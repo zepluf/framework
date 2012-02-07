@@ -33,6 +33,8 @@ $container->register('dispatcher', 'Symfony\Component\EventDispatcher\EventDispa
 
 $container->register('riPlugin.Settings', 'plugins\\riPlugin\\Settings');
 
+$container->setParameter('container', $container);
+
 $routes = new Routing\RouteCollection();
 
 Plugin::init($loader, $container, $routes);

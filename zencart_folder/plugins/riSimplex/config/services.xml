@@ -3,9 +3,24 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+	<parameters>
+    	<parameter key="template.path.patterns" type="collection"></parameter>
+        
+    	<parameter key="template.parser">Symfony\Component\Templating\TemplateNameParser</parameter>
+	</parameters>
+
     <services>        
         <service id="riSimplex.View" class="plugins\riSimplex\View" scope="container">
         	<argument type="service" id="dispatcher"/>
+        	<argument>%container%</argument>   	
+        </service> 
+        <service id="riSimplex.TemplateLoader" class="plugins\riSimplex\TemplateLoader" scope="prototype">        		
+        	<argument>%template.path.patterns%</argument>
+        </service>
+        <service id="riSimplex.TemplateEngine" class="plugins\riSimplex\TemplateEngine" scope="prototype">
+        	<argument>%template.engines%</argument>
+        </service> 
+        <service id="riSimplex.HolderHelper" class="plugins\riSimplex\HolderHelper" scope="container">        	
         </service>        
     </services>
 

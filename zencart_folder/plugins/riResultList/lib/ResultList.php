@@ -127,6 +127,15 @@ class ResultList extends Object {
     	$this->filters_[] = $filter;
     }
     
+    public function addFilters($filters, $map){
+        foreach ($filters as $key => $value){    
+            if(isset($map[$key])){        
+                $filter = $map[$key]['field'] . $map[$key]['condition'] . (isset($map[$key]['bind']) ? $map[$key]['bind']($value) : $value);            
+                $this->addFilter($filter);
+            }
+        } 
+    }
+    
     public function getFilters(){
     	return $this->filters_;
     }
@@ -226,6 +235,7 @@ class ResultList extends Object {
 			
         // put in the limit
         list($start, $duration) = $this->getLimit();
+        if($duration > 0)
 		$query .= " Limit $start, $duration";
 		
 		return $query;
