@@ -1,0 +1,27 @@
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/ClassLoader"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/ClassLoader
+	url = git://github.com/symfony/ClassLoader.git
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/DependencyInjection"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/DependencyInjection
+	url = git://github.com/symfony/DependencyInjection.git
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/Config"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/Config
+	url = https://github.com/symfony/Config.git
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/Yaml"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/Yaml
+	url = https://github.com/symfony/Yaml.git
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/Routing"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/Routing
+	url = https://github.com/symfony/Routing.git
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/HttpFoundation"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/HttpFoundation
+	url = https://github.com/symfony/HttpFoundation.git
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/EventDispatcher"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/EventDispatcher
+	url = https://github.com/symfony/EventDispatcher.git
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/HttpKernel"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/HttpKernel
+	url = https://github.com/symfony/HttpKernel.git
+[submodule "zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/Validator"]
+	path = zencart_folder/zenmagick/vendor/symfony/src/Symfony/Component/Validator
+	url = https://github.com/symfony/Validator.git
