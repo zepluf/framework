@@ -17,9 +17,19 @@ class TemplateLoader extends FilesystemLoader{
         $this->templates[$template->getLogicalName()] = $content;
     }
     
-    public function addPathPatterns($path_patterns){
-        $path_patterns = (array)$path_patterns;
-        
+    public function unshiftPathPattern($path_pattern){              
+        array_unshift($this->templatePathPatterns, $path_patterns);
+    }
+    
+    public function pushPathPattern($path_pattern){              
+        $this->templatePathPatterns[] = $path_pattern;
+    }
+    
+    public function pushPathPatterns($path_patterns){              
         $this->templatePathPatterns = array_merge($this->templatePathPatterns, $path_patterns);
+    }
+    
+    public function setPathPatterns($path_patterns){
+        $this->templatePathPatterns = $path_patterns;
     }
 }

@@ -16,14 +16,14 @@ class View extends Object{
 	private $vars = array(),			
 			$loader,
 			$engine,
-			$engines;
+			$engines,
+			$patterns = array();
 	
 	public function __construct($dispatcher, $container){	   
 
 	    $this->loader = $container->get('riSimplex.TemplateLoader');
-	    $this->loader->addPathPatterns(array(
-            __DIR__.'/../../riSimplex/content/views/%name%'
-        ));
+	    
+	    $this->patterns['default'] =  array(__DIR__.'/../../riSimplex/content/views/%name%');
 
         $this->engines = array(
             'php' => 
@@ -50,34 +50,35 @@ class View extends Object{
 		
 		$view = explode('::', $view);
 		
-		// default to php
-		if(strpos($view[1], '.') === false) $view[1] .= '.php';
-		 
-		$this->loader->addPathPatterns(array(
-            __DIR__.'/../../'.$view[0].'/content/views/%name%'
-        ));
+		// we will have to set path patterns to make sure we dont look for template files at extra places
+		if(!empty($view[0])){		    		       
+            $this->setPathPatterns($view[0]);		    
+		}
+		else {
+		    $view[1] = $view[0];
+		    $this->setPathPatterns();
+		}
+        		    
+		// default to php		
+		if(strpos($view[1], '.') === false) $view[1] .= '.php';		 		
         
 		return $this->engine->render($view[1], $this->vars);		
+	}
+	
+	public function setPathPatterns($scope = 'default'){
+	    if(!isset($this->patterns[$scope]))
+	        $this->patterns[$scope] = array(__DIR__.'/../../'.$scope.'/content/views/%name%');
+	        
+	    $patterns = $scope != 'default' ? array_merge($this->patterns[$scope], $this->patterns['default']) : $this->patterns['default'];
+	    
+	    $this->loader->setPathPatterns($patterns);
 	}
 	
 	public function get($name){
 	    $name = explode('::', $name);
 	    return $this->engine->getEngine('name.'.$name[0])->get($name[1]);
 	}
-	
-	private function getPath($plugin, $view){
-	    $path = __DIR__.'/../../'.$plugin.'/content/views/'.$view.'.php';
-	    if(file_exists($path))
-	        return $path;
-	        
-	    // fall back to default view    
-	    $path = __DIR__.'/../../riSimplex/content/views/'.$view.'.php';
-	    if(file_exists($path))
-	        return $path;  
-
-	    return false;
-	}
-	
+		
 	public function renderResponse($view, $parameters = null, Response $response = null){
 		$content = $this->render($view, $parameters); 
 		$response->setContent($this->render($view, $parameters));
@@ -87,27 +88,5 @@ class View extends Object{
 	public function setVars($vars){
 		if(!is_array($vars)) $vars = array($vars);
 		$this->vars = array_merge($this->vars, $vars);
-	}
-	
-	public function appendSlot($slot, $content, $order = 0){
-		$this->slots[$slot][] = array('order' => $order, 'content' => $content); 
-	}
-	
-	public function renderSlot($slot){
-		$content = '';
-		if(isset($this->slots[$slot]) && count($this->slots[$slot])> 0){
-			usort($this->slots[$slot], function($a, $b) {
-				if ($a['order'] == $b['order']) {
-	        		return 0;
-				}
-	    		return ($a['order'] < $b['order']) ? -1 : 1;
-			});
-			
-			
-			foreach ($this->slots[$slot] as $c)
-				$content .= $c['content'];
-		}
-		
-		return $content;	 
-	}
+	}		
 }
