@@ -1,6 +1,6 @@
 <?php
 
-namespace plugins\riSimplex;
+namespace plugins\riCore;
 
 use Symfony\Component\Templating\Loader\FilesystemLoader;
 use Symfony\Component\Templating\TemplateReferenceInterface;

@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+    	<service id="riPlugin.Settings" class="plugins\riPlugin\Settings" scope="container"></service>
+    	<service id="context" class="Symfony\Component\Routing\RequestContext" scope="container"></service>
+    	<service id="matcher" class="Symfony\Component\Routing\Matcher\UrlMatcher" scope="container">
+    		<argument>%routes%</argument>
+    		<argument type="service" id="context" />
+    	</service>
+    	<service id="listener.router" class="Symfony\Component\HttpKernel\EventListener\RouterListener" scope="container">
+    		<argument type="service" id="matcher" />
+    	</service>
+    	<service id="listener.response" class="Symfony\Component\HttpKernel\EventListener\ResponseListener" scope="container">
+    		<argument>%charset%</argument>
+    	</service>
+    	<service id="listener.exception" class="Symfony\Component\HttpKernel\EventListener\ExceptionListener" scope="container">
+    		<argument>plugins\\riSimplex\\Controller::exceptionAction</argument>
+    	</service>
+    	<service id="dispatcher" class="Symfony\Component\EventDispatcher\EventDispatcher" scope="container">
+    		<call method="addSubscriber">
+            	<argument type="service" id="listener.router" />
+        	</call>
+        	<call method="addSubscriber">
+            	<argument type="service" id="listener.response" />
+        	</call>
+        	<call method="addSubscriber">
+            	<argument type="service" id="listener.exception" />
+        	</call>
+    	</service>
+    	                  
+    </services>
+
+</container>

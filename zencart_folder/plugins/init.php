@@ -6,7 +6,6 @@ require_once(__DIR__.'/../zenmagick/lib/base/classloader/ClassLoader.php');
 // load the class loader and dependency injection component
 $loader = new zenmagick\base\classloader\ClassLoader();
 
-//$loader->registerNamespace('plugins',DIR_FS_CATALOG);
 $loader->addNamespaces(array(	
 	'plugins\riPlugin' => __DIR__.'/riPlugin/lib@plugins\riPlugin',	
 ));
@@ -19,24 +18,25 @@ $loader->register(true);
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing;
 use plugins\riPlugin\Container;
 use plugins\riPlugin\Plugin;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\EventDispatcher\Event;
 $container = new Container();		
-
-//use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-//use Symfony\Component\Config\FileLocator;
-
-$container->register('dispatcher', 'Symfony\Component\EventDispatcher\EventDispatcher');
-
-$container->register('riPlugin.Settings', 'plugins\\riPlugin\\Settings');
-
-$container->setParameter('container', $container);
 
 $routes = new Routing\RouteCollection();
 
+$container->setParameter('container', $container);
+$container->setParameter('routes', $routes);
+$container->setParameter('charset', 'UTF-8'); 
+
+// load the base services
+$xml_loader = new XMLFileLoader($container, new FileLocator(__DIR__));				
+$xml_loader->load('services.xml');	
+        
 Plugin::init($loader, $container, $routes);
 
 $settings = Yaml::parse(__DIR__.'/settings.yaml');
@@ -49,3 +49,6 @@ if(defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true){
 else{
 	if(is_array($settings['frontend']['preload'])) Plugin::load($settings['frontend']['preload']);
 }
+
+// init the view to be used globally in ZC
+$riview = Plugin::get('riCore.View');

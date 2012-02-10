@@ -1,5 +1,7 @@
 <?php 
-namespace plugins\riPlugin;
+namespace plugins\riCore;
+
+use plugins\riPlugin\Object;
 
 class Model extends Object{
     
@@ -8,6 +10,18 @@ class Model extends Object{
     public function init($table, $id){
         $this->table = $table;
         $this->id = $id;
+    }
+
+    public function getId(){
+        return $this->id;
+    }
+    
+    public function getTable(){
+        return $this->table;
+    }
+    
+    public function create($data){
+        return $this->setArray($data);    
     }
     
     public function save(){

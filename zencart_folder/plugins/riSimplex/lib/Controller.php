@@ -10,7 +10,7 @@ class Controller{
 	
 	public function __construct(){
 		$this->response = new Response();
-		$this->view = Plugin::get('riSimplex.View');
+		$this->view = Plugin::get('riCore.View');
 	}
 	
 	public function exceptionAction(){
@@ -29,6 +29,6 @@ class Controller{
     public function render($view, array $parameters = array(), Response $response = null)
     {
     	if($response == null) $response = $this->response;
-        return Plugin::get('riSimplex.View')->renderResponse($view, $parameters, $response);
+        return $this->view->renderResponse($view, $parameters, $response);
     }
 }

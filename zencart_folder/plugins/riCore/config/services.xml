@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+	<parameters>
+    	<parameter key="template.path.patterns" type="collection"></parameter>
+        
+    	<parameter key="template.parser">Symfony\Component\Templating\TemplateNameParser</parameter>
+	</parameters>
+
+    <services>
+    	<service id="riCore.Model" class="plugins\riCore\Model" scope="prototype">
+    		<argument type="service" id="dispatcher"/>
+    	</service>   
+    	<service id="riCore.View" class="plugins\riCore\View" scope="container">
+        	<argument type="service" id="dispatcher"/>
+        	<argument>%container%</argument>   	
+        </service> 
+        <service id="riCore.TemplateLoader" class="plugins\riCore\TemplateLoader" scope="prototype">        		
+        	<argument>%template.path.patterns%</argument>
+        </service>
+        <service id="riCore.TemplateEngine" class="plugins\riCore\TemplateEngine" scope="prototype">
+        	<argument>%template.engines%</argument>
+        </service> 
+        <service id="riCore.HolderHelper" class="plugins\riCore\HolderHelper" scope="container"> 
+        	<argument type="service" id="dispatcher"/>
+        	<argument>%container%</argument>       	
+        </service>  
+        <service id="riCore.HolderHelperEvent" class="plugins\riCore\HolderHelperEvent" scope="container">        
+        </service>           
+    </services>
+
+</container>

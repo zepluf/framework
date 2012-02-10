@@ -1,5 +1,5 @@
 global:
-  preload: [riUtility, riLog, riSession, riCard, riMerchant]
+  preload: [riCore, riUtility, riLog, riSession]
 
 backend:
-  preload: [riZCAdmin, riCsv, riResultList]
+  preload: [riZCAdmin]

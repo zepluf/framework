@@ -1,6 +1,6 @@
 <?php
 
-namespace plugins\riSimplex;
+namespace plugins\riCore;
 
 use Symfony\Component\Templating\PhpEngine;
 
@@ -21,20 +21,20 @@ class View extends Object{
 	
 	public function __construct($dispatcher, $container){	   
 
-	    $this->loader = $container->get('riSimplex.TemplateLoader');
+	    $this->loader = $container->get('riCore.TemplateLoader');
 	    
 	    $this->patterns['default'] =  array(__DIR__.'/../../riSimplex/content/views/%name%');
 
         $this->engines = array(
             'php' => 
-                new \Symfony\Component\Templating\PhpEngine(new TemplateNameParser(), $this->loader, array(new SlotsHelper(), $container->get('riSimplex.HolderHelper')))
+                new \Symfony\Component\Templating\PhpEngine(new TemplateNameParser(), $this->loader, array(new SlotsHelper(), $container->get('riCore.HolderHelper')))
         );
             
         // set the available template engines
         $container->setParameter('template.engines', array_values($this->engines));
         
         // init the engine
-        $this->engine = $container->get('riSimplex.TemplateEngine');
+        $this->engine = $container->get('riCore.TemplateEngine');
         
         // always set router and reference to this
 	    $this->setVars(array(

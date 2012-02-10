@@ -4,14 +4,31 @@ namespace plugins\riResultList;
 use plugins\riPlugin\Object;
 
 class ResultSource extends Object implements ResultSourceInterface{
-    protected $resultList_;
+    protected $resultList_, $model, $from, $select;
     /**
      * Set the corresponding result list.
      *
      * @param ZMResultList resultList The *parent* result list.
      */
+    
+    public function setModel($model){
+        $this->model = $model;  
+        return $this;  
+    }
+    
+    public function select($select){
+        $this->select = $select;
+        return $this;
+    }
+    
+    public function from($from){
+        $this->from = $from;
+        return $this;
+    }
+    
     public function setResultList($resultList){
         $this->resultList_ = $resultList;
+        return $this;
     }
 
     /**
@@ -21,10 +38,40 @@ class ResultSource extends Object implements ResultSourceInterface{
      *
      * @return array List of results.
      */
-    public function getResults($reload=false){
         
+    
+    public function getResults($reload=false){
+        global $db;                
+
+        $sql = 'SELECT ' . $this->select . ' FROM ' . $this->from;
+		$sql = $this->resultList_->buildPaginationQuery($sql);			
+		$result = $db->Execute($sql);
+		
+		$results = array();
+		while(!$result->EOF){
+			$results[] = $this->create($result->fields);			
+			$result->MoveNext();
+		}
+		return $results;
     }
 
+    public function findById($id){
+        global $db;
+        
+        $sql = "SELECT * FROM ".$this->model->getTable()." WHERE ".$this->model->getId()." = :id";
+        $sql = $db->bindVars($sql, ':id', $id, 'integer');
+        
+        $result = $db->Execute($sql);
+        
+        if($result->RecordCount())
+            return $this->create($result->fields);
+        return false;
+    }
+    
+    public function create($data){
+        $object = clone $this->model;
+        return $object->create($data);        
+    }
     /**
      * Get the class name of the results.
      *
@@ -40,7 +87,13 @@ class ResultSource extends Object implements ResultSourceInterface{
      * @return int The total number if results.
      */
     public function getTotalNumberOfResults(){
-        
+        global $db;
+		$sql = 'SELECT COUNT(*) AS count FROM ' . $this->from;
+		
+		$sql = $this->resultList_->buildBaseQuery($sql);
+			
+		$result = $db->execute($sql);
+		return $result->fields['count'];
     }
 
     /**

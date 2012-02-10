@@ -19,11 +19,13 @@ $total_page = $result_list->getNumberOfPages();
 		<?php endif;?>	
 	<?php endif;?>	
 	
-	<?php for($page = $current_page-5; $page < $current_page && $page > 0; $page++):?>
+	<?php for($page = $current_page - 5; $page < $current_page; $page++):?>
+	<?php if($page > 0):?>
 	<li class="page"><a
 		href="<?php echo $router->generate($current_route, riGetAllGetParams(array('page'), array('page' => $page)));?>"><?php echo $page;?>
 	</a>
 	</li>
+	<?php endif;?>
 	<?php endfor;?>
 	<li class="page current"><a
 		href="<?php echo $router->generate($current_route, riGetAllGetParams(array('page'), array('page' => $current_page)));?>"><?php echo $current_page;?>

@@ -1,12 +1,17 @@
 <?php
 
-namespace plugins\riSimplex;
+namespace plugins\riCore;
 
 use Symfony\Component\Templating\Helper\Helper;
 
 class HolderHelper extends Helper{
     
-    protected $slots = array();
+    protected $slots = array(), $dispatcher, $container;
+    
+    public function __construct($dispatcher, $container){
+        $this->dispatcher = $dispatcher;
+        $this->container = $container;
+    }
     
     public function getName(){
         return 'holder';
@@ -17,6 +22,10 @@ class HolderHelper extends Helper{
     }
     
     public function get($slot){
+        $event = $this->container->get('riCore.HolderHelperEvent')->setContainer($this->container)->setSlot($slot)->setHelper($this);
+        $this->dispatcher->dispatch('view.helper.holder.get.start', $event);
+        $this->dispatcher->dispatch('view.helper.holder.get.start.'.$slot, $event);
+        
         $content = '';
 		if(isset($this->slots[$slot]) && count($this->slots[$slot])> 0){
 			usort($this->slots[$slot], function($a, $b) {
@@ -31,6 +40,8 @@ class HolderHelper extends Helper{
 				$content .= $c['content'];
 		}
 		
+		$this->dispatcher->dispatch('view.helper.holder.get.end', $event);
+        $this->dispatcher->dispatch('view.helper.holder.get.end.'.$slot, $event);
 		return $content;
          
     }

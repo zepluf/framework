@@ -24,14 +24,18 @@ class Plugin{
 		foreach ($plugins as $plugin){
 			if(!in_array($plugin, self::$loaded)){
 				
-				$config_path = __DIR__.'/../../'.$plugin.'/config/';
-				
+			    $plugin_path = __DIR__.'/../../'.$plugin.'/';
+			    
+			    $plugin_name = ucfirst($plugin);
+			    
+				$config_path = $plugin_path.'config/';
+								
 				foreach (glob($config_path."*.php") as $file) { 
 					include($file);
 				}
 				
 				self::$loader->addConfig(__DIR__.'/../../'.$plugin."/lib");							
-				
+							    
 				if(file_exists($config_path.'services.xml')){
 					$loader = new XMLFileLoader(self::$container, new FileLocator($config_path));				
         			$loader->load('services.xml');	
@@ -60,6 +64,14 @@ class Plugin{
 					self::get('riPlugin.Settings')->set($plugin, $settings);					
 				};
 				
+				if(file_exists($plugin_path.$plugin_name.'.php')){
+				    require($plugin_path.$plugin_name.'.php');
+				    $class_name = "plugins\\$plugin\\$plugin_name";
+				    $plugin_object = new $class_name(self::$container->get('dispatcher'), self::$container);
+				    $plugin_object->init();
+				}
+				
+				    
 				self::$loaded[] = $plugin; 				
 			}
 		}		

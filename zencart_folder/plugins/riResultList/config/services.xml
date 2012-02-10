@@ -7,6 +7,9 @@
     	<service id="riResultList.ResultList" class="plugins\riResultList\ResultList" scope="prototype">
     		<argument type="service" id="dispatcher"/>
     	</service>
+    	<service id="riResultList.ResultSource" class="plugins\riResultList\ResultSource" scope="prototype">
+    		<argument type="service" id="dispatcher"/>
+    	</service>
     </services>
 
 </container>
