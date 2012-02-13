@@ -36,10 +36,16 @@ $container->setParameter('charset', 'UTF-8');
 // load the base services
 $xml_loader = new XMLFileLoader($container, new FileLocator(__DIR__));				
 $xml_loader->load('services.xml');	
-        
+
+use Symfony\Component\Translation\Loader\MoFileLoader;
+use Symfony\Component\Translation\Loader\PoFileLoader;
+
 Plugin::init($loader, $container, $routes);
 
 $settings = Yaml::parse(__DIR__.'/settings.yaml');
+
+$container->setParameter('locale', $settings['framework']['translator']['fallback']);
+
 if(is_array($settings['global']['preload'])) Plugin::load($settings['global']['preload']);
 
 // a hack for zen

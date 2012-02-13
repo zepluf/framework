@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Finder\Finder;
 
 
 class Plugin{
@@ -51,6 +52,7 @@ class Plugin{
 				if(file_exists($config_path.'settings.yaml')){
 					$settings = Yaml::parse($config_path.'settings.yaml');
 					
+					// set routes
 					if(isset($settings['routes'])){
 						foreach($settings['routes'] as $key => $route){
 							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);							
@@ -64,6 +66,8 @@ class Plugin{
 					self::get('riPlugin.Settings')->set($plugin, $settings);					
 				};
 				
+				self::loadTranslations($plugin_path, 'en');
+				// load language files				
 				if(file_exists($plugin_path.$plugin_name.'.php')){
 				    require($plugin_path.$plugin_name.'.php');
 				    $class_name = "plugins\\$plugin\\$plugin_name";
@@ -76,6 +80,35 @@ class Plugin{
 			}
 		}		
 	}
+	
+	private function loadTranslations($plugin_path, $fallback)
+    {        
+        $translator = self::$container->get('translator');        
+        // Discover translation directories
+        $dirs = array();
+        if(is_dir($dir = $plugin_path . 'translations'))
+            $dirs[] = $dir;
+        /*
+        if (is_dir($dir = $container->getParameter('kernel.root_dir').'/Resources/translations')) {
+            $dirs[] = $dir;
+        }
+		*/
+            
+        // Register translation resources
+        if ($dirs) {
+            $finder = new Finder();
+            $finder->files()->filter(function (\SplFileInfo $file) {
+                return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
+            })->in($dirs);
+            foreach ($finder as $file) {
+                // filename is domain.locale.format
+                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+                
+                // we have to add resource right away or it will be too late
+                $translator->addResource($format, (string) $file, $locale, $domain);        
+            }                        
+        }                
+    }
 	
 	public static function getContainer(){
 		return self::$container;

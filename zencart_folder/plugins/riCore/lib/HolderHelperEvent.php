@@ -6,7 +6,7 @@ use Symfony\Component\EventDispatcher\Event;
 
 class HolderHelperEvent extends Event
 { 
-    private $slot, $helper, $container;
+    private $slot;
     
     public function setSlot($slot){
         $this->slot = $slot;
@@ -16,7 +16,7 @@ class HolderHelperEvent extends Event
     public function getSlot(){
         return $this->slot;
     }
-    
+    /*
     public function setHelper($helper){
         $this->helper = $helper;
         return $this;
@@ -33,5 +33,5 @@ class HolderHelperEvent extends Event
     
     public function getContainer(){
         return $this->container;
-    }
+    }*/
 }

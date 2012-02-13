@@ -8,8 +8,30 @@ function getBaseHref($admin = true){
 		return HTTP_SERVER . DIR_WS_ADMIN;
 }
 
-function ri($string){
-	return $string;
+/**
+ * 
+ * function used for translation
+ * @param string $id
+ * @param array $parameters
+ * @param string $domain
+ * @param string $locale
+ * $return translated string
+ */
+function ri($id, array $parameters = array(), $domain = 'messages', $locale = null){
+	return plugins\riPlugin\Plugin::get('translator')->trans($id, $parameters, 'messages', $locale);	
+}
+
+/**
+ * 
+ * function used for translation
+ * @param string $id
+ * @param array $parameters
+ * @param string $domain
+ * @param string $locale
+ * $return void
+ */
+function rie($id, array $parameters = array(), $domain = 'messages', $locale = null){
+    echo ri($id, $parameters, 'messages', $locale);
 }
 
 function riAdminLink($route, $params, $file = 'ri.php'){

@@ -4,6 +4,21 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+    	<service id="translation.loader.mo" class="Symfony\Component\Translation\Loader\MoFileLoader"></service>
+    	<service id="translation.loader.po" class="Symfony\Component\Translation\Loader\PoFileLoader"></service>
+    	<service id="translator.selector" class="Symfony\Component\Translation\MessageSelector" public="false" />
+    	<service id="translator" class="Symfony\Component\Translation\Translator">
+    		<argument>%locale%</argument>
+    		<argument type="service" id="translator.selector" />    
+    		<call method="addLoader">
+    			<argument>mo</argument>
+    			<argument type="service" id="translation.loader.mo" />
+    		</call>	    		
+    		<call method="addLoader">
+    			<argument>po</argument>
+    			<argument type="service" id="translation.loader.po" />
+    		</call>
+    	</service>
     	<service id="riPlugin.Settings" class="plugins\riPlugin\Settings" scope="container"></service>
     	<service id="context" class="Symfony\Component\Routing\RequestContext" scope="container"></service>
     	<service id="matcher" class="Symfony\Component\Routing\Matcher\UrlMatcher" scope="container">
