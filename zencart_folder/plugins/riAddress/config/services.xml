@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+    	<service id="riAddress.Address" class="plugins\riAddress\Address" scope="prototype">
+    		<argument type="service" id="dispatcher"/>
+    	</service>
+    	<service id="riAddress.Addresses" class="plugins\riAddress\Addresses" scope="container">
+    		<argument type="service" id="dispatcher"/>
+    	</service> 
+    	<service id="riAddress.Country" class="plugins\riAddress\Country" scope="prototype">
+    		<argument type="service" id="dispatcher"/>
+    	</service>
+    	<service id="riAddress.Countries" class="plugins\riAddress\Countries" scope="container">
+    		<argument type="service" id="dispatcher"/>
+    	</service>     
+    </services>
+</container>

@@ -1,0 +1,4 @@
+routes:
+  ajax_add_to_cart:
+    pattern:  /ajax_add_to_cart/
+    defaults: { _controller: plugins\riCart\CartController::add }

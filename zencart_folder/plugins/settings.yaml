@@ -1,5 +1,8 @@
 global:
-  preload: [riCore, riUtility, riLog, riSession]
+  preload: [riCore, riCart, riUtility, riLog, riSession]
 
 backend:
   preload: [riZCAdmin]
+  
+framework:
+    translator: { fallback: en }
