@@ -2,30 +2,35 @@
 
 namespace plugins\riProduct;
 
-use plugins\riPlugin\Object;
+use plugins\riCore\Model;
 
-class Product extends Object {
+class Product extends Model {
+    protected $id = 'products_id', $table = TABLE_PRODUCTS;
+    
 	private $description, $categories = array();
 	
 	// TODO: need to return false
 	public function save(){
 		global $db;
 					
-		$data = $this->getArray();
+		$data = $this->getArray(array('description'));
 		unset($data['id']);
 		
-		if(isset($this->id) && $this->id > 0){
+		if(isset($this->productsId) && $this->productsId > 0){
 			// TODO: description
 			zen_db_perform(TABLE_PRODUCTS, $data, 'update', 'id = '.$this->id);
 			return true;
 		}
 		else {
 			zen_db_perform(TABLE_PRODUCTS, $data);
-			$this->id = $db->Insert_ID();
+			$this->productsId = $db->Insert_ID();
 			
-			$this->description['products_id'] = $this->id;
-			zen_db_perform(TABLE_PRODUCTS_DESCRIPTION, $this->description);
-			zen_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, array('products_id' => $this->id, 'categories_id' => $this->masterCategoriesId));
+			// insert description
+			$this->description->productsId = $this->productsId;
+			$this->description->save();						
+			
+			// insert 2 category relationship
+			zen_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, array('products_id' => $this->productsId, 'categories_id' => $this->masterCategoriesId));
 			
 			return true;
 		}
@@ -34,12 +39,22 @@ class Product extends Object {
 	}
 	
 	public function getDescription($languages_id = 1){
+	    
+	    if(isset($this->description) && !empty($this->description)) return $this->description;
 		global $db;
 		$sql = "SELECT * FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id = :products_id AND language_id = :languages_id";
-		$sql = $db->bindVars($sql, ":products_id", $this->id, 'integer');
+		$sql = $db->bindVars($sql, ":products_id", $this->productsId, 'integer');
 		$sql = $db->bindVars($sql, ":languages_id", $languages_id, 'integer');
+		
 		$result = $db->Execute($sql);
-		if($result->RecordCount() > 0)
-		$this->description = $result->fields;
+		if($result->RecordCount() > 0){
+		    $this->description = $this->container->get('riProduct.ProductsDescription')->setArray($result->fields);		    
+		}
+		
+		return $this->description;  
 	} 
+	
+	public function setDescription($description){
+	    $this->description = $description;
+	}
 }

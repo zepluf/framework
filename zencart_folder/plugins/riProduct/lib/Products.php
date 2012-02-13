@@ -11,9 +11,7 @@ class Products extends Object{
 		$result = $db->Execute($sql);
 		
 		if($result->RecordCount() > 0){
-			$product = $this->container->get('riProduct.Product');
-			$product->id = $result->fields['products_id'];
-			unset($result->fields['products_id']);
+			$product = $this->container->get('riProduct.Product');			
 			$product->setArray($result->fields);
 			return $product;
 		}
