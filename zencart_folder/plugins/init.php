@@ -37,6 +37,18 @@ $container->setParameter('charset', 'UTF-8');
 $xml_loader = new XMLFileLoader($container, new FileLocator(__DIR__));				
 $xml_loader->load('services.xml');	
 
+// listen to the plugin load and set the view holder
+$container->get('dispatcher')->addListener(\plugins\riPlugin\PluginEvents::onLoadEnd, function($event) use ($container){
+	$settings = $event->getSettings();
+	if(isset($settings['global']['frontend']['holder'])){
+		foreach($settings['global']['frontend']['holder'] as $holder_name => $holder){			
+			foreach($holder as $h){			
+				call_user_func($h['method'], $holder_name, $h['parameters'], $container);
+			}
+		}
+	}
+});
+
 use Symfony\Component\Translation\Loader\MoFileLoader;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 

@@ -5,13 +5,13 @@ namespace plugins\riPlugin;
 final class PluginEvents
 {
     /**
-     * The store.order event is thrown each time an order is created
+     * The plugin.load.end event is thrown each time a plugin is loaded (1st time)
      * in the system.
      *
-     * The event listener receives an Acme\StoreBundle\Event\FilterOrderEvent
+     * The event listener receives an plugins\riPlugin\PluginEvent
      * instance.
      *
      * @var string
      */
-    const onStoreOrder = 'store.order';
+    const onLoadEnd = 'plugin.load.end';
 }

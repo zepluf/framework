@@ -75,7 +75,10 @@ class Plugin{
 				    $plugin_object->init();
 				}
 				
-				    
+				// set the dispatcher
+				$event = new PluginEvent();				
+        		self::$container->get('dispatcher')->dispatch(PluginEvents::onLoadEnd, $event->setPlugin($plugin)->setSettings($settings));
+				
 				self::$loaded[] = $plugin; 				
 			}
 		}		

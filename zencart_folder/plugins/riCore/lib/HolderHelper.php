@@ -17,6 +17,9 @@ class HolderHelper extends Helper{
         return 'holder';
     }
     
+    /**
+     * 
+     */
     public function add($slot, $content, $order = 0){
         $this->slots[$slot][] = array('order' => $order, 'content' => $content);
     }

@@ -80,8 +80,13 @@ class Object extends ContainerAware implements \Serializable{
 		return $this;
 	}
 	
-	public function getArray(){
-		return $this->properties_;
+	public function getArray($exclude = array()){
+	    $data = $this->properties_;
+	    if(!empty($exclude))
+	        foreach ($exclude as $key)
+	            unset($data[$key]);
+	            
+		return $data;
 	}
 	
 	/**

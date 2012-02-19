@@ -1,0 +1,1 @@
+<?php if($order === false) echo "Order is deleted"?>

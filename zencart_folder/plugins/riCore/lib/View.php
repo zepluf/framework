@@ -51,7 +51,7 @@ class View extends Object{
 		$view = explode('::', $view);
 		
 		// we will have to set path patterns to make sure we dont look for template files at extra places
-		if(!empty($view[0])){		    		       
+		if(!empty($view[1])){		    		       
             $this->setPathPatterns($view[0]);		    
 		}
 		else {

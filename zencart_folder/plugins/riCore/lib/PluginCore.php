@@ -2,7 +2,7 @@
 
 namespace plugins\riCore;
 
-class Plugin{
+class PluginCore{
     
     protected $dispatcher, $container;
     

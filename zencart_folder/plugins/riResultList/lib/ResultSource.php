@@ -9,12 +9,7 @@ class ResultSource extends Object implements ResultSourceInterface{
      * Set the corresponding result list.
      *
      * @param ZMResultList resultList The *parent* result list.
-     */
-    
-    public function setModel($model){
-        $this->model = $model;  
-        return $this;  
-    }
+     */        
     
     public function select($select){
         $this->select = $select;
@@ -55,23 +50,6 @@ class ResultSource extends Object implements ResultSourceInterface{
 		return $results;
     }
 
-    public function findById($id){
-        global $db;
-        
-        $sql = "SELECT * FROM ".$this->model->getTable()." WHERE ".$this->model->getId()." = :id";
-        $sql = $db->bindVars($sql, ':id', $id, 'integer');
-        
-        $result = $db->Execute($sql);
-        
-        if($result->RecordCount())
-            return $this->create($result->fields);
-        return false;
-    }
-    
-    public function create($data){
-        $object = clone $this->model;
-        return $object->create($data);        
-    }
     /**
      * Get the class name of the results.
      *
