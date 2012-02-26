@@ -22,12 +22,13 @@ class Product extends Model {
 			return true;
 		}
 		else {
+		    $data['products_date_added'] = 'now()';
 			zen_db_perform(TABLE_PRODUCTS, $data);
 			$this->productsId = $db->Insert_ID();
 			
 			// insert description
 			$this->description->productsId = $this->productsId;
-			$this->description->save();						
+			$this->description->save(true);						
 			
 			// insert 2 category relationship
 			zen_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, array('products_id' => $this->productsId, 'categories_id' => $this->masterCategoriesId));

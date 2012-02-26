@@ -1,8 +1,11 @@
 global:
-  preload: [riCore, riCart, riUtility, riLog, riSession]
+  preload: [riCore, riCart, riUtility, riLog, riSession, riCard, riMerchant, riSuggestion]
 
 backend:
-  preload: [riZCAdmin]
-  
+  preload: [riCustomer, riZCAdmin, riCsv, riResultList]
+
+frontend:
+  preload: [riBalance]
+    
 framework:
     translator: { fallback: en }

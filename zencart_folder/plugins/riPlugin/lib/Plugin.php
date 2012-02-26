@@ -20,6 +20,10 @@ class Plugin{
 		self::$routes = $routes;
 	}
 	
+	public static function getLoaded(){
+	    return self::$loaded;    
+	}
+	
 	public static function load($plugins){
 		if(!is_array($plugins)) $plugins = array($plugins);
 		foreach ($plugins as $plugin){
@@ -35,20 +39,22 @@ class Plugin{
 					include($file);
 				}
 				
-				self::$loader->addConfig(__DIR__.'/../../'.$plugin."/lib");							
+				// add config for class loader
+				self::$loader->addConfig($plugin_path."lib");							
 							    
 				if(file_exists($config_path.'services.xml')){
 					$loader = new XMLFileLoader(self::$container, new FileLocator($config_path));				
         			$loader->load('services.xml');	
 				}
 				else{
-					foreach (glob(__DIR__.'/../../'.$plugin."/lib/*.php") as $file) { 
+					foreach (glob($plugin_path."/lib/*.php") as $file) { 
 						$filename = basename($file, '.php');
 						self::$container->register($plugin.'.'.$filename, 'plugins\\'.$plugin.'\\'.$filename);						    		
 					}	
 				}
 
 				// load plugin's settings
+				$settings = array();
 				if(file_exists($config_path.'settings.yaml')){
 					$settings = Yaml::parse($config_path.'settings.yaml');
 					
@@ -84,7 +90,7 @@ class Plugin{
 		}		
 	}
 	
-	private function loadTranslations($plugin_path, $fallback)
+	private static function loadTranslations($plugin_path, $fallback)
     {        
         $translator = self::$container->get('translator');        
         // Discover translation directories

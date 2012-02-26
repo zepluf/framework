@@ -43,7 +43,7 @@ $container->get('dispatcher')->addListener(\plugins\riPlugin\PluginEvents::onLoa
 	if(isset($settings['global']['frontend']['holder'])){
 		foreach($settings['global']['frontend']['holder'] as $holder_name => $holder){			
 			foreach($holder as $h){			
-				call_user_func($h['method'], $holder_name, $h['parameters'], $container);
+				//call_user_func($h['method'], $holder_name, $h['parameters'], $container);
 			}
 		}
 	}
@@ -69,4 +69,4 @@ else{
 }
 
 // init the view to be used globally in ZC
-$riview = Plugin::get('riCore.View');
+$riview = Plugin::get('riCore.Model');
