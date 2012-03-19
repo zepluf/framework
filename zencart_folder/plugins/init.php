@@ -69,4 +69,4 @@ else{
 }
 
 // init the view to be used globally in ZC
-$riview = Plugin::get('riCore.Model');
+$riview = Plugin::get('riCore.View');

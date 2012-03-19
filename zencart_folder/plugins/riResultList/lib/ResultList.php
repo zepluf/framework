@@ -24,7 +24,7 @@ class ResultList extends Object {
     protected $filters_;
     protected $page_;
     protected $pagination_;
-    protected $number_of_results_;    
+    protected $number_of_results_ = false;    
     protected $results_;
     
 	function __construct(EventDispatcherInterface $dispatcher) {
@@ -32,7 +32,7 @@ class ResultList extends Object {
         $this->resultSource_ = null;        
         $this->sorters_ = array();
         $this->filters_ = array();
-        $this->number_of_results_ = 0;
+        $this->number_of_results_ = false;
         $this->page_ = 1;
         $this->pagination_ = 15;        
         $this->results_ = null;
@@ -75,7 +75,9 @@ class ResultList extends Object {
      * @return int The total number if results.
      */
     public function getNumberOfResults() {
-        return $this->resultSource_->getTotalNumberOfResults();
+        if($this->number_of_results_ === false)
+            $this->number_of_results_ = $this->resultSource_->getTotalNumberOfResults();
+        return $this->number_of_results_;
     }
 
 	public function getNumberOfCurrentResults() {

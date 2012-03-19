@@ -5,7 +5,7 @@ backend:
   preload: [riCustomer, riZCAdmin, riCsv, riResultList]
 
 frontend:
-  preload: [riBalance]
+  preload: []
     
 framework:
     translator: { fallback: en }

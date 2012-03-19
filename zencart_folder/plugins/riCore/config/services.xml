@@ -13,6 +13,9 @@
     	<service id="riCore.Model" class="plugins\riCore\Model" scope="prototype">
     		<argument type="service" id="dispatcher"/>
     	</service>   
+    	<service id="riCore.Collection" class="plugins\riCore\Collection" scope="prototype">
+    		<argument type="service" id="dispatcher"/>
+    	</service>   
     	<service id="riCore.View" class="plugins\riCore\View" scope="container">
         	<argument type="service" id="dispatcher"/>
         	<argument>%container%</argument>   	

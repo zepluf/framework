@@ -88,5 +88,9 @@ class View extends Object{
 	public function setVars($vars){
 		if(!is_array($vars)) $vars = array($vars);
 		$this->vars = array_merge($this->vars, $vars);
-	}		
+	}	
+
+	public function getVar($name){
+	    return $this->vars[$name];
+	}
 }

@@ -24,11 +24,14 @@ class Plugin{
 	    return self::$loaded;    
 	}
 	
+	public static function isLoaded($plugin){
+	    return in_array($plugin, self::$loaded);    
+	}
+	
 	public static function load($plugins){
 		if(!is_array($plugins)) $plugins = array($plugins);
 		foreach ($plugins as $plugin){
-			if(!in_array($plugin, self::$loaded)){
-				
+			if(!in_array($plugin, self::$loaded)){				
 			    $plugin_path = __DIR__.'/../../'.$plugin.'/';
 			    
 			    $plugin_name = ucfirst($plugin);
