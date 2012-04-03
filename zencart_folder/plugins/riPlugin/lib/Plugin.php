@@ -56,6 +56,7 @@ class Plugin{
 					}	
 				}
 
+				Yaml::enablePhpParsing();
 				// load plugin's settings
 				$settings = array();
 				if(file_exists($config_path.'settings.yaml')){

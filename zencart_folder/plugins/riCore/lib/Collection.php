@@ -19,6 +19,19 @@ class Collection extends ResultSource{
         return $this;  
     }
     
+    public function findAll(){
+		global $db;
+		$collection = array();
+		$result = $db->Execute("select * FROM " . $this->from . " order by name");
+		while(!$result->EOF){
+			$object = clone $this->model;
+			$object->setArray($result->fields);
+			$collection[] = $object;
+			$result->MoveNext();
+		}
+		return $collection;
+	}
+	
     public function findById($id){
         global $db;
         
@@ -36,4 +49,5 @@ class Collection extends ResultSource{
         $object = clone $this->model;
         return $object->create($data);        
     }
+    
 }
