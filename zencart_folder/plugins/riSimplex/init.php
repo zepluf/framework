@@ -5,7 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 Plugin::load(array('riSimplex'));
 
-$request = Request::createFromGlobals();
+//$request = Request::createFromGlobals();
 
 $container->setParameter('request', $request);
 

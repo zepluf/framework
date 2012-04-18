@@ -2,6 +2,8 @@
 
 namespace plugins\riCore;
 
+use plugins\riPlugin\Plugin;
+
 use Symfony\Component\Templating\PhpEngine;
 
 use plugins\riPlugin\Object;
@@ -37,16 +39,17 @@ class View extends Object{
         $this->engine = $container->get('riCore.TemplateEngine');
         
         // always set router and reference to this
-	    $this->setVars(array(
+	    $this->set(array(
 	    	'router' => new Routing\Generator\UrlGenerator($container->getParameter('routes'), $container->get('context')),
-	        'riview' => $this
+	        'riview' => $this,
+	        'container' => $container	        
 	    ));
 	    
 	    parent::__construct($dispatcher);
 	}
 	
 	public function render($view, $parameters = null){
-		$this->setVars($parameters);
+		$this->set($parameters);
 		
 		$view = explode('::', $view);
 		
@@ -74,7 +77,7 @@ class View extends Object{
 	    $this->loader->setPathPatterns($patterns);
 	}
 	
-	public function get($name){
+	public function getHelper($name){
 	    $name = explode('::', $name);
 	    return $this->engine->getEngine('name.'.$name[0])->get($name[1]);
 	}
@@ -85,12 +88,12 @@ class View extends Object{
 		return $response;
 	}
 	
-	public function setVars($vars){
+	public function set($vars){
 		if(!is_array($vars)) $vars = array($vars);
 		$this->vars = array_merge($this->vars, $vars);
 	}	
 
-	public function getVar($name){
+	public function get($name){
 	    return $this->vars[$name];
 	}
 }

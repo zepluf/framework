@@ -23,8 +23,11 @@ use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Routing;
+use Symfony\Component\HttpFoundation\Request;
+
 use plugins\riPlugin\Container;
 use plugins\riPlugin\Plugin;
+
 $container = new Container();		
 
 $routes = new Routing\RouteCollection();
@@ -37,26 +40,16 @@ $container->setParameter('charset', 'UTF-8');
 $xml_loader = new XMLFileLoader($container, new FileLocator(__DIR__));				
 $xml_loader->load('services.xml');	
 
-// listen to the plugin load and set the view holder
-$container->get('dispatcher')->addListener(\plugins\riPlugin\PluginEvents::onLoadEnd, function($event) use ($container){
-	$settings = $event->getSettings();
-	if(isset($settings['global']['frontend']['holder'])){
-		foreach($settings['global']['frontend']['holder'] as $holder_name => $holder){			
-			foreach($holder as $h){			
-				//call_user_func($h['method'], $holder_name, $h['parameters'], $container);
-			}
-		}
-	}
-});
-
 use Symfony\Component\Translation\Loader\MoFileLoader;
 use Symfony\Component\Translation\Loader\PoFileLoader;
 
 Plugin::init($loader, $container, $routes);
 
 $settings = Yaml::parse(__DIR__.'/settings.yaml');
-
 $container->setParameter('locale', $settings['framework']['translator']['fallback']);
+
+$request = Request::createFromGlobals();
+$container->setParameter('request', $request);
 
 if(is_array($settings['global']['preload'])) Plugin::load($settings['global']['preload']);
 

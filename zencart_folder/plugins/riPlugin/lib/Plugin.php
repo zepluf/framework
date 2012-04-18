@@ -32,7 +32,7 @@ class Plugin{
 		if(!is_array($plugins)) $plugins = array($plugins);
 		foreach ($plugins as $plugin){
 			if(!in_array($plugin, self::$loaded)){				
-			    $plugin_path = __DIR__.'/../../'.$plugin.'/';
+			    $plugin_path = realpath(__DIR__.'/../../'.$plugin.'/') . '/';
 			    
 			    $plugin_name = ucfirst($plugin);
 			    
@@ -77,13 +77,18 @@ class Plugin{
 				};
 				
 				self::loadTranslations($plugin_path, 'en');
-				// load language files				
+				// init 				
 				if(file_exists($plugin_path.$plugin_name.'.php')){
 				    require($plugin_path.$plugin_name.'.php');
 				    $class_name = "plugins\\$plugin\\$plugin_name";
 				    $plugin_object = new $class_name(self::$container->get('dispatcher'), self::$container);
 				    $plugin_object->init();
 				}
+				
+				if(file_exists($plugin_path.'/lib/auto_loaders.php')){
+				    require($plugin_path.'/lib/auto_loaders.php');
+				}
+				
 				
 				// set the dispatcher
 				$event = new PluginEvent();				
@@ -128,6 +133,8 @@ class Plugin{
 	}
 	
 	public static function get($service){
+	    if(!self::$container->has($service)) return false;
+	    
 		$service = self::$container->get($service);		
 		if (null != $service && $service instanceof \Symfony\Component\DependencyInjection\ContainerAwareInterface) {
             $service->setContainer(self::$container);

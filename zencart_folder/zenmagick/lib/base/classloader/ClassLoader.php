@@ -1,7 +1,7 @@
 <?php
 /*
  * ZenMagick - Another PHP framework.
- * Copyright (C) 2006-2011 zenmagick.org
+ * Copyright (C) 2006-2012 zenmagick.org
  *
 * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -19,8 +19,6 @@
 * and is licensed under the LGPL. For more information, see
 * <http://www.gnu.org/licenses/lgpl.html>.
 */
-?>
-<?php
 namespace zenmagick\base\classloader;
 
 /**
@@ -60,13 +58,13 @@ namespace zenmagick\base\classloader;
  * $loader = new ClassLoader();
  *
  * // register classes with namespaces
- * $loader->registerNamespaces(array(
+ * $loader->addNamespaces(array(
  *   'Symfony\Component' => __DIR__.'/component',
  *   'Symfony' => __DIR__.'/framework'
  * ));
  *
  * // register a library using the PEAR naming convention
- * $loader->registerPrefixes(array(
+ * $loader->addPrefixes(array(
  *   'Swift_' => __DIR__.'/Swift'
  * ));
  *
@@ -126,7 +124,7 @@ class ClassLoader {
      */
     public function addConfig($path) {
         // optional phar
-        $phar = realpath($path . DIRECTORY_SEPARATOR . basename($path) . '.phar');
+        $phar = $path.'/'.basename($path).'.phar';
         $usePhar = file_exists($phar);
         if (is_dir($path)) {
             $ini = null;
@@ -135,13 +133,13 @@ class ClassLoader {
             }
             if (!file_exists($ini)) {
                 // fallback
-                $ini = realpath($path . DIRECTORY_SEPARATOR . 'classloader.ini');
+                $ini = $path.'/'.'classloader.ini';
             }
         } else {
-            $ini = realpath($path);
+            $ini = $path;
         }
         if (!empty($ini) && file_exists($ini) && is_file($ini)) {
-            $baseDir = dirname($ini) . DIRECTORY_SEPARATOR;
+            $baseDir = dirname($ini);
             $mappings = parse_ini_file($ini, true);
             if (array_key_exists('namespaces', $mappings)) {
                 foreach ($mappings['namespaces'] as $namespace => $folder) {
@@ -150,19 +148,19 @@ class ClassLoader {
                         $nsoff = substr($folder, $at+1);
                         $folder = substr($folder, 0, $at);
                     }
-                    $nspath = $usePhar ? 'phar://'.$phar.'/'.str_replace('\\', '/', $folder) : (realpath($baseDir.$folder).((!empty($nsoff) && false !== $at) ? '@'.$nsoff: ''));
+                    $nspath = $usePhar ? 'phar://'.$phar.'/'.str_replace('\\', '/', $folder) : (($baseDir.'/'.$folder).((!empty($nsoff) && false !== $at) ? '@'.$nsoff: ''));
                     $this->addNamespace($namespace, $nspath);
                 }
             }
             if (array_key_exists('prefixes', $mappings)) {
                 foreach ($mappings['prefixes'] as $prefix => $folder) {
-                    $pxpath = $usePhar ? 'phar://'.$phar.'/'.str_replace('\\', '/', $folder) : realpath($baseDir.$folder);
+                    $pxpath = $usePhar ? 'phar://'.$phar.'/'.str_replace('\\', '/', $folder) : ($baseDir.'/'.$folder);
                     $this->addPrefix($prefix, $pxpath);
                 }
             }
             if (array_key_exists('default', $mappings)) {
                 foreach ($mappings['default'] as $folder) {
-                    $pxpath = $usePhar ? 'phar://'.$phar.'/'.$folder : realpath($baseDir.$folder);
+                    $pxpath = $usePhar ? 'phar://'.$phar.'/'.$folder : ($baseDir.'/'.$folder);
                     $this->addPath($pxpath);
                 }
             }
@@ -185,7 +183,7 @@ class ClassLoader {
      * @param string name Optional name to register a single class for name; default is <code>null</code>.
      */
     public function addPath($path, $name=null) {
-      if (file_exists($path)) {
+        if (file_exists($path)) {
             if (is_dir($path)) {
                 $extList = array('.class.php', '.php');
                 // scan and add individual files/classes
@@ -465,19 +463,20 @@ class ClassLoader {
         }
 
         if (false !== ($pos = strripos($name, $this->namespaceSeparator))) {
-            // namespaced class name
+            // get namespace
             $namespace = substr($name, 0, $pos);
+            // strip namespace from name
+            $class = substr($name, $pos + 1);
             foreach ($this->namespaces as $ns => $arr) {
                 foreach ($arr as $path) {
                     if (0 === strpos($namespace, $ns)) {
                         $finalns = $namespace;
                         if ($path[1]) {
                             // adjust
-                            $finalns = substr($finalns, strlen($path[1]), strlen($finalns));
+                            $finalns = substr($finalns, strlen($path[1])+1, strlen($finalns));
                         }
-                        $name = substr($name, $pos + 1);
                         $sep = 0 === strpos($path[0], 'phar://') ? '/' : DIRECTORY_SEPARATOR;
-                        $file = $path[0].$sep.str_replace($this->namespaceSeparator, $sep, $finalns).$sep.str_replace('_', $sep, $name).'.php';
+                        $file = $path[0].$sep.str_replace($this->namespaceSeparator, $sep, $finalns).$sep.str_replace('_', $sep, $class).'.php';
                         if (file_exists($file)) {
                             return $file;
                         }
@@ -498,7 +497,9 @@ class ClassLoader {
             // try default namespace
             foreach ($this->defaults as $clazz => $file) {
                 if ($clazz == $name) {
-                    return $file;
+                    if (file_exists($file)) {
+                        return $file;
+                    }
                 }
             }
         }
