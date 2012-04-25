@@ -11,8 +11,8 @@ class Listener
     // ...
     public function onPageEnd(Event $event)
     {
-    	
-    	Plugin::get('riCjLoader.Loader')->injectAssets($event->getContent());
+    	$content = &$event->getContent();
+    	Plugin::get('riCjLoader.Loader')->injectAssets($content);
         // extend here the functionality of the core
         // ...
     }

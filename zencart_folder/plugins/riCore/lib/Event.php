@@ -10,7 +10,7 @@ class Event extends \Symfony\Component\EventDispatcher\Event
         $this->content = $content;        
     } 
 
-	public function getContent(){
+	public function &getContent(){
         return $this->content;        
     }
 }
