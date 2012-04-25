@@ -90,13 +90,13 @@ if (typeof _editor_url == "string") HTMLArea.replaceAll();
 </head>
 <body onload="init()">
 <!-- header //-->
-{header}
+
 <!-- header_eof //-->
 <!-- body //-->
 
 <?php echo $view['holder']->get('main')?>
 
-{footer}
-{application_bottom}
+
+
 </body>
 </html>

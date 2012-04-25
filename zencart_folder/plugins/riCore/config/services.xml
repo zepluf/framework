@@ -30,8 +30,14 @@
         	<argument type="service" id="dispatcher"/>
         	<argument>%container%</argument>       	
         </service>  
-        <service id="riCore.HolderHelperEvent" class="plugins\riCore\HolderHelperEvent" scope="container">        
+        <service id="riCore.HolderHelperEvent" class="plugins\riCore\HolderHelperEvent" scope="container">
         </service>           
+        <service id="riCore.Event" class="plugins\riCore\Event" scope="container">
+        </service>
+        <service id="riCore.Events" class="plugins\riCore\Events" scope="container">
+        </service>
+        <service id="riCore.Listener" class="plugins\riCore\Listener" scope="container">
+        </service>
     </services>
 
 </container>

@@ -32,13 +32,13 @@ $base_href = getBaseHref(true);
 
 <body onload="init()">
 <!-- header //-->
-{header}
+
 <!-- header_eof //-->
 <!-- body //-->
 
 <?php echo $view['holder']->get('main')?>
 
-{footer}
-{application_bottom}
+
+
 </body>
 </html>

@@ -1,5 +1,4 @@
 <?php 
-
 require_once('riPlugin/lib/common.php');
 require_once(__DIR__.'/../zenmagick/lib/base/classloader/ClassLoader.php');
 
