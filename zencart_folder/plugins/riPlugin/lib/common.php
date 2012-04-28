@@ -55,3 +55,94 @@ function riGetAllGetParams($exclude_array = array(), $new_params = array()) {
     	$_get = array_merge($_get, $new_params);
     return $_get;
 }
+
+/**
+ *    first variation
+ *
+ *    $input is input array
+ *    $start is index of slice begin
+ *    $end is index of slice end, if this is null, $replacement will be inserted (in the same way as original array_Slice())
+ *indexes of $replacement are preserved in both examples
+ */
+function array_KSplice1(&$input, $start, $end=null, $replacement=null)
+{
+    $keys=array_Keys($input);
+    $values=array_Values($input);
+    if($replacement!==null)
+    {
+        $replacement=(array)$replacement;
+        $rKeys=array_Keys($replacement);
+        $rValues=array_Values($replacement);
+    }
+
+    $start=array_Search($start,$keys,true);
+    if($start===false)
+        return false;
+    if($end!==null)
+    {
+        $end=array_Search($end,$keys,true);
+        // if $end not found, exit
+        if($end===false)
+            return false;
+        // if $end is before $start, exit
+        if($end<$start)
+            return false;
+        // index to length
+        $end-=$start-1;
+    }
+
+    // optional arguments
+    if($replacement!==null)
+    {
+        array_Splice($keys,$start,$end,$rKeys);
+        array_Splice($values,$start,$end,$rValues);
+    }
+    else
+    {
+        array_Splice($keys,$start,$end);
+        array_Splice($values,$start,$end);
+    }
+
+    $input=array_Combine($keys,$values);
+
+    return $input;
+}
+
+/**
+ *    second variation
+ *
+ *    $input is input array
+ *    $start is index of slice begin
+ *    $length is length of slice, what will be replaced, if is zero, $replacement will be inserted (in the same way as original array_Slice())
+ */
+function array_KSplice2(&$input, $start, $length=0, $replacement=null)
+{
+    $keys=array_Keys($input);
+    $values=array_Values($input);
+    if($replacement!==null)
+    {
+        $replacement=(array)$replacement;
+        $rKeys=array_Keys($replacement);
+        $rValues=array_Values($replacement);
+    }
+
+    $start=array_Search($start,$keys,true);
+    if($start===false)
+        return false;
+
+    // optional arguments
+    if($replacement!==null)
+    {
+        array_Splice($keys,$start,$length,$rKeys);
+        array_Splice($values,$start,$length,$rValues);
+    }
+    else
+    {
+        array_Splice($keys,$start,$length);
+        array_Splice($values,$start,$length);
+    }
+
+    $input=array_Combine($keys,$values);
+
+    return $input;
+}

@@ -50,26 +50,13 @@ class View extends Object{
 	
 	public function render($view, $parameters = null){
 		
-		$patterns = $this->patterns;
-		
 		$this->set($parameters);
 		
 		$view = explode('::', $view);			
 		
 		// we will have to set path patterns to make sure we dont look for template files at extra places
-		if(!empty($view[1])){		    		       
-            // this is not a plugin template
-			$this->addPathPattern('template', $this->patterns['template'] . 'plugins/' . $view[0] . '/views/%name%', $patterns);
-			$this->addPathPattern($view[0], __DIR__ . '/../../' . $view[0] . '/content/views/%name%', $patterns);
-			
-			$this->loader->setPathPatterns($patterns);		    
-		}
-		else {
-			$view[1] = $view[0];
-			$this->addPathPattern('template', $this->patterns['template'] . '%name%', $patterns);
-				
-			$this->loader->setPathPatterns($patterns);
-		}
+		$patterns = $this->findPathPatterns($view);
+		$this->loader->setPathPatterns($patterns);
         		    
 		// default to php		
 		if(strpos($view[1], '.') === false) $view[1] .= '.php';		 		
@@ -87,11 +74,38 @@ class View extends Object{
 	
 	public function setPathPatterns($patterns){
 	    if(!isset($this->patterns[$scope]))
-	        $this->patterns[$scope] = array(__DIR__.'/../../'.$scope.'/content/views/%name%');
-	        
+	    $this->patterns[$scope] = array(__DIR__.'/../../'.$scope.'/content/views/%name%');
+	     
 	    $patterns = $scope != 'default' ? array_merge($this->patterns[$scope], $this->patterns['default']) : $this->patterns['default'];
-	    
+	     
 	    $this->loader->setPathPatterns($patterns);
+	}
+
+	public function findRenderPath($view){
+		$view = explode('::', $view);		
+		$file = isset($view[1]) ? $view[1] : $view[0];
+			
+		$patterns = $this->findPathPatterns($view);
+		foreach ($patterns as $scope => $path){
+			if(file_exists($render_path = str_replace('%name%', $file, $path)))
+				return $render_path;			
+		}
+		return false;
+	}
+	
+	private function findPathPatterns($view){
+		$patterns = $this->patterns;
+		if(!empty($view[1])){
+			// this is not a plugin template
+			$this->addPathPattern('template', $this->patterns['template'] . 'plugins/' . $view[0] . '/views/%name%', $patterns);
+			$this->addPathPattern($view[0], __DIR__ . '/../../' . $view[0] . '/content/views/%name%', $patterns);
+		}
+		else {
+			$view[1] = $view[0];
+			$this->addPathPattern('template', $this->patterns['template'] . '%name%', $patterns);						
+		}
+		
+		return $patterns;
 	}
 	
 	public function getHelper($name){

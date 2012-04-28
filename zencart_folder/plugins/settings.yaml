@@ -1,8 +1,8 @@
 global:
-  preload: [riCore, riCart, riUtility, riLog, riSession, riCard, riMerchant, riSuggestion]
+  preload: [riCore, riCart, riUtility, riLog, riSession]
 
 backend:
-  preload: [riCustomer, riZCAdmin, riCsv, riResultList]
+  preload: [riZCAdmin, riResultList]
 
 frontend:
   preload: []
