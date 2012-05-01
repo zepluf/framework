@@ -37,7 +37,7 @@ $application_bottom = ob_get_clean();
 
 $content = $response->getContent();
 
-$content = str_replace(array("{header}", "{footer}", "{application_bottom}"), array($header, $footer, $application_bottom), $content);
-
+$content = str_replace(array("</head>", "</body>", "</body>"), array('</head>' . $header, '</body>' . $footer, '</body>' . $application_bottom), $content);
+$riview->get('loader')->injectAssets($content);
 $response->setContent($content);
 $response->send();

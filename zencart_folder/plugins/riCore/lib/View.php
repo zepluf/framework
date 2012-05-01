@@ -63,23 +63,6 @@ class View extends Object{
         
 		return $this->engine->render($view[1], $this->vars);		
 	}
-	
-	public function addDefaultPathPattern($scope, $pattern){
-		$this->patterns[$scope] = $pattern;
-	}
-	
-	public function addPathPattern($scope, $pattern, &$patterns){
-		$patterns[$scope] = $pattern;
-	}
-	
-	public function setPathPatterns($patterns){
-	    if(!isset($this->patterns[$scope]))
-	    $this->patterns[$scope] = array(__DIR__.'/../../'.$scope.'/content/views/%name%');
-	     
-	    $patterns = $scope != 'default' ? array_merge($this->patterns[$scope], $this->patterns['default']) : $this->patterns['default'];
-	     
-	    $this->loader->setPathPatterns($patterns);
-	}
 
 	public function findRenderPath($view){
 		$view = explode('::', $view);		
@@ -93,6 +76,14 @@ class View extends Object{
 		return false;
 	}
 	
+	public function addDefaultPathPattern($scope, $pattern){
+		$this->patterns[$scope] = $pattern;
+	}
+	
+	public function addPathPattern($scope, $pattern, &$patterns){
+		$patterns[$scope] = $pattern;
+	}
+	
 	private function findPathPatterns($view){
 		$patterns = $this->patterns;
 		if(!empty($view[1])){
@@ -104,7 +95,14 @@ class View extends Object{
 			$view[1] = $view[0];
 			$this->addPathPattern('template', $this->patterns['template'] . '%name%', $patterns);						
 		}
-		
+
+		// default must always be the last one
+		$last_key = end(array_keys($patterns));
+		if($last_key != 'default' && isset($patterns['default'])) {
+			$default = $patterns['default'];
+			unset($patterns['default']);
+			$patterns['default'] = $default;
+		}
 		return $patterns;
 	}
 	
