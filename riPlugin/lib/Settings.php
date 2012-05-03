@@ -3,7 +3,7 @@ namespace plugins\riPlugin;
 
 class Settings{
 
-    private $settings;
+    private $settings, $cache;
 
     public function set($key, $value, $merge = false){
          
@@ -23,8 +23,11 @@ class Settings{
     }
 
     public function get($key, $default = null){
-        $key = explode('.', $key);
-        return $this->_get($key, $this->settings);
+        if(!isset($this->cache[$key])){
+            $_key = explode('.', $key);
+            $this->cache[$key] = $this->_get($_key, $this->settings);
+        }
+        return $this->cache[$key];
     }
 
     private function _get($key, $settings){

@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+    	<service id="riCategory.Category" class="plugins\riCategory\Category" scope="prototype">
+    		<argument type="service" id="dispatcher"/>
+    	</service>
+        <service id="riCategory.Categories" class="plugins\riCategory\Categories" scope="container">
+        	<argument type="service" id="dispatcher"/>
+        </service>   
+        <service id="riCategory.CategoriesDescription" class="plugins\riCategory\CategoriesDescription" scope="container">
+        	<argument type="service" id="dispatcher"/>
+        </service> 
+        <service id="riCategory.Tree" class="plugins\riCategory\Tree" scope="container">        	
+        </service>       
+    </services>
+
+</container>
