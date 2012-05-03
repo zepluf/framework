@@ -34,3 +34,9 @@
 [submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Finder"]
 	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Finder
 	url = https://github.com/symfony/Finder.git
+[submodule "riCache"]
+	path = riCache
+	url = git@github.com:yellow1912/riCache.git
+[submodule "riCategory"]
+	path = riCategory
+	url = git@github.com:yellow1912/riCategory.git
