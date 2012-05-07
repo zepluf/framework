@@ -84,7 +84,7 @@ class View extends Object{
 		$patterns[$scope] = $pattern;
 	}
 	
-	private function findPathPatterns($view){
+	private function findPathPatterns(&$view){
 		$patterns = $this->patterns;
 		if(!empty($view[1])){
 			// this is not a plugin template

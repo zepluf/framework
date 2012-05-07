@@ -2,7 +2,7 @@
 
 namespace plugins\riPlugin;
 
-use plugins\riUtility\Utility;
+use plugins\riUtility\String;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -41,18 +41,16 @@ class Object extends ContainerAware implements \Serializable{
 	public function __call($name, $args){	
 		if(strpos($name, 'get') === 0){
 			$name = substr($name, 3);
-			//$name{0} = Utility::fromCamelCase($name{0});
 			return $this->get($name);
 		}
 		elseif(strpos($name, 'set') === 0){
 			$name = substr($name, 3);
-			//$name{0} = Utility::fromCamelCase($name{0});
 			$this->set($name, $args[0]);
 		}
 	}
 	
 	public function __isset($key){
-		$key = Utility::fromCamelCase($key);
+		$key = String::fromCamelCase($key);
 		return isset($this->properties_[$key]);
 	}
 	
@@ -61,13 +59,13 @@ class Object extends ContainerAware implements \Serializable{
 	}
 	
 	public function set($key, $value){
-		$key = Utility::fromCamelCase($key);
+		$key = String::fromCamelCase($key);
 		$this->properties_[$key] = $value;
 		return $this;
 	}
 	
 	public function get($key, $default = null){
-		$key = Utility::fromCamelCase($key);
+		$key = String::fromCamelCase($key);
 		return isset($this->properties_[$key]) ? $this->properties_[$key] : $default;		
 	}
 	

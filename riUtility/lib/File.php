@@ -30,4 +30,29 @@ class File{
 		$result = implode('/', $to);
 		return $result;
 	}
+	
+	// TODO: log error?
+    function sureRemoveDir($dir, $DeleteMe, &$counter) {
+		//global $messageStack;
+	    if(!$dh = @opendir($dir)){
+	    	//$messageStack->add("Could not open dir $dir", 'warning');
+	    	return;
+	    }
+	    //if(self::$file_counter > SSU_MAX_CACHE_DELETE){
+	    //	return;
+	    //}
+	    while (false !== ($obj = readdir($dh))) {
+	        if($obj=='.' || $obj=='..') continue;
+	        if (!@unlink($dir.'/'.$obj)) $this->sureRemoveDir($dir.'/'.$obj, $DeleteMe, $counter);
+	        else $counter++;
+	        //if($counter >= SSU_MAX_CACHE_DELETE){
+			//			return;
+	        //}
+	    }
+	
+	    closedir($dh);
+	    if ($DeleteMe){
+	        @rmdir($dir);
+	    }
+	}
 }

@@ -25,22 +25,22 @@ class Settings{
     public function get($key, $default = null){
         if(!isset($this->cache[$key])){
             $_key = explode('.', $key);
-            $this->cache[$key] = $this->_get($_key, $this->settings);
+            $this->cache[$key] = $this->_get($_key, $this->settings, $default);
         }
         return $this->cache[$key];
     }
 
-    private function _get($key, $settings){
+    private function _get($key, $settings, $default){
         foreach($key as $k){
             if(isset($settings[$k])){
                 array_shift($key);
                 if(count($key) > 0)
-                return $this->_get($key, $settings[$k]);
+                return $this->_get($key, $settings[$k], $default);
                 else
                 return $settings[$k];
             }
             else
-            return false;
+            return $default;
         }
     }
 }
