@@ -37,3 +37,6 @@
 [submodule "riCategory"]
 	path = riCategory
 	url = git@github.com:yellow1912/riCategory.git
+[submodule "riCache"]
+	path = riCache
+	url = git@github.com:yellow1912/riCache.git
