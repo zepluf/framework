@@ -11,10 +11,7 @@ This framework is meant to be used with Zencart version 1.3.9h and above (certai
 
 **Installation**
 
-*prerequisites* 
-
-You must have PHP 5.3 or newer to use ZePLUF (Zencart 1.3.9 and above will support PHP 5.3)
-
+http://rubikintegration.com/2012/05/20/zencart-plugin-framework-day-1-installation/
 
 
 
