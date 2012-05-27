@@ -43,8 +43,11 @@ class Plugin{
 				}
 				
 				// add config for class loader
+				if(is_dir($plugin_path."lib"))
 				self::$loader->addConfig($plugin_path."lib");							
-							    
+                if(is_dir($plugin_path."vendor"))
+				self::$loader->addConfig($plugin_path."vendor");
+				
 				if(file_exists($config_path.'services.xml')){
 					$loader = new XMLFileLoader(self::$container, new FileLocator($config_path));				
         			$loader->load('services.xml');	
@@ -58,24 +61,28 @@ class Plugin{
 
 				Yaml::enablePhpParsing();
 				// load plugin's settings
-				$settings = array();
-				if(file_exists($config_path.'settings.yaml')){
-					$settings = Yaml::parse($config_path.'settings.yaml');
-					
-					// set routes
-					if(isset($settings['routes'])){
-						foreach($settings['routes'] as $key => $route){
-							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);							
-							self::$routes->add($key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
-						}						
-					}
-					
-					//self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
-					if(isset($settings['global'])) self::get('riPlugin.Settings')->set('global', $settings['global'], true); 
-					
-					self::get('riPlugin.Settings')->set($plugin, $settings);					
-				};
-				
+				if(!self::get('riPlugin.Settings')->isInitiated()){
+    				$settings = array();
+    				if(file_exists($config_path.'settings.yaml')){
+    					$settings = Yaml::parse($config_path.'settings.yaml');
+    					
+    					// set routes
+    					if(isset($settings['routes'])){
+    						foreach($settings['routes'] as $key => $route){
+    							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);							
+    							self::$routes->add($key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
+    						}						
+    					}
+    					
+    					//self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
+    					if(isset($settings['global'])) self::get('riPlugin.Settings')->set('global', $settings['global'], true); 
+    					
+    					self::get('riPlugin.Settings')->set($plugin, $settings);					
+    				};
+				}
+				else 
+				    $settings = self::get('riPlugin.Settings')->get($plugin);
+				    
 				self::loadTranslations($plugin_path, 'en');
 				// init 				
 				if(file_exists($plugin_path.$plugin_name.'.php')){
@@ -101,30 +108,32 @@ class Plugin{
 	
 	private static function loadTranslations($plugin_path, $fallback)
     {        
-        $translator = self::$container->get('translator');        
-        // Discover translation directories
-        $dirs = array();
-        if(is_dir($dir = $plugin_path . 'translations'))
-            $dirs[] = $dir;
-        /*
-        if (is_dir($dir = $container->getParameter('kernel.root_dir').'/Resources/translations')) {
-            $dirs[] = $dir;
-        }
-		*/
-            
-        // Register translation resources
-        if ($dirs) {
-            $finder = new Finder();
-            $finder->files()->filter(function (\SplFileInfo $file) {
-                return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
-            })->in($dirs);
-            foreach ($finder as $file) {
-                // filename is domain.locale.format
-                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+        if(is_dir($plugin_path . 'translations')){
+            $translator = self::$container->get('translator');        
+            // Discover translation directories
+            $dirs = array();
+            if(is_dir($dir = $plugin_path . 'translations'))
+                $dirs[] = $dir;
+            /*
+            if (is_dir($dir = $container->getParameter('kernel.root_dir').'/Resources/translations')) {
+                $dirs[] = $dir;
+            }
+    		*/
                 
-                // we have to add resource right away or it will be too late
-                $translator->addResource($format, (string) $file, $locale, $domain);        
-            }                        
+            // Register translation resources
+            if ($dirs) {
+                $finder = new Finder();
+                $finder->files()->filter(function (\SplFileInfo $file) {
+                    return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
+                })->in($dirs);
+                foreach ($finder as $file) {
+                    // filename is domain.locale.format
+                    list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+                    
+                    // we have to add resource right away or it will be too late
+                    $translator->addResource($format, (string) $file, $locale, $domain);        
+                }                        
+            }
         }                
     }
 	

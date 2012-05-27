@@ -3,8 +3,17 @@ namespace plugins\riPlugin;
 
 class Settings{
 
-    private $settings, $cache;
+    private $settings, $cache, $is_initiated = false;
 
+    public function init($settings){
+        $this->settings = $settings; 
+        $this->is_initiated = true; 
+    }
+    
+    public function isInitiated(){
+        return $this->is_initiated;
+    }
+    
     public function set($key, $value, $merge = false){
          
         $key = explode('.', $key);
@@ -22,7 +31,9 @@ class Settings{
             
     }
 
-    public function get($key, $default = null){
+    public function get($key = null, $default = null){
+        if(empty($key)) return $this->settings;
+        
         if(!isset($this->cache[$key])){
             $_key = explode('.', $key);
             $this->cache[$key] = $this->_get($_key, $this->settings, $default);

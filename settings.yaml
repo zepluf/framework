@@ -1,11 +1,11 @@
+# the list of plugins in to be loaded globally, both on frontend and backend. Plugins will be loaded in order listed here
 global:
-  preload: [riCore, riCart, riUtility, riLog, riSession]
+  preload: [riCart, riUtility, riLog, riSession]
 
+# the list of plugins in to be loaded on backend. Plugins will be loaded in order listed here
 backend:
   preload: [riZCAdmin, riResultList]
 
+# the list of plugins in to be loaded on frontend. Plugins will be loaded in order listed here
 frontend:
   preload: []
-    
-framework:
-    translator: { fallback: en }
