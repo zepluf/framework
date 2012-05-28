@@ -9,3 +9,6 @@ backend:
 # the list of plugins in to be loaded on frontend. Plugins will be loaded in order listed here
 frontend:
   preload: []
+
+# do not edit below this line
+activated: {}

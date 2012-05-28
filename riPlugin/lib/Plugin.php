@@ -11,7 +11,7 @@ use Symfony\Component\Finder\Finder;
 
 
 class Plugin{
-	private static $loaded = array();
+	private static $loaded = array(), $info = array();
 	private static $container, $loader, $routes;
 	
 	public static function init($loader, $container, $routes){		
@@ -143,7 +143,7 @@ class Plugin{
 	
 	public static function get($service){
 	    if(!self::$container->has($service)) return false;
-	    
+	    	    
 		$service = self::$container->get($service);		
 		if (null != $service && $service instanceof \Symfony\Component\DependencyInjection\ContainerAwareInterface) {
             $service->setContainer(self::$container);
@@ -151,5 +151,66 @@ class Plugin{
         	
         }
 		return $service;
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $plugin
+	 */
+	public function isActivated($plugin){
+	    return in_array($plugin, self::get('riPlugin.Settings')->get('framework.activated'));
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $plugin
+	 */
+	public function info($plugin){
+	    if(!isset(self::$info[$plugin]))
+	        if(file_exists($file_path = __DIR__ . '/../../' . $plugin . '/plugin.xml'))
+                self::$info[$plugin] = \SimpleXMLElement(file_get_contents($file_path));
+	        else 
+	            self::$info[$plugin] = false;
+	            
+        return self::$info[$plugin];     
+	}
+	
+	/**
+	 * 
+	 * Enter description here ...
+	 * @param unknown_type $plugin
+	 */
+	public function toggle($plugin){
+	    $settings = self::get('riPlugin.Settings')->get('framework');
+	    
+	    $activated = false;
+	    if(!in_array($plugin, $settings['activated'])){
+	        $settings['activated'][] = $plugin;
+	        
+	        // we will put into the load
+    	    $info = Plugin::info($plugin);
+    	    if($info->preload->frontend === true)
+    	        self::get('riUtility.Collection')->insertValue($settings['frontend']['preload'], $plugin);    	        
+    	    if($info->preload->backend === true)
+    	        self::get('riUtility.Collection')->insertValue($settings['backend']['preload'], $plugin);
+    	    if($info->preload->global === true)
+    	        self::get('riUtility.Collection')->insertValue($settings['global']['preload'], $plugin);
+    	        
+	        $activated = true;
+	    }
+	    else {
+	        $settings['activated'] = self::get('riUtility.Collection')->removeValue($settings['activated'], $plugin);
+	        self::get('riUtility.Collection')->removeValue($settings['frontend']['preload'], $plugin);
+	        self::get('riUtility.Collection')->removeValue($settings['backend']['preload'], $plugin);
+	        self::get('riUtility.Collection')->removeValue($settings['global']['preload'], $plugin);
+	    }
+	        	        
+	    file_put_contents(__DIR__ .'/../../settings.yaml', Yaml::dump($settings));
+	    
+	    self::get('riCache.Cache')->remove('settings.backend.cache', '/riPlugin/');
+	    self::get('riCache.Cache')->remove('settings.frontend.cache', '/riPlugin/');
+	    return $activated;
 	}
 }
