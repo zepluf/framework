@@ -63,7 +63,7 @@ if(($settings = Plugin::get('riCache.Cache')->read($cache_file, $cache_folder)) 
     $framework_settings = $container->get('riPlugin.Settings')->get('framework');
 }
 else{
-    $framework_settings = Yaml::parse(__DIR__.'/settings.yaml');
+    $framework_settings = Plugin::loadSettings(__DIR__ . '/');
     Plugin::get('riPlugin.Settings')->set('framework', $framework_settings);
 }
 

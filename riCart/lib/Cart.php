@@ -42,4 +42,44 @@ class Cart extends ZCCart{
         
         $this->add_cart($products_id, $this->get_quantity(zen_get_uprid($products_id, $real_ids))+$new_qty, $real_ids, $notify);
     }
+    
+  /**
+   * Method to remove an item from the cart
+   *
+   * @param mixed product ID of item to remove
+   * @return void
+   * @global object access to the db object
+   */
+  function remove($products_id) {
+    global $db;
+    $this->notify('NOTIFIER_CART_REMOVE_START', array('products_id' => $products_id));
+    //die($products_id);
+    //CLR 030228 add call zen_get_uprid to correctly format product ids containing quotes
+    //      $products_id = zen_get_uprid($products_id, $attributes);
+    unset($this->contents[$products_id]);
+    // remove from database
+    if ($_SESSION['customer_id']) {
+
+      //        zen_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$customer_id . "' and products_id = '" . zen_db_input($products_id) . "'");
+
+      $sql = "delete from " . TABLE_CUSTOMERS_BASKET . "
+                where customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                and products_id = '" . zen_db_input($products_id) . "'";
+
+      $db->Execute($sql);
+
+      //        zen_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$customer_id . "' and products_id = '" . zen_db_input($products_id) . "'");
+
+      $sql = "delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . "
+                where customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                and products_id = '" . zen_db_input($products_id) . "'";
+
+      $db->Execute($sql);
+
+    }
+
+    // assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure
+    $this->cartID = $this->generate_cart_id();
+    $this->notify('NOTIFIER_CART_REMOVE_END');
+  }
 }

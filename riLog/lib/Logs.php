@@ -50,10 +50,10 @@ class Logs extends Object{
 		return $this;
 	}
 		
-	public function getCollectionAsArray(){
+	public function getAsArray(){
 	    $logs = array();
 	    foreach($this->logs as $log)
-	        $logs = $log->getArray();
+	        $logs[] = $log->getArray();
 	    return $logs;
 	}
 	

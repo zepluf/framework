@@ -1,0 +1,25 @@
+routes:
+  admin_plugins:
+    pattern:  /admin_plugins/
+    defaults: { _controller: plugins\riCore\AdminController::indexAction }
+  admin_plugins_info:
+    pattern:  /admin_plugins_info/
+    defaults: { _controller: plugins\riCore\AdminController::infoAction }
+  admin_plugins_install:
+    pattern:  /admin_plugins_install/
+    defaults: { _controller: plugins\riCore\AdminController::installAction }
+  admin_plugins_uninstall:
+    pattern:  /admin_plugins_uninstall/
+    defaults: { _controller: plugins\riCore\AdminController::uninstallAction }
+  admin_plugins_activate:
+    pattern:  /admin_plugins_activate/
+    defaults: { _controller: plugins\riCore\AdminController::activateAction }
+  admin_plugins_deactivate:
+    pattern:  /admin_plugins_deactivate/
+    defaults: { _controller: plugins\riCore\AdminController::deactivateAction }
+            
+global:    
+  backend:
+    menu:
+      extras:
+        - {text: Plugin Manager, link: ri.php/admin_plugins/}

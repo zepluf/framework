@@ -23,7 +23,7 @@ class CartController extends Controller{
                 'id' => $request->get('products_id'),
                 'quantity' => $_SESSION['cart']->get_quantity($request->get('products_id'))
             ) ,
-        	'messages' => Plugin::get('riLog.Logs')->getCollectionAsArray())
+        	'messages' => Plugin::get('riLog.Logs')->getAsArray())
             )
         );          
     }

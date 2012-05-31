@@ -1,0 +1,50 @@
+## This file is an exemple, you should copy it into your config directory and build your own form with the described syntax #
+## @see daYamlEditorPlugin
+## @author dalexandre
+##
+#
+#all:
+#  myaboutconfigform:              # Add this block for each Yaml. It's also the name used create specific form
+#    file: %SF_CONFIG_DIR%/app.yml # Path of the Yaml file to parse, can be anywhere, must be writable
+#    fields:
+#      sitename:                   # The unique name of the field, must be unique
+#        label: Nom du site
+#        path: "all/sitename"      # Path to the var in the yaml file (levels separated by "/")
+#        type: string              # Can be integer, number, string, boolean, email
+#        help: Min 10 char.        # A text helper can be set
+#        validate:                 # Validator options
+#          required: true          # Any option can be add here
+#          min_length: 10
+#        message:                  # Any message can be override here
+#          required: Le nom du site est obligatoire
+#
+#      from:
+#        label: Expéditeur
+#        path: "all/mailer/from"
+#        type: email
+#        help: L'email utilisé par le site
+#        message:
+#          invalid: L'email doit être un email valide
+#
+#      recaptcha:
+#        label: Captcha
+#        path: "all/recaptcha/in_register_form"
+#        type: boolean
+#        help: Affichage du captcha dans le formulaire d'inscription
+#
+#      gestures:
+#        label: Nombre max de poisson par page
+#        path: "all/max_list"
+#        type: integer
+#        validate:
+#          required: true
+#          min: 2
+#          max: 90
+#
+## You can also define fields by env
+#dev:
+#  my_file1:
+#    fields:
+#      sitename:
+#        path: "dev/sitename"
+#

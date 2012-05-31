@@ -2,7 +2,9 @@
 
 namespace plugins\riCore;
 
-class PluginCore{
+use plugins\riPlugin\Plugin;
+
+abstract class PluginCore{
     
     protected $dispatcher, $container;
     
@@ -13,5 +15,13 @@ class PluginCore{
     
     public function init(){
         
+    }
+    
+    public function install(){          
+        return true;
+    }
+    
+    public function uninstall(){
+        return true;
     }
 }
