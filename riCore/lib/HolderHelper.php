@@ -26,7 +26,7 @@ class HolderHelper extends Helper{
     }
     
     public function get($slot){
-        $event = $this->container->get('riCore.HolderHelperEvent')->setSlot($slot);
+        $event = $this->container->get('templating.holder.event')->setSlot($slot);
         $this->dispatcher->dispatch('view.helper.holder.get.start', $event);
         $this->dispatcher->dispatch('view.helper.holder.get.start.'.$slot, $event);
         

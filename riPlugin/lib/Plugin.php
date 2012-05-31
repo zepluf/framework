@@ -65,24 +65,27 @@ class Plugin{
 				Yaml::enablePhpParsing();
 				// load plugin's settings
 				if(!self::get('riPlugin.Settings')->isInitiated()){
-    				$settings = self::loadSettings($config_path);
-    				if(!empty($settings)){
-                        // set routes
-    					if(isset($settings['routes'])){
-    						foreach($settings['routes'] as $key => $route){
-    							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);							
-    							self::$routes->add($key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
-    						}						
-    					}
-    					
-    					//self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
-    					if(isset($settings['global'])) self::get('riPlugin.Settings')->set('global', $settings['global'], true); 
-    					
-    					self::get('riPlugin.Settings')->set($plugin, $settings);					
-    				};
+    				$settings = self::loadSettings($config_path);    				
 				}
-				else 
+				else {
 				    $settings = self::get('riPlugin.Settings')->get($plugin);
+				}
+				
+				if(!empty($settings)){
+				    
+                    // set routes
+					if(isset($settings['routes'])){
+						foreach($settings['routes'] as $key => $route){
+							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);							
+							self::$routes->add($key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
+						}						
+					}
+					
+					//self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
+					if(isset($settings['global'])) self::get('riPlugin.Settings')->set('global', $settings['global'], true); 
+					
+					self::get('riPlugin.Settings')->set($plugin, $settings);					
+				};
 				    
 				self::loadTranslations($plugin_path, 'en');
 				// init 				
@@ -227,10 +230,9 @@ class Plugin{
 	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');
 	    	    
 	    if(in_array($plugin, $settings['activated'])){	      
-	        $settings['activated'] = self::get('riUtility.Collection')->removeValue($settings['activated'], $plugin);
+	        self::get('riUtility.Collection')->removeValue($settings['activated'], $plugin);
 	        self::get('riUtility.Collection')->removeValue($settings['frontend']['preload'], $plugin);
 	        self::get('riUtility.Collection')->removeValue($settings['backend']['preload'], $plugin);
-	        self::get('riUtility.Collection')->removeValue($settings['global']['preload'], $plugin);
 	        
 	        self::saveFrameworkSettings($settings);
 	    }
@@ -282,9 +284,7 @@ class Plugin{
     	    if($info->preload->frontend == 'true')
     	        self::get('riUtility.Collection')->insertValue($settings['frontend']['preload'], $plugin);    	        
     	    if($info->preload->backend == 'true')
-    	        self::get('riUtility.Collection')->insertValue($settings['backend']['preload'], $plugin);
-    	    if($info->preload->global == 'true')
-    	        self::get('riUtility.Collection')->insertValue($settings['global']['preload'], $plugin);
+    	        self::get('riUtility.Collection')->insertValue($settings['backend']['preload'], $plugin);    	    
     	        
 	        self::saveFrameworkSettings($settings);
 	    }

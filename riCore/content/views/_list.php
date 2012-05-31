@@ -1,4 +1,4 @@
-<?php $riview->get('loader')->load(array('jquery.lib', 'jquery.gritter.lib', 'riCore::style.css', 'riCore::modal.js'))?>
+<?php $riview->get('loader')->load(array('jquery.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riCore::style.css', 'riCore::modal.js'))?>
 
 <?php $riview->get('loader')->startInline('js');?>
 $(function () {
@@ -15,6 +15,9 @@ $(function () {
 			success: function(response){
 				$('#myModal .modal-body').html(response);
 				$('#myModal').modal('show');
+				$("pre.code").each(function(){console.log($(this));
+					$(this).snippet($(this).data('language'));
+				});
 			}
 		});
 		e.preventDefault();

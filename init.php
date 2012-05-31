@@ -67,8 +67,6 @@ else{
     Plugin::get('riPlugin.Settings')->set('framework', $framework_settings);
 }
 
-if(is_array($framework_settings['global']['preload'])) Plugin::load($framework_settings['global']['preload']);
-
 // a hack for zen
 if($is_admin){
 	if(is_array($framework_settings['backend']['preload'])) Plugin::load($framework_settings['backend']['preload']);

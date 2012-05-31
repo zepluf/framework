@@ -2,6 +2,8 @@
 
 namespace plugins\riCore;
 
+use Symfony\Component\Templating\DelegatingEngine;
+
 use plugins\riPlugin\Plugin;
 
 use Symfony\Component\Templating\PhpEngine;
@@ -9,16 +11,13 @@ use Symfony\Component\Templating\PhpEngine;
 use plugins\riPlugin\Object;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
-use Symfony\Component\Templating\TemplateNameParser;
 use Symfony\Component\Templating\TemplateReference;
 use Symfony\Component\Templating\Helper\SlotsHelper;
-
 
 class View extends Object{
 	private $vars = array(),			
 			$loader,
-			$engine,
-			$engines,
+			$engine,			
 			$patterns = array();
 	
 	public function __construct($dispatcher, $container){	   
@@ -26,18 +25,18 @@ class View extends Object{
 	    $this->loader = $container->get('riCore.TemplateLoader');
 	    
 	    $this->patterns['default'] =  __DIR__.'/../../riSimplex/content/views/%name%';
-
-        $this->engines = array(
-            'php' => 
-                new \Symfony\Component\Templating\PhpEngine(new TemplateNameParser(), $this->loader, array(new SlotsHelper(), $container->get('riCore.HolderHelper')))
-        );
-            
-        // set the available template engines
-        $container->setParameter('template.engines', array_values($this->engines));
-        
-        // init the engine
+	    
+	    $container->setParameter('templating.loader', $this->loader);
+        $container->setParameter('templating.nameparser', $container->get('templating.nameparser'));
+	    
         $this->engine = $container->get('riCore.TemplateEngine');
-        
+	    foreach($container->get('riPlugin.Settings')->get('framework.templating.engines') as $engine_name){
+	        if(($engine = $container->get('templating.engine.' . $engine_name)) !== false){
+                $engine->addHelpers(array($container->get('templating.helper.slot'), $container->get('templating.holder')));
+	            $this->engine->addEngine($engine); 
+	        }
+	    }
+                                                
         // always set router and reference to this
 	    $this->set(array(
 	    	'router' => new Routing\Generator\UrlGenerator($container->getParameter('routes'), $container->get('context')),
@@ -104,12 +103,7 @@ class View extends Object{
 			$patterns['default'] = $default;
 		}
 		return $patterns;
-	}
-	
-	public function getHelper($name){
-	    $name = explode('::', $name);
-	    return $this->engine->getEngine('name.'.$name[0])->get($name[1]);
-	}
+	}		
 		
 	public function renderResponse($view, $parameters = null, Response $response = null){
 		$content = $this->render($view, $parameters); 

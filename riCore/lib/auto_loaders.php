@@ -9,5 +9,5 @@
 //if(!IS_ADMIN_FLAG){
     global $autoLoadConfig;
     // we want to include the loader into the view for easy access, we need to do it after the template is loaded
-    $autoLoadConfig[200][] = array('autoType'=>'include', 'loadFile'=> DIR_FS_CATALOG . 'plugins/riCore/lib/init_includes.php');
+    $autoLoadConfig[200][] = array('autoType' => 'require', 'loadFile' => __DIR__ . '/init_includes.php');
 //}

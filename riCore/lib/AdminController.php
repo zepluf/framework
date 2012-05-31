@@ -26,8 +26,8 @@ class AdminController extends Controller{
 				);             
 			}
         }
-        
-        $this->view->getHelper('php::holder')->add('main', $this->view->render('riCore::_list', array('plugins' => $plugins)));
+   
+        $this->container->get('templating.holder')->add('main', $this->view->render('riCore::_list', array('plugins' => $plugins)));
 
         return $this->render('riCore::admin_layout');       
     }

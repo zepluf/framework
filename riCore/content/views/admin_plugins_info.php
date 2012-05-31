@@ -67,6 +67,9 @@ else:?>
 	<h2><?php rie('Summary')?></h2>
 	<?php echo nl2br($info->summary)?>
 	
+	<h2><?php rie('Notes')?></h2>
+	<?php echo ($info->notes)?>
+	
 	<h2><?php rie('Changelog')?></h2>
 	<?php foreach($info->changelog->release as $release):?>
 		<div class="releases">

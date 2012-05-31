@@ -4,34 +4,42 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
 	<parameters>
-    	<parameter key="template.path.patterns" type="collection"></parameter>
-        
-    	<parameter key="template.parser">Symfony\Component\Templating\TemplateNameParser</parameter>
+    	<parameter key="templating.path.patterns" type="collection"></parameter>            	
 	</parameters>
 
     <services>
     	<service id="riCore.Model" class="plugins\riCore\Model" scope="prototype">
     		<argument type="service" id="dispatcher"/>
-    	</service>   
+    	</service>
+    	
+    	<service id="templating.engine.php" class="Symfony\Component\Templating\PhpEngine" scope="prototype">
+    		<argument>%templating.nameparser%</argument>
+    		<argument>%templating.loader%</argument>
+    	</service>		
+    	<service id="templating.engine.twig" class="Symfony\Bundle\TwigBundle\TwigEngine" scope="prototype"></service>
+    	<service id="templating.nameparser" class="Symfony\Component\Templating\TemplateNameParser" scope="prototype"></service>
+    	<service id="templating.helper.slot" class="Symfony\Component\Templating\Helper\SlotsHelper" scope="prototype"></service>
+    	<service id="templating.holder.event" class="plugins\riCore\HolderHelperEvent" scope="container"></service>
+    	<service id="templating.holder" class="plugins\riCore\HolderHelper" scope="container"> 
+        	<argument type="service" id="dispatcher"/>
+        	<argument>%container%</argument>            	
+        </service> 
     	<service id="riCore.Collection" class="plugins\riCore\Collection" scope="prototype">
     		<argument type="service" id="dispatcher"/>
     	</service>   
+    	
     	<service id="riCore.View" class="plugins\riCore\View" scope="container">
         	<argument type="service" id="dispatcher"/>
         	<argument>%container%</argument>   	
         </service> 
+        
         <service id="riCore.TemplateLoader" class="plugins\riCore\TemplateLoader" scope="prototype">        		
-        	<argument>%template.path.patterns%</argument>
+        	<argument>%templating.path.patterns%</argument>
         </service>
-        <service id="riCore.TemplateEngine" class="plugins\riCore\TemplateEngine" scope="prototype">
-        	<argument>%template.engines%</argument>
-        </service> 
-        <service id="riCore.HolderHelper" class="plugins\riCore\HolderHelper" scope="container"> 
-        	<argument type="service" id="dispatcher"/>
-        	<argument>%container%</argument>       	
-        </service>  
-        <service id="riCore.HolderHelperEvent" class="plugins\riCore\HolderHelperEvent" scope="container">
-        </service>           
+        
+        <service id="riCore.TemplateEngine" class="plugins\riCore\TemplateEngine" scope="prototype"></service>         
+        
+                    
         <service id="riCore.Event" class="plugins\riCore\Event" scope="container">
         </service>
         <service id="riCore.Events" class="plugins\riCore\Events" scope="container">
