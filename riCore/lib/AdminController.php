@@ -15,12 +15,16 @@ use Symfony\Component\Yaml\Yaml;
 class AdminController extends Controller{
     public function indexAction(){        
 		$settings = Yaml::parse(__DIR__ .'/../../settings.yaml');
-        $plugins = array();
+        
+		// a temporary hack to avoid displaying installation folder
+		$ignore = array('installation');
+		
+		$plugins = array();
         foreach(glob(DIR_FS_CATALOG . 'plugins/*', GLOB_ONLYDIR) as $plugin)
         {         
 			$code_name = basename($plugin);
 			// the core modules are not to be exposed
-			if(!in_array($code_name, $settings['installed'])){
+			if(!in_array($code_name, $ignore) && !in_array($code_name, $settings['installed'])){
 				$plugins[] = array(
 					'code_name' => $code_name,            	
 				);             

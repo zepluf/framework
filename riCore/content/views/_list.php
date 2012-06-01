@@ -79,6 +79,7 @@ $(function () {
 <table class="table">
 <tr>
 	<th><?php rie('Plugin Code Name')?></th>
+	<th><?php rie('Version')?></th>
 	<th><?php rie('Install')?></th>
 	<th><?php rie('Status')?></th>
 	<th><?php rie('Action')?></th>
@@ -87,9 +88,11 @@ $(function () {
 <?php 
     $installed = \plugins\riPlugin\Plugin::isInstalled($plugin['code_name']);
     $activated = \plugins\riPlugin\Plugin::isActivated($plugin['code_name']);
+    $info = \plugins\riPlugin\Plugin::info($plugin['code_name']);
 ?>
 <tr>
 	<td><?php echo $plugin['code_name']?></td>
+	<td><?php echo $info->release?></td>
 	<td>
 		<a class="toggle-plugin installation install" <?php echo $installed ? 'style="display:none"' : '' ?> href="ri.php/admin_plugins_install/?plugin=<?php echo $plugin['code_name']?>">
             <?php rie('install')?>
