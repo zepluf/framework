@@ -122,7 +122,7 @@ class Plugin{
     	    $settings = Yaml::parse($config_path.'settings.yaml');
     	
     	if(file_exists($config_path.'local.yaml')){
-    	    $local = Yaml::parse($config_path.'local.yaml');
+    	    $local = (array)Yaml::parse($config_path.'local.yaml');
     	    $settings = empty($settings) ? $local : array_merge_recursive($settings, $local);
     	}
     	
@@ -301,9 +301,11 @@ class Plugin{
 	    
 	    $plugin_path = realpath(__DIR__.'/../../'.$plugin.'/') . '/';
 	    
-	    if(file_exists($plugin_path.$plugin.'.php')){
-		    require_once($plugin_path.$plugin.'.php');
-		    $class_name = "plugins\\$plugin\\$plugin";
+	    $plugin_class = ucfirst($plugin);
+	    
+	    if(file_exists($plugin_path.$plugin_class.'.php')){
+		    require_once($plugin_path.$plugin_class.'.php');
+		    $class_name = "plugins\\$plugin\\$plugin_class";
 		    $plugin_object = new $class_name(self::$container->get('dispatcher'), self::$container);
 		    
     	    if(!in_array($plugin, $settings['installed'])){
@@ -331,9 +333,11 @@ class Plugin{
 	    
 	    $plugin_path = realpath(__DIR__.'/../../'.$plugin.'/') . '/';
 	    
-	    if(file_exists($plugin_path.$plugin.'.php')){
-	        require_once($plugin_path.$plugin.'.php');
-		    $class_name = "plugins\\$plugin\\$plugin";
+	    $plugin_class = ucfirst($plugin);
+	    
+	    if(file_exists($plugin_path.$plugin_class.'.php')){
+	        require_once($plugin_path.$plugin_class.'.php');
+		    $class_name = "plugins\\$plugin\\$plugin_class";
 		    $plugin_object = new $class_name(self::$container->get('dispatcher'), self::$container);
 		    
 	        if(in_array($plugin, $settings['installed'])){    	        

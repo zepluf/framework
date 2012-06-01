@@ -39,10 +39,10 @@ else:?>
 		<?php endforeach;?>	
 	<?php endforeach;?>
 	
-	<?php foreach ($info->dependencies->plugins as $plugin):?>
-		<?php foreach ($plugin as $key => $pl):?>
-			<strong><?php echo $key?></strong> <?php rie('min')?>: <?php echo $pl->min?><br />
-		<?php endforeach;?>	
+	<?php foreach ($info->dependencies->plugins->plugin as $plugin):?>
+		
+		<strong><?php echo $plugin->codename?></strong> <?php rie('min version')?> <?php echo $plugin->min?><br />
+		
 	<?php endforeach;?>
 	<h2><?php rie('Authors')?></h2>
 	<?php foreach($info->authors->author as $author):?>

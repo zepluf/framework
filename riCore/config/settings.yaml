@@ -1,3 +1,7 @@
+# should we parse view for holders? this may has some performance implication
+parse_holders: false
+
+# the settings from here should not be edited or overwritten
 routes:
   admin_plugins:
     pattern:  /admin_plugins/

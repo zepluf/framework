@@ -12,6 +12,8 @@
     		<argument type="service" id="dispatcher"/>
     	</service>
     	
+    	<service id="riCore.TemplateEngine" class="plugins\riCore\TemplateEngine" scope="prototype"></service>
+    	
     	<service id="templating.engine.php" class="Symfony\Component\Templating\PhpEngine" scope="prototype">
     		<argument>%templating.nameparser%</argument>
     		<argument>%templating.loader%</argument>
@@ -28,6 +30,8 @@
     		<argument type="service" id="dispatcher"/>
     	</service>   
     	
+    	<service id="riCore.DatabasePatch" class="plugins\riCore\DatabasePatch"></service>
+    	
     	<service id="riCore.View" class="plugins\riCore\View" scope="container">
         	<argument type="service" id="dispatcher"/>
         	<argument>%container%</argument>   	
@@ -35,10 +39,7 @@
         
         <service id="riCore.TemplateLoader" class="plugins\riCore\TemplateLoader" scope="prototype">        		
         	<argument>%templating.path.patterns%</argument>
-        </service>
-        
-        <service id="riCore.TemplateEngine" class="plugins\riCore\TemplateEngine" scope="prototype"></service>         
-        
+        </service>                                
                     
         <service id="riCore.Event" class="plugins\riCore\Event" scope="container">
         </service>

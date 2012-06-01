@@ -49,4 +49,12 @@ class HolderHelper extends Helper{
 		return $content;
          
     }
+    
+    public function injectHolders(&$content){                
+        // scan the content to find holders
+		preg_match_all("/(<!-- holder:)(.*?)(-->)/", $content, $matches, PREG_SET_ORDER);		
+		foreach ($matches as $val) {
+			$content = str_replace($val[0], $this->get(trim($val[2])), $content);
+		}
+    }
 }
