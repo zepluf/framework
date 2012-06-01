@@ -47,19 +47,19 @@ $container->setParameter('request', $request);
 $container->register('riPlugin.Settings', 'plugins\\riPlugin\\Settings');
 Plugin::init($class_loader, $container, $routes);
 
-// preload several core plugins
-Plugin::load(array('riCore', 'riCache'));
+// define the cache files location
+$cache_folder = __DIR__ . '/../cache/riPlugin/';
 
 $is_admin = false;
-$cache_folder = '/riPlugin';
 $cache_file = 'settings.frontend.cache';
 if(defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true){
     $is_admin = true;
     $cache_file = 'settings.backend.cache';
 }
-
-if(($settings = Plugin::get('riCache.Cache')->read($cache_file, $cache_folder)) !== false){
-    Plugin::get('riPlugin.Settings')->init(unserialize($settings));    
+$cache_file = $cache_folder . $cache_file;
+ 
+if(file_exists($cache_file)){
+    Plugin::get('riPlugin.Settings')->init(unserialize(file_get_contents($cache_file)));    
     $framework_settings = $container->get('riPlugin.Settings')->get('framework');
 }
 else{
@@ -75,8 +75,8 @@ else{
 	if(is_array($framework_settings['frontend']['preload'])) Plugin::load($framework_settings['frontend']['preload']);
 }
 
-if($settings === false){
-    Plugin::get('riCache.Cache')->write($cache_file, $cache_folder, serialize($container->get('riPlugin.Settings')->get()));
+if(!Plugin::get('riPlugin.Settings')->isInitiated()){
+    file_put_contents($cache_file, serialize($container->get('riPlugin.Settings')->get()));
 }
 // init the view to be used globally in ZC
 $riview = Plugin::get('riCore.View');

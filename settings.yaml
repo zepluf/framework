@@ -23,10 +23,10 @@ activated:
   - riZCAdmin
 
 backend:
-    preload: [riUtility, riLog, riSession, riResultList, riZCAdmin, riCjLoader]
+    preload: [riCore, riCache, riUtility, riLog, riSession, riResultList, riZCAdmin, riCjLoader]
 
 frontend:
-    preload: [riUtility, riLog, riSession, riResultList, riCjLoader]
+    preload: [riCore, riCache, riUtility, riLog, riSession, riResultList, riCjLoader]
 
 # templating
 templating: { engines: ['php'] }    

@@ -65,10 +65,14 @@ class Plugin{
 				Yaml::enablePhpParsing();
 				// load plugin's settings
 				if(!self::get('riPlugin.Settings')->isInitiated()){
-    				$settings = self::loadSettings($config_path);    				
+    				$settings = self::loadSettings($config_path);
+    				self::get('riPlugin.Settings')->set($plugin, $settings);
+    				if(isset($settings['global'])) self::get('riPlugin.Settings')->set('global', $settings['global'], true); 				
 				}
 				else {
 				    $settings = self::get('riPlugin.Settings')->get($plugin);
+				    //self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
+					 
 				}
 				
 				if(!empty($settings)){
@@ -81,10 +85,6 @@ class Plugin{
 						}						
 					}
 					
-					//self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
-					if(isset($settings['global'])) self::get('riPlugin.Settings')->set('global', $settings['global'], true); 
-					
-					self::get('riPlugin.Settings')->set($plugin, $settings);					
 				};
 				    
 				self::loadTranslations($plugin_path, 'en');
@@ -125,7 +125,6 @@ class Plugin{
     	    $local = (array)Yaml::parse($config_path.'local.yaml');
     	    $settings = empty($settings) ? $local : array_merge_recursive($settings, $local);
     	}
-    	
     	return $settings;
 	}
 	
