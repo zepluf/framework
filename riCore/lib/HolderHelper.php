@@ -2,16 +2,12 @@
 
 namespace plugins\riCore;
 
+use plugins\riPlugin\Plugin;
 use Symfony\Component\Templating\Helper\Helper;
 
 class HolderHelper extends Helper{
     
-    protected $slots = array(), $dispatcher, $container;
-    
-    public function __construct($dispatcher, $container){
-        $this->dispatcher = $dispatcher;
-        $this->container = $container;
-    }
+    protected $slots = array(), $dispatcher, $container;    
     
     public function getName(){
         return 'holder';
@@ -26,9 +22,9 @@ class HolderHelper extends Helper{
     }
     
     public function get($slot){
-        $event = $this->container->get('templating.holder.event')->setSlot($slot);
-        $this->dispatcher->dispatch('view.helper.holder.get.start', $event);
-        $this->dispatcher->dispatch('view.helper.holder.get.start.'.$slot, $event);
+        $event = Plugin::get('templating.holder.event')->setSlot($slot);
+        Plugin::get('dispatcher')->dispatch('view.helper.holder.get.start', $event);
+        Plugin::get('dispatcher')->dispatch('view.helper.holder.get.start.'.$slot, $event);
         
         $content = '';
 		if(isset($this->slots[$slot]) && count($this->slots[$slot])> 0){
@@ -44,8 +40,8 @@ class HolderHelper extends Helper{
 				$content .= $c['content'];
 		}
 		
-		$this->dispatcher->dispatch('view.helper.holder.get.end', $event);
-        $this->dispatcher->dispatch('view.helper.holder.get.end.'.$slot, $event);
+		Plugin::get('dispatcher')->dispatch('view.helper.holder.get.end', $event);
+        Plugin::get('dispatcher')->dispatch('view.helper.holder.get.end.'.$slot, $event);
 		return $content;
          
     }

@@ -3,7 +3,6 @@
 namespace plugins\riResultList;
 
 use plugins\riPlugin\Object;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * A (result) list that handles lists spanning multiple pages.
@@ -27,8 +26,7 @@ class ResultList extends Object {
     protected $number_of_results_ = false;    
     protected $results_;
     
-	function __construct(EventDispatcherInterface $dispatcher) {
-        parent::__construct($dispatcher);
+	function __construct() {        
         $this->resultSource_ = null;        
         $this->sorters_ = array();
         $this->filters_ = array();

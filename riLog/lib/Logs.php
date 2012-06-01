@@ -3,6 +3,7 @@
 namespace plugins\riLog;
 
 use plugins\riPlugin\Object;
+use plugins\riPlugin\Plugin;
 
 class Logs extends Object{
 	
@@ -17,7 +18,7 @@ class Logs extends Object{
 				'scope' => 'global'
 				), $log);
 				
-			$log = $this->container->get('riLog.Log');
+			$log = Plugin::get('riLog.Log');
 			$log->put($args['message'], $args['session'], $args['type'], $args['scope']);			
 			
 		}

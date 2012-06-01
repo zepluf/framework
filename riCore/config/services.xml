@@ -9,7 +9,6 @@
 
     <services>
     	<service id="riCore.Model" class="plugins\riCore\Model" scope="prototype">
-    		<argument type="service" id="dispatcher"/>
     	</service>
     	
     	<service id="riCore.TemplateEngine" class="plugins\riCore\TemplateEngine" scope="prototype"></service>
@@ -23,18 +22,13 @@
     	<service id="templating.helper.slot" class="Symfony\Component\Templating\Helper\SlotsHelper" scope="prototype"></service>
     	<service id="templating.holder.event" class="plugins\riCore\HolderHelperEvent" scope="container"></service>
     	<service id="templating.holder" class="plugins\riCore\HolderHelper" scope="container"> 
-        	<argument type="service" id="dispatcher"/>
-        	<argument>%container%</argument>            	
         </service> 
     	<service id="riCore.Collection" class="plugins\riCore\Collection" scope="prototype">
-    		<argument type="service" id="dispatcher"/>
     	</service>   
     	
     	<service id="riCore.DatabasePatch" class="plugins\riCore\DatabasePatch"></service>
     	
-    	<service id="riCore.View" class="plugins\riCore\View" scope="container">
-        	<argument type="service" id="dispatcher"/>
-        	<argument>%container%</argument>   	
+    	<service id="riCore.View" class="plugins\riCore\View" scope="container">	
         </service> 
         
         <service id="riCore.TemplateLoader" class="plugins\riCore\TemplateLoader" scope="prototype">        		

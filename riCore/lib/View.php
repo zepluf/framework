@@ -2,17 +2,14 @@
 
 namespace plugins\riCore;
 
-use Symfony\Component\Templating\DelegatingEngine;
-
 use plugins\riPlugin\Plugin;
-
-use Symfony\Component\Templating\PhpEngine;
-
 use plugins\riPlugin\Object;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing;
+use Symfony\Component\Templating\DelegatingEngine;
+use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\Templating\TemplateReference;
 use Symfony\Component\Templating\Helper\SlotsHelper;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing;
 
 class View extends Object{
 	private $vars = array(),			
@@ -20,37 +17,36 @@ class View extends Object{
 			$engine,			
 			$patterns = array();
 	
-	public function __construct($dispatcher, $container){	   
+	public function __construct(){	   
 
-	    $this->loader = $container->get('riCore.TemplateLoader');
+	    $this->loader = Plugin::get('riCore.TemplateLoader');
 	    
 	    $this->patterns['default'] =  __DIR__.'/../../riSimplex/content/views/%name%';
 	    
-	    $container->setParameter('templating.loader', $this->loader);
-        $container->setParameter('templating.nameparser', $container->get('templating.nameparser'));
+	    Plugin::getContainer()->setParameter('templating.loader', $this->loader);
+        Plugin::getContainer()->setParameter('templating.nameparser', Plugin::get('templating.nameparser'));
 	    
-        $this->engine = $container->get('riCore.TemplateEngine');
-	    foreach($container->get('riPlugin.Settings')->get('framework.templating.engines') as $engine_name){
-	        if(($engine = $container->get('templating.engine.' . $engine_name)) !== false){
-                $engine->addHelpers(array($container->get('templating.helper.slot'), $container->get('templating.holder')));
+        $this->engine = Plugin::get('riCore.TemplateEngine');
+	    foreach(Plugin::get('riPlugin.Settings')->get('framework.templating.engines') as $engine_name){
+	        if(($engine = Plugin::get('templating.engine.' . $engine_name)) !== false){
+                $engine->addHelpers(array(Plugin::get('templating.helper.slot'), Plugin::get('templating.holder')));
 	            $this->engine->addEngine($engine); 
 	        }
 	    }
                                                 
         // always set router and reference to this
 	    $this->set(array(
-	    	'router' => new Routing\Generator\UrlGenerator($container->getParameter('routes'), $container->get('context')),
+	    	'router' => new Routing\Generator\UrlGenerator(Plugin::getContainer()->getParameter('routes'), Plugin::get('context')),
 	        'riview' => $this,
-	        'container' => $container	        
-	    ));
-	    
-	    parent::__construct($dispatcher);
+	        'container' => Plugin::getContainer()
+	    	        
+	    ));	    	    
 	}
 	
 	public function render($view, $parameters = null){
-		
-		$this->set($parameters);
-		
+
+		$parameters = is_array($parameters) ? array_merge($this->vars, $parameters) : $this->vars;
+
 		$view = explode('::', $view);			
 		
 		// we will have to set path patterns to make sure we dont look for template files at extra places
@@ -60,7 +56,7 @@ class View extends Object{
 		// default to php		
 		if(strpos($view[1], '.') === false) $view[1] .= '.php';		 		
         
-		return $this->engine->render($view[1], $this->vars);		
+        return $this->engine->render($view[1], $parameters);
 	}
 
 	public function findRenderPath($view){

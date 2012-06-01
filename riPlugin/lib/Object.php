@@ -3,25 +3,9 @@
 namespace plugins\riPlugin;
 
 use plugins\riUtility\String;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class Object extends ContainerAware implements \Serializable{
-	protected $properties_ = array();
-	protected $container;	
-    protected $dispatcher;    
-
-    /**
-     * Constructor
-     *
-     * @param EventDispatcherInterface    $dispatcher An EventDispatcherInterface instance     
-     *
-     * @api
-     */
-    public function __construct(EventDispatcherInterface $dispatcher)
-    {
-        $this->dispatcher = $dispatcher;        
-    }
+class Object implements \Serializable{
+	protected $properties_ = array();		   
     
 	/**
     /**

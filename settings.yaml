@@ -1,8 +1,8 @@
 installed:
   - riCore
+  - riSimplex
   - riCache
   - riCjLoader
-  - riSimplex
   - riPlugin
   - riUtility
   - riLog
@@ -12,9 +12,9 @@ installed:
   
 activated:
   - riCore
-  - riCache
-  - riCjLoader
   - riSimplex
+  - riCache
+  - riCjLoader  
   - riPlugin
   - riUtility
   - riLog

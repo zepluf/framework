@@ -24,12 +24,5 @@ class HolderHelperEvent extends \Symfony\Component\EventDispatcher\Event
         return $this->helper;
     }
     
-    public function setContainer($container){
-        $this->container = $container;
-        return $this;
-    }
-    
-    public function getContainer(){
-        return $this->container;
-    }*/
+    */
 }

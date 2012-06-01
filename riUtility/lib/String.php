@@ -2,7 +2,7 @@
 namespace plugins\riUtility;
 
 class String{
-	public static function fromCamelCase($str, $glue='_'){
+	public static function fromCamelCase($str){
 		 return preg_replace(
 	    '/(^|[a-z])([A-Z])/e', 
 	    'strtolower(strlen("\\1") ? "\\1_\\2" : "\\2")',
