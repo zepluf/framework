@@ -8,7 +8,7 @@ use plugins\riPlugin\Plugin;
 
 class RiCore extends PluginCore{
 	public function init(){
-	    if(Plugin::get('riPlugin.Settings')->get('riCore.parse_holders')){	    
+	    if(Plugin::get('settings')->get('riCore.parse_holders')){	    
 		    $listener = Plugin::get('riCore.Listener');
 		    Plugin::get('dispatcher')->addListener(\plugins\riCore\Events::onPageEnd, array($this, 'onPageEnd'));
 	    }

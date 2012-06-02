@@ -55,4 +55,29 @@ class File{
 	        @rmdir($dir);
 	    }
 	}
+	
+	public function write($file, $data, $chmod = 0){
+	    
+	    // if the dir does not exist lets try to generate it
+	    $dir = dirname($file);
+	    if(!is_dir($dir)){
+			$old_umask = umask(0);
+			@mkdir($dir, 0777, true);
+			umask($old_umask);
+		}
+		
+	    if ($fp = @fopen($file, 'wb')) {
+
+	        // lock file for writing
+			if (flock($fp, LOCK_EX)) {
+				$written = fwrite($fp, $data);
+			}
+			fclose($fp);
+
+			// Set filemtime
+			touch(file, time() + 3600);
+			
+			if($chmod != 0)	@chmod($file, $chmod);			
+		}
+	}
 }

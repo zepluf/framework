@@ -44,7 +44,7 @@ $request = Request::createFromGlobals();
 $container->setParameter('request', $request);
 
 // register settings service
-$container->register('riPlugin.Settings', 'plugins\\riPlugin\\Settings');
+$container->register('settings', 'plugins\\riPlugin\\Settings');
 Plugin::init($class_loader, $container, $routes);
 
 // define the cache files location
@@ -59,12 +59,12 @@ if(defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true){
 $cache_file = $cache_folder . $cache_file;
  
 if(file_exists($cache_file)){
-    Plugin::get('riPlugin.Settings')->init(unserialize(file_get_contents($cache_file)));    
-    $framework_settings = $container->get('riPlugin.Settings')->get('framework');
+    Plugin::get('settings')->init(unserialize(file_get_contents($cache_file)));    
+    $framework_settings = $container->get('settings')->get('framework');
 }
 else{
     $framework_settings = Plugin::loadSettings(__DIR__ . '/');
-    Plugin::get('riPlugin.Settings')->set('framework', $framework_settings);
+    Plugin::get('settings')->set('framework', $framework_settings);
 }
 
 // a hack for zen
@@ -75,8 +75,8 @@ else{
 	if(is_array($framework_settings['frontend']['preload'])) Plugin::load($framework_settings['frontend']['preload']);
 }
 
-if(!Plugin::get('riPlugin.Settings')->isInitiated()){
-    file_put_contents($cache_file, serialize($container->get('riPlugin.Settings')->get()));
+if(!Plugin::get('settings')->isInitiated()){
+    Plugin::get('riUtility.File')->write($cache_file, serialize($container->get('settings')->get()));
 }
 // init the view to be used globally in ZC
 $riview = Plugin::get('riCore.View');

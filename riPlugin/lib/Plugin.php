@@ -64,13 +64,13 @@ class Plugin{
 
 				Yaml::enablePhpParsing();
 				// load plugin's settings
-				if(!self::get('riPlugin.Settings')->isInitiated()){
+				if(!self::get('settings')->isInitiated()){
     				$settings = self::loadSettings($config_path);
-    				self::get('riPlugin.Settings')->set($plugin, $settings);
-    				if(isset($settings['global'])) self::get('riPlugin.Settings')->set('global', $settings['global'], true); 				
+    				self::get('settings')->set($plugin, $settings);
+    				if(isset($settings['global'])) self::get('settings')->set('global', $settings['global'], true); 				
 				}
 				else {
-				    $settings = self::get('riPlugin.Settings')->get($plugin);
+				    $settings = self::get('settings')->get($plugin);
 				    //self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
 					 
 				}
@@ -193,7 +193,7 @@ class Plugin{
 	 * @param unknown_type $plugin
 	 */
 	public function isActivated($plugin){
-	    return in_array($plugin, self::get('riPlugin.Settings')->get('framework.activated'));
+	    return in_array($plugin, self::get('settings')->get('framework.activated'));
 	}
 	
 	/**
@@ -202,7 +202,7 @@ class Plugin{
 	 * @param unknown_type $plugin
 	 */
     public function isInstalled($plugin){
-	    return in_array($plugin, self::get('riPlugin.Settings')->get('framework.installed'));
+	    return in_array($plugin, self::get('settings')->get('framework.installed'));
 	}
 	
 	/**
