@@ -15,4 +15,12 @@ abstract class PluginCore{
     public function uninstall(){
         return true;
     }
+    
+    public function activate(){          
+        return true;
+    }
+    
+    public function deactivate(){
+        return true;
+    }
 }

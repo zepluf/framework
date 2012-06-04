@@ -26,4 +26,4 @@ global:
   backend:
     menu:
       extras:
-        - {text: Plugin Manager, link: ri.php/admin_plugins/}
+        - {text: Plugins Manager, link: ri.php/admin_plugins/}

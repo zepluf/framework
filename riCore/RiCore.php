@@ -13,7 +13,7 @@ class RiCore extends PluginCore{
 		    Plugin::get('dispatcher')->addListener(\plugins\riCore\Events::onPageEnd, array($this, 'onPageEnd'));
 	    }
 	}	
-    
+	
 	public function onPageEnd(Event $event)
     {        
     	$content = &$event->getContent();

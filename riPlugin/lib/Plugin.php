@@ -11,8 +11,16 @@ use Symfony\Component\Finder\Finder;
 
 
 class Plugin{
-	private static $loaded = array(), $info = array();
-	private static $container, $loader, $routes;
+	private static 
+	    $loaded = array(), 
+	    $info = array(),
+	    $version,
+	    $container, 
+	    $loader, 
+	    $routes, 
+	    $is_admin = false,
+	    $cache_folder, 
+	    $cache_file;
 	
 	const GREATER = 1, EQUAL = 0, LESS = -1;
 	
@@ -20,6 +28,18 @@ class Plugin{
 		self::$container = $container;		
 		self::$loader = $loader;
 		self::$routes = $routes;
+		
+		self::$cache_folder = __DIR__ . '/../../../cache/riPlugin/';
+		if(defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true){
+	        self::$is_admin = true;
+	        self::$cache_file = 'settings.backend.cache';
+	    }
+	    else 
+	        self::$cache_file = 'settings.frontend.cache';
+	        
+        // check version
+        if((int)PROJECT_VERSION_MAJOR > 1 || (int)PROJECT_VERSION_MINOR > 0)
+            self::$version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;	        
 	}
 	
 	public static function getLoaded(){
@@ -62,12 +82,20 @@ class Plugin{
 					}	
 				}
 
+				// register the plugin main file
+				if(file_exists($plugin_path.$plugin_name.'.php')){
+				    self::$loader->addNamespace(
+                    	'plugins\\' . $plugin , realpath(__DIR__.'/../../' . $plugin) . '/@plugins\\' . $plugin	
+                    );
+				    self::$container->register($plugin, 'plugins\\'.$plugin.'\\'.$plugin_name);
+				    
+				}
 				Yaml::enablePhpParsing();
 				// load plugin's settings
 				if(!self::get('settings')->isInitiated()){
     				$settings = self::loadSettings($config_path);
     				self::get('settings')->set($plugin, $settings);
-    				if(isset($settings['global'])) self::get('settings')->set('global', $settings['global'], true); 				
+    				if(isset($settings['global'])) self::get('settings')->set('global', $settings['global'], true); 	   				    				    							
 				}
 				else {
 				    $settings = self::get('settings')->get($plugin);
@@ -89,11 +117,8 @@ class Plugin{
 				    
 				self::loadTranslations($plugin_path, 'en');
 				// init 				
-				if(file_exists($plugin_path.$plugin_name.'.php')){
-				    require_once($plugin_path.$plugin_name.'.php');
-				    $class_name = "plugins\\$plugin\\$plugin_name";
-				    $plugin_object = new $class_name(self::$container->get('dispatcher'), self::$container);
-				    $plugin_object->init();
+				if(Plugin::get($plugin) !== false){
+				    Plugin::get($plugin)->init();
 				}
 				
 				if(file_exists($plugin_path.'/lib/auto_loaders.php')){
@@ -167,17 +192,17 @@ class Plugin{
 	
 	public static function getContainer(){
 		return self::$container;
-	}
+	}		
 	
 	public static function get($service){
 	    if(!self::$container->has($service)){
 	        // see if we should try to load this plugin
-	        list($plugin, $class) = explode('.', $service);
-	        if(!self::isLoaded($plugin)) self::load($plugin);
-	        
-	        if(!self::$container->has($service)) return false;
+	        //list($plugin, $class) = explode('.', $service);
+	        //if(!self::isLoaded($plugin)) self::load($plugin);
+	        return false;
+	        //if(!self::$container->has($service)) return false;
 	    }
-	    	    
+		    
 		$service = self::$container->get($service);		
 		if (null != $service && $service instanceof \Symfony\Component\DependencyInjection\ContainerAwareInterface) {
             $service->setContainer(self::$container);
@@ -228,12 +253,25 @@ class Plugin{
 	public function deactivate($plugin){
 	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');
 	    	    
-	    if(in_array($plugin, $settings['activated'])){	      
-	        self::get('riUtility.Collection')->removeValue($settings['activated'], $plugin);
-	        self::get('riUtility.Collection')->removeValue($settings['frontend']['preload'], $plugin);
-	        self::get('riUtility.Collection')->removeValue($settings['backend']['preload'], $plugin);
-	        
-	        self::saveFrameworkSettings($settings);
+	    if(in_array($plugin, $settings['activated'])){	    
+	        if(Plugin::get($plugin) === false || Plugin::get($plugin)->deactivate() !== false){  
+    	        self::get('riUtility.Collection')->removeValue($settings['activated'], $plugin);
+    	        self::get('riUtility.Collection')->removeValue($settings['frontend']['preload'], $plugin);
+    	        self::get('riUtility.Collection')->removeValue($settings['backend']['preload'], $plugin);
+    	        
+    	        self::saveSettings('framework', $settings);
+    	        
+    	        // add menu for ZC 1.5.0 >
+    	        if(function_exists('zen_deregister_admin_pages')){
+        	        if(($menus = self::get('settings')->get($plugin . '.global.backend.menu', null)) != null){	            	           
+        	            foreach ($menus as $menu_key => $sub_menus)
+        	                foreach($sub_menus as $menu){
+        	                    $id = preg_replace("/[^A-Za-z0-9\s\s+\-]/", "_", $menu['link']);	                    
+        	                    zen_deregister_admin_pages('ZEPLUF_' . $id);
+        	                }	                
+        	        }
+    	        }
+	        }
 	    }
 	        	        	    
 	    return true;
@@ -247,45 +285,64 @@ class Plugin{
 	public function activate($plugin){	    
 	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');
 	    
+	    if(empty($settings['activated'])) $settings['activated'] = array();
 	    if(!in_array($plugin, $settings['activated'])){
-	        $settings['activated'][] = $plugin;
-	        
-	        // we will put into the load
-    	    $info = Plugin::info($plugin);
-    	    
-    	    // check dependencies first
-    	    $error = false;
-    	    foreach($info->dependencies->plugins->plugin as $dependent_plugin){
-    	        if(!self::isInstalled($dependent_plugin->codename)){
-    	            $error = true;
-    	            self::get('riLog.Logs')->add(array(
+	        if(Plugin::get($plugin) === false || Plugin::get($plugin)->activate() !== false){
+    	        $settings['activated'][] = $plugin;
+    	        
+    	        // we will put into the load
+        	    $info = Plugin::info($plugin);
+        	    
+        	    // check dependencies first
+        	    $error = false;
+        	    foreach($info->dependencies->plugins->plugin as $dependent_plugin){
+        	        if(!self::isInstalled($dependent_plugin->codename)){
+        	            $error = true;
+        	            self::get('riLog.Logs')->add(array(
+        	            	'message' => ri('Plugin %plugin% min version %min% is required', array(
+        	            		'%plugin%' => $dependent_plugin->codename,
+        	                    '%min%' => $dependent_plugin->min)
+        	                )));
+        	        }
+        	        
+        	        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == self::LESS){
+        	            // we need to check the version
+        	            
+    	                $error = true;
+    	                self::get('riLog.Logs')->add(array(
     	            	'message' => ri('Plugin %plugin% min version %min% is required', array(
     	            		'%plugin%' => $dependent_plugin->codename,
     	                    '%min%' => $dependent_plugin->min)
     	                )));
+        	            
+        	        }
+        	    } 	        
+    
+        	    if($error) return false;
+        	    
+        	    if($info->preload->frontend == 'true'){
+        	        if(!isset($settings['frontend']['preload'])) $settings['frontend']['preload'] = array();
+        	        self::get('riUtility.Collection')->insertValue($settings['frontend']['preload'], $plugin);
+        	    }    	        
+        	    if($info->preload->backend == 'true'){
+        	        if(!isset($settings['backend']['preload'])) $settings['backend']['preload'] = array();
+        	        self::get('riUtility.Collection')->insertValue($settings['backend']['preload'], $plugin);
+        	    }    	    
+        	        
+    	        self::saveSettings('framework', $settings);
+    	        	        	       
+    	        // add menu for ZC 1.5.0 >
+    	        if(function_exists('zen_register_admin_page')){
+    	            self::load($plugin);	        
+        	        if(($menus = self::get('settings')->get($plugin . '.global.backend.menu', null)) != null){	            	           
+        	            foreach ($menus as $menu_key => $sub_menus)
+        	                foreach($sub_menus as $menu){
+        	                    $id = preg_replace("/[^A-Za-z0-9\s\s+\-]/", "_", $menu['link']);	                    
+        	                    zen_register_admin_page('ZEPLUF_' . $id, 'ZEPLUF_MENU_NAME_' . $id, 'ZEPLUF_MENU_URL_' . $id, '', $menu_key, 'Y', 1);
+        	                }	                
+        	        }
     	        }
-    	        
-    	        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == self::LESS){
-    	            // we need to check the version
-    	            
-	                $error = true;
-	                self::get('riLog.Logs')->add(array(
-	            	'message' => ri('Plugin %plugin% min version %min% is required', array(
-	            		'%plugin%' => $dependent_plugin->codename,
-	                    '%min%' => $dependent_plugin->min)
-	                )));
-    	            
-    	        }
-    	    } 	        
-
-    	    if($error) return false;
-    	    
-    	    if($info->preload->frontend == 'true')
-    	        self::get('riUtility.Collection')->insertValue($settings['frontend']['preload'], $plugin);    	        
-    	    if($info->preload->backend == 'true')
-    	        self::get('riUtility.Collection')->insertValue($settings['backend']['preload'], $plugin);    	    
-    	        
-	        self::saveFrameworkSettings($settings);
+	        }
 	    }
 	    return true;
 	}
@@ -302,24 +359,20 @@ class Plugin{
 	    
 	    $plugin_class = ucfirst($plugin);
 	    
-	    if(file_exists($plugin_path.$plugin_class.'.php')){
-		    require_once($plugin_path.$plugin_class.'.php');
-		    $class_name = "plugins\\$plugin\\$plugin_class";
-		    $plugin_object = new $class_name(self::$container->get('dispatcher'), self::$container);
-		    
+	    if(Plugin::get($plugin) !== false){
     	    if(!in_array($plugin, $settings['installed'])){
     	        $settings['installed'][] = $plugin;
-    	        if($plugin_object->install()){
+    	        if(Plugin::get($plugin)->install()){
         	        // we will put into the load
             	    self::get('riUtility.Collection')->insertValue($settings['installed'], $plugin);
-            	    self::saveFrameworkSettings($settings);
+            	    self::saveSettings('framework', $settings);
             	    return true;
     	        }    	    
     	    }	        
 		}
 		else{		    
 		    self::get('riUtility.Collection')->insertValue($settings['installed'], $plugin);
-		    self::saveFrameworkSettings($settings);
+		    self::saveSettings('framework', $settings);
             return true;
 		}
 		
@@ -334,16 +387,12 @@ class Plugin{
 	    
 	    $plugin_class = ucfirst($plugin);
 	    
-	    if(file_exists($plugin_path.$plugin_class.'.php')){
-	        require_once($plugin_path.$plugin_class.'.php');
-		    $class_name = "plugins\\$plugin\\$plugin_class";
-		    $plugin_object = new $class_name(self::$container->get('dispatcher'), self::$container);
-		    
+	    if(Plugin::get($plugin) !== false){	        
 	        if(in_array($plugin, $settings['installed'])){    	        
-    	        if($plugin_object->uninstall()){
+    	        if(Plugin::get($plugin)->uninstall()){
         	        // we will put into the load
             	    self::get('riUtility.Collection')->removeValue($settings['installed'], $plugin);
-            	    self::saveFrameworkSettings($settings);
+            	    self::saveSettings('framework', $settings);
             	    
             	    self::deactivate($plugin);
             	    return true;
@@ -351,13 +400,62 @@ class Plugin{
     	    }
 	    }else{
             self::get('riUtility.Collection')->removeValue($settings['installed'], $plugin);
-            self::saveFrameworkSettings($settings);
+            self::saveSettings('framework', $settings);
             
             self::deactivate($plugin);
             return true;	        
 	    }
 	    
 	    return false;
+	}
+	
+	public function isAdmin(){
+	    return self::$is_admin;        
+	}
+	
+	/**
+	 * 
+	 * save settings into cache file ...
+	 */
+	public function loadCacheSettings(){      
+        if(file_exists(self::$cache_folder . self::$cache_file)){
+            self::get('settings')->init(unserialize(file_get_contents(self::$cache_folder . self::$cache_file)));    
+            return true;
+        }
+        return false;
+	}
+	
+	/**
+	 * 
+	 * save settings into cache file ...
+	 */
+    public function saveCacheSettings(){        	
+        $settings = self::get('settings')->get();    
+	    self::get('riUtility.File')->write(self::$cache_folder . self::$cache_file, serialize($settings));	    
+	}
+	
+	public function saveSettings($plugin = 'framework', $settings = array()){
+	    
+	    if($plugin == 'framework'){	        
+	        $config_path = __DIR__ .'/../../';
+	    }
+	    else
+	        $config_path = __DIR__ .'/../../' . $plugin . '/config/';
+	        
+	    if(empty($settings)){    
+            $all_settings = self::get('settings')->get($plugin); 
+            	        
+    	    $default_settings = Yaml::parse(__DIR__ .'/../../settings.yaml');
+    	    
+    	    $settings = self::get('riUtility.Collection')->multiArrayDiff($all_settings, $default_settings);    	    
+	    }
+	    
+	    // put into local.yaml
+	    file_put_contents($config_path . 'local.yaml', Yaml::dump($settings));
+	    
+	    // reset cache
+	    self::get('riCache.Cache')->remove('settings.backend.cache', self::$cache_folder);
+	    self::get('riCache.Cache')->remove('settings.frontend.cache', self::$cache_folder);
 	}
 	
     /**
@@ -387,17 +485,5 @@ class Plugin{
 	       return self::GREATER;
 	       
 	   return self::LESS;
-	}
-	
-	/**
-	 * 
-	 * Enter description here ...
-	 * @param unknown_type $settings
-	 */
-	private function saveFrameworkSettings($settings){
-	    file_put_contents(__DIR__ .'/../../local.yaml', Yaml::dump($settings));
-	    
-	    self::get('riCache.Cache')->remove('settings.backend.cache', '/riPlugin/');
-	    self::get('riCache.Cache')->remove('settings.frontend.cache', '/riPlugin/');
-	}		
+	}	
 }
