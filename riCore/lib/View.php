@@ -38,8 +38,8 @@ class View extends Object{
 	    $this->set(array(
 	    	'router' => new Routing\Generator\UrlGenerator(Plugin::getContainer()->getParameter('routes'), Plugin::get('context')),
 	        'riview' => $this,
-	        'container' => Plugin::getContainer()
-	    	        
+	        'container' => Plugin::getContainer(),
+	    	'holder' => Plugin::get('templating.holder')    
 	    ));	    	    
 	}
 	
