@@ -15,7 +15,7 @@ $(function () {
 			success: function(response){
 				$('#myModal .modal-body').html(response);
 				$('#myModal').modal('show');
-				$("pre.code").each(function(){console.log($(this));
+				$("pre.code").each(function(){
 					$(this).snippet($(this).data('language'));
 				});
 			}
