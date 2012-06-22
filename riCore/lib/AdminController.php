@@ -81,8 +81,10 @@ class AdminController extends Controller{
         if(!empty($plugin)){
             $installed = Plugin::install($plugin);                            
         }
-        
-        return new Response(json_encode(array('installed' => $installed)));        
+
+        Plugin::get('riLog.Logs')->copyFromZen();
+
+        return new Response(json_encode(array('installed' => $installed, 'messages' => Plugin::get('riLog.Logs')->getAsArray())));
     }
     
     public function uninstallAction(Request $request){

@@ -83,13 +83,8 @@ class Plugin{
 				}
 
 				// register the plugin main file
-				if(file_exists($plugin_path.$plugin_name.'.php')){
-				    self::$loader->addNamespace(
-                    	'plugins\\' . $plugin , realpath(__DIR__.'/../../' . $plugin) . '/@plugins\\' . $plugin	
-                    );
-				    self::$container->register($plugin, 'plugins\\'.$plugin.'\\'.$plugin_name);
-				    
-				}
+				self::registerCore($plugin, $plugin_name);
+
 				Yaml::enablePhpParsing();
 				// load plugin's settings
 				if(!self::get('settings')->isInitiated()){
@@ -117,8 +112,8 @@ class Plugin{
 				    
 				self::loadTranslations($plugin_path, 'en');
 				// init 				
-				if(Plugin::get($plugin) !== false){
-				    Plugin::get($plugin)->init();
+				if(Plugin::get($plugin_name) !== false){
+				    Plugin::get($plugin_name)->init();
 				}
 				
 				if(file_exists($plugin_path.'/lib/auto_loaders.php')){
@@ -134,7 +129,16 @@ class Plugin{
 			}
 		}		
 	}
-	
+
+    private static function registerCore($plugin_name, $plugin_class){
+        if(file_exists(__DIR__.'/../../' . $plugin_name . '/' . $plugin_class . '.php')){
+            self::$loader->addNamespace(
+                'plugins\\' . $plugin_name , realpath(__DIR__.'/../../' . $plugin_name . '') . '/@plugins\\' . $plugin_name
+            );
+            self::$container->register($plugin_class, 'plugins\\'.$plugin_name.'\\'.$plugin_class);
+        }
+    }
+
 	/**
 	 * 
 	 * Load settings from yaml files, load local settings as well
@@ -358,11 +362,13 @@ class Plugin{
 	    $plugin_path = realpath(__DIR__.'/../../'.$plugin.'/') . '/';
 	    
 	    $plugin_class = ucfirst($plugin);
-	    
-	    if(Plugin::get($plugin) !== false){
+
+        self::registerCore($plugin, $plugin_class);
+
+	    if(Plugin::get($plugin_class) !== false){
     	    if(!in_array($plugin, $settings['installed'])){
     	        $settings['installed'][] = $plugin;
-    	        if(Plugin::get($plugin)->install()){
+    	        if(Plugin::get($plugin_class)->install()){
         	        // we will put into the load
             	    self::get('riUtility.Collection')->insertValue($settings['installed'], $plugin);
             	    self::saveSettings('framework', $settings);
@@ -389,7 +395,7 @@ class Plugin{
 	    
 	    if(Plugin::get($plugin) !== false){	        
 	        if(in_array($plugin, $settings['installed'])){    	        
-    	        if(Plugin::get($plugin)->uninstall()){
+    	        if(Plugin::get($plugin_class)->uninstall()){
         	        // we will put into the load
             	    self::get('riUtility.Collection')->removeValue($settings['installed'], $plugin);
             	    self::saveSettings('framework', $settings);
