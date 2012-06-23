@@ -312,9 +312,11 @@ class DatabasePatch{
 		return array('queries'=> $results, 'string'=>$string, 'output'=>$return_output, 'ignored'=>($ignored_count), 'errors'=>$errors);
 	} //end function
 
-	function zen_table_exists($tablename, $pre_install=false) {
+	function zen_table_exists($tablename, $append_prefix = true) {
 		global $db;
-		$tables = $db->Execute("SHOW TABLES like '" . DB_PREFIX . $tablename . "'");
+        if($append_prefix) $tablename = DB_PREFIX . $tablename;
+
+		$tables = $db->Execute("SHOW TABLES like '" . $tablename . "'");
 		if (ZC_UPG_DEBUG3==true) echo 'Table check ('.$tablename.') = '. $tables->RecordCount() .'<br>';
 		if ($tables->RecordCount() > 0) {
 			return true;
@@ -603,7 +605,7 @@ class DatabasePatch{
 	function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
 		global $db;
 		$this->zen_create_exceptions_table();
-		$sql="INSERT INTO " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS . " VALUES (0,'". $sql_file."','".$reason."', now(), '".addslashes($line)."')";
+		$sql="INSERT INTO " . TABLE_UPGRADE_EXCEPTIONS . " VALUES (0,'". $sql_file."','".$reason."', now(), '".addslashes($line)."')";
 		if (ZC_UPG_DEBUG3==true) echo '<br />sql='.$sql.'<br />';
 		$result = $db->Execute($sql);
 		return $result;
@@ -612,20 +614,20 @@ class DatabasePatch{
 	function zen_purge_exceptions_table() {
 		global $db;
 		$this->zen_create_exceptions_table();
-		$result = $db->Execute("TRUNCATE TABLE " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS );
+		$result = $db->Execute("TRUNCATE TABLE " . TABLE_UPGRADE_EXCEPTIONS );
 		return $result;
 	}
 
 	function zen_create_exceptions_table() {
 		global $db;
-		if (!$this->zen_table_exists(TABLE_UPGRADE_EXCEPTIONS)) {
-			$result = $db->Execute("CREATE TABLE " . DB_PREFIX . TABLE_UPGRADE_EXCEPTIONS ." (
+		if (!$this->zen_table_exists(TABLE_UPGRADE_EXCEPTIONS, false)) {
+			$result = $db->Execute("CREATE TABLE " . TABLE_UPGRADE_EXCEPTIONS ." (
             upgrade_exception_id smallint(5) NOT NULL auto_increment,
             sql_file varchar(50) default NULL,
             reason varchar(200) default NULL,
             errordate datetime default '0001-01-01 00:00:00',
             sqlstatement text, PRIMARY KEY  (upgrade_exception_id)
-          ) TYPE=MyISAM   ");
+          ) ENGINE=MyISAM   ");
 			return $result;
 		}
 	}
