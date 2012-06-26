@@ -39,7 +39,9 @@ class Plugin{
 	        
         // check version
         if((int)PROJECT_VERSION_MAJOR > 1 || (int)PROJECT_VERSION_MINOR > 0)
-            self::$version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;	        
+            self::$version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+
+        Yaml::enablePhpParsing();
 	}
 	
 	public static function getLoaded(){
@@ -85,17 +87,13 @@ class Plugin{
 				// register the plugin main file
 				self::registerCore($plugin, $plugin_name);
 
-				Yaml::enablePhpParsing();
 				// load plugin's settings
 				if(!self::get('settings')->isInitiated()){
-    				$settings = self::loadSettings($config_path);
-    				self::get('settings')->set($plugin, $settings);
-    				if(isset($settings['global'])) self::get('settings')->set('global', $settings['global'], true); 	   				    				    							
+    				$settings = self::loadSettings($plugin, $config_path);
 				}
 				else {
 				    $settings = self::get('settings')->get($plugin);
 				    //self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
-					 
 				}
 				
 				if(!empty($settings)){
@@ -145,15 +143,19 @@ class Plugin{
 	 * @param string $path
 	 * @param string $file
 	 */
-	public function loadSettings($config_path, $file = 'settings.yaml'){
+	public function loadSettings($root, $config_path, $file = 'settings.yaml'){
 	    $settings = array();	
 	    if(file_exists($config_path.$file))
-    	    $settings = Yaml::parse($config_path.'settings.yaml');
+    	    $settings = Yaml::parse($config_path . $file);
     	
-    	if(file_exists($config_path.'local.yaml')){
-    	    $local = (array)Yaml::parse($config_path.'local.yaml');
+    	if(file_exists($config_path . 'local.yaml')){
+    	    $local = (array)Yaml::parse($config_path . 'local.yaml');
     	    $settings = empty($settings) ? $local : array_merge_recursive($settings, $local);
     	}
+
+        self::get('settings')->set($root, $settings);
+        if(isset($settings['global'])) self::get('settings')->set('global', $settings['global'], true);
+
     	return $settings;
 	}
 	
@@ -298,32 +300,34 @@ class Plugin{
         	    $info = Plugin::info($plugin);
         	    
         	    // check dependencies first
-        	    $error = false;
-        	    foreach($info->dependencies->plugins->plugin as $dependent_plugin){
-        	        if(!self::isInstalled($dependent_plugin->codename)){
-        	            $error = true;
-        	            self::get('riLog.Logs')->add(array(
-        	            	'message' => ri('Plugin %plugin% min version %min% is required', array(
-        	            		'%plugin%' => $dependent_plugin->codename,
-        	                    '%min%' => $dependent_plugin->min)
-        	                )));
-        	        }
-        	        
-        	        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == self::LESS){
-        	            // we need to check the version
-        	            
-    	                $error = true;
-    	                self::get('riLog.Logs')->add(array(
-    	            	'message' => ri('Plugin %plugin% min version %min% is required', array(
-    	            		'%plugin%' => $dependent_plugin->codename,
-    	                    '%min%' => $dependent_plugin->min)
-    	                )));
-        	            
-        	        }
-        	    } 	        
-    
-        	    if($error) return false;
-        	    
+                if(isset($info->dependencies->plugins)){
+                    $error = false;
+                    foreach($info->dependencies->plugins->plugin as $dependent_plugin){
+                        if(!self::isInstalled($dependent_plugin->codename)){
+                            $error = true;
+                            self::get('riLog.Logs')->add(array(
+                                'message' => ri('Plugin %plugin% min version %min% is required', array(
+                                    '%plugin%' => $dependent_plugin->codename,
+                                    '%min%' => $dependent_plugin->min)
+                                )));
+                        }
+
+                        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == self::LESS){
+                            // we need to check the version
+
+                            $error = true;
+                            self::get('riLog.Logs')->add(array(
+                            'message' => ri('Plugin %plugin% min version %min% is required', array(
+                                '%plugin%' => $dependent_plugin->codename,
+                                '%min%' => $dependent_plugin->min)
+                            )));
+
+                        }
+                    }
+
+                    if($error) return false;
+                }
+
         	    if($info->preload->frontend == 'true'){
         	        if(!isset($settings['frontend']['preload'])) $settings['frontend']['preload'] = array();
         	        self::get('riUtility.Collection')->insertValue($settings['frontend']['preload'], $plugin);

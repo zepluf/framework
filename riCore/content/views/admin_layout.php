@@ -33,7 +33,7 @@ $base_href = getBaseHref(true);
 <!-- header_eof //-->
 <!-- body //-->
 
-<?php echo $view['holder']->get('main')?>
+<?php echo $view['holder']->get('main');?>
 
 </body>
 </html>

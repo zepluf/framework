@@ -102,7 +102,6 @@ class View extends Object{
 	}		
 		
 	public function renderResponse($view, $parameters = null, Response $response = null){
-		$content = $this->render($view, $parameters); 
 		$response->setContent($this->render($view, $parameters));
 		return $response;
 	}

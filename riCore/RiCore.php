@@ -8,16 +8,15 @@ use plugins\riPlugin\Plugin;
 
 class RiCore extends PluginCore{
 	public function init(){
-	    if(Plugin::get('settings')->get('riCore.parse_holders')){	    
-		    $listener = Plugin::get('riCore.Listener');
-		    Plugin::get('dispatcher')->addListener(\plugins\riCore\Events::onPageEnd, array($this, 'onPageEnd'));
-	    }
+        Plugin::get('dispatcher')->addListener(\plugins\riCore\Events::onPageEnd, array($this, 'onPageEnd'));
 	}	
 	
 	public function onPageEnd(Event $event)
-    {        
-    	$content = &$event->getContent();
-    	Plugin::get('templating.holder')->injectHolders($content);
+    {
+        Plugin::get('templating.holder')->processHolders();
+
+        $content = &$event->getContent();
+        Plugin::get('templating.holder')->injectHolders($content);
         // extend here the functionality of the core
         // ...
     }

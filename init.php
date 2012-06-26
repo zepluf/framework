@@ -51,8 +51,7 @@ if(Plugin::loadCacheSettings()){
     $framework_settings = $container->get('settings')->get('framework');
 }
 else{
-    $framework_settings = Plugin::loadSettings(__DIR__ . '/');
-    Plugin::get('settings')->set('framework', $framework_settings);
+    $framework_settings = Plugin::loadSettings('framework',__DIR__ . '/');
 }
 
 // a hack for zen

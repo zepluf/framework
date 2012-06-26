@@ -21,11 +21,11 @@ class HolderHelper extends Helper{
         return $this;
     }
     
-    public function get($slot){
+    public function get($slot, $silent = false){
         $event = Plugin::get('templating.holder.event')->setSlot($slot);
         Plugin::get('dispatcher')->dispatch('view.helper.holder.get.start', $event);
         Plugin::get('dispatcher')->dispatch('view.helper.holder.get.start.'.$slot, $event);
-        
+
         $content = '';
 		if(isset($this->slots[$slot]) && count($this->slots[$slot])> 0){
 			usort($this->slots[$slot], function($a, $b) {
@@ -42,15 +42,30 @@ class HolderHelper extends Helper{
 		
 		Plugin::get('dispatcher')->dispatch('view.helper.holder.get.end', $event);
         Plugin::get('dispatcher')->dispatch('view.helper.holder.get.end.'.$slot, $event);
+
+        $this->slots[$slot] = array();
+        $content .= "<!-- holder: " . $slot . " -->";
+
 		return $content;
-         
     }
     
-    public function injectHolders(&$content){                
+    public function injectHolders(&$content){
+        // we want to loop through all the registered holders
         // scan the content to find holders
-		preg_match_all("/(<!-- holder:)(.*?)(-->)/", $content, $matches, PREG_SET_ORDER);		
+		preg_match_all("/(<!-- holder:)(.*?)(-->)/", $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $val) {
 			$content = str_replace($val[0], $this->get(trim($val[2])), $content);
 		}
+    }
+
+    /**
+     *
+     */
+    public function processHolders(){
+        foreach(Plugin::get('settings')->get('global.holders', array()) as $position => $holders) {
+            foreach($holders as $holder){
+                //$this->add($position, Plugin::get('riCore.View')->render($holder['template']));
+            }
+        }
     }
 }
