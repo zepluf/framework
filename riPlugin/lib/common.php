@@ -34,6 +34,11 @@ function rie($id, array $parameters = array(), $domain = 'messages', $locale = n
     echo ri($id, $parameters, 'messages', $locale);
 }
 
+function rimage($image){
+    $image = \plugins\riPlugin\Plugin::get('riCjLoader.Loader')->get($image);
+    return $image[0]['path'];
+}
+
 function riAdminLink($route, $params, $file = 'ri.php'){
 	return getBaseHref(true) . $file . $route . '?' . http_build_query($params, '', '&amp;');	
 }
