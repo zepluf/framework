@@ -34,7 +34,7 @@ class Framework extends HttpKernel
     public function customHandleRaw($main_page, $request, $type){
         // request
         $event = new GetResponseEvent($this, $request, $type);
-        $this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
+        //$this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
 
         if ($event->hasResponse()) {
             return $this->customFilterResponse($event->getResponse(), $request, $type);

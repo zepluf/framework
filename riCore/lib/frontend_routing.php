@@ -14,7 +14,12 @@ if (!is_dir(DIR_WS_MODULES .  'pages/' . $current_page)){
     $container->setParameter('request', $request);
 
     try{
+        global $response, $current_page, $current_page_base;
         $response = Plugin::get('riSimplex.Framework')->customHandle($current_page, $request);
+
+        $_GET['main_page'] = $current_page = $current_page_base = 'ri';
+
+// eof ri: cjloader
     }catch (\Exception $e){
         zen_redirect(zen_href_link('page_not_found'));
     }

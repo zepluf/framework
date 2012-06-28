@@ -150,7 +150,7 @@ class Plugin{
     	
     	if(file_exists($config_path . 'local.yaml')){
     	    $local = (array)Yaml::parse($config_path . 'local.yaml');
-    	    $settings = empty($settings) ? $local : array_merge_recursive($settings, $local);
+    	    $settings = empty($settings) ? $local : arrayMergeWithReplace($settings, $local);
     	}
 
         self::get('settings')->set($root, $settings);

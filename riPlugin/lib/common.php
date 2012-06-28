@@ -151,3 +151,30 @@ function array_KSplice2(&$input, $start, $length=0, $replacement=null)
 
     return $input;
 }
+
+/**
+* If one of the Arguments isn't an Array, first Argument is returned. If an Element is an Array in both Arrays, Arrays are merged recursively, otherwise the element in $ins will overwrite the element in $arr (regardless if key is numeric or not). This also applys to Arrays in $arr, if the Element is scalar in $ins (in difference to the previous approach).
+* @param array $arr
+* @param array $ins
+* @return array 
+*/
+function arrayMergeWithReplace($arr, $ins) {
+# Loop through all Elements in $ins:
+if (is_array($arr) && is_array($ins))
+    foreach ($ins as $k => $v) {
+        # Key exists in $arr and both Elemente are Arrays: Merge recursively.
+        if (isset($arr[$k]) && is_array($v) && is_array($arr[$k]))
+            $arr[$k] = arrayMergeWithReplace($arr[$k], $v);
+        # Place more Conditions here (see below)
+        # ...
+        # Otherwise replace Element in $arr with Element in $ins:
+        else if (is_integer($k)) {
+            if (!in_array($v, $arr))
+                $arr[] = $v;
+        }
+        else
+            $arr[$k] = $v;
+    }
+# Return merged Arrays:
+return($arr);
+}

@@ -23,8 +23,8 @@ class HolderHelper extends Helper{
     
     public function get($slot, $silent = false){
         $event = Plugin::get('templating.holder.event')->setSlot($slot);
-        Plugin::get('dispatcher')->dispatch('view.helper.holder.get.start', $event);
-        Plugin::get('dispatcher')->dispatch('view.helper.holder.get.start.'.$slot, $event);
+        Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderStart, $event);
+        Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderStart . '.' . $slot, $event);
 
         $content = '';
 		if(isset($this->slots[$slot]) && count($this->slots[$slot])> 0){
@@ -40,8 +40,8 @@ class HolderHelper extends Helper{
 				$content .= $c['content'];
 		}
 		
-		Plugin::get('dispatcher')->dispatch('view.helper.holder.get.end', $event);
-        Plugin::get('dispatcher')->dispatch('view.helper.holder.get.end.'.$slot, $event);
+		Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderEnd, $event);
+        Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderEnd . '.' .$slot, $event);
 
         $this->slots[$slot] = array();
         $content .= "<!-- holder: " . $slot . " -->";
@@ -64,7 +64,7 @@ class HolderHelper extends Helper{
     public function processHolders(){
         foreach(Plugin::get('settings')->get('global.holders', array()) as $position => $holders) {
             foreach($holders as $holder){
-                //$this->add($position, Plugin::get('riCore.View')->render($holder['template']));
+                $this->add($position, Plugin::get('riCore.View')->render($holder['template']));
             }
         }
     }
