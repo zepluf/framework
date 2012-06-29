@@ -34,6 +34,13 @@ class Controller extends ContainerAware{
     	if($response == null) $response = $this->response;
         return $this->view->renderResponse($view, $parameters, $response);
     }
+
+    public function renderJson($data, Response $response = null){
+        if($response == null) $response = $this->response;
+        $response->setContent(json_encode($data));
+        $response->send();
+        exit();
+    }
     
 	/**
      * Generates a URL from the given parameters.

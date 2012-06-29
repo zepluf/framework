@@ -17,8 +17,8 @@ function getBaseHref($admin = true){
  * @param string $locale
  * $return translated string
  */
-function ri($id, array $parameters = array(), $domain = 'messages', $locale = null){
-	return plugins\riPlugin\Plugin::get('translator')->trans($id, $parameters, 'messages', $locale);	
+function ri($id, $parameters = array(), $domain = 'messages', $locale = null){
+	return plugins\riPlugin\Plugin::get('translator')->trans($id, (array)$parameters, $domain, $locale);
 }
 
 /**
@@ -30,8 +30,8 @@ function ri($id, array $parameters = array(), $domain = 'messages', $locale = nu
  * @param string $locale
  * $return void
  */
-function rie($id, array $parameters = array(), $domain = 'messages', $locale = null){
-    echo ri($id, $parameters, 'messages', $locale);
+function rie($id, $parameters = array(), $domain = 'messages', $locale = null){
+    echo ri($id, $parameters, $domain, $locale);
 }
 
 function rimage($image){
