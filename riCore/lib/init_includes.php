@@ -27,6 +27,9 @@ else{
     Plugin::loadSettings('theme', DIR_WS_TEMPLATE, 'theme.yaml');
 }
 
+// set locale
+Plugin::get('translator')->setLocale($_SESSION['languages_code']);
+
 // bof ri: ZePLUF
 $core_event = plugins\riPlugin\Plugin::get('riCore.Event');
 Plugin::get('dispatcher')->dispatch(plugins\riCore\Events::onPageStart, $core_event);

@@ -10,7 +10,7 @@ class Logs extends Object{
 	private $logs = array();
 	
 	public function add($log){
-		if(!$log instanceof RiLog){	
+		if(!$log instanceof Log){
 			$args = array_merge(array(
 				'message' => '', 
 				'session' => false, 

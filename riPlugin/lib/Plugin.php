@@ -291,7 +291,12 @@ class Plugin{
 	public function activate($plugin){	    
 	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');
 	    
-	    if(empty($settings['activated'])) $settings['activated'] = array();
+	    if(!is_array($settings))
+            $settings = array();
+
+        if(!isset($settings['activated']))
+            $settings['activated'] = array();
+
 	    if(!in_array($plugin, $settings['activated'])){
 	        if(Plugin::get($plugin) === false || Plugin::get($plugin)->activate() !== false){
     	        $settings['activated'][] = $plugin;

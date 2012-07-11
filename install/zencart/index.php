@@ -107,6 +107,13 @@
 ?>
 </html>
 
+<?php
+/**
+ * Load general code run before page closes
+ */
+?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+
 <?php 
   // bof ri: ZePLUF
   $content = ob_get_clean();
@@ -116,10 +123,3 @@
   // eof ri: ZePLUF
 
 ?>
-
-<?php
-/**
- * Load general code run before page closes
- */
-?>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

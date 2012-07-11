@@ -17,7 +17,7 @@ function getBaseHref($admin = true){
  * @param string $locale
  * $return translated string
  */
-function ri($id, $parameters = array(), $domain = 'messages', $locale = null){
+function ri($id, $parameters = array(), $domain = 'default', $locale = null){
 	return plugins\riPlugin\Plugin::get('translator')->trans($id, (array)$parameters, $domain, $locale);
 }
 
@@ -30,7 +30,7 @@ function ri($id, $parameters = array(), $domain = 'messages', $locale = null){
  * @param string $locale
  * $return void
  */
-function rie($id, $parameters = array(), $domain = 'messages', $locale = null){
+function rie($id, $parameters = array(), $domain = 'default', $locale = null){
     echo ri($id, $parameters, $domain, $locale);
 }
 
