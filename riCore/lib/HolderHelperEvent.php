@@ -2,7 +2,7 @@
 
 namespace plugins\riCore;
 
-class HolderHelperEvent extends \Symfony\Component\EventDispatcher\Event
+class HolderHelperEvent extends Event
 { 
     private $slot;
     

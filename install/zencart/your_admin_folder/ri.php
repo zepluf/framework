@@ -31,13 +31,8 @@ ob_start();
 require(DIR_WS_INCLUDES . 'footer.php');
 $footer = ob_get_clean();
 
-ob_start();	
-require(DIR_WS_INCLUDES . 'application_bottom.php');
-$application_bottom = ob_get_clean();
-
 $content = $response->getContent();
+$content = str_replace(array("</head>", "</body>"), array($header . '</head>', $footer . '</body>'), $content);
 
-$content = str_replace(array("</head>", "</body>", "</body>"), array('</head>' . $header, '</body>' . $footer, '</body>' . $application_bottom), $content);
-$riview->get('loader')->injectAssets($content);
-$response->setContent($content);
-$response->send();
+echo $content;
+require('includes/application_bottom.php');

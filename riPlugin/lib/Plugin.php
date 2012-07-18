@@ -62,7 +62,10 @@ class Plugin{
 			    
 				$config_path = $plugin_path.'config/';
 								
-				foreach (glob($config_path."*.php") as $file) { 
+				$config_files = glob($config_path."*.php");
+				
+				if($config_files !== false)
+				foreach ($config_files as $file) { 
 					include($file);
 				}
 				
@@ -288,7 +291,7 @@ class Plugin{
 	 * Enter description here ...
 	 * @param unknown_type $plugin
 	 */
-	public function activate($plugin){	    
+	public function activate($plugin){
 	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');
 	    
 	    if(!is_array($settings))
