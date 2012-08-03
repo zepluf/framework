@@ -1,6 +1,6 @@
 <?php 
 
-namespace plugins\riPlugin;
+namespace plugins\riCore;
 
 use plugins\riUtility\String;
 

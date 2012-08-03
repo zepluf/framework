@@ -1,6 +1,8 @@
 <?php
 namespace plugins\riUtility;
 
+use plugins\riPlugin\Plugin;
+
 class File{
     public function getRelativePath($from, $to)
 	{
@@ -30,7 +32,53 @@ class File{
 		$result = implode('/', $to);
 		return $result;
 	}
-	
+
+    public function generateUniqueName($absolute_path, $name){
+        $now = time();
+        while(file_exists($absolute_path.$name)){
+            $now++;
+            $name = $now.'-'.$name;
+        }
+        return $name;
+    }
+
+    public function calculatePath($name, $cache_folder, $use_subfolder = 0){
+        if($use_subfolder > 0){
+            $name = Plugin::get('riUtility.String')->stripNonAlphaNumeric(strtolower($name));
+            $path = substr($name , 0, $use_subfolder);
+            $cache_folder .= chunk_split($path, 1, '/');
+        }
+
+        $cache_folder = trim($cache_folder, '/');
+
+        return $cache_folder;
+    }
+
+    public function uploadFile($name, $tmp_name, $absolute_destination_path, $use_subfolder = 0){
+        $_files_name = $relative_path = '';
+
+        $absolute_destination_path = rtrim($absolute_destination_path, '/') . '/';
+
+        $relative_path = $this->calculatePath($name, '', $use_subfolder);
+
+        $final_path = !empty($relative_path) ? $absolute_destination_path . $relative_path . '/' : $absolute_destination_path;
+        // create the folder if not exists
+        if(!is_dir($final_path)){
+            $old_umask = umask(0);
+            @mkdir($final_path, 0777, true);
+            umask($old_umask);
+        }
+
+        // generate a new name if the file is already there
+        if(file_exists($final_path . $name)){
+            $name = $this->generateUniqueName($final_path, $name);
+        }
+
+        $is_moved = @move_uploaded_file($tmp_name, $final_path . $name);
+
+        return array($is_moved, $relative_path, $name);
+    }
+
 	// TODO: log error?
     function sureRemoveDir($dir, $DeleteMe, &$counter) {
 		//global $messageStack;

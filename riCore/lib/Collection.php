@@ -22,7 +22,7 @@ class Collection extends ResultSource{
     public function findAll(){
 		global $db;
 		$collection = array();
-		$result = $db->Execute("select * FROM " . $this->from . " order by name");
+		$result = $db->Execute("select * FROM " . $this->model->getTable());
 		while(!$result->EOF){
 			$object = clone $this->model;
 			$object->setArray($result->fields);

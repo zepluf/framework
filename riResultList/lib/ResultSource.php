@@ -1,7 +1,7 @@
 <?php
 namespace plugins\riResultList;
 
-use plugins\riPlugin\Object;
+use plugins\riCore\Object;
 
 class ResultSource extends Object implements ResultSourceInterface{
     protected $resultList_, $model, $from, $select;

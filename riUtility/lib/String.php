@@ -19,5 +19,60 @@ class String{
 			return lcfirst($string); 
 		} 
 		return $string; 
-	}		
+	}
+
+    /**
+     * @param $string
+     * @return string
+     * echo normal_chars('¡lix----_√xel!?!?'); // Alix Axel
+     * echo normal_chars('·ÈÌÛ˙¡…Õ”⁄'); // aeiouAEIOU
+     * echo normal_chars('¸ˇƒÀœ÷‹üÂ≈'); // uyAEIOUYaA
+     */
+    public function normalizeCharacters($string, $replacement = ' '){
+        $string = htmlentities($string, ENT_QUOTES, 'UTF-8');
+        $string = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', $string);
+        $string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
+        $string = preg_replace(array('~[^0-9a-z]~i', '~[ -]+~'), $replacement, $string);
+
+        return trim($string, ' -');
+    }
+
+    /**
+     * Remove all characters except letters, numbers, and spaces.
+     *
+     * @param string $string
+     * @return string
+     */
+    function stripNonAlphaNumeric( $string ) {
+        return preg_replace( "/[^a-z0-9]/i", "", $string );
+    }
+
+    /**
+     * Transform two or more spaces into just one space.
+     *
+     * @param string $string
+     * @return string
+     */
+    function stripExcessWhitespace( $string ) {
+        return preg_replace( '/  +/', ' ', $string );
+    }
+
+    /**
+     * Generate a random string of specified length from a set of specified characters
+     *
+     * @param integer $size Default size is 30 characters.
+     * @param string $chars The characters to use for randomization.
+     */
+    function randomString( $size=30, $chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" ) {
+
+        $string = "";
+        $length = strlen( $chars );
+
+        for( $i=0; $i < $size; $i++ ) {
+            $string .= $chars{ rand( 0, $length ) };
+        }
+
+        return $string;
+
+    }
 }

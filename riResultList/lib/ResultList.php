@@ -2,7 +2,7 @@
 
 namespace plugins\riResultList;
 
-use plugins\riPlugin\Object;
+use plugins\riCore\Object;
 
 /**
  * A (result) list that handles lists spanning multiple pages.

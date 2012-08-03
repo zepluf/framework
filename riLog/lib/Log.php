@@ -2,7 +2,7 @@
 
 namespace plugins\riLog;
 
-use plugins\riPlugin\Object;
+use plugins\riCore\Object;
 
 class Log extends Object{
 	public function put($message, $session = false, $type = 'error', $scope = 'global'){

@@ -27,7 +27,7 @@ ob_start();
 require(DIR_WS_INCLUDES . 'header.php');
 $header = ob_get_clean();
 
-ob_start();	
+ob_start();
 require(DIR_WS_INCLUDES . 'footer.php');
 $footer = ob_get_clean();
 

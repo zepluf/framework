@@ -75,12 +75,21 @@ class Plugin{
                 
 				if(is_dir($plugin_path."vendor"))
 				    self::$loader->addConfig($plugin_path."vendor");
-				
+
+                $loaded_services = false;
 				if(file_exists($config_path.'services.xml')){
-					$loader = new XMLFileLoader(self::$container, new FileLocator($config_path));				
-        			$loader->load('services.xml');	
-				}
-				else{
+                    $loader = new XMLFileLoader(self::$container, new FileLocator($config_path));
+                    $loader->load('services.xml');
+                    $loaded_services = true;
+                }
+
+                if(file_exists($config_path.'local.xml')){
+                    $loader = new XMLFileLoader(self::$container, new FileLocator($config_path));
+                    $loader->load('local.xml');
+                    $loaded_services = true;
+                }
+
+				if(!$loaded_services){
 					foreach (glob($plugin_path."/lib/*.php") as $file) { 
 						$filename = basename($file, '.php');
 						self::$container->register($plugin.'.'.$filename, 'plugins\\'.$plugin.'\\'.$filename);						    		

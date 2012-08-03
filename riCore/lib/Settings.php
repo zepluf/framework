@@ -1,5 +1,5 @@
 <?php
-namespace plugins\riPlugin;
+namespace plugins\riCore;
 
 class Settings extends ParameterBag{
 

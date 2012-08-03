@@ -6,7 +6,8 @@ require_once(__DIR__.'/../zenmagick/lib/base/classloader/ClassLoader.php');
 $class_loader = new zenmagick\base\classloader\ClassLoader();
 
 $class_loader->addNamespaces(array(	
-	'plugins\riPlugin' => __DIR__.'/riPlugin/lib@plugins\riPlugin',	
+	'plugins\riPlugin' => __DIR__.'/riPlugin/lib@plugins\riPlugin',
+    'plugins\riCore' => __DIR__.'/riCore/lib@plugins\riCore',
 ));
 
 $class_loader->addNamespace('Symfony',__DIR__.'/../zenmagick/vendor/symfony/src');
@@ -44,7 +45,7 @@ $request = Request::createFromGlobals();
 $container->setParameter('request', $request);
 
 // register settings service
-$container->register('settings', 'plugins\\riPlugin\\Settings');
+$container->register('settings', 'plugins\\riCore\\Settings');
 Plugin::init($class_loader, $container, $routes);
 
 if(Plugin::loadCacheSettings()){       

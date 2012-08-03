@@ -2,7 +2,7 @@
 
 namespace plugins\riLog;
 
-use plugins\riPlugin\Object;
+use plugins\riCore\Object;
 use plugins\riPlugin\Plugin;
 
 class Logs extends Object{

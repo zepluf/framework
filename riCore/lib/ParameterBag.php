@@ -7,7 +7,7 @@
  * Question? Come to our website at http://rubikintegration.com
  */
 
-namespace plugins\riPlugin;
+namespace plugins\riCore;
 
 class ParameterBag{
 
