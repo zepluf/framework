@@ -64,7 +64,7 @@ class HolderHelper extends Helper{
     public function processHolders(){
         foreach(Plugin::get('settings')->get('global.holders', array()) as $position => $holders) {
             foreach($holders as $holder){
-                $this->add($position, Plugin::get('riCore.View')->render($holder['template']));
+                $this->add($position, Plugin::get('view')->render($holder['template']));
             }
         }
     }

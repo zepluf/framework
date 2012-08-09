@@ -67,7 +67,10 @@ class AdminController extends Controller{
             $deactivated = Plugin::deactivate($plugin);                            
         }
         
-        return new Response(json_encode(array('activated' => !$deactivated)));        
+        return new Response(json_encode(array(
+            'activated' => !$deactivated,
+            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+        )));
     }
     
     /**
@@ -79,21 +82,29 @@ class AdminController extends Controller{
         $installed = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
-            $installed = Plugin::install($plugin);                            
+            $installed = Plugin::install($plugin);
+            Plugin::get('riLog.Logs')->copyFromZen();
         }
 
         Plugin::get('riLog.Logs')->copyFromZen();
 
-        return new Response(json_encode(array('installed' => $installed, 'messages' => Plugin::get('riLog.Logs')->getAsArray())));
+        return new Response(json_encode(array(
+            'installed' => $installed,
+            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+        )));
     }
     
     public function uninstallAction(Request $request){
         $uninstalled = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
-            $uninstalled = Plugin::uninstall($plugin);                            
+            $uninstalled = Plugin::uninstall($plugin);
+            Plugin::get('riLog.Logs')->copyFromZen();
         }
         
-        return new Response(json_encode(array('installed' => !$uninstalled)));        
+        return new Response(json_encode(array(
+            'installed' => !$uninstalled,
+            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+        )));
     }
 }

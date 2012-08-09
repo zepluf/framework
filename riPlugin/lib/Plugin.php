@@ -404,7 +404,6 @@ class Plugin{
 		}
 		
 	    return false;
-	   
 	}
 	
 	public function uninstall($plugin){

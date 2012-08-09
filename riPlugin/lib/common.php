@@ -34,13 +34,28 @@ function rie($id, $parameters = array(), $domain = 'default', $locale = null){
     echo ri($id, $parameters, $domain, $locale);
 }
 
-function rimage($image){
+function riImage($image){
     $image = \plugins\riPlugin\Plugin::get('riCjLoader.Loader')->get($image);
     return $image[0]['path'];
 }
 
-function riAdminLink($route, $params, $file = 'ri.php'){
-	return getBaseHref(true) . $file . $route . '?' . http_build_query($params, '', '&amp;');	
+function riLink($route, $params = array(), $request_type = 'NONSSL', $is_admin = null, $file = 'ri.php'){
+
+    // TODO: hook in seo url?
+    if(is_null($is_admin)) $is_admin = defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG;
+
+    $host = ($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER;
+
+    $link = \plugins\riPlugin\Plugin::get('view')->get('router')->generate($route, $params);
+
+    if(basename($_SERVER["SCRIPT_NAME"]) == 'ri.php')
+        return $host . $link;
+
+    $host .= ($is_admin) ? DIR_WS_HTTPS_ADMIN : DIR_WS_CATALOG;
+
+    if($file == 'index.php') $file = '';
+
+    return $host . $file . $link;
 }
 
 function riGetAllGetParams($exclude_array = array(), $new_params = array()) {

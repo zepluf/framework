@@ -11,7 +11,7 @@ class Controller extends ContainerAware{
 	
 	public function __construct(){
 		$this->response = new Response();
-		$this->view = Plugin::get('riCore.View');
+		$this->view = Plugin::get('view');
 		$this->router = $this->view->get('router');
 		$this->setContainer(Plugin::getContainer());
 	}

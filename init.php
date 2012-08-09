@@ -67,4 +67,4 @@ if(!Plugin::get('settings')->isInitiated()){
     Plugin::saveCacheSettings();
 }
 // init the view to be used globally in ZC
-$riview = Plugin::get('riCore.View');
+$riview = Plugin::get('view');
