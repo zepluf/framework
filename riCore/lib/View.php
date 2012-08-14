@@ -41,7 +41,11 @@ class View extends Object{
 	    	'holder' => Plugin::get('templating.holder')    
 	    ));	    	    
 	}
-	
+
+    public function getEngine(){
+        return $this->engine;
+    }
+
 	public function render($view, $parameters = null){
 
 		$parameters = is_array($parameters) ? array_merge($this->vars, $parameters) : $this->vars;

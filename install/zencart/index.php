@@ -121,5 +121,3 @@
   $container->get('dispatcher')->dispatch(plugins\riCore\Events::onPageEnd, $core_event);
   echo $content;
   // eof ri: ZePLUF
-
-?>

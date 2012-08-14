@@ -54,6 +54,16 @@ class File{
         return $cache_folder;
     }
 
+    public function mkDir($absolute_path, $chmod = '0777'){
+        $success = false;
+        if(!is_dir($final_path)){
+            $old_umask = umask(0);
+            $success = @mkdir($absolute_path, $chmod, true);
+            umask($old_umask);
+        }
+        return $success;
+    }
+
     public function uploadFile($name, $tmp_name, $absolute_destination_path, $use_subfolder = 0){
         $_files_name = $relative_path = '';
 
@@ -63,11 +73,7 @@ class File{
 
         $final_path = !empty($relative_path) ? $absolute_destination_path . $relative_path . '/' : $absolute_destination_path;
         // create the folder if not exists
-        if(!is_dir($final_path)){
-            $old_umask = umask(0);
-            @mkdir($final_path, 0777, true);
-            umask($old_umask);
-        }
+        $this->mkDir($final_path);
 
         // generate a new name if the file is already there
         if(file_exists($final_path . $name)){

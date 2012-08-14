@@ -2,6 +2,7 @@
 namespace plugins\riSimplex;
 
 use plugins\riPlugin\Plugin;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,7 +16,14 @@ class Controller extends ContainerAware{
 		$this->router = $this->view->get('router');
 		$this->setContainer(Plugin::getContainer());
 	}
-	
+
+    public function beforeAction(Event $event){
+        if($event->getRequest()->get('role', '') == 'isAdmin'){
+            if(!defined('IS_ADMIN_FLAG') || !IS_ADMIN_FLAG)
+                die(ri('You do not have permission to access an admin route from here!'));
+        }
+    }
+
 	public function exceptionAction(){
 		//
 	}

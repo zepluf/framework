@@ -35,4 +35,8 @@ $content = $response->getContent();
 $content = str_replace(array("</head>", "</body>"), array($header . '</head>', $footer . '</body>'), $content);
 
 echo $content;
+
 require('includes/application_bottom.php');
+
+$response->setContent($content);
+$response->send();

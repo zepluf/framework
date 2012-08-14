@@ -34,12 +34,7 @@ function rie($id, $parameters = array(), $domain = 'default', $locale = null){
     echo ri($id, $parameters, $domain, $locale);
 }
 
-function riImage($image){
-    $image = \plugins\riPlugin\Plugin::get('riCjLoader.Loader')->get($image);
-    return $image[0]['path'];
-}
-
-function riLink($route, $params = array(), $request_type = 'NONSSL', $is_admin = null, $file = 'ri.php'){
+function riLink($route, $params = array(), $request_type = 'NONSSL', $is_admin = null, $file = 'index.php'){
 
     // TODO: hook in seo url?
     if(is_null($is_admin)) $is_admin = defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG;
@@ -51,11 +46,21 @@ function riLink($route, $params = array(), $request_type = 'NONSSL', $is_admin =
     if(basename($_SERVER["SCRIPT_NAME"]) == 'ri.php')
         return $host . $link;
 
-    $host .= ($is_admin) ? DIR_WS_HTTPS_ADMIN : DIR_WS_CATALOG;
+    if($is_admin){
+        $file = 'ri.php';
+        $host .= ($request_type == 'SSL') ? DIR_WS_HTTPS_ADMIN : DIR_WS_ADMIN;
+    }
+    else{
+        //$file = 'index.php';
+        $host .= ($request_type == 'SSL') ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG;
+    }
 
-    if($file == 'index.php') $file = '';
-
-    return $host . $file . $link;
+    if($file == 'index.php'){
+        $params['main_page'] = urlencode (trim($link, '/'));
+        return $host . $file . '?' . http_build_query($params);
+    }
+    else
+        return $host . $file . $link;
 }
 
 function riGetAllGetParams($exclude_array = array(), $new_params = array()) {
