@@ -2,13 +2,9 @@
 namespace plugins\riCore;
 
 use plugins\riPlugin\Plugin;
-
 use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass;
-
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\HttpFoundation\Request;
-
 use plugins\riSimplex\Controller;
 use Symfony\Component\Yaml\Yaml;
 

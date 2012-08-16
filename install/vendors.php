@@ -19,10 +19,10 @@ $vendorDeps = array(
 		array('riUtility', 'git@github.com:yellow1912/riUtility.git', 'origin/HEAD', false),
         array('riLog', 'git@github.com:yellow1912/riLog.git', 'origin/HEAD', false)
     ),
-	$baseDir . '/../zenmagick/lib/base' => array(
+	$baseDir . '/riCore/vendor/zenmagick/lib/base' => array(
 	    array('classloader', 'git@github.com:yellow1912/classloader.git', 'origin/HEAD', false)
 	),
-	$baseDir . '/../zenmagick/vendor/symfony/src/Symfony/Component' => array(
+	$baseDir . '/riCore/vendor/symfony/src/Symfony/Component' => array(
 		array('ClassLoader', 'git://github.com/symfony/ClassLoader.git', 'origin/HEAD', false),
 		array('DependencyInjection', 'git://github.com/symfony/DependencyInjection.git', 'origin/HEAD', false),
 		array('Config', 'git://github.com/symfony/Config.git', 'origin/HEAD', false),
@@ -36,7 +36,7 @@ $vendorDeps = array(
 		array('Templating', 'git://github.com/symfony/Templating.git', 'origin/HEAD', false),
 		array('Finder', 'git://github.com/symfony/Finder.git', 'origin/HEAD', false)		
 	),
-	$baseDir . '/../zenmagick/vendor/symfony/src/Symfony/Bundle' => array(
+	$baseDir . '/riCore/vendor/symfony/src/Symfony/Bundle' => array(
 	    array('TwigBundle', 'git://github.com/symfony/TwigBundle.git', 'origin/HEAD', false)
 	)
 );

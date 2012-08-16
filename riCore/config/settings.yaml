@@ -1,26 +1,26 @@
 # the settings from here should not be edited or overwritten
 routes:
   admin_plugins:
-    pattern:  /admin_plugins/
+    pattern:  /riplugin/manager/
     defaults: { _controller: plugins\riCore\AdminController::indexAction }
   admin_plugins_info:
-    pattern:  /admin_plugins_info/
+    pattern:  /riplugin/info/
     defaults: { _controller: plugins\riCore\AdminController::infoAction }
   admin_plugins_install:
-    pattern:  /admin_plugins_install/
+    pattern:  /riplugin/install/
     defaults: { _controller: plugins\riCore\AdminController::installAction }
   admin_plugins_uninstall:
-    pattern:  /admin_plugins_uninstall/
+    pattern:  /riplugin/uninstall/
     defaults: { _controller: plugins\riCore\AdminController::uninstallAction }
   admin_plugins_activate:
-    pattern:  /admin_plugins_activate/
+    pattern:  /riplugin/activate/
     defaults: { _controller: plugins\riCore\AdminController::activateAction }
   admin_plugins_deactivate:
-    pattern:  /admin_plugins_deactivate/
+    pattern:  /riplugin/deactivate/
     defaults: { _controller: plugins\riCore\AdminController::deactivateAction }
             
 global:    
   backend:
     menu:
       extras:
-        - {text: Plugins Manager, link: ri.php/admin_plugins/}
+        - {text: Plugins Manager, link: ri.php/riplugin/manager/}
