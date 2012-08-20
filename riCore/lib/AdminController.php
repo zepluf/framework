@@ -48,7 +48,7 @@ class AdminController extends Controller{
             $info = Plugin::info($plugin);
             $activated = Plugin::activate($plugin);                            
         }
-        
+
         return new Response(json_encode(array(
         	'activated' => $activated,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
@@ -101,6 +101,19 @@ class AdminController extends Controller{
         return new Response(json_encode(array(
             'installed' => !$uninstalled,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
+        )));
+    }
+
+    /**
+     * Load current theme settings
+     */
+    public function loadThemeSettingsAction(){
+        Plugin::get('settings')->loadTheme();
+        return new Response(json_encode(array(
+            'messages' => array(array(
+                'type' => 'success',
+                'message' => 'Theme\'s settings have been loaded'
+            ))
         )));
     }
 }

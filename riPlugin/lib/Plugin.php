@@ -19,8 +19,7 @@ class Plugin{
 	    $loader, 
 	    $routes, 
 	    $is_admin = false,
-	    $cache_folder, 
-	    $cache_file;
+        $environment;
 	
 	const GREATER = 1, EQUAL = 0, LESS = -1;
 	
@@ -28,15 +27,14 @@ class Plugin{
 		self::$container = $container;		
 		self::$loader = $loader;
 		self::$routes = $routes;
-		
-		self::$cache_folder = __DIR__ . '/../../../cache/riPlugin/';
+
 		if(defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true){
 	        self::$is_admin = true;
-	        self::$cache_file = 'settings.backend.cache';
+            self::$environment = 'backend';
 	    }
-	    else 
-	        self::$cache_file = 'settings.frontend.cache';
-	        
+	    else
+            self::$environment = 'frontend';
+
         // check version
         if((int)PROJECT_VERSION_MAJOR > 1 || (int)PROJECT_VERSION_MINOR > 0)
             self::$version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
@@ -101,7 +99,7 @@ class Plugin{
 
 				// load plugin's settings
 				if(!self::get('settings')->isInitiated()){
-    				$settings = self::loadSettings($plugin, $config_path);
+    				$settings = self::get('settings')->load($plugin, $config_path);
 				}
 				else {
 				    $settings = self::get('settings')->get($plugin);
@@ -149,28 +147,6 @@ class Plugin{
         }
     }
 
-	/**
-	 * 
-	 * Load settings from yaml files, load local settings as well
-	 * @param string $path
-	 * @param string $file
-	 */
-	public function loadSettings($root, $config_path, $file = 'settings.yaml'){
-	    $settings = array();	
-	    if(file_exists($config_path.$file))
-    	    $settings = Yaml::parse($config_path . $file);
-    	
-    	if(file_exists($config_path . 'local.yaml')){
-    	    $local = (array)Yaml::parse($config_path . 'local.yaml');
-    	    $settings = empty($settings) ? $local : arrayMergeWithReplace($settings, $local);
-    	}
-
-        self::get('settings')->set($root, $settings);
-        if(isset($settings['global'])) self::get('settings')->set('global', $settings['global'], true);
-
-    	return $settings;
-	}
-	
 	/**
 	 * 
 	 * Enter description here ...
@@ -277,8 +253,10 @@ class Plugin{
     	        self::get('riUtility.Collection')->removeValue($settings['frontend']['preload'], $plugin);
     	        self::get('riUtility.Collection')->removeValue($settings['backend']['preload'], $plugin);
     	        
-    	        self::saveSettings('framework', $settings);
-    	        
+    	        self::get('settings')->saveLocal('framework', $settings);
+
+                self::get('settings')->reload();
+
     	        // add menu for ZC 1.5.0 >
     	        if(function_exists('zen_deregister_admin_pages')){
         	        if(($menus = self::get('settings')->get($plugin . '.global.backend.menu', null)) != null){	            	           
@@ -354,8 +332,10 @@ class Plugin{
         	        self::get('riUtility.Collection')->insertValue($settings['backend']['preload'], $plugin);
         	    }    	    
         	        
-    	        self::saveSettings('framework', $settings);
-    	        	        	       
+    	        self::get('settings')->saveLocal('framework', $settings);
+
+                self::get('settings')->reload();
+
     	        // add menu for ZC 1.5.0 >
     	        if(function_exists('zen_register_admin_page')){
     	            self::load($plugin);	        
@@ -392,14 +372,14 @@ class Plugin{
     	        if(Plugin::get($plugin_class)->install()){
         	        // we will put into the load
             	    self::get('riUtility.Collection')->insertValue($settings['installed'], $plugin);
-            	    self::saveSettings('framework', $settings);
+            	    self::get('settings')->saveLocal('framework', $settings);
             	    return true;
     	        }    	    
     	    }	        
 		}
 		else{		    
 		    self::get('riUtility.Collection')->insertValue($settings['installed'], $plugin);
-		    self::saveSettings('framework', $settings);
+		    self::get('settings')->saveLocal('framework', $settings);
             return true;
 		}
 		
@@ -418,7 +398,7 @@ class Plugin{
     	        if(Plugin::get($plugin_class)->uninstall()){
         	        // we will put into the load
             	    self::get('riUtility.Collection')->removeValue($settings['installed'], $plugin);
-            	    self::saveSettings('framework', $settings);
+            	    self::get('settings')->saveLocal('framework', $settings);
             	    
             	    self::deactivate($plugin);
             	    return true;
@@ -426,7 +406,7 @@ class Plugin{
     	    }
 	    }else{
             self::get('riUtility.Collection')->removeValue($settings['installed'], $plugin);
-            self::saveSettings('framework', $settings);
+            self::get('settings')->saveLocal('framework', $settings);
             
             self::deactivate($plugin);
             return true;	        
@@ -435,54 +415,13 @@ class Plugin{
 	    return false;
 	}
 	
-	public function isAdmin(){
+	public static function isAdmin(){
 	    return self::$is_admin;        
 	}
-	
-	/**
-	 * 
-	 * save settings into cache file ...
-	 */
-	public function loadCacheSettings(){      
-        if(file_exists(self::$cache_folder . self::$cache_file)){
-            self::get('settings')->init(unserialize(file_get_contents(self::$cache_folder . self::$cache_file)));    
-            return true;
-        }
-        return false;
-	}
-	
-	/**
-	 * 
-	 * save settings into cache file ...
-	 */
-    public function saveCacheSettings(){        	
-        $settings = self::get('settings')->get();    
-	    self::get('riUtility.File')->write(self::$cache_folder . self::$cache_file, serialize($settings));	    
-	}
-	
-	public function saveSettings($plugin = 'framework', $settings = array()){
-	    
-	    if($plugin == 'framework'){	        
-	        $config_path = __DIR__ .'/../../';
-	    }
-	    else
-	        $config_path = __DIR__ .'/../../' . $plugin . '/config/';
-	        
-	    if(empty($settings)){    
-            $all_settings = self::get('settings')->get($plugin); 
-            	        
-    	    $default_settings = Yaml::parse(__DIR__ .'/../../settings.yaml');
-    	    
-    	    $settings = self::get('riUtility.Collection')->multiArrayDiff($all_settings, $default_settings);    	    
-	    }
-	    
-	    // put into local.yaml
-	    file_put_contents($config_path . 'local.yaml', Yaml::dump($settings));
-	    
-	    // reset cache
-	    self::get('riCache.Cache')->remove('settings.backend.cache', self::$cache_folder);
-	    self::get('riCache.Cache')->remove('settings.frontend.cache', self::$cache_folder);
-	}
+
+    public static function getEnvironment(){
+        return self::$environment;
+    }
 	
     /**
      * 

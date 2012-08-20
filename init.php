@@ -48,11 +48,11 @@ $container->setParameter('request', $request);
 $container->register('settings', 'plugins\\riCore\\Settings');
 Plugin::init($class_loader, $container, $routes);
 
-if(Plugin::loadCacheSettings()){       
-    $framework_settings = $container->get('settings')->get('framework');
+if(Plugin::get('settings')->loadCache(Plugin::getEnvironment())){
+    $framework_settings = Plugin::get('settings')->get('framework');
 }
 else{
-    $framework_settings = Plugin::loadSettings('framework',__DIR__ . '/');
+    $framework_settings = Plugin::get('settings')->load('framework', __DIR__ . '/');
 }
 
 // a hack for zen
@@ -64,7 +64,7 @@ else{
 }
 
 if(!Plugin::get('settings')->isInitiated()){
-    Plugin::saveCacheSettings();
+    Plugin::get('settings')->saveCache(Plugin::getEnvironment());
 }
 // init the view to be used globally in ZC
 $riview = Plugin::get('view');

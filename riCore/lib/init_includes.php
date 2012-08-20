@@ -22,9 +22,6 @@ if(IS_ADMIN_FLAG){
 }
 else{
 	$riview->addDefaultPathPattern('template', DIR_FS_CATALOG . DIR_WS_TEMPLATE);
-
-    // we need to load theme settings
-    Plugin::loadSettings('theme', DIR_WS_TEMPLATE, 'theme.yaml');
 }
 
 // set locale

@@ -30,6 +30,14 @@ class ParameterBag{
 
     }
 
+    /**
+     * Unset a key
+     * @param $key
+     */
+    public function remove($key){
+        unset($this->_parameters[$key]);
+    }
+
     public function has($key){
         if(isset($this->_cache[$key])) return true;
 
