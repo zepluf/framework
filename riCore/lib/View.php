@@ -24,9 +24,9 @@ class View extends Object{
 	    
 	    Plugin::getContainer()->setParameter('templating.loader', $this->loader);
         Plugin::getContainer()->setParameter('templating.nameparser', Plugin::get('templating.nameparser'));
-	    
+
         $this->engine = Plugin::get('riCore.TemplateEngine');
-	    foreach(Plugin::get('settings')->get('framework.templating.engines') as $engine_name){
+	    foreach(Plugin::get('settings')->get('framework.templating.engines', array()) as $engine_name){
 	        if(($engine = Plugin::get('templating.engine.' . $engine_name)) !== false){
                 $engine->addHelpers(array(Plugin::get('templating.helper.slot'), Plugin::get('templating.holder')));
 	            $this->engine->addEngine($engine); 

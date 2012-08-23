@@ -173,28 +173,117 @@ function array_KSplice2(&$input, $start, $length=0, $replacement=null)
 }
 
 /**
-* If one of the Arguments isn't an Array, first Argument is returned. If an Element is an Array in both Arrays, Arrays are merged recursively, otherwise the element in $ins will overwrite the element in $arr (regardless if key is numeric or not). This also applys to Arrays in $arr, if the Element is scalar in $ins (in difference to the previous approach).
+* If one of the Arguments isn't an Array, first Argument is returned.
+* If an Element is an Array in both Arrays, Arrays are merged recursively,
+* otherwise the element in $ins will overwrite the element in $arr (regardless if key is numeric or not).
+* This also applys to Arrays in $arr, if the Element is scalar in $ins (in difference to the previous approach).
 * @param array $arr
 * @param array $ins
 * @return array 
 */
 function arrayMergeWithReplace($arr, $ins) {
-# Loop through all Elements in $ins:
-if (is_array($arr) && is_array($ins))
-    foreach ($ins as $k => $v) {
-        # Key exists in $arr and both Elemente are Arrays: Merge recursively.
-        if (isset($arr[$k]) && is_array($v) && is_array($arr[$k]))
-            $arr[$k] = arrayMergeWithReplace($arr[$k], $v);
-        # Place more Conditions here (see below)
-        # ...
-        # Otherwise replace Element in $arr with Element in $ins:
-        else if (is_integer($k)) {
-            if (!in_array($v, $arr))
-                $arr[] = $v;
+    # Loop through all Elements in $ins:
+    if (is_array($arr) && is_array($ins))
+        foreach ($ins as $k => $v) {
+            # Key exists in $arr and both Elemente are Arrays: Merge recursively.
+            if (isset($arr[$k]) && is_array($v) && is_array($arr[$k]))
+                $arr[$k] = arrayMergeWithReplace($arr[$k], $v);
+            # Place more Conditions here (see below)
+            # ...
+            # Otherwise replace Element in $arr with Element in $ins:
+            else if (is_integer($k)) {
+                if (!in_array($v, $arr))
+                    $arr[] = $v;
+            }
+            else
+                $arr[$k] = $v;
         }
-        else
-            $arr[$k] = $v;
+    # Return merged Arrays:
+    return($arr);
+}
+
+/**
+ * http://stackoverflow.com/questions/3876435/recursive-array-diff
+ * @param $array1
+ * @param $array2
+ * @return array
+ */
+function arrayRecursiveDiff($array1, $array2){
+    $aReturn = array();
+
+    foreach ($array1 as $mKey => $mValue) {
+        if (is_array($array2) && array_key_exists($mKey, $array2)) {
+            if (is_array($mValue)) {
+                $aRecursiveDiff = arrayRecursiveDiff($mValue, $array2[$mKey]);
+                if (count($aRecursiveDiff)) { $aReturn[$mKey] = $aRecursiveDiff; }
+            } else {
+                if ($mValue != $array2[$mKey]) {
+                    $aReturn[$mKey] = $mValue;
+                }
+            }
+        } else {
+            $aReturn[$mKey] = $mValue;
+        }
     }
-# Return merged Arrays:
-return($arr);
+    return $aReturn;
+}
+
+/**
+ * Check if the array is an associative array.
+ * Assuming even array start with index > 0 can still be the non associative array
+ * @param $arr
+ * @return bool
+ */
+function arrayIsAssoc($arr)
+{
+    foreach(array_keys($arr) as $key) if(!is_integer($key)) return true;
+    return false;
+}
+
+/**
+ * Check if the array is deeper than X level
+ * @param $array
+ * @param int $level
+ * @return bool
+ */
+function arrayIsDeeper($array, $level = 1){
+    $current_depth = 1;
+    foreach($array as $value)
+        if(is_array($value)) {
+            $current_depth ++;
+            if($current_depth > $level)
+                return true;
+            else return arrayIsDeeper($value, $level-1);
+        }
+    return false;
+}
+
+/**
+ * Reindex a multi-dim array
+ * @param $array
+ */
+function arrayRecursiveReindex(&$array){
+    // if this is a
+    if(!arrayIsAssoc($array)){
+        $array = array_values($array);
+    }
+
+    if(arrayIsDeeper($array, 1)){
+        foreach($array as $key => $value){
+            if(is_array($value))
+                arrayRecursiveReindex($array[$key]);
+        }
+    }
+}
+
+function arrayRemoveValue(&$array, $value){
+    if(!is_array($array)) $array = array();
+    else
+        $array = array_values(array_diff($array, array($value)));
+}
+
+function arrayInsertValue(&$array, $value){
+    if(!is_array($array)) $array = array($value);
+    else
+        if(!in_array($value, $array)) $array[] = $value;
 }

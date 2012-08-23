@@ -35,7 +35,7 @@
         	<argument>%templating.path.patterns%</argument>
         </service>                                
                     
-        <service id="riCore.Event" class="plugins\riCore\Event" scope="container">
+        <service id="riCore.Event" class="plugins\riCore\Event" scope="prototype">
         </service>
         <service id="riCore.Events" class="plugins\riCore\Events" scope="container">
         </service>

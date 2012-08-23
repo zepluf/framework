@@ -49,6 +49,10 @@ class AdminController extends Controller{
             $activated = Plugin::activate($plugin);                            
         }
 
+        if($activated){
+            Plugin::get('settings')->saveLocal();
+        }
+
         return new Response(json_encode(array(
         	'activated' => $activated,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
@@ -62,7 +66,11 @@ class AdminController extends Controller{
             $info = Plugin::info($plugin);
             $deactivated = Plugin::deactivate($plugin);                            
         }
-        
+
+        if($deactivated){
+            Plugin::get('settings')->saveLocal();
+        }
+
         return new Response(json_encode(array(
             'activated' => !$deactivated,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
@@ -82,6 +90,10 @@ class AdminController extends Controller{
             Plugin::get('riLog.Logs')->copyFromZen();
         }
 
+        if($installed){
+            Plugin::get('settings')->saveLocal();
+        }
+
         Plugin::get('riLog.Logs')->copyFromZen();
 
         return new Response(json_encode(array(
@@ -97,7 +109,11 @@ class AdminController extends Controller{
             $uninstalled = Plugin::uninstall($plugin);
             Plugin::get('riLog.Logs')->copyFromZen();
         }
-        
+
+        if($uninstalled){
+            Plugin::get('settings')->saveLocal();
+        }
+
         return new Response(json_encode(array(
             'installed' => !$uninstalled,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
@@ -108,11 +124,14 @@ class AdminController extends Controller{
      * Load current theme settings
      */
     public function loadThemeSettingsAction(){
-        Plugin::get('settings')->loadTheme();
+        // we need to load theme settings
+        Plugin::get('settings')->resetCache('theme');
+        Plugin::get('settings')->load('theme', __DIR__ . '/../../../' . DIR_WS_TEMPLATE, 'theme.yaml');
+
         return new Response(json_encode(array(
             'messages' => array(array(
                 'type' => 'success',
-                'message' => 'Theme\'s settings have been loaded'
+                'message' => ri('Theme %theme% settings have been loaded', array('%theme%' => DIR_WS_TEMPLATE))
             ))
         )));
     }

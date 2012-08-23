@@ -49,7 +49,13 @@ class Plugin{
 	public static function isLoaded($plugin){
 	    return in_array($plugin, self::$loaded);    
 	}
-	
+
+    /**
+     * Load a plugin or an array of plugin.
+     * This will add all the classes to the the classes loader etc
+     * @static
+     * @param $plugins
+     */
 	public static function load($plugins){
 		if(!is_array($plugins)) $plugins = array($plugins);
 		foreach ($plugins as $plugin){
@@ -98,16 +104,12 @@ class Plugin{
 				self::registerCore($plugin, $plugin_name);
 
 				// load plugin's settings
-				if(!self::get('settings')->isInitiated()){
-    				$settings = self::get('settings')->load($plugin, $config_path);
-				}
-				else {
-				    $settings = self::get('settings')->get($plugin);
-				    //self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
-				}
+
+				$settings = self::get('settings')->load($plugin);
+				//self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
+
 				
 				if(!empty($settings)){
-				    
                     // set routes
 					if(isset($settings['routes'])){
 						foreach($settings['routes'] as $key => $route){
@@ -123,11 +125,6 @@ class Plugin{
 				if(Plugin::get($plugin_name) !== false){
 				    Plugin::get($plugin_name)->init();
 				}
-				
-				if(file_exists($plugin_path.'/lib/auto_loaders.php')){
-				    require_once($plugin_path.'/lib/auto_loaders.php');
-				}
-				
 				
 				// set the dispatcher
 				$event = new PluginEvent();				
@@ -147,12 +144,12 @@ class Plugin{
         }
     }
 
-	/**
-	 * 
-	 * Enter description here ...
-	 * @param string $plugin_path
-	 * @param string $fallback
-	 */
+    /**
+     * Load the translation files of the plugin
+     * @static
+     * @param $plugin_path
+     * @param $fallback
+     */
 	private static function loadTranslations($plugin_path, $fallback)
     {        
         if(is_dir($plugin_path . 'translations')){
@@ -183,11 +180,22 @@ class Plugin{
             }
         }                
     }
-	
+
+    /**
+     * Returns the container
+     * @static
+     * @return mixed
+     */
 	public static function getContainer(){
 		return self::$container;
 	}		
-	
+
+    /**
+     * Returns the specific service
+     * @static
+     * @param $service
+     * @return bool
+     */
 	public static function get($service){
 	    if(!self::$container->has($service)){
 	        // see if we should try to load this plugin
@@ -205,23 +213,85 @@ class Plugin{
         }
 		return $service;
 	}
-	
+
+    /**
+     * This function will uninstall a plugin
+     * It will also call the plugins/pluginfolder/PluginClass->install() method of exists
+     * @param $plugin
+     * @return bool
+     */
+    public function install($plugin){
+        $settings = self::get('settings')->get('framework');
+
+        $plugin_class = ucfirst($plugin);
+
+        self::registerCore($plugin, $plugin_class);
+
+        if(Plugin::get($plugin_class) !== false){
+            if(!isset($settings['installed']) || !in_array($plugin, $settings['installed'])){
+                $settings['installed'][] = $plugin;
+                if(Plugin::get($plugin_class)->install()){
+                    // we will put into the load
+
+                    arrayInsertValue($settings['installed'], $plugin);
+
+                    self::get('settings')->set('framework.installed', $settings['installed'], true);
+
+                    return true;
+                }
+            }
+        }
+        else{
+            arrayInsertValue($settings['installed'], $plugin);
+
+            self::get('settings')->set('framework.installed', $settings['installed'], true);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * This function will uninstall a plugin
+     * It will also call the plugins/pluginfolder/PluginClass->uninstall() method of exists
+     * @param $plugin
+     * @return bool
+     */
+    public function uninstall($plugin){
+        $settings = self::get('settings')->get('framework');
+
+        $plugin_class = ucfirst($plugin);
+
+        if(Plugin::get($plugin) !== false){
+            if(!isset($settings['installed']) || in_array($plugin, $settings['installed'])){
+                if(Plugin::get($plugin_class)->uninstall()){
+                    // we will put into the load
+                    arrayRemoveValue($settings['installed'], $plugin);
+                    self::get('settings')->set('framework.installed', $settings['installed'], true);
+
+                    self::deactivate($plugin);
+                    return true;
+                }
+            }
+        }else{
+            arrayRemoveValue($settings['installed'], $plugin);
+            self::get('settings')->set('framework.installed', $settings['installed'], true);
+
+            self::deactivate($plugin);
+            return true;
+        }
+
+        return false;
+    }
+
 	/**
-	 * 
-	 * Enter description here ...
-	 * @param unknown_type $plugin
-	 */
-	public function isActivated($plugin){
-	    return in_array($plugin, self::get('settings')->get('framework.activated'));
-	}
-	
-	/**
-	 * 
-	 * Enter description here ...
-	 * @param unknown_type $plugin
-	 */
+     * Check if the plugin is installed
+     * @param $plugin
+     * @return bool
+     */
     public function isInstalled($plugin){
-	    return in_array($plugin, self::get('settings')->get('framework.installed'));
+	    return in_array($plugin, self::get('settings')->get('framework.installed', array()));
 	}
 	
 	/**
@@ -238,24 +308,100 @@ class Plugin{
 	            
         return self::$info[$plugin];     
 	}
-	
+
+    /**
+     * This function will activate a plugin
+     * It will also call the plugins/pluginfolder/PluginClass->activate() method of exists
+     * @param $plugin
+     * @return bool
+     */
+    public function activate($plugin){
+        $settings = self::get('settings')->get('framework');
+
+        if(!isset($settings['activated']))
+            $settings['activated'] = array();
+
+        if(!in_array($plugin, $settings['activated'])){
+            if(Plugin::get($plugin) === false || Plugin::get($plugin)->activate() !== false){
+                $settings['activated'][] = $plugin;
+
+                // we will put into the load
+                $info = Plugin::info($plugin);
+
+                // check dependencies first
+                if(isset($info->dependencies->plugins)){
+                    $error = false;
+                    foreach($info->dependencies->plugins->plugin as $dependent_plugin){
+                        if(!self::isInstalled($dependent_plugin->codename)){
+                            $error = true;
+                            self::get('riLog.Logs')->add(array(
+                                'message' => ri('Plugin %plugin% min version %min% is required', array(
+                                        '%plugin%' => $dependent_plugin->codename,
+                                        '%min%' => $dependent_plugin->min)
+                                )));
+                        }
+
+                        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == self::LESS){
+                            // we need to check the version
+                            $error = true;
+                            self::get('riLog.Logs')->add(array(
+                                'message' => ri('Plugin %plugin% min version %min% is required', array(
+                                        '%plugin%' => $dependent_plugin->codename,
+                                        '%min%' => $dependent_plugin->min)
+                                )));
+                        }
+                    }
+
+                    if($error) return false;
+                }
+
+                if($info->preload->frontend == 'true'){
+                    if(!isset($settings['frontend']['preload'])) $settings['frontend']['preload'] = array();
+                    arrayInsertValue($settings['frontend']['preload'], $plugin);
+                }
+                if($info->preload->backend == 'true'){
+                    if(!isset($settings['backend']['preload'])) $settings['backend']['preload'] = array();
+                    arrayInsertValue($settings['backend']['preload'], $plugin);
+                }
+
+                // set back to settings
+                self::get('settings')->set('framework', $settings, true);
+
+                // add menu for ZC 1.5.0 >
+                if(function_exists('zen_register_admin_page')){
+                    self::load($plugin);
+                    if(($menus = self::get('settings')->get($plugin . '.global.backend.menu', null)) != null){
+                        foreach ($menus as $menu_key => $sub_menus)
+                            foreach($sub_menus as $menu){
+                                $id = preg_replace("/[^A-Za-z0-9\s\s+\-]/", "_", $menu['link']);
+                                zen_deregister_admin_pages('ZEPLUF_' . $id);
+                                zen_register_admin_page('ZEPLUF_' . $id, 'ZEPLUF_MENU_NAME_' . $id, 'ZEPLUF_MENU_URL_' . $id, '', $menu_key, 'Y', 1);
+                            }
+                    }
+                }
+            }
+        }
+
+        $settings = self::get('settings')->load($plugin);
+        return true;
+    }
+
 	/**
-	 * 
-	 * Enter description here ...
-	 * @param string $plugin
-	 */
+     * This function will deactivate a plugin
+     * It will also call the plugins/pluginfolder/PluginClass->deactivate() method of exists
+     * @param $plugin
+     * @return bool
+     */
 	public function deactivate($plugin){
-	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');
+        $settings = self::get('settings')->get('framework');
 	    	    
 	    if(in_array($plugin, $settings['activated'])){	    
 	        if(Plugin::get($plugin) === false || Plugin::get($plugin)->deactivate() !== false){  
-    	        self::get('riUtility.Collection')->removeValue($settings['activated'], $plugin);
-    	        self::get('riUtility.Collection')->removeValue($settings['frontend']['preload'], $plugin);
-    	        self::get('riUtility.Collection')->removeValue($settings['backend']['preload'], $plugin);
-    	        
-    	        self::get('settings')->saveLocal('framework', $settings);
+    	        arrayRemoveValue($settings['activated'], $plugin);
+    	        arrayRemoveValue($settings['frontend']['preload'], $plugin);
+    	        arrayRemoveValue($settings['backend']['preload'], $plugin);
 
-                self::get('settings')->reload();
+                self::get('settings')->set('framework', $settings);
 
     	        // add menu for ZC 1.5.0 >
     	        if(function_exists('zen_deregister_admin_pages')){
@@ -271,150 +417,22 @@ class Plugin{
 	    }
 	        	        	    
 	    return true;
-	}		
-	
-	/**
-	 * 
-	 * Enter description here ...
-	 * @param unknown_type $plugin
-	 */
-	public function activate($plugin){
-	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');
-	    
-	    if(!is_array($settings))
-            $settings = array();
-
-        if(!isset($settings['activated']))
-            $settings['activated'] = array();
-
-	    if(!in_array($plugin, $settings['activated'])){
-	        if(Plugin::get($plugin) === false || Plugin::get($plugin)->activate() !== false){
-    	        $settings['activated'][] = $plugin;
-    	        
-    	        // we will put into the load
-        	    $info = Plugin::info($plugin);
-        	    
-        	    // check dependencies first
-                if(isset($info->dependencies->plugins)){
-                    $error = false;
-                    foreach($info->dependencies->plugins->plugin as $dependent_plugin){
-                        if(!self::isInstalled($dependent_plugin->codename)){
-                            $error = true;
-                            self::get('riLog.Logs')->add(array(
-                                'message' => ri('Plugin %plugin% min version %min% is required', array(
-                                    '%plugin%' => $dependent_plugin->codename,
-                                    '%min%' => $dependent_plugin->min)
-                                )));
-                        }
-
-                        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == self::LESS){
-                            // we need to check the version
-
-                            $error = true;
-                            self::get('riLog.Logs')->add(array(
-                            'message' => ri('Plugin %plugin% min version %min% is required', array(
-                                '%plugin%' => $dependent_plugin->codename,
-                                '%min%' => $dependent_plugin->min)
-                            )));
-
-                        }
-                    }
-
-                    if($error) return false;
-                }
-
-        	    if($info->preload->frontend == 'true'){
-        	        if(!isset($settings['frontend']['preload'])) $settings['frontend']['preload'] = array();
-        	        self::get('riUtility.Collection')->insertValue($settings['frontend']['preload'], $plugin);
-        	    }    	        
-        	    if($info->preload->backend == 'true'){
-        	        if(!isset($settings['backend']['preload'])) $settings['backend']['preload'] = array();
-        	        self::get('riUtility.Collection')->insertValue($settings['backend']['preload'], $plugin);
-        	    }    	    
-        	        
-    	        self::get('settings')->saveLocal('framework', $settings);
-
-                self::get('settings')->reload();
-
-    	        // add menu for ZC 1.5.0 >
-    	        if(function_exists('zen_register_admin_page')){
-    	            self::load($plugin);	        
-        	        if(($menus = self::get('settings')->get($plugin . '.global.backend.menu', null)) != null){	            	           
-        	            foreach ($menus as $menu_key => $sub_menus)
-        	                foreach($sub_menus as $menu){
-        	                    $id = preg_replace("/[^A-Za-z0-9\s\s+\-]/", "_", $menu['link']);	                    
-        	                    zen_register_admin_page('ZEPLUF_' . $id, 'ZEPLUF_MENU_NAME_' . $id, 'ZEPLUF_MENU_URL_' . $id, '', $menu_key, 'Y', 1);
-        	                }	                
-        	        }
-    	        }
-	        }
-	    }
-	    return true;
 	}
-	
-	/**
-	 * 
-	 * Enter description here ...
-	 * @param string $plugin
-	 */
-	public function install($plugin){    
-	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');	      
-	    
-	    $plugin_path = realpath(__DIR__.'/../../'.$plugin.'/') . '/';
-	    
-	    $plugin_class = ucfirst($plugin);
 
-        self::registerCore($plugin, $plugin_class);
+    /**
+     * check if a plugin is activated
+     * @param $plugin
+     * @return bool
+     */
+    public function isActivated($plugin){
+        return in_array($plugin, self::get('settings')->get('framework.activated'));
+    }
 
-	    if(Plugin::get($plugin_class) !== false){
-    	    if(!in_array($plugin, $settings['installed'])){
-    	        $settings['installed'][] = $plugin;
-    	        if(Plugin::get($plugin_class)->install()){
-        	        // we will put into the load
-            	    self::get('riUtility.Collection')->insertValue($settings['installed'], $plugin);
-            	    self::get('settings')->saveLocal('framework', $settings);
-            	    return true;
-    	        }    	    
-    	    }	        
-		}
-		else{		    
-		    self::get('riUtility.Collection')->insertValue($settings['installed'], $plugin);
-		    self::get('settings')->saveLocal('framework', $settings);
-            return true;
-		}
-		
-	    return false;
-	}
-	
-	public function uninstall($plugin){
-	    $settings = Yaml::parse(__DIR__ .'/../../local.yaml');
-	    
-	    $plugin_path = realpath(__DIR__.'/../../'.$plugin.'/') . '/';
-	    
-	    $plugin_class = ucfirst($plugin);
-	    
-	    if(Plugin::get($plugin) !== false){	        
-	        if(in_array($plugin, $settings['installed'])){    	        
-    	        if(Plugin::get($plugin_class)->uninstall()){
-        	        // we will put into the load
-            	    self::get('riUtility.Collection')->removeValue($settings['installed'], $plugin);
-            	    self::get('settings')->saveLocal('framework', $settings);
-            	    
-            	    self::deactivate($plugin);
-            	    return true;
-    	        }    	    
-    	    }
-	    }else{
-            self::get('riUtility.Collection')->removeValue($settings['installed'], $plugin);
-            self::get('settings')->saveLocal('framework', $settings);
-            
-            self::deactivate($plugin);
-            return true;	        
-	    }
-	    
-	    return false;
-	}
-	
+    /**
+     * Check if we are in admin
+     * @static
+     * @return bool
+     */
 	public static function isAdmin(){
 	    return self::$is_admin;        
 	}
@@ -424,10 +442,9 @@ class Plugin{
     }
 	
     /**
-     * 
-     * Enter description here ...
-     * @param unknown_type $base_version
-     * @param unknown_type $compare_version
+     * Check if the compare_version is newer than base_version
+     * @param string $base_version
+     * @param string $compare_version
      */
 	private function compareVersions($base_version, $compare_version){
 	   $base_version = (preg_split('/[^0-9a-z]/i', $base_version));
@@ -450,5 +467,5 @@ class Plugin{
 	       return self::GREATER;
 	       
 	   return self::LESS;
-	}	
+	}
 }

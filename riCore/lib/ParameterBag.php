@@ -11,6 +11,8 @@ namespace plugins\riCore;
 
 class ParameterBag{
 
+    const DEFAULT_KEY = 'THISISADEFAULTKEY';
+
     protected $_parameters, $_cache;
 
     public function set($key, $value, $merge = false){
@@ -18,16 +20,21 @@ class ParameterBag{
         $key = explode('.', $key);
 
         $r = & $this->_parameters;
+        $keys = array();
         foreach ($key as $k){
             if(!isset($r[$k])) $r[$k] = null;
             $r = & $r[$k];
+
+            // we need to reset cache
+            $keys[] = $k;
+            unset($this->_cache[implode('.', $keys)]);
         }
 
         if(!$merge || !is_array($r))
             $r = $value;
-        else
-            $r = array_merge_recursive($r, $value);
-
+        else{
+            $r = arrayMergeWithReplace($r, $value);
+        }
     }
 
     /**
@@ -44,7 +51,7 @@ class ParameterBag{
         return $this->get($key, 'THISISADEFAULTKEY') != 'THISISADEFAULTKEY';
     }
 
-    public function get($key = null, $default = null){
+    public function get($key = null, $default = self::DEFAULT_KEY){
         if(empty($key)) return $this->_parameters;
 
         if(!isset($this->_cache[$key])){

@@ -1,32 +1,32 @@
+# do not ever edit this file
+
+# status
+initalized: false
+
+# plugins
 installed:
   - riCore
-  - riSimplex
-  - riCache
-  - riCjLoader
   - riPlugin
-  - riUtility
-  - riLog
-  - riSession
-  - riResultList
-  - riZCAdmin
   
 activated:
-  #- riCore
-  - riSimplex
-  - riCache
-  - riCjLoader  
+  - riCore
   - riPlugin
+
+core:
   - riUtility
+  - riCache
   - riLog
-  - riSession
+  - riSimplex
+  #- riSession
   - riResultList
   - riZCAdmin
+  - riCjLoader
 
 backend:
-    preload: [riCore, riCache, riUtility, riLog, riSession, riResultList, riZCAdmin, riCjLoader]
+    preload: [riCore]
 
 frontend:
-    preload: [riCore, riCache, riUtility, riLog, riSession, riResultList, riCjLoader]
+    preload: [riCore]
 
 # templating
 templating: { engines: ['php'] }    

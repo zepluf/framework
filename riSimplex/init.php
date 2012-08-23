@@ -9,5 +9,6 @@ try{
     $response = Plugin::get('riSimplex.Framework')->handle($request, Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST, false);
 }catch (Exception $e){
     // do something?
+    echo $e->getMessage();
     exit('something went wrong with the routing');
 }
