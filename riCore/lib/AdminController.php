@@ -13,8 +13,9 @@ class AdminController extends Controller{
 		$settings = Yaml::parse(__DIR__ .'/../../settings.yaml');
         
 		// a temporary hack to avoid displaying installation folder
-		$ignore = array('install');
-		
+		$ignore = Plugin::get('settings')->get('framework.core', array());
+		$ignore[] = 'install';
+
 		$plugins = array();
         foreach(glob(DIR_FS_CATALOG . 'plugins/*', GLOB_ONLYDIR) as $plugin)
         {         

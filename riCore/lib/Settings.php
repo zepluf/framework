@@ -10,7 +10,7 @@ class Settings extends ParameterBag{
     $cache_folder;
 
     public function __construct(){
-        $this->cache_folder = __DIR__ . '/../../../cache/riPlugin/';
+        $this->cache_folder = __DIR__ . '/../../../cache/ZePLUF/';
         Yaml::enablePhpParsing();
     }
 
@@ -122,6 +122,7 @@ class Settings extends ParameterBag{
      * save settings into cache file ...
      */
     public function saveCache($cache_file, $settings = null){
+        riMkDir($this->cache_folder);
         return @file_put_contents($this->cache_folder . $cache_file . '.cache', serialize($settings));
     }
 

@@ -276,14 +276,38 @@ function arrayRecursiveReindex(&$array){
     }
 }
 
+/**
+ * @param $array
+ * @param $value
+ */
 function arrayRemoveValue(&$array, $value){
     if(!is_array($array)) $array = array();
     else
         $array = array_values(array_diff($array, array($value)));
 }
 
+/**
+ * @param $array
+ * @param $value
+ */
 function arrayInsertValue(&$array, $value){
     if(!is_array($array)) $array = array($value);
     else
         if(!in_array($value, $array)) $array[] = $value;
+}
+
+/**
+ * tries to generate new folders with given path
+ * @param $absolute_path
+ * @param int $chmod
+ * @return bool
+ */
+function riMkDir($absolute_path, $chmod = 0777, $recursive = true){
+    $success = false;
+    if(!is_dir($absolute_path)){
+        $old_umask = umask(0);
+        $success = @mkdir($absolute_path, $chmod, $recursive);
+        umask($old_umask);
+    }
+    return $success;
 }

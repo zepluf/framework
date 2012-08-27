@@ -115,7 +115,7 @@ class DatabasePatch{
 					case (substr($line_upper, 0, 13) == 'CREATE TABLE '):
 						// check to see if table exists
 						$table = (strtoupper($param[2].' '.$param[3].' '.$param[4]) == 'IF NOT EXISTS') ? $param[5] : $param[2];
-						$result=$this->zen_table_exists($table);
+						$result = $this->zen_table_exists($table);
 						if ($result==true) {
 							$this->zen_write_to_upgrade_exceptions_table($line, sprintf(REASON_TABLE_ALREADY_EXISTS,$table), $sql_file);
 							$ignore_line=true;

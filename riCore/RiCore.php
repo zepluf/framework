@@ -17,6 +17,13 @@ class RiCore extends PluginCore{
         if(!IS_ADMIN_FLAG){
             $autoLoadConfig[999][] = array('autoType' => 'require', 'loadFile' => __DIR__ . '/lib/frontend_routing.php');
         }
+
+        // for the holders
+        $holders = Plugin::get('settings')->get('global.holders', array());
+
+        foreach($holders as $holder => $holder_parameters){
+            Plugin::get('dispatcher')->addListener(\plugins\riCore\HolderHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
+        }
 	}	
 	
 	public function onPageEnd(Event $event)
@@ -27,5 +34,10 @@ class RiCore extends PluginCore{
         Plugin::get('templating.holder')->injectHolders($content);
         // extend here the functionality of the core
         // ...
+    }
+
+    public function onHolderStart(Event $event){
+        $holder_settings = Plugin::get('settings')->get('global.holders.'.$event->getSlot());
+        Plugin::get('templating.holder')->add($event->getSlot(), Plugin::get('view')->render($holder_settings['template'], $holder_settings['parameters']));
     }
 }

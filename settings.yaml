@@ -5,14 +5,13 @@ initalized: false
 
 # plugins
 installed:
-  - riCore
   - riPlugin
   
 activated:
-  - riCore
   - riPlugin
 
 core:
+  - riCore
   - riUtility
   - riCache
   - riLog
@@ -23,10 +22,10 @@ core:
   - riCjLoader
 
 backend:
-    preload: [riCore]
+    preload: []
 
 frontend:
-    preload: [riCore]
+    preload: []
 
 # templating
 templating: { engines: ['php'] }    

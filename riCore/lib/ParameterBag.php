@@ -63,7 +63,7 @@ class ParameterBag{
 
     protected function _get($key, $settings, $default){
         foreach($key as $k){
-            if(isset($settings[$k])){
+            if(array_key_exists($k, $settings)){
                 array_shift($key);
                 if(count($key) > 0)
                     return $this->_get($key, $settings[$k], $default);

@@ -40,6 +40,34 @@ class Plugin{
             self::$version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
 
         Yaml::enablePhpParsing();
+
+        // load theme settings
+        self::get('settings')->load('theme');
+
+        // load framework settings
+        self::get('settings')->load('framework', __DIR__ . '/../../');
+        $framework_settings = self::get('settings')->get('framework');
+
+        // if this is the first time ZePLUF is loaded we need to do some init
+        if(!$framework_settings['initalized']){
+            foreach ($framework_settings['core'] as $plugin){
+                self::install($plugin);
+                self::load($plugin);
+                self::activate($plugin);
+            }
+
+            // if this is the first time
+            self::get('settings')->set('framework.initalized', true);
+            self::get('settings')->saveLocal();
+        }
+
+        // a hack for zen
+        if(self::isAdmin()){
+            if(is_array($framework_settings['backend']['preload'])) Plugin::load($framework_settings['backend']['preload']);
+        }
+        else{
+            if(is_array($framework_settings['frontend']['preload'])) Plugin::load($framework_settings['frontend']['preload']);
+        }
 	}
 	
 	public static function getLoaded(){
