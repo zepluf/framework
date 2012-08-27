@@ -4,11 +4,12 @@ namespace plugins\riCore;
 use plugins\riCore\Event;
 use plugins\riCore\PluginCore;
 use plugins\riPlugin\Plugin;
-
+use plugins\riCore\Events;
+use plugins\riCore\HolderHelperEvents;
 
 class RiCore extends PluginCore{
 	public function init(){
-        Plugin::get('dispatcher')->addListener(\plugins\riCore\Events::onPageEnd, array($this, 'onPageEnd'));
+        Plugin::get('dispatcher')->addListener(Events::onPageEnd, array($this, 'onPageEnd'));
 
         global $autoLoadConfig;
         // we want to include the loader into the view for easy access, we need to do it after the template is loaded
@@ -21,8 +22,8 @@ class RiCore extends PluginCore{
         // for the holders
         $holders = Plugin::get('settings')->get('global.holders', array());
 
-        foreach($holders as $holder => $holder_parameters){
-            Plugin::get('dispatcher')->addListener(\plugins\riCore\HolderHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
+        foreach($holders as $holder => $content){
+            Plugin::get('dispatcher')->addListener(HolderHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
         }
 	}	
 	
@@ -37,7 +38,8 @@ class RiCore extends PluginCore{
     }
 
     public function onHolderStart(Event $event){
-        $holder_settings = Plugin::get('settings')->get('global.holders.'.$event->getSlot());
-        Plugin::get('templating.holder')->add($event->getSlot(), Plugin::get('view')->render($holder_settings['template'], $holder_settings['parameters']));
+        $holder_content = Plugin::get('settings')->get('global.holders.'.$event->getSlot());
+        foreach($holder_content as $content)
+            Plugin::get('templating.holder')->add($event->getSlot(), Plugin::get('view')->render($content['template'], $content['parameters']));
     }
 }
