@@ -48,6 +48,17 @@ class Plugin{
         self::get('settings')->load('framework', __DIR__ . '/../../');
         $framework_settings = self::get('settings')->get('framework');
 
+        // a hack for zen
+        if(self::isAdmin()){
+            if(is_array($framework_settings['backend']['preload'])) Plugin::load($framework_settings['backend']['preload']);
+        }
+        else{
+            if(is_array($framework_settings['frontend']['preload'])) Plugin::load($framework_settings['frontend']['preload']);
+        }
+	}
+
+    public static function setup(){
+        $framework_settings = self::get('settings')->get('framework');
         // if this is the first time ZePLUF is loaded we need to do some init
         if(!$framework_settings['initalized']){
             foreach ($framework_settings['core'] as $plugin){
@@ -60,15 +71,7 @@ class Plugin{
             self::get('settings')->set('framework.initalized', true);
             self::get('settings')->saveLocal();
         }
-
-        // a hack for zen
-        if(self::isAdmin()){
-            if(is_array($framework_settings['backend']['preload'])) Plugin::load($framework_settings['backend']['preload']);
-        }
-        else{
-            if(is_array($framework_settings['frontend']['preload'])) Plugin::load($framework_settings['frontend']['preload']);
-        }
-	}
+    }
 	
 	public static function getLoaded(){
 	    return self::$loaded;    
@@ -401,9 +404,9 @@ class Plugin{
                     if(($menus = self::get('settings')->get($plugin . '.global.backend.menu', null)) != null){
                         foreach ($menus as $menu_key => $sub_menus)
                             foreach($sub_menus as $menu){
-                                $id = preg_replace("/[^A-Za-z0-9\s\s+\-]/", "_", $menu['link']);
-                                zen_deregister_admin_pages('ZEPLUF_' . $id);
-                                zen_register_admin_page('ZEPLUF_' . $id, 'ZEPLUF_MENU_NAME_' . $id, 'ZEPLUF_MENU_URL_' . $id, '', $menu_key, 'Y', 1);
+                                $id = md5($menu['link']);
+                                zen_deregister_admin_pages($id);
+                                zen_register_admin_page($id, 'ZEPLUF_NAME_' . $id, 'ZEPLUF_URL_' . $id, '', $menu_key, 'Y', 1);
                             }
                     }
                 }
@@ -433,11 +436,11 @@ class Plugin{
 
     	        // add menu for ZC 1.5.0 >
     	        if(function_exists('zen_deregister_admin_pages')){
-        	        if(($menus = self::get('settings')->get($plugin . '.global.backend.menu', null)) != null){	            	           
-        	            foreach ($menus as $menu_key => $sub_menus)
+        	        if(($menus = self::get('settings')->get($plugin . '.global.backend.menu', null)) != null){
+                        foreach ($menus as $menu_key => $sub_menus)
         	                foreach($sub_menus as $menu){
-        	                    $id = preg_replace("/[^A-Za-z0-9\s\s+\-]/", "_", $menu['link']);	                    
-        	                    zen_deregister_admin_pages('ZEPLUF_' . $id);
+        	                    $id = md5($menu['link']);
+        	                    zen_deregister_admin_pages($id);
         	                }	                
         	        }
     	        }

@@ -14,8 +14,8 @@
 			<email>support@rubikintegration.com</email>
 		</author>
 	</authors>
-	<released>Aug 23rd 2012</released>
-	<release>1.4.0</release>
+	<released>Aug 28th 2012</released>
+	<release>1.4.1</release>
 	<license uri="http://www.symfony-project.org/license">MIT license</license>
 	<dependencies>
   		<required>
@@ -28,6 +28,16 @@
 	</dependencies>
 	<changelog>
         <release>
+            <version>
+                <release>1.4.1</release>
+            </version>
+            <license uri="http://www.symfony-project.com/license">MIT license</license>
+            <released>Aug 28th 2012</released>
+            <notes>
+                * Various bug fixes
+                * Now allow core plugins to add menu to admin correctly
+            </notes>
+        </release>
             <version>
                 <release>1.4.0</release>
             </version>

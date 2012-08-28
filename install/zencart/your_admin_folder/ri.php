@@ -20,6 +20,13 @@
 //  $Id: zones.php 1969 2005-09-13 06:57:21Z drbyte $
 //
 require('includes/application_top.php');
+
+// added to allow setting up core plugins AFTER all zencart variables have been setup
+if($_GET['setup'] == 1){
+    plugins\riPlugin\Plugin::setup();
+    die(sprintf("Setup has been done! You can <a href='%s'>click here</a> to visit the ZePLUF Manager", "ri.php/riplugin/manager/"));
+}
+
 require('../plugins/riSimplex/init.php');
 
 //some hacks for zencart
