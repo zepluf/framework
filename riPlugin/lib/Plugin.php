@@ -294,23 +294,18 @@ class Plugin{
 
         $plugin_class = ucfirst($plugin);
 
-        if(Plugin::get($plugin) !== false){
-            if(!isset($settings['installed']) || in_array($plugin, $settings['installed'])){
-                if(Plugin::get($plugin_class)->uninstall()){
-                    // we will put into the load
-                    arrayRemoveValue($settings['installed'], $plugin);
-                    self::get('settings')->set('framework.installed', $settings['installed'], true);
+        // we need to load this plugin even if it has been de-activated
+        self::load($plugin);
 
-                    self::deactivate($plugin);
-                    return true;
-                }
+        if(!isset($settings['installed']) || in_array($plugin, $settings['installed'])){
+            if(Plugin::get($plugin_class)->uninstall()){
+                // we will put into the load
+                arrayRemoveValue($settings['installed'], $plugin);
+                self::get('settings')->set('framework.installed', $settings['installed'], true);
+
+                self::deactivate($plugin);
+                return true;
             }
-        }else{
-            arrayRemoveValue($settings['installed'], $plugin);
-            self::get('settings')->set('framework.installed', $settings['installed'], true);
-
-            self::deactivate($plugin);
-            return true;
         }
 
         return false;

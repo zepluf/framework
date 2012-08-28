@@ -15,7 +15,7 @@
 		</author>
 	</authors>
 	<released>Aug 28th 2012</released>
-	<release>1.4.1</release>
+	<release>1.4.2</release>
 	<license uri="http://www.symfony-project.org/license">MIT license</license>
 	<dependencies>
   		<required>
@@ -27,6 +27,16 @@
    		</plugins>
 	</dependencies>
 	<changelog>
+		<release>
+            <version>
+                <release>1.4.2</release>
+            </version>
+            <license uri="http://www.symfony-project.com/license">MIT license</license>
+            <released>Aug 28th 2012</released>
+            <notes>
+                * Fixed some issue with re-installing a plugin with existing tables                
+            </notes>
+        </release>
         <release>
             <version>
                 <release>1.4.1</release>

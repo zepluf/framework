@@ -118,7 +118,7 @@ class DatabasePatch{
 						$result = $this->zen_table_exists($table);
 						if ($result==true) {
 							$this->zen_write_to_upgrade_exceptions_table($line, sprintf(REASON_TABLE_ALREADY_EXISTS,$table), $sql_file);
-							$ignore_line=true;
+							//$ignore_line=true;
 							$result=sprintf(REASON_TABLE_ALREADY_EXISTS,$table); //duplicated here for on-screen error-reporting
 							break;
 						} else {
