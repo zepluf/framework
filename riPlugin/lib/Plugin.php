@@ -57,7 +57,23 @@ class Plugin{
         }
 	}
 
-    public static function setup(){
+    public static function setup($force = false){
+        // we should check if some folders are writtable
+
+        if(!self::get('settings')->preCheck())
+            die(sprintf("ZePLUF is using this folder %s to write cache files, please make it writeable!", self::get('settings')->getCacheRoot()));
+
+        $local = realpath(__DIR__ . '/../../local.yaml');
+        if(!is_writable($local))
+            die(sprintf("ZePLUF is using this file %s to write cache files, please create/make it writeable!", $local));
+
+        if($force){
+            // we should remove all files in the cache
+            self::get('settings')->resetCache();
+            // then we should also remove the local.yaml
+            @unlink($local);
+        }
+
         $framework_settings = self::get('settings')->get('framework');
         // if this is the first time ZePLUF is loaded we need to do some init
         if(!$framework_settings['initalized']){
@@ -450,7 +466,7 @@ class Plugin{
      * @param $plugin
      * @return bool
      */
-    public function isActivated($plugin){
+    public static function isActivated($plugin){
         return in_array($plugin, self::get('settings')->get('framework.activated'));
     }
 

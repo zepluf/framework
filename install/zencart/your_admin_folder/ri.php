@@ -23,7 +23,7 @@ require('includes/application_top.php');
 
 // added to allow setting up core plugins AFTER all zencart variables have been setup
 if($_GET['setup'] == 1){
-    plugins\riPlugin\Plugin::setup();
+    plugins\riPlugin\Plugin::setup((bool)$_GET['force']);
     die(sprintf("Setup has been done! You can <a href='%s'>click here</a> to visit the ZePLUF Manager", "ri.php/riplugin/manager/"));
 }
 

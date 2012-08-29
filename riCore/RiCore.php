@@ -39,7 +39,17 @@ class RiCore extends PluginCore{
 
     public function onHolderStart(Event $event){
         $holder_content = Plugin::get('settings')->get('global.holders.'.$event->getSlot());
-        foreach($holder_content as $content)
+        foreach($holder_content as $content){
+            $load = true;
+
+            // we will check to see if this is a plugin's template, and if so we need to check if it is activated
+            if(strpos($content['template'], '::') !== false){
+                $plugin = current(explode('::', $content['template']));
+                if(!Plugin::isActivated($plugin))
+                    $load = false;
+            }
+            if($load)
             Plugin::get('templating.holder')->add($event->getSlot(), Plugin::get('view')->render($content['template'], $content['parameters']));
+        }
     }
 }

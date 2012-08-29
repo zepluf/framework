@@ -48,6 +48,7 @@
                 * Now allow core plugins to add menu to admin correctly
             </notes>
         </release>
+        <release>
             <version>
                 <release>1.4.0</release>
             </version>

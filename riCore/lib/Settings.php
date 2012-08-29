@@ -10,8 +10,23 @@ class Settings extends ParameterBag{
     $cache_folder;
 
     public function __construct(){
-        $this->cache_folder = __DIR__ . '/../../../cache/ZePLUF/';
+        $this->cache_root_folder =  realpath(__DIR__ . '/../../../cache') . '/';
+        $this->cache_folder = $this->cache_root_folder . 'ZePLUF/';
         Yaml::enablePhpParsing();
+    }
+
+    /**
+     * @return bool
+     */
+    public function preCheck(){
+        return is_writable($this->cache_root_folder);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCacheRoot(){
+        return $this->cache_root_folder;
     }
 
     public function initialize($settings){
