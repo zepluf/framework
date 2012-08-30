@@ -63,15 +63,18 @@ class Plugin{
         if(!self::get('settings')->preCheck())
             die(sprintf("ZePLUF is using this folder %s to write cache files, please make it writeable!", self::get('settings')->getCacheRoot()));
 
-        $local = realpath(__DIR__ . '/../../local.yaml');
-        if(!is_writable($local))
-            die(sprintf("ZePLUF is using this file %s to write cache files, please create/make it writeable!", $local));
+        $local_folder = realpath(__DIR__ . '/../../');
+        $local_file = $local_folder . '/' . 'local.yaml';
+        if(file_exists($local_file) && !is_writable($local_file))
+            die(sprintf("ZePLUF is using this file %s to write cache files, please create/make it writeable!", $local_file));
+        elseif(!is_writable($local_folder))
+            die(sprintf("ZePLUF is going to write local.yaml to this folder %s, please create/make the file writeable!", $local_folder));
 
         if($force){
             // we should remove all files in the cache
             self::get('settings')->resetCache();
             // then we should also remove the local.yaml
-            @unlink($local);
+            @unlink($local_file);
         }
 
         $framework_settings = self::get('settings')->get('framework');
@@ -159,9 +162,10 @@ class Plugin{
 				if(!empty($settings)){
                     // set routes
 					if(isset($settings['routes'])){
+                        $plugin_lc_name = strtolower($plugin_name);
 						foreach($settings['routes'] as $key => $route){
 							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);							
-							self::$routes->add($key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
+							self::$routes->add($plugin_lc_name . '_' . $key, new Route($plugin_lc_name . $route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
 						}						
 					}
 					

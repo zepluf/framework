@@ -11,7 +11,7 @@
 
         $('.modal-link').bind('click', function (e) {
             $.ajax({
-                url: '<?php echo riLink('admin_plugins_info');?>',
+                url: '<?php echo riLink('ricore_admin_plugins_info');?>',
                 data: {plugin: $(this).data('plugin')},
                 success: function(response){
                     $('#myModal .modal-body').html(response);
@@ -81,7 +81,7 @@
 </script>
 <?php $riview->get('loader')->endInline();?>
 
-<button class="ajax-link" data-href="<?php echo riLink('admin_plugins_load_theme_settings');?>">Load theme settings</button>
+<button class="ajax-link" data-href="<?php echo riLink('ricore_admin_plugins_load_theme_settings');?>">Load theme settings</button>
 
 <table class="table">
     <tr>
@@ -101,20 +101,20 @@
         <td><?php echo $plugin['code_name']?></td>
         <td><?php echo $info->release?></td>
         <td>
-            <a class="toggle-plugin installation install" <?php echo $installed ? 'style="display:none"' : '' ?> href="<?php echo riLink('admin_plugins_install', array('plugin' => $plugin['code_name']))?>">
+            <a class="toggle-plugin installation install" <?php echo $installed ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_install', array('plugin' => $plugin['code_name']))?>">
                 <?php rie('install')?>
             </a>
 
-            <a class="toggle-plugin installation uninstall" <?php echo !$installed ? 'style="display:none"' : '' ?> href="<?php echo riLink('admin_plugins_uninstall', array('plugin' => $plugin['code_name']))?>">
+            <a class="toggle-plugin installation uninstall" <?php echo !$installed ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_uninstall', array('plugin' => $plugin['code_name']))?>">
                 <?php rie('un-install')?>
             </a>
         </td>
         <td>
-            <a class="toggle-plugin activation activate" <?php echo !$installed || $activated ? 'style="display:none"' : '' ?> href="<?php echo riLink('admin_plugins_activate', array('plugin' => $plugin['code_name']))?>">
+            <a class="toggle-plugin activation activate" <?php echo !$installed || $activated ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_activate', array('plugin' => $plugin['code_name']))?>">
                 <?php rie('activate')?>
             </a>
 
-            <a class="toggle-plugin activation deactivate" <?php echo !$installed || !$activated ? 'style="display:none"' : '' ?> href="<?php echo riLink('admin_plugins_deactivate', array('plugin' => $plugin['code_name']))?>">
+            <a class="toggle-plugin activation deactivate" <?php echo !$installed || !$activated ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_deactivate', array('plugin' => $plugin['code_name']))?>">
                 <?php rie('de-activate')?>
             </a>
 

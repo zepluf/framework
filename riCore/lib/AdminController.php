@@ -33,7 +33,7 @@ class AdminController extends Controller{
         return $this->render('riCore::admin_layout');       
     }
     
-    public function infoAction(Request $request){
+    public function pluginsInfoAction(Request $request){
         $info = null;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
@@ -42,7 +42,7 @@ class AdminController extends Controller{
         return $this->render('riCore::admin_plugins_info', array('info' => $info));
     }
     
-    public function activateAction(Request $request){
+    public function pluginsActivateAction(Request $request){
         $activated = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
@@ -60,7 +60,7 @@ class AdminController extends Controller{
         )));        
     }
     
-    public function deactivateAction(Request $request){
+    public function pluginsDeactivateAction(Request $request){
         $deactivated = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
@@ -83,7 +83,7 @@ class AdminController extends Controller{
      * Enter description here ...
      * @param Request $request
      */
-    public function installAction(Request $request){
+    public function pluginsInstallAction(Request $request){
         $installed = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
@@ -103,7 +103,7 @@ class AdminController extends Controller{
         )));
     }
     
-    public function uninstallAction(Request $request){
+    public function pluginsUninstallAction(Request $request){
         $uninstalled = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){

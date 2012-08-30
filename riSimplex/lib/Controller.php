@@ -18,10 +18,18 @@ class Controller extends ContainerAware{
 	}
 
     public function beforeAction(Event $event){
+        $is_permitted = true;
         if($event->getRequest()->get('role', '') == 'isAdmin'){
             if(!defined('IS_ADMIN_FLAG') || !IS_ADMIN_FLAG)
-                die(ri('You do not have permission to access an admin route from here!'));
+                $is_permitted = false;
+        }else{
+            $route_parts = explode('_', $event->getRequest()->get('_route'));
+            if($route_parts[1] == 'admin' && !IS_ADMIN_FLAG){
+                $is_permitted = false;
+            }
         }
+        if(!$is_permitted)
+            die(ri('You do not have permission to access an admin route from here!'));
     }
 
 	public function exceptionAction(){

@@ -1,32 +1,32 @@
 # the settings from here should not be edited or overwritten
 routes:
-  admin_plugins:
-    pattern:  /riplugin/manager/
+  admin_manager:
+    pattern:  /manager/
     defaults: { _controller: plugins\riCore\AdminController::indexAction }
   admin_plugins_info:
-    pattern:  /riplugin/info/
-    defaults: { _controller: plugins\riCore\AdminController::infoAction }
+    pattern:  /plugins_info/
+    defaults: { _controller: plugins\riCore\AdminController::pluginsInfoAction }
   admin_plugins_install:
-    pattern:  /riplugin/install/
-    defaults: { _controller: plugins\riCore\AdminController::installAction }
+    pattern:  /plugins_install/
+    defaults: { _controller: plugins\riCore\AdminController::pluginsInstallAction }
   admin_plugins_uninstall:
-    pattern:  /riplugin/uninstall/
-    defaults: { _controller: plugins\riCore\AdminController::uninstallAction }
+    pattern:  /plugins_uninstall/
+    defaults: { _controller: plugins\riCore\AdminController::pluginsUninstallAction }
   admin_plugins_activate:
-    pattern:  /riplugin/activate/
-    defaults: { _controller: plugins\riCore\AdminController::activateAction }
+    pattern:  /plugins_activate/
+    defaults: { _controller: plugins\riCore\AdminController::pluginsActivateAction }
   admin_plugins_deactivate:
-    pattern:  /riplugin/deactivate/
-    defaults: { _controller: plugins\riCore\AdminController::deactivateAction }
+    pattern:  /plugins_deactivate/
+    defaults: { _controller: plugins\riCore\AdminController::pluginsDeactivateAction }
   admin_plugins_reset_settings:
-    pattern:  /riplugin/reset_settings/
+    pattern:  /reset_settings/
     defaults: { _controller: plugins\riCore\AdminController::resetSettingsAction }
   admin_plugins_load_theme_settings:
-    pattern:  /riplugin/load_theme_settings/
+    pattern:  /load_theme_settings/
     defaults: { _controller: plugins\riCore\AdminController::loadThemeSettingsAction }
 
 global:    
   backend:
     menu:
       extras:
-        - {text: Plugins Manager, link: ri.php/riplugin/manager/}
+        - {text: Plugins Manager, link: ri.php/ricore/manager/}
