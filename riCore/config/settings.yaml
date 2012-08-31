@@ -1,23 +1,23 @@
 # the settings from here should not be edited or overwritten
 routes:
-  admin_manager:
+  admin_plugins:
     pattern:  /manager/
     defaults: { _controller: plugins\riCore\AdminController::indexAction }
   admin_plugins_info:
-    pattern:  /plugins_info/
-    defaults: { _controller: plugins\riCore\AdminController::pluginsInfoAction }
+    pattern:  /info/
+    defaults: { _controller: plugins\riCore\AdminController::infoAction }
   admin_plugins_install:
-    pattern:  /plugins_install/
-    defaults: { _controller: plugins\riCore\AdminController::pluginsInstallAction }
+    pattern:  /install/
+    defaults: { _controller: plugins\riCore\AdminController::installAction }
   admin_plugins_uninstall:
-    pattern:  /plugins_uninstall/
-    defaults: { _controller: plugins\riCore\AdminController::pluginsUninstallAction }
+    pattern:  /uninstall/
+    defaults: { _controller: plugins\riCore\AdminController::uninstallAction }
   admin_plugins_activate:
-    pattern:  /plugins_activate/
-    defaults: { _controller: plugins\riCore\AdminController::pluginsActivateAction }
+    pattern:  /activate/
+    defaults: { _controller: plugins\riCore\AdminController::activateAction }
   admin_plugins_deactivate:
-    pattern:  /plugins_deactivate/
-    defaults: { _controller: plugins\riCore\AdminController::pluginsDeactivateAction }
+    pattern:  /deactivate/
+    defaults: { _controller: plugins\riCore\AdminController::deactivateAction }
   admin_plugins_reset_settings:
     pattern:  /reset_settings/
     defaults: { _controller: plugins\riCore\AdminController::resetSettingsAction }
