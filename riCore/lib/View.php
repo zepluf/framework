@@ -20,7 +20,7 @@ class View extends Object{
 
         $this->loader = Plugin::get('riCore.TemplateLoader');
 
-        $this->patterns['default'] =  __DIR__.'/../../riSimplex/content/views/%name%';
+        //$this->patterns['default'] =  __DIR__.'/../../riSimplex/content/views/%name%';
 
         Plugin::getContainer()->setParameter('templating.loader', $this->loader);
         Plugin::getContainer()->setParameter('templating.nameparser', Plugin::get('templating.nameparser'));
@@ -95,7 +95,7 @@ class View extends Object{
         $patterns = $this->patterns;
         if(!empty($view[1])){
             $this->addPathPattern('template', $this->patterns['template'] . 'plugins/%name%', $patterns);
-            //$this->addPathPattern($view[0], __DIR__ . '/../../%name%', $patterns);
+            $this->addPathPattern($view[0], __DIR__ . '/../../%name%', $patterns);
         }
         else {
             // this is not a plugin template
@@ -103,12 +103,12 @@ class View extends Object{
         }
 
         // default must always be the last one
-        $last_key = end(array_keys($patterns));
-        if($last_key != 'default' && isset($patterns['default'])) {
-            $default = $patterns['default'];
-            unset($patterns['default']);
-            $patterns['default'] = $default;
-        }
+//        $last_key = end(array_keys($patterns));
+//        if($last_key != 'default' && isset($patterns['default'])) {
+//            $default = $patterns['default'];
+//            unset($patterns['default']);
+//            $patterns['default'] = $default;
+//        }
         return $patterns;
     }
 
