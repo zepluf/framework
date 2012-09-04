@@ -158,14 +158,13 @@ class Plugin{
 				$settings = self::get('settings')->load($plugin);
 				//self::$container->get('dispatcher')->dispatch('test', new \Symfony\Component\EventDispatcher\Event());
 
-				
 				if(!empty($settings)){
                     // set routes
 					if(isset($settings['routes'])){
                         $plugin_lc_name = strtolower($plugin_name);
 						foreach($settings['routes'] as $key => $route){
-							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);							
-							self::$routes->add($plugin_lc_name . '_' . $key, new Route($plugin_lc_name . $route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
+							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);
+							self::$routes->add($plugin_lc_name . '_' . $key, new Route('/' . $plugin_lc_name . $route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
 						}						
 					}
 					
@@ -286,7 +285,7 @@ class Plugin{
 
                     arrayInsertValue($settings['installed'], $plugin);
 
-                    self::get('settings')->set('framework.installed', $settings['installed'], true);
+                    self::get('settings')->set('framework.installed', $settings['installed'], false);
 
                     return true;
                 }
@@ -295,7 +294,7 @@ class Plugin{
         else{
             arrayInsertValue($settings['installed'], $plugin);
 
-            self::get('settings')->set('framework.installed', $settings['installed'], true);
+            self::get('settings')->set('framework.installed', $settings['installed'], false);
 
             return true;
         }
@@ -321,7 +320,7 @@ class Plugin{
             if(Plugin::get($plugin_class)->uninstall()){
                 // we will put into the load
                 arrayRemoveValue($settings['installed'], $plugin);
-                self::get('settings')->set('framework.installed', $settings['installed'], true);
+                self::get('settings')->set('framework.installed', $settings['installed'], false);
 
                 self::deactivate($plugin);
                 return true;

@@ -17,7 +17,8 @@ $vendorDeps = array(
 		array('riCategory', 'git@github.com:yellow1912/riCategory.git', 'origin/master', false), 
 		array('riCache', 'git@github.com:yellow1912/riCache.git', 'origin/HEAD', false),
 		array('riUtility', 'git@github.com:yellow1912/riUtility.git', 'origin/HEAD', false),
-        array('riLog', 'git@github.com:yellow1912/riLog.git', 'origin/HEAD', false)
+        array('riLog', 'git@github.com:yellow1912/riLog.git', 'origin/HEAD', false),
+        array('riResultList', 'git@github.com:ZePLUF/riResultList.git', 'origin/HEAD', false)
     ),
 	$baseDir . '/riCore/vendor/zenmagick/lib/base' => array(
 	    array('classloader', 'git@github.com:yellow1912/classloader.git', 'origin/HEAD', false)

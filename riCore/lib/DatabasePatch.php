@@ -631,4 +631,17 @@ class DatabasePatch{
 			return $result;
 		}
 	}
+
+    public function getColumns($table){
+        global $db;
+        $fields = $db->Execute("SHOW fields FROM " . TABLE_PRODUCTS_DESCRIPTION);
+        $columns = array();
+
+        while(!$fields->EOF){
+            $columns[] = $fields->fields['Field'];
+            $fields->MoveNext();
+        }
+
+        return $columns;
+    }
 }

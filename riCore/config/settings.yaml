@@ -5,19 +5,19 @@ routes:
     defaults: { _controller: plugins\riCore\AdminController::indexAction }
   admin_plugins_info:
     pattern:  /info/
-    defaults: { _controller: plugins\riCore\AdminController::infoAction }
+    defaults: { _controller: plugins\riCore\AdminController::pluginsInfoAction }
   admin_plugins_install:
     pattern:  /install/
-    defaults: { _controller: plugins\riCore\AdminController::installAction }
+    defaults: { _controller: plugins\riCore\AdminController::pluginsInstallAction }
   admin_plugins_uninstall:
     pattern:  /uninstall/
-    defaults: { _controller: plugins\riCore\AdminController::uninstallAction }
+    defaults: { _controller: plugins\riCore\AdminController::pluginsUninstallAction }
   admin_plugins_activate:
     pattern:  /activate/
-    defaults: { _controller: plugins\riCore\AdminController::activateAction }
+    defaults: { _controller: plugins\riCore\AdminController::pluginsActivateAction }
   admin_plugins_deactivate:
     pattern:  /deactivate/
-    defaults: { _controller: plugins\riCore\AdminController::deactivateAction }
+    defaults: { _controller: plugins\riCore\AdminController::pluginsDeactivateAction }
   admin_plugins_reset_settings:
     pattern:  /reset_settings/
     defaults: { _controller: plugins\riCore\AdminController::resetSettingsAction }

@@ -121,6 +121,7 @@ class View extends Object{
     public function set($vars){
         if(!is_array($vars)) $vars = array($vars);
         $this->vars = array_merge($this->vars, $vars);
+        return $this;
     }
 
     public function get($name){

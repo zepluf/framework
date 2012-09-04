@@ -20,7 +20,9 @@ if (!defined('IS_ADMIN_FLAG')) {
 
 // bof ri: ZePLUF
 $content = ob_get_clean();
-$core_event->setContent($content);
-$container->get('dispatcher')->dispatch(plugins\riCore\Events::onPageEnd, $core_event);
+if(is_object($core_event)){
+    $core_event->setContent($content);
+    $container->get('dispatcher')->dispatch(plugins\riCore\Events::onPageEnd, $core_event);
+}
 if(!isset($print_content) || $print_content) echo $content;
 // eof ri: cjloader

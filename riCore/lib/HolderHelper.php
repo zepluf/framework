@@ -44,7 +44,7 @@ class HolderHelper extends Helper{
         Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderEnd . '.' .$slot, $event);
 
         $this->slots[$slot] = array();
-        $content .= "<!-- holder: " . $slot . " -->";
+        //$content .= "<!-- holder: " . $slot . " -->";
 
 		return $content;
     }
@@ -54,7 +54,10 @@ class HolderHelper extends Helper{
         // scan the content to find holders
 		preg_match_all("/(<!-- holder:)(.*?)(-->)/", $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $val) {
-			$content = str_replace($val[0], $this->get(trim($val[2])), $content);
+            $inject_content = $this->get(trim($val[2]));
+            // now we need to inject into inject content *_*
+            $this->injectHolders($inject_content);
+			$content = str_replace($val[0], $inject_content . "<!-- holder:" . $val[2] . "-->", $content);
 		}
     }
 
