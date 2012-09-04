@@ -64,7 +64,6 @@ class View extends Object{
         // default to php
         if(strpos($view_path, '.') === false) $view_path .= '.php';
 
-
         return $this->engine->render($view_path, $parameters);
     }
 
@@ -96,7 +95,7 @@ class View extends Object{
         $patterns = $this->patterns;
         if(!empty($view[1])){
             $this->addPathPattern('template', $this->patterns['template'] . 'plugins/%name%', $patterns);
-            $this->addPathPattern($view[0], __DIR__ . '/../../%name%', $patterns);
+            //$this->addPathPattern($view[0], __DIR__ . '/../../%name%', $patterns);
         }
         else {
             // this is not a plugin template

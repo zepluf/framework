@@ -30,7 +30,7 @@ class AdminController extends Controller{
    
         $this->container->get('templating.holder')->add('main', $this->view->render('riCore::_list', array('plugins' => $plugins)));
 
-        return $this->render('riCore::admin_layout');       
+        return $this->render('riZCAdmin::admin_layout');
     }
     
     public function pluginsInfoAction(Request $request){
