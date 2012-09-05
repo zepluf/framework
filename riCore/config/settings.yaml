@@ -18,9 +18,9 @@ routes:
   admin_plugins_deactivate:
     pattern:  /deactivate/
     defaults: { _controller: plugins\riCore\AdminController::pluginsDeactivateAction }
-  admin_plugins_reset_settings:
+  admin_plugins_reset:
     pattern:  /reset_settings/
-    defaults: { _controller: plugins\riCore\AdminController::resetSettingsAction }
+    defaults: { _controller: plugins\riCore\AdminController::pluginsResetAction }
   admin_plugins_load_theme_settings:
     pattern:  /load_theme_settings/
     defaults: { _controller: plugins\riCore\AdminController::loadThemeSettingsAction }

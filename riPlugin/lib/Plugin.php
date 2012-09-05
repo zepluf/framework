@@ -164,7 +164,12 @@ class Plugin{
                         $plugin_lc_name = strtolower($plugin_name);
 						foreach($settings['routes'] as $key => $route){
 							$route = array_merge(array('pattern' => '', 'defaults' => array(), 'requirements' => array(), 'options' => array()), $route);
-							self::$routes->add($plugin_lc_name . '_' . $key, new Route('/' . $plugin_lc_name . $route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
+                            if(strpos($route['pattern'], '/') !== false)
+                                $route['pattern'] = $plugin_lc_name . $route['pattern'];
+                            else
+                                $route['pattern'] = $plugin_lc_name . '_' . $route['pattern'];
+
+							self::$routes->add($plugin_lc_name . '_' . $key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
 						}						
 					}
 					

@@ -33,15 +33,29 @@ class Collection extends ResultSource{
 
     public function __call($name, $args){
         if(strpos($name, 'findBy') === 0){
-            $field_name = Plugin::get('riUtility.String')->fromCamelCase(substr($name, 6));
+            $field_names = Plugin::get('riUtility.String')->fromCamelCase(substr($name, 6));
+
+            $field_names = preg_split('/(_or_|_and_)/', $field_names, -1, PREG_SPLIT_DELIM_CAPTURE);
 
             global $db;
 
-            $sql = "SELECT * FROM ".$this->model->getTable()." WHERE ".$field_name." = :id";
+            $field_names_count = count($field_names);
+
+            $sql = "SELECT * FROM ".$this->model->getTable()." WHERE ";
+            if($field_names_count == 1) {
+                $sql .= $db->bindVars($field_names[0] . " = :id", ':id', $args[0], isset($args[1]) ? $args[1] : 'string');
+            }
+            else{
+                $j = $i = 0;
+                while($i < $field_names_count){
+                    $sql .= $db->bindVars($field_names[$i] . " = :arg", ':arg', $args[$j++], $args[$j++]);
+                    if($i + 1 < $field_names_count)
+                        $sql .= ' ' . trim($field_names[$i+1], '_') . ' ';
+                    $i = $i + 2;
+                }
+            }
 
             // TODO: better way to map field?
-            $sql = $db->bindVars($sql, ':id', $args[0], isset($args[1]) ? $args[1] : 'string');
-
             $result = $db->Execute($sql);
 
             $collection = array();

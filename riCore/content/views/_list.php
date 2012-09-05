@@ -118,6 +118,10 @@
                 <?php rie('de-activate')?>
             </a>
 
+            <a class="toggle-plugin activation deactivate" <?php echo !$installed || !$activated ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_reset', array('plugin' => $plugin['code_name']))?>">
+                <?php rie('de-activate')?>
+            </a>
+
         </td>
         <td><a class="modal-link" href="#" data-plugin="<?php echo $plugin['code_name']?>"><?php rie('view')?></a></td>
     </tr>

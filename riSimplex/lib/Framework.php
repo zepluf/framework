@@ -41,7 +41,7 @@ class Framework extends HttpKernel
         }
 
         try {
-            $match = \plugins\riPlugin\Plugin::get('matcher')->match('/' . $main_page . '/');
+            $match = \plugins\riPlugin\Plugin::get('matcher')->match('/' . $main_page);
             list($class, $method) = explode('::', $match['_controller'], 2);
 
             if (!class_exists($class)) {
@@ -51,7 +51,7 @@ class Framework extends HttpKernel
             $controller = array(new $class(), $method);
 
         } catch (\Exception $e) {
-            throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $request->getPathInfo()));
+            throw new NotFoundHttpException(sprintf('Unable to find the controller for path "%s". Maybe you forgot to add the matching route in your routing configuration?', $main_page));
         }
 
         $event = new FilterControllerEvent($this, $controller, $request, $type);
