@@ -31,8 +31,7 @@ class RiCore extends PluginCore{
     {
         Plugin::get('templating.holder')->processHolders();
 
-        $content = &$event->getContent();
-        Plugin::get('templating.holder')->injectHolders($content);
+        $event->setContent(Plugin::get('templating.holder')->injectHolders($event->getContent()));
         // extend here the functionality of the core
         // ...
     }

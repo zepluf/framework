@@ -20,8 +20,9 @@ class Collection extends ResultSource{
     }
     
     public function findAll(){
-        if(empty($this->collection)){
+        if($this->collection[0] === false){
             global $db;
+            $this->collection = array();
             $result = $db->Execute("select * FROM " . $this->model->getTable());
             while(!$result->EOF){
                 $this->collection[$result->fields[Plugin::get($this->model_service)->getId()]] = Plugin::get($this->model_service)->setArray($result->fields);

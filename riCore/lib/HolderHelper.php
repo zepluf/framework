@@ -49,16 +49,18 @@ class HolderHelper extends Helper{
 		return $content;
     }
     
-    public function injectHolders(&$content){
+    public function injectHolders($content){
         // we want to loop through all the registered holders
         // scan the content to find holders
 		preg_match_all("/(<!-- holder:)(.*?)(-->)/", $content, $matches, PREG_SET_ORDER);
 		foreach ($matches as $val) {
             $inject_content = $this->get(trim($val[2]));
             // now we need to inject into inject content *_*
-            $this->injectHolders($inject_content);
+            $inject_content = $this->injectHolders($inject_content);
 			$content = str_replace($val[0], $inject_content . "<!-- holder:" . $val[2] . "-->", $content);
 		}
+
+        return $content;
     }
 
     /**

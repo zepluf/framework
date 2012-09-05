@@ -126,6 +126,6 @@ else{
 $content = ob_get_clean();
 $core_event->setContent($content);
 $container->get('dispatcher')->dispatch(plugins\riCore\Events::onPageEnd, $core_event);
-echo $content;
+echo $core_event->getContent();
 // eof ri: ZePLUF
 exit();
