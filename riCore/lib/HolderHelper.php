@@ -62,15 +62,4 @@ class HolderHelper extends Helper{
 
         return $content;
     }
-
-    /**
-     *
-     */
-    public function processHolders(){
-        foreach(Plugin::get('settings')->get('global.'.Plugin::getEnvironment().'.holders', array()) as $position => $holders) {
-            foreach($holders as $holder){
-                $this->add($position, Plugin::get('view')->render($holder['template']));
-            }
-        }
-    }
 }

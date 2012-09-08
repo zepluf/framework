@@ -50,7 +50,7 @@ class Settings extends ParameterBag{
         $framework_settings = $this->load('framework', __DIR__ . '/');
         if(is_array($framework_settings['backend']['preload'])) Plugin::load($framework_settings['backend']['preload']);
         if(is_array($framework_settings['frontend']['preload'])) Plugin::load($framework_settings['frontend']['preload']);
-        $this->loadTheme();
+        $this->loadTheme('frontend');
     }
 
     /**
@@ -63,9 +63,6 @@ class Settings extends ParameterBag{
             $settings = array();
 
             if(empty($config_path)){
-                // a temporary hack for theme settings
-                if($this == 'theme') return $settings;
-
                 $config_path = realpath(__DIR__.'/../../'.$root.'/config') . '/';
             }
 
@@ -80,14 +77,43 @@ class Settings extends ParameterBag{
             $this->saveCache($root, $settings);
         }
 
-        // a hack to let theme's settings to always override plugins'
-        if($root != 'theme')
-            if(($theme_settings = $this->get('theme.' . $root)) != self::DEFAULT_KEY)
-                $settings = arrayMergeWithReplace($settings, $theme_settings);
+        // global settings
+        if(isset($settings['global'])) $this->set('global', $settings['global'], true);
 
         $this->set($root, $settings);
 
-        if(isset($settings['global'])) $this->set('global', $settings['global'], true);
+        return $settings;
+    }
+
+    public function loadTheme($env = 'frontend', $config_path = ''){
+        if(($settings = $this->loadCache('theme')) === false){
+            $settings = array();
+
+            if(empty($config_path)){
+                return $settings;
+            }
+
+            if(file_exists($config_path . 'theme.yaml'))
+                $settings = Yaml::parse($config_path . 'theme.yaml');
+
+            if(file_exists($config_path . 'local.yaml')){
+                $local = (array)Yaml::parse($config_path . 'local.yaml');
+                $settings = empty($settings) ? $local : arrayMergeWithReplace($settings, $local);
+            }
+
+            $this->saveCache('theme', $settings);
+        }
+
+        // a bit hacky here, but we want the theme global to be set specifically to the correct env
+        if(isset($settings['global'])) $this->set('global.'.$env, $settings['global'], true);
+
+        // and we also want to override plugin settings
+        // a hack to let theme's settings to always override plugins'
+        if(isset($settings['plugins']) && is_array($settings['plugins']))
+            foreach($settings['plugins'] as $plugin => $plugin_settings)
+                $this->set($plugin, $plugin_settings, true);
+
+        $this->set('theme', $settings);
 
         return $settings;
     }

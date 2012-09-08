@@ -41,9 +41,6 @@ class Plugin{
 
         Yaml::enablePhpParsing();
 
-        // load theme settings
-        self::get('settings')->load('theme');
-
         // load framework settings
         self::get('settings')->load('framework', __DIR__ . '/../../');
         $framework_settings = self::get('settings')->get('framework');
@@ -54,7 +51,11 @@ class Plugin{
         }
         else{
             if(is_array($framework_settings['frontend']['preload'])) Plugin::load($framework_settings['frontend']['preload']);
+            // load theme settings
+            self::get('settings')->loadTheme('frontend');
         }
+
+        self::$container->get('dispatcher')->dispatch(PluginEvents::onInitEnd, new PluginEvent());
 	}
 
     public static function setup($force = false){
@@ -183,7 +184,7 @@ class Plugin{
 				
 				// set the dispatcher
 				$event = new PluginEvent();				
-        		self::$container->get('dispatcher')->dispatch(PluginEvents::onLoadEnd, $event->setPlugin($plugin)->setSettings($settings));
+        		self::$container->get('dispatcher')->dispatch(PluginEvents::onPluginLoadEnd, $event->setPlugin($plugin)->setSettings($settings));
 				
 				self::$loaded[] = $plugin; 				
 			}

@@ -13,5 +13,6 @@ final class PluginEvents
      *
      * @var string
      */
-    const onLoadEnd = 'plugin.load.end';
+    const onPluginLoadEnd = 'plugin.load.end';
+    const onInitEnd = 'init.end';
 }

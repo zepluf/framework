@@ -127,7 +127,7 @@ class AdminController extends Controller{
     public function loadThemeSettingsAction(){
         // we need to load theme settings
         Plugin::get('settings')->resetCache('theme');
-        Plugin::get('settings')->load('theme', __DIR__ . '/../../../' . DIR_WS_TEMPLATE, 'theme.yaml');
+        Plugin::get('settings')->loadTheme('frontend', __DIR__ . '/../../../' . DIR_WS_TEMPLATE);
 
         return new Response(json_encode(array(
             'messages' => array(array(

@@ -18,18 +18,15 @@ class RiCore extends PluginCore{
         if(!IS_ADMIN_FLAG){
             $autoLoadConfig[999][] = array('autoType' => 'require', 'loadFile' => __DIR__ . '/lib/frontend_routing.php');
         }
-
-        // for the holders
-        $holders = Plugin::get('settings')->get('global.holders', array());
-
-        foreach($holders as $holder => $content){
-            Plugin::get('dispatcher')->addListener(HolderHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
-        }
 	}	
 	
 	public function onPageEnd(Event $event)
     {
-        Plugin::get('templating.holder')->processHolders();
+        $holders = Plugin::get('settings')->get('global.' . Plugin::getEnvironment() . '.holders', array());
+
+        foreach($holders as $holder => $content){
+            Plugin::get('dispatcher')->addListener(HolderHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
+        }
 
         $event->setContent(Plugin::get('templating.holder')->injectHolders($event->getContent()));
         // extend here the functionality of the core
@@ -37,7 +34,7 @@ class RiCore extends PluginCore{
     }
 
     public function onHolderStart(Event $event){
-        $holder_content = Plugin::get('settings')->get('global.holders.'.$event->getSlot());
+        $holder_content = Plugin::get('settings')->get('global.' . Plugin::getEnvironment() . '.holders.' . $event->getSlot());
         foreach($holder_content as $content){
             $load = true;
 
