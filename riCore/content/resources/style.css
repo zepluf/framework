@@ -144,3 +144,11 @@
 .modal-footer .btn-group .btn + .btn {
   margin-left: -1px;
 }
+
+.core .installation,.core .activation{
+    display: none;
+}
+
+.core td{
+    background: #FCDCDC;
+}

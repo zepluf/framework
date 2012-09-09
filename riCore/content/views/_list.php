@@ -97,7 +97,7 @@
     $activated = \plugins\riPlugin\Plugin::isActivated($plugin['code_name']);
     $info = \plugins\riPlugin\Plugin::info($plugin['code_name']);
     ?>
-    <tr>
+    <tr class="<?php echo in_array($plugin['code_name'], $core) ? 'core' : 'noncore';?>">
         <td><?php echo $plugin['code_name']?></td>
         <td><?php echo $info->release?></td>
         <td>
@@ -118,12 +118,17 @@
                 <?php rie('de-activate')?>
             </a>
 
-            <a class="toggle-plugin activation deactivate" <?php echo !$installed || !$activated ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_reset', array('plugin' => $plugin['code_name']))?>">
-                <?php rie('de-activate')?>
-            </a>
-
         </td>
-        <td><a class="modal-link" href="#" data-plugin="<?php echo $plugin['code_name']?>"><?php rie('view')?></a></td>
+        <td>
+            <a class="modal-link" href="#" data-plugin="<?php echo $plugin['code_name']?>"><?php rie('view')?></a>
+
+            <?php if($installed && $activated):?>
+            |
+            <a class="toggle-plugin deactivate" href="<?php echo riLink('ricore_admin_plugins_reset', array('plugin' => $plugin['code_name']))?>">
+                <?php rie('reload settings')?>
+            </a>
+            <?php endif;?>
+        </td>
     </tr>
     <?php endforeach;?>
 </table>

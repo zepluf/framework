@@ -13,8 +13,8 @@ class AdminController extends Controller{
 		$settings = Yaml::parse(__DIR__ .'/../../settings.yaml');
         
 		// a temporary hack to avoid displaying installation folder
-		$ignore = Plugin::get('settings')->get('framework.core', array());
-		$ignore[] = 'install';
+		//$ignore = Plugin::get('settings')->get('framework.core', array());
+		$ignore = array('install', 'simpletest');
 
 		$plugins = array();
         foreach(glob(DIR_FS_CATALOG . 'plugins/*', GLOB_ONLYDIR) as $plugin)
@@ -23,12 +23,12 @@ class AdminController extends Controller{
 			// the core modules are not to be exposed
 			if(!in_array($code_name, $ignore) && !in_array($code_name, $settings['installed'])){
 				$plugins[] = array(
-					'code_name' => $code_name,            	
+					'code_name' => $code_name,
 				);             
 			}
         }
    
-        $this->container->get('templating.holder')->add('main', $this->view->render('riCore::_list', array('plugins' => $plugins)));
+        $this->container->get('templating.holder')->add('main', $this->view->render('riCore::_list', array('plugins' => $plugins, 'core' => Plugin::get('settings')->get('framework.core', array()))));
 
         return $this->render('riZCAdmin::backend/layout');
     }
@@ -39,7 +39,7 @@ class AdminController extends Controller{
         if(!empty($plugin)){
             $info = Plugin::info($plugin);                
         }
-        return $this->render('riCore::admin_plugins_info', array('info' => $info));
+        return $this->render('riCore::_plugins_info', array('info' => $info));
     }
     
     public function pluginsActivateAction(Request $request){
@@ -119,6 +119,20 @@ class AdminController extends Controller{
             'installed' => !$uninstalled,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
         )));
+    }
+
+    public function pluginsResetAction(Request $request){
+        Plugin::get('settings')->resetCache($request->get('plugin'));
+        Plugin::get('settings')->load($request->get('plugin'));
+
+        Plugin::get('riLog.Logs')->add(array(
+            'type' => 'success',
+            'message' => 'settings reloaded'
+        ));
+
+        return $this->renderJson(array(
+            'messages' => Plugin::get('riLog.Logs')->getAsArray())
+        );
     }
 
     /**

@@ -39,7 +39,9 @@ else:?>
 		<?php endforeach;?>	
 	<?php endforeach;?>
 	
-	<?php foreach ($info->dependencies->plugins->plugin as $plugin):?>
+	<?php
+    if(!empty($info->dependencies->plugins->plugin))
+        foreach ($info->dependencies->plugins->plugin as $plugin):?>
 		
 		<strong><?php echo $plugin->codename?></strong> <?php rie('min version')?> <?php echo $plugin->min?><br />
 		
