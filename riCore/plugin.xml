@@ -14,8 +14,8 @@
 			<email>support@rubikintegration.com</email>
 		</author>
 	</authors>
-	<released>Aug 28th 2012</released>
-	<release>1.4.2</release>
+	<released>Sep 14th 2012</released>
+	<release>1.4.3</release>
 	<license uri="http://www.symfony-project.org/license">MIT license</license>
 	<dependencies>
   		<required>
@@ -27,6 +27,19 @@
    		</plugins>
 	</dependencies>
 	<changelog>
+	<release>
+            <version>
+                <release>1.4.3</release>
+            </version>
+            <license uri="http://www.symfony-project.com/license">MIT license</license>
+            <released>Sep 14th 2012</released>
+            <notes>
+                * multiple minor fixes
+		* more reliable setup process
+		* plugins and theme settings loaded more consistently
+		* some new features
+            </notes>
+        </release>
 		<release>
             <version>
                 <release>1.4.2</release>

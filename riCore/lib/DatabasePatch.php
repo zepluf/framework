@@ -259,6 +259,9 @@ class DatabasePatch{
 							$line = str_replace('FROM ', 'FROM '.$table_prefix, $line);
 						}//endif substr_count(,)
 						break;
+                    case (strpos($line_upper, 'REFERENCES') !== false):
+                        $line = str_replace('REFERENCES ', 'REFERENCES '.$table_prefix, $line);
+                        break;
 					default:
 						break;
 				} //end switch
