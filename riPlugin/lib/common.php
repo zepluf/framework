@@ -46,21 +46,19 @@ function riLink($route, $params = array(), $request_type = 'NONSSL', $is_admin =
     if(basename($_SERVER["SCRIPT_NAME"]) == 'ri.php')
         return $host . $link;
 
+    // catalog?
+    if(!$is_admin && $file == 'index.php')
+        return zen_href_link(trim($link, '/'), http_build_query($params), $request_type);
+
     if($is_admin){
         $file = 'ri.php';
         $host .= ($request_type == 'SSL') ? DIR_WS_HTTPS_ADMIN : DIR_WS_ADMIN;
     }
     else{
-        //$file = 'index.php';
         $host .= ($request_type == 'SSL') ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG;
     }
 
-    if($file == 'index.php'){
-        $params['main_page'] = urlencode (trim($link, '/'));
-        return $host . $file . '?' . http_build_query($params);
-    }
-    else
-        return $host . $file . $link;
+    return $host . $file . $link;
 }
 
 function riGetAllGetParams($exclude_array = array(), $new_params = array()) {
