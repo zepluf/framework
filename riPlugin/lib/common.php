@@ -1,15 +1,19 @@
-<?php 
+<?php
 
+/**
+ * @param bool $admin
+ * @return get the basehref
+ */
 function getBaseHref($admin = true){
-	global $request_type;
-	if($request_type == 'SSL')
-		return HTTPS_SERVER . DIR_WS_HTTPS_ADMIN;
-	else 
-		return HTTP_SERVER . DIR_WS_ADMIN;
+    global $request_type;
+    if($request_type == 'SSL')
+        return HTTPS_SERVER . DIR_WS_HTTPS_ADMIN;
+    else
+        return HTTP_SERVER . DIR_WS_ADMIN;
 }
 
 /**
- * 
+ *
  * function used for translation
  * @param string $id
  * @param array $parameters
@@ -18,11 +22,11 @@ function getBaseHref($admin = true){
  * $return translated string
  */
 function ri($id, $parameters = array(), $domain = 'default', $locale = null){
-	return plugins\riPlugin\Plugin::get('translator')->trans($id, (array)$parameters, $domain, $locale);
+    return plugins\riPlugin\Plugin::get('translator')->trans($id, (array)$parameters, $domain, $locale);
 }
 
 /**
- * 
+ *
  * function used for translation
  * @param string $id
  * @param array $parameters
@@ -34,21 +38,37 @@ function rie($id, $parameters = array(), $domain = 'default', $locale = null){
     echo ri($id, $parameters, $domain, $locale);
 }
 
+/**
+ * generates url for plugins
+ * @param $route
+ * @param array $params
+ * @param string $request_type
+ * @param null $is_admin
+ * @param string $file
+ * @return mixed|string
+ */
 function riLink($route, $params = array(), $request_type = 'NONSSL', $is_admin = null, $file = 'index.php'){
 
+    //if($route == "ricomparison_productsComparison")
+    //var_dump($route) ;die();
     // TODO: hook in seo url?
-    if(is_null($is_admin)) $is_admin = defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG;
+    if($is_admin === null) $is_admin = defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG;
 
     $host = ($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER;
 
-    $link = \plugins\riPlugin\Plugin::get('view')->get('router')->generate($route, $params);
+    $link = \plugins\riPlugin\Plugin::get('view')->get('router')->customGenerate($route, $params);
 
-    if(basename($_SERVER["SCRIPT_NAME"]) == 'ri.php')
-        return $host . $link;
+    if($is_admin && basename($_SERVER["SCRIPT_NAME"]) == 'ri.php')
+        return $host . \plugins\riPlugin\Plugin::get('view')->get('router')->getBaseUrl() . $link;
 
     // catalog?
-    if(!$is_admin && $file == 'index.php')
-        return zen_href_link(trim($link, '/'), http_build_query($params), $request_type);
+    if(!$is_admin && $file == 'index.php'){
+        $link = explode('?', trim($link, '/'));
+        if(IS_ADMIN_FLAG)
+            return zen_catalog_href_link($link[0], $link[1], $request_type);
+        else
+            return zen_href_link($link[0], $link[1], $request_type);
+    }
 
     if($is_admin){
         $file = 'ri.php';
@@ -61,27 +81,32 @@ function riLink($route, $params = array(), $request_type = 'NONSSL', $is_admin =
     return $host . $file . $link;
 }
 
+/**
+ * get all $_GET parameters, usually useful for generating pagination links
+ * @param array $exclude_array
+ * @param array $new_params
+ * @return array|string
+ */
 function riGetAllGetParams($exclude_array = array(), $new_params = array()) {
     global $_GET;
 
-    if (!is_array($exclude_array)) $exclude_array = array($exclude_array);   
+    if (!is_array($exclude_array)) $exclude_array = array($exclude_array);
 
-    $_get = $_GET;    
+    $_get = $_GET;
     if(!empty($exclude_array)){
-	    foreach ($_get as $key => $value){
-	    	if(in_array($key, $exclude_array))
-	    		unset($_get[$key]);
-	    }
+        foreach ($_get as $key => $value){
+            if(in_array($key, $exclude_array))
+                unset($_get[$key]);
+        }
     }
-    
+
     if(is_array($new_params) && !empty($new_params))
-    	$_get = array_merge($_get, $new_params);
+        $_get = array_merge($_get, $new_params);
     return $_get;
 }
 
 /**
  *    first variation
- *
  *    $input is input array
  *    $start is index of slice begin
  *    $end is index of slice end, if this is null, $replacement will be inserted (in the same way as original array_Slice())
@@ -133,7 +158,6 @@ function array_KSplice1(&$input, $start, $end=null, $replacement=null)
 
 /**
  *    second variation
- *
  *    $input is input array
  *    $start is index of slice begin
  *    $length is length of slice, what will be replaced, if is zero, $replacement will be inserted (in the same way as original array_Slice())

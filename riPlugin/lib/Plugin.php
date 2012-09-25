@@ -286,7 +286,7 @@ class Plugin{
         if(Plugin::get($plugin_class) !== false){
             if(!isset($settings['installed']) || !in_array($plugin, $settings['installed'])){
                 $settings['installed'][] = $plugin;
-                if(Plugin::get($plugin_class)->install()){
+                if(Plugin::get($plugin_class) !== false && Plugin::get($plugin_class)->install()){
                     // we will put into the load
 
                     arrayInsertValue($settings['installed'], $plugin);
@@ -323,7 +323,7 @@ class Plugin{
         self::load($plugin);
 
         if(!isset($settings['installed']) || in_array($plugin, $settings['installed'])){
-            if(Plugin::get($plugin_class)->uninstall()){
+            if(Plugin::get($plugin_class) !== false && Plugin::get($plugin_class)->uninstall()){
                 // we will put into the load
                 arrayRemoveValue($settings['installed'], $plugin);
                 self::get('settings')->set('framework.installed', $settings['installed'], false);

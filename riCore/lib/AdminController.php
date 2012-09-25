@@ -9,7 +9,12 @@ use plugins\riSimplex\Controller;
 use Symfony\Component\Yaml\Yaml;
 
 class AdminController extends Controller{
-    public function indexAction(){        
+
+    /**
+     * return the list of current plugins
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction(){
 		$settings = Yaml::parse(__DIR__ .'/../../settings.yaml');
         
 		// a temporary hack to avoid displaying installation folder
@@ -32,7 +37,12 @@ class AdminController extends Controller{
 
         return $this->render('riZCAdmin::backend/layout');
     }
-    
+
+    /**
+     * load the plugin.xml file and returns the information of the plugin
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function pluginsInfoAction(Request $request){
         $info = null;
         $plugin = $request->get('plugin');
@@ -41,7 +51,12 @@ class AdminController extends Controller{
         }
         return $this->render('riCore::_plugins_info', array('info' => $info));
     }
-    
+
+    /**
+     * activates a plugin
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function pluginsActivateAction(Request $request){
         $activated = false;
         $plugin = $request->get('plugin');
@@ -59,7 +74,12 @@ class AdminController extends Controller{
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
         )));        
     }
-    
+
+    /**
+     * deactivates a plugin
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function pluginsDeactivateAction(Request $request){
         $deactivated = false;
         $plugin = $request->get('plugin');
@@ -79,9 +99,9 @@ class AdminController extends Controller{
     }
     
     /**
-     * 
-     * Enter description here ...
-     * @param Request $request
+     * installs a plugin
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function pluginsInstallAction(Request $request){
         $installed = false;
@@ -102,7 +122,12 @@ class AdminController extends Controller{
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
         )));
     }
-    
+
+    /**
+     * uninstalls a plugin
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function pluginsUninstallAction(Request $request){
         $uninstalled = false;
         $plugin = $request->get('plugin');
@@ -121,6 +146,10 @@ class AdminController extends Controller{
         )));
     }
 
+    /**
+     * reload a plugin's settings
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     */
     public function pluginsResetAction(Request $request){
         Plugin::get('settings')->resetCache($request->get('plugin'));
         Plugin::get('settings')->load($request->get('plugin'));
@@ -137,6 +166,7 @@ class AdminController extends Controller{
 
     /**
      * Load current theme settings
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loadThemeSettingsAction(){
         // we need to load theme settings
