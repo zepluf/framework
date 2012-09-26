@@ -17,6 +17,11 @@ class Controller extends ContainerAware{
 		$this->setContainer(Plugin::getContainer());
 	}
 
+    /**
+     * runs before any controller action
+     *
+     * @param \Symfony\Component\EventDispatcher\Event $event
+     */
     public function beforeAction(Event $event){
         $is_permitted = true;
         if($event->getRequest()->get('role', '') == 'isAdmin'){
@@ -51,6 +56,12 @@ class Controller extends ContainerAware{
         return $this->view->renderResponse($view, $parameters, $response);
     }
 
+    /**
+     * renders the response as json the exits right away
+     *
+     * @param $data
+     * @param null|\Symfony\Component\HttpFoundation\Response $response
+     */
     public function renderJson($data, Response $response = null){
         if($response == null) $response = $this->response;
         $response->setContent(json_encode($data));

@@ -57,16 +57,4 @@ class Container extends ContainerBuilder {
 
         return $service;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    /*protected function createService(Definition $definition, $id){
-        $service = parent::createService($definition, $id);
-        if (null != $service && $service instanceof ContainerAwareInterface) {
-            $service->setContainer($this);
-        }
-        return $service;
-    }*/
-
 }

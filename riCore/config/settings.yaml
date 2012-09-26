@@ -28,5 +28,6 @@ routes:
 global:    
   backend:
     menu:
+      # append the Plugin Manager link into the Extras menu
       extras:
         - {text: Plugins Manager, link: ri.php/ricore/manager/}

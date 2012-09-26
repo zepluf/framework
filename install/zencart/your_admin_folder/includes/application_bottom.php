@@ -17,13 +17,4 @@ if (STORE_PAGE_PARSE_TIME == 'true') {
     echo $logger->timer_stop(DISPLAY_PAGE_PARSE_TIME);
 }
 
-
-// bof ri: ZePLUF
-$content = ob_get_clean();
-if(is_object($core_event)){
-    $core_event->setContent($content);
-    $container->get('dispatcher')->dispatch(plugins\riCore\Events::onPageEnd, $core_event);
-    $content = $core_event->getContent();
-}
-if(!isset($print_content) || $print_content) echo $content;
-// eof ri: cjloader
+include(DIR_FS_CATALOG . 'plugins/backend_application_bottom.php');

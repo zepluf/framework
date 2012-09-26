@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * gets the base href, mainly used inside the admin layout
+ *
  * @param bool $admin
  * @return get the basehref
  */
@@ -40,6 +42,7 @@ function rie($id, $parameters = array(), $domain = 'default', $locale = null){
 
 /**
  * generates url for plugins
+ *
  * @param $route
  * @param array $params
  * @param string $request_type
@@ -82,7 +85,8 @@ function riLink($route, $params = array(), $request_type = 'NONSSL', $is_admin =
 }
 
 /**
- * get all $_GET parameters, usually useful for generating pagination links
+ * gets all $_GET parameters, usually useful for generating pagination links
+ *
  * @param array $exclude_array
  * @param array $new_params
  * @return array|string
@@ -227,6 +231,7 @@ function arrayMergeWithReplace($arr, $ins) {
 
 /**
  * http://stackoverflow.com/questions/3876435/recursive-array-diff
+ *
  * @param $array1
  * @param $array2
  * @return array
@@ -254,6 +259,7 @@ function arrayRecursiveDiff($array1, $array2){
 /**
  * Check if the array is an associative array.
  * Assuming even array start with index > 0 can still be the non associative array
+ *
  * @param $arr
  * @return bool
  */
@@ -283,6 +289,7 @@ function arrayIsDeeper($array, $level = 1){
 
 /**
  * Reindex a multi-dim array
+ *
  * @param $array
  */
 function arrayRecursiveReindex(&$array){
@@ -300,6 +307,8 @@ function arrayRecursiveReindex(&$array){
 }
 
 /**
+ * removes a value from an array
+ *
  * @param $array
  * @param $value
  */
@@ -310,6 +319,8 @@ function arrayRemoveValue(&$array, $value){
 }
 
 /**
+ * inserts a vale to the array
+ *
  * @param $array
  * @param $value
  */
@@ -321,6 +332,7 @@ function arrayInsertValue(&$array, $value){
 
 /**
  * tries to generate new folders with given path
+ *
  * @param $absolute_path
  * @param int $chmod
  * @return bool

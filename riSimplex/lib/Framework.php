@@ -18,6 +18,16 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class Framework extends HttpKernel
 {
+    /**
+     * handles the _main_page=something to match the routes defined in plugins' settings
+     *
+     * @param $main_page
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $type
+     * @param bool $catch
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
     public function customHandle($main_page, Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
         try {
@@ -31,6 +41,17 @@ class Framework extends HttpKernel
         }
     }
 
+    /**
+     * raw handles the _main_page=something to match the routes defined in plugins' settings
+     *
+     * @param $main_page
+     * @param $request
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \LogicException
+     * @throws \InvalidArgumentException
+     */
     public function customHandleRaw($main_page, $request, $type){
         // request
         $event = new GetResponseEvent($this, $request, $type);
@@ -88,7 +109,7 @@ class Framework extends HttpKernel
     }
 
     /**
-     * Handles and exception by trying to convert it to a Response.
+     * handles an exception by trying to convert it to a Response.
      *
      * @param \Exception $e       An \Exception instance
      * @param Request    $request A Request instance
@@ -132,6 +153,11 @@ class Framework extends HttpKernel
         return $event->getResponse();
     }
 
+    /**
+     * we need this because the parent method is protected
+     * @param $var
+     * @return string
+     */
     protected function customVarToString($var)
     {
         if (is_object($var)) {

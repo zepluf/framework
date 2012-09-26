@@ -22,7 +22,15 @@ class Plugin{
         $environment;
 	
 	const GREATER = 1, EQUAL = 0, LESS = -1;
-	
+
+    /**
+     * inits the Plugin container
+     *
+     * @static
+     * @param $loader
+     * @param $container
+     * @param $routes
+     */
 	public static function init($loader, $container, $routes){		
 		self::$container = $container;		
 		self::$loader = $loader;
@@ -58,6 +66,12 @@ class Plugin{
         self::$container->get('dispatcher')->dispatch(PluginEvents::onInitEnd, new PluginEvent());
 	}
 
+    /**
+     * setups ZePLUF
+     *
+     * @static
+     * @param bool $force
+     */
     public static function setup($force = false){
         // we should check if some folders are writtable
 
@@ -92,18 +106,32 @@ class Plugin{
             self::get('settings')->saveLocal();
         }
     }
-	
+
+    /**
+     * gets the array of loaded plugins
+     *
+     * @static
+     * @return array
+     */
 	public static function getLoaded(){
 	    return self::$loaded;    
 	}
-	
+
+    /**
+     * checks if a plugin is loaded
+     *
+     * @static
+     * @param $plugin
+     * @return bool
+     */
 	public static function isLoaded($plugin){
 	    return in_array($plugin, self::$loaded);    
 	}
 
     /**
-     * Load a plugin or an array of plugin.
+     * loads a plugin or an array of plugin.
      * This will add all the classes to the the classes loader etc
+     *
      * @static
      * @param $plugins
      */
@@ -191,6 +219,13 @@ class Plugin{
 		}		
 	}
 
+    /**
+     * register the core plugins
+     *
+     * @static
+     * @param $plugin_name
+     * @param $plugin_class
+     */
     private static function registerCore($plugin_name, $plugin_class){
         if(file_exists(__DIR__.'/../../' . $plugin_name . '/' . $plugin_class . '.php')){
             self::$loader->addNamespace(
@@ -239,6 +274,7 @@ class Plugin{
 
     /**
      * Returns the container
+     *
      * @static
      * @return mixed
      */
@@ -248,6 +284,7 @@ class Plugin{
 
     /**
      * Returns the specific service
+     *
      * @static
      * @param $service
      * @return bool
@@ -311,6 +348,7 @@ class Plugin{
     /**
      * This function will uninstall a plugin
      * It will also call the plugins/pluginfolder/PluginClass->uninstall() method of exists
+     *
      * @param $plugin
      * @return bool
      */
@@ -337,7 +375,8 @@ class Plugin{
     }
 
 	/**
-     * Check if the plugin is installed
+     * Checks if the plugin is installed
+     *
      * @param $plugin
      * @return bool
      */
@@ -363,6 +402,7 @@ class Plugin{
     /**
      * This function will activate a plugin
      * It will also call the plugins/pluginfolder/PluginClass->activate() method of exists
+     *
      * @param $plugin
      * @return bool
      */
@@ -440,6 +480,7 @@ class Plugin{
 	/**
      * This function will deactivate a plugin
      * It will also call the plugins/pluginfolder/PluginClass->deactivate() method of exists
+     *
      * @param $plugin
      * @return bool
      */
@@ -471,7 +512,8 @@ class Plugin{
 	}
 
     /**
-     * check if a plugin is activated
+     * checks if a plugin is activated
+     *
      * @param $plugin
      * @return bool
      */
@@ -480,7 +522,8 @@ class Plugin{
     }
 
     /**
-     * Check if we are in admin
+     * Checks if we are in admin
+     *
      * @static
      * @return bool
      */
@@ -488,12 +531,19 @@ class Plugin{
 	    return self::$is_admin;        
 	}
 
+    /**
+     * gets the current enviornment
+     *
+     * @static
+     * @return mixed
+     */
     public static function getEnvironment(){
         return self::$environment;
     }
 	
     /**
-     * Check if the compare_version is newer than base_version
+     * Checks if the compare_version is newer than base_version
+     *
      * @param string $base_version
      * @param string $compare_version
      */
