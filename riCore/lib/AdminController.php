@@ -12,6 +12,7 @@ class AdminController extends Controller{
 
     /**
      * return the list of current plugins
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(){
@@ -40,6 +41,7 @@ class AdminController extends Controller{
 
     /**
      * load the plugin.xml file and returns the information of the plugin
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -54,6 +56,7 @@ class AdminController extends Controller{
 
     /**
      * activates a plugin
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -77,6 +80,7 @@ class AdminController extends Controller{
 
     /**
      * deactivates a plugin
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -100,6 +104,7 @@ class AdminController extends Controller{
     
     /**
      * installs a plugin
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -125,6 +130,7 @@ class AdminController extends Controller{
 
     /**
      * uninstalls a plugin
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -148,6 +154,7 @@ class AdminController extends Controller{
 
     /**
      * reload a plugin's settings
+     *
      * @param \Symfony\Component\HttpFoundation\Request $request
      */
     public function pluginsResetAction(Request $request){
@@ -166,6 +173,7 @@ class AdminController extends Controller{
 
     /**
      * Load current theme settings
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function loadThemeSettingsAction(){

@@ -19,6 +19,7 @@ core:
   #- riSession
   - riZCAdmin
   - riCjLoader
+  - riResultList
 
 backend:
     preload: []

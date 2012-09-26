@@ -8,23 +8,47 @@ use plugins\riPlugin\Plugin;
 
 class Collection extends ResultSource{
 
-    protected $mock_object = null, $model_service = '', $collection = array(0 => false), $map = array();
+    protected $mock_object = null;
+    protected $model_service = '';
+    protected $collection = array(0 => false);
+    protected $map = array();
 
+    /**
+     * sets the model service to be used when returning object from collection
+     * <code>
+     * setModelService('riMeta.Meta');
+     * </code>
+     * @param $model_service
+     * @return Collection
+     */
     public function setModelService($model_service){
         $this->model_service = $model_service;
         return $this;
     }
 
+    /**
+     * sets mock object in case no model service is available
+     * @param $mock_object
+     * @return Collection
+     */
     public function setMockObject($mock_object){
         $this->mock_object = $mock_object;
         return $this;
     }
 
+    /**
+     * gets the mock object
+     * @return object
+     */
     public function getMockObject(){
         if($this->mock_object === null) $this->mock_object = Plugin::get($this->model_service);
         return $this->mock_object;
     }
 
+    /**
+     * finds all the objects within the collection
+     * @return array of objects
+     */
     public function findAll(){
         if($this->collection[0] === false){
             global $db;
@@ -38,6 +62,16 @@ class Collection extends ResultSource{
         return $this->collection;
     }
 
+    /**
+     * the magical find methods
+     * can support un-predefined methods such as
+     * findByProductsNameAndProductsStatus('name', 'string', 1, 'integer');
+     * findByProductsNameAndProductsStatusOrMasterCategoriesId('name', 'string', 1, 'integer', 19, 'integer');
+     * parameters must be passed in pairs value, datatype
+     * @param string $name
+     * @param array $args
+     * @return array|bool|mixed
+     */
     public function __call($name, $args){
         if(strpos($name, 'findBy') === 0){
             $field_names = Plugin::get('riUtility.String')->fromCamelCase(substr($name, 6));
@@ -79,6 +113,11 @@ class Collection extends ResultSource{
             return parent::__call($name, $args);
     }
 
+    /**
+     * finds an object by id, this method may be dropped in the future in favor of the magical find above
+     * @param $id
+     * @return bool
+     */
     public function findById($id){
         if(!isset($this->collection[$id])){
             global $db;
@@ -94,6 +133,11 @@ class Collection extends ResultSource{
         return isset($this->collection[$id]) ? $this->collection[$id] : false;
     }
 
+    /**
+     * creates a new object from the array data
+     * @param $data
+     * @return mixed
+     */
     public function create($data){
         return Plugin::get($this->model_service)->create($data);
     }

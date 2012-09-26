@@ -9,26 +9,39 @@ class HolderHelper extends Helper{
     
     protected $slots = array(), $dispatcher, $container;    
     
+    /**
+     * returns the name of this helper
+     * @return string
+     */
     public function getName(){
         return 'holder';
     }
     
     /**
-     * 
+     * add content into holder
+     * @param $holder is the holder name
+     * @param $content is the content to be added into the holder
+     * @param int $order is optional to sort the content inside this holder
+     * @return HolderHelper
      */
-    public function add($slot, $content, $order = 0){
-        $this->slots[$slot][] = array('order' => $order, 'content' => $content);
+    public function add($holder, $content, $order = 0){
+        $this->slots[$holder][] = array('order' => $order, 'content' => $content);
         return $this;
     }
-    
-    public function get($slot, $silent = false){
-        $event = Plugin::get('templating.holder.event')->setSlot($slot);
+
+    /**
+     * gets the content of the holder
+     * @param $holder is the holder name
+     * @return string
+     */
+    public function get($holder){
+        $event = Plugin::get('templating.holder.event')->setHolder($holder);
         Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderStart, $event);
-        Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderStart . '.' . $slot, $event);
+        Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderStart . '.' . $holder, $event);
 
         $content = '';
-		if(isset($this->slots[$slot]) && count($this->slots[$slot])> 0){
-			usort($this->slots[$slot], function($a, $b) {
+		if(isset($this->slots[$holder]) && count($this->slots[$holder])> 0){
+			usort($this->slots[$holder], function($a, $b) {
 				if ($a['order'] == $b['order']) {
 	        		return 0;
 				}
@@ -36,19 +49,23 @@ class HolderHelper extends Helper{
 			});
 			
 			
-			foreach ($this->slots[$slot] as $c)
+			foreach ($this->slots[$holder] as $c)
 				$content .= $c['content'];
 		}
 		
 		Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderEnd, $event);
-        Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderEnd . '.' .$slot, $event);
+        Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderEnd . '.' .$holder, $event);
 
-        $this->slots[$slot] = array();
-        //$content .= "<!-- holder: " . $slot . " -->";
+        $this->slots[$holder] = array();
 
 		return $content;
     }
-    
+
+    /**
+     * parse the content, find all holders, and then inject content of each holder
+     * @param $content
+     * @return mixed
+     */
     public function injectHolders($content){
         // we want to loop through all the registered holders
         // scan the content to find holders

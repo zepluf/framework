@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Our main class for parsing sql files and execute
+ *
+ */
 namespace plugins\riCore;
 
 // We want to use ZenCart sqlpatch.php,but for now we have to do it the ugly way.......

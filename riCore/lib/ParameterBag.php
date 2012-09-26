@@ -15,6 +15,15 @@ class ParameterBag{
 
     protected $_parameters, $_cache;
 
+    /**
+     * sets a new/existing key/value into the bag
+     * it's possible to do set('multi.array.level', $value) which will be similar to
+     * $this->$_parameters['nulti']['array']['level'] = $value
+     *
+     * @param $key
+     * @param $value
+     * @param bool $merge
+     */
     public function set($key, $value, $merge = false){
 
         $key = explode('.', $key);
@@ -38,19 +47,32 @@ class ParameterBag{
     }
 
     /**
-     * Unset a key
+     * Unsets a key
+     *
      * @param $key
      */
     public function remove($key){
         unset($this->_parameters[$key]);
     }
 
+    /**
+     * checks if a key exists, it's possible to use multi.array.level here
+     *
+     * @param $key
+     * @return bool
+     */
     public function has($key){
         if(isset($this->_cache[$key])) return true;
 
         return $this->get($key, 'THISISADEFAULTKEY') != 'THISISADEFAULTKEY';
     }
 
+    /**
+     * gets the value of a key, it's possible to use multi.array.level here
+     * @param null $key
+     * @param string $default is optional, is used to return if the key does not exist
+     * @return mixed
+     */
     public function get($key = null, $default = self::DEFAULT_KEY){
         if(empty($key)) return $this->_parameters;
 
@@ -61,6 +83,14 @@ class ParameterBag{
         return $this->_cache[$key];
     }
 
+    /**
+     * helper for the get method
+     *
+     * @param $key
+     * @param $settings
+     * @param $default
+     * @return mixed
+     */
     protected function _get($key, $settings, $default){
         foreach($key as $k){
             if(array_key_exists($k, $settings)){

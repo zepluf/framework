@@ -9,13 +9,28 @@
 
 namespace plugins\riCore;
 
+/**
+ * extends Symfony UrlGenerator for our needs
+ */
 class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator{
 
+    /**
+     * gets the current base url
+     *
+     * @return string
+     */
     public function getBaseUrl(){
         return $this->context->getBaseUrl();
     }
+
     /**
-     * {@inheritDoc}
+     * similar to Symfony default generate() but here we do not prepends the bsae url
+     *
+     * @param $name
+     * @param array $parameters
+     * @param bool $absolute
+     * @return null|string
+     * @throws RouteNotFoundException
      */
     public function customGenerate($name, $parameters = array(), $absolute = false)
     {

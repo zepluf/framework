@@ -4,25 +4,25 @@ namespace plugins\riCore;
 
 class HolderHelperEvent extends Event
 { 
-    private $slot;
-    
-    public function setSlot($slot){
-        $this->slot = $slot;
+    private $holder;
+
+    /**
+     * sets holder name
+     *
+     * @param $slot
+     * @return HolderHelperEvent
+     */
+    public function setHolder($holder){
+        $this->holder = $holder;
         return $this;
     }
-    
-    public function getSlot(){
-        return $this->slot;
+
+    /**
+     * gets holder name
+     *
+     * @return mixed
+     */
+    public function getHolder(){
+        return $this->holder;
     }
-    /*
-    public function setHelper($helper){
-        $this->helper = $helper;
-        return $this;
-    }
-    
-    public function getHelper(){
-        return $this->helper;
-    }
-    
-    */
 }

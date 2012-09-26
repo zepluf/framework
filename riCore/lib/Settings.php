@@ -9,6 +9,9 @@ class Settings extends ParameterBag{
     private $is_initiated = false,
     $cache_folder;
 
+    /**
+     * init
+     */
     public function __construct(){
         $this->cache_root_folder =  realpath(__DIR__ . '/../../../cache') . '/';
         $this->cache_folder = $this->cache_root_folder . 'ZePLUF/';
@@ -16,6 +19,8 @@ class Settings extends ParameterBag{
     }
 
     /**
+     * checks if the cache folder is writable
+     *
      * @return bool
      */
     public function preCheck(){
@@ -23,19 +28,27 @@ class Settings extends ParameterBag{
     }
 
     /**
+     * gets the cache root folder
+     *
      * @return string
      */
     public function getCacheRoot(){
         return $this->cache_root_folder;
     }
 
+    /**
+     * inits the settings with an input array
+     *
+     * @param $settings
+     */
     public function initialize($settings){
         $this->_parameters = $settings;
         $this->is_initiated = true; 
     }
 
     /**
-     * check if the settings are already loaded
+     * checks if the init settings are already loaded
+     *
      * @return bool
      */
     public function isInitiated(){
@@ -43,7 +56,7 @@ class Settings extends ParameterBag{
     }
 
     /**
-     * reload all settings
+     * reloads all settings
      */
     public function reload(){
         // reload the framework settings
@@ -54,7 +67,7 @@ class Settings extends ParameterBag{
     }
 
     /**
-     * Load settings from yaml files, load local settings as well
+     * loads settings from yaml files, load local settings as well
      * @param string $path
      * @param string $file
      */
@@ -85,6 +98,13 @@ class Settings extends ParameterBag{
         return $settings;
     }
 
+    /**
+     * loads the theme's settings
+     *
+     * @param string $env
+     * @param string $config_path
+     * @return array|bool|mixed
+     */
     public function loadTheme($env = 'frontend', $config_path = ''){
         if(($settings = $this->loadCache('theme')) === false){
             $settings = array();
@@ -119,7 +139,8 @@ class Settings extends ParameterBag{
     }
 
     /**
-     * save the settings
+     * saves the local settings
+     *
      * @param string $plugin
      * @param array $settings
      */
@@ -147,8 +168,10 @@ class Settings extends ParameterBag{
     }
 
     /**
+     * loads settings from cache file ...
      *
-     * load settings from cache file ...
+     * @param $root
+     * @return bool|mixed
      */
     public function loadCache($root){
         if(file_exists($this->cache_folder . $root . '.cache')){
@@ -159,17 +182,22 @@ class Settings extends ParameterBag{
     }
 
     /**
+     * saves settings into cache file ...
      *
-     * save settings into cache file ...
+     * @param $cache_file
+     * @param null $settings
+     * @return int
      */
     public function saveCache($cache_file, $settings = null){
         riMkDir($this->cache_folder);
         return @file_put_contents($this->cache_folder . $cache_file . '.cache', serialize($settings));
     }
 
+
     /**
-     * TODO: log
-     * delete all cache files
+     * deletes all cache files
+     *
+     * @param string $root
      */
     public function resetCache($root = ''){
         if(!empty($root)) @unlink($this->cache_folder . $root . '.cache');
