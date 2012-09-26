@@ -24,6 +24,15 @@ routes:
   admin_plugins_load_theme_settings:
     pattern:  /load_theme_settings/
     defaults: { _controller: plugins\riCore\AdminController::loadThemeSettingsAction }
+  admin_plugins_configs_settings:
+      pattern:  /configs_settings/
+      defaults: { _controller: plugins\riCore\AdminController::pluginsConfigAction }
+  admin_plugins_show_settings:
+        pattern:  /show_settings/
+        defaults: { _controller: plugins\riCore\AdminController::pluginsShowSettings }
+  admin_plugins_delete:
+          pattern:  /delete/
+          defaults: { _controller: plugins\riCore\AdminController::pluginsDeleteAction }
 
 global:    
   backend:

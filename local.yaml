@@ -1,0 +1,24 @@
+initalized: true
+installed:
+    - riCore
+    - riUtility
+    - riCache
+    - riLog
+    - riSimplex
+    - riZCAdmin
+    - riCjLoader
+    - riResultList
+    - riSsu
+    - riCategory
+activated:
+    - riCore
+    - riUtility
+    - riCache
+    - riLog
+    - riSimplex
+    - riZCAdmin
+    - riCjLoader
+backend:
+    preload: [riCore, riUtility, riCache, riLog, riZCAdmin, riCjLoader]
+frontend:
+    preload: [riCore, riUtility, riCache, riLog, riCjLoader]

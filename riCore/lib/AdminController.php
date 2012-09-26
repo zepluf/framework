@@ -77,7 +77,74 @@ class AdminController extends Controller{
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
         )));
     }
-    
+
+    /**
+     * config plugin
+     * @param Request $request
+     */
+    public function pluginsConfigAction(Request $request){
+        $stt = false;
+        $configs = array();
+        $riname = $request->get('riname');
+        $configs = $request->get('configs');
+
+        if(!empty($configs) && !empty($riname)){
+            Plugin::get('settings')->saveLocal($riname, $configs);
+            $stt = true;
+        }
+
+        return new Response(json_encode(array(
+            'status' => $stt,
+            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+        )));
+    }
+
+    public function pluginsShowSettings(Request $request){
+        $riname = $request->get('name');
+        $config_path = realpath(__DIR__.'/../../'.$riname.'/content/views') . '/';
+        if(file_exists($config_path . '_settings.php'))
+            $view = $this->view->render($riname . '::_settings.php', array('riname' => $riname));
+
+        return new Response(json_encode(array(
+            'view' => isset($view) ? $view : false
+            )
+        ));
+    }
+
+    public function deleteAction($path){
+        if (is_dir($path))
+            $dir_handle = opendir($path);
+        if (!$dir_handle)
+            return false;
+        while($file = readdir($dir_handle)) {
+            if ($file != "." && $file != "..") {
+                if (!is_dir($path."/".$file)){
+                    chmod($path."/".$file, 0777);
+                    unlink($path."/".$file);
+                }else
+                    $this->deleteAction($path.'/'.$file);
+            }
+        }
+        closedir($dir_handle);
+        rmdir($path);
+    }
+
+    public function pluginsDeleteAction(Request $request){
+        $stt = false;
+        $riname = $request->get('name');
+        $path = realpath(__DIR__.'/../../'.$riname);
+        //var_dump($path);
+        $this->deleteAction($path);
+
+        if(!file_exists($path))
+            $stt = true;
+
+        return new Response(json_encode(array(
+                'status' => $stt
+            )
+        ));
+    }
+
     /**
      * 
      * Enter description here ...

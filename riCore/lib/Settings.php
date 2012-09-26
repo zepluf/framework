@@ -69,7 +69,7 @@ class Settings extends ParameterBag{
             if(file_exists($config_path . $file))
                 $settings = Yaml::parse($config_path . $file);
 
-            if(file_exists($config_path . 'local.yaml')){
+            if($file != 'local.yaml' && file_exists($config_path . 'local.yaml')){
                 $local = (array)Yaml::parse($config_path . 'local.yaml');
                 $settings = empty($settings) ? $local : arrayMergeWithReplace($settings, $local);
             }
@@ -81,6 +81,20 @@ class Settings extends ParameterBag{
         if(isset($settings['global'])) $this->set('global', $settings['global'], true);
 
         $this->set($root, $settings);
+
+        return $settings;
+    }
+
+    public function loadFile($root, $config_path = '', $file = 'settings.yaml'){
+
+        $settings = array();
+
+        if(empty($config_path)){
+            $config_path = realpath(__DIR__.'/../../'.$root.'/config') . '/';
+        }
+
+        if(file_exists($config_path . $file))
+            $settings = Yaml::parse($config_path . $file);
 
         return $settings;
     }
