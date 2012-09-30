@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace plugins\riPlugin;
 
@@ -323,7 +323,12 @@ class Plugin{
         if(Plugin::get($plugin_class) !== false){
             if(!isset($settings['installed']) || !in_array($plugin, $settings['installed'])){
                 $settings['installed'][] = $plugin;
+<<<<<<< HEAD
                 if(Plugin::get($plugin_class) !== false && Plugin::get($plugin_class)->install()){
+=======
+                var_dump($plugin_class);
+                if(Plugin::get($plugin_class)->install()){
+>>>>>>> 4f76a9d35856f4f55a78c81e12851f8cb659d812
                     // we will put into the load
 
                     arrayInsertValue($settings['installed'], $plugin);

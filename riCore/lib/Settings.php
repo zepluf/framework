@@ -82,7 +82,7 @@ class Settings extends ParameterBag{
             if(file_exists($config_path . $file))
                 $settings = Yaml::parse($config_path . $file);
 
-            if(file_exists($config_path . 'local.yaml')){
+            if($file != 'local.yaml' && file_exists($config_path . 'local.yaml')){
                 $local = (array)Yaml::parse($config_path . 'local.yaml');
                 $settings = empty($settings) ? $local : arrayMergeWithReplace($settings, $local);
             }
@@ -98,6 +98,7 @@ class Settings extends ParameterBag{
         return $settings;
     }
 
+<<<<<<< HEAD
     /**
      * loads the theme's settings
      *
@@ -105,6 +106,22 @@ class Settings extends ParameterBag{
      * @param string $config_path
      * @return array|bool|mixed
      */
+=======
+    public function loadFile($root, $config_path = '', $file = 'settings.yaml'){
+
+        $settings = array();
+
+        if(empty($config_path)){
+            $config_path = realpath(__DIR__.'/../../'.$root.'/config') . '/';
+        }
+
+        if(file_exists($config_path . $file))
+            $settings = Yaml::parse($config_path . $file);
+
+        return $settings;
+    }
+
+>>>>>>> 4f76a9d35856f4f55a78c81e12851f8cb659d812
     public function loadTheme($env = 'frontend', $config_path = ''){
         if(($settings = $this->loadCache('theme')) === false){
             $settings = array();

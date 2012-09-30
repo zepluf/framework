@@ -1,4 +1,4 @@
-<?php $riview->get('loader')->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.form.lib', 'jquery.gritter.lib', 'riCore::jquery.tablesorter.js', 'riCore::style.css', 'riCore::modal.js', 'ritools.lib', 'riCore::plugins.css'))?>
+<?php $riview->get('loader')->load(array('jquery.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riCore::style.css', 'riCore::modal.js', 'ritools.lib'))?>
 
 <?php $riview->get('loader')->startInline('js');?>
 <script type="text/javascript">
@@ -49,14 +49,10 @@
                         if(response.activated){
                             parent.find('a.activate').hide();
                             parent.find('a.deactivate').show();
-                            parent.find('a.activation.activate').addClass('act');
-                            parent.find('a.activation.deactivate').removeClass('deact');
                         }
                         else{
                             parent.find('a.activate').show();
                             parent.find('a.deactivate').hide();
-                            parent.find('a.activation.activate').removeClass('act');
-                            parent.find('a.activation.deactivate').addClass('deact');
                         }
                     }
 
@@ -64,60 +60,78 @@
                         if(response.installed){
                             parent.find('a.deactivate').hide();
                             parent.find('a.activate').show();
-                            parent.find('a.activation.deactivate').addClass('deact');
-                            parent.find('a.activation.activate').removeClass('act');
                             parent.find('a.install').hide();
                             parent.find('a.uninstall').show();
                         }
                         else{
                             parent.find('a.deactivate').hide();
                             parent.find('a.activate').hide();
-                            parent.find('a.activation.deactivate').addClass('deact');
                             parent.find('a.install').show();
                             parent.find('a.uninstall').hide();
                         }
                     }
-                    updateTab();
-                    updateStatus($('#menu-plugins li.active').find('a').attr('data-dismiss'));
+
                     riTools.message(response.messages);
                 }
             });
             e.preventDefault();
-        });
+        })
 
     });
 </script>
 <?php $riview->get('loader')->endInline();?>
-<div class="logo pull-left"></div>
-<div class="menus pull-right">
-    <ul class="nav nav-pills" id="tabPlugin">
-        <li class="active">
-            <a href="#plugins"><?php rie('Plugins')?></a>
-        </li>
-        <li><a href="#install"><?php rie('Install')?></a></li>
-        <li><a href="#feature"><?php rie('Feature')?></a></li>
-        <li><a href="#about"><?php rie('About')?></a></li>
-    </ul>
-</div>
-<div class="clearfix"></div>
-<div class="row-fluid show-grid plugins">
-    <div class="span12 title" id="table-name"><?php rie('Plugins')?></div>
-    <div class="tab-content" style="width: 100%;">
-        <div class="tab-pane active" id="plugins">
-            <?php echo $riview->render('riCore::_tab_plugins.php', array('plugins' => $plugins, 'core' => $core));?>
-        </div>
-        <div class="tab-pane" id="settings">
 
-        </div>
-        <div class="tab-pane" id="install">
-            <?php echo $riview->render('riCore::_tab_install.php');?>
-        </div>
-        <div class="tab-pane" id="feature">             ...               </div>
-        <div class="tab-pane" id="about">...</div>
-    </div>
-</div>
-<a href="#" class="news"></a>
+<button class="ajax-link" data-href="<?php echo riLink('ricore_admin_plugins_load_theme_settings');?>">Load theme settings</button>
 
+<table class="table">
+    <tr>
+        <th><?php rie('Plugin Code Name')?></th>
+        <th><?php rie('Version')?></th>
+        <th><?php rie('Install')?></th>
+        <th><?php rie('Status')?></th>
+        <th><?php rie('Action')?></th>
+    </tr>
+    <?php foreach ($plugins as $plugin):?>
+    <?php
+    $installed = \plugins\riPlugin\Plugin::isInstalled($plugin['code_name']);
+    $activated = \plugins\riPlugin\Plugin::isActivated($plugin['code_name']);
+    $info = \plugins\riPlugin\Plugin::info($plugin['code_name']);
+    ?>
+    <tr class="<?php echo in_array($plugin['code_name'], $core) ? 'core' : 'noncore';?>">
+        <td><?php echo $plugin['code_name']?></td>
+        <td><?php echo $info->release?></td>
+        <td>
+            <a class="toggle-plugin installation install" <?php echo $installed ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_install', array('plugin' => $plugin['code_name']))?>">
+                <?php rie('install')?>
+            </a>
+
+            <a class="toggle-plugin installation uninstall" <?php echo !$installed ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_uninstall', array('plugin' => $plugin['code_name']))?>">
+                <?php rie('un-install')?>
+            </a>
+        </td>
+        <td>
+            <a class="toggle-plugin activation activate" <?php echo !$installed || $activated ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_activate', array('plugin' => $plugin['code_name']))?>">
+                <?php rie('activate')?>
+            </a>
+
+            <a class="toggle-plugin activation deactivate" <?php echo !$installed || !$activated ? 'style="display:none"' : '' ?> href="<?php echo riLink('ricore_admin_plugins_deactivate', array('plugin' => $plugin['code_name']))?>">
+                <?php rie('de-activate')?>
+            </a>
+
+        </td>
+        <td>
+            <a class="modal-link" href="#" data-plugin="<?php echo $plugin['code_name']?>"><?php rie('view')?></a>
+
+            <?php if($installed && $activated):?>
+            |
+            <a class="toggle-plugin deactivate" href="<?php echo riLink('ricore_admin_plugins_reset', array('plugin' => $plugin['code_name']))?>">
+                <?php rie('reload settings')?>
+            </a>
+            <?php endif;?>
+        </td>
+    </tr>
+    <?php endforeach;?>
+</table>
 <div class="modal" id="myModal" style="display: none">
     <div class="modal-header">
         <button class="close" data-dismiss="modal">x</button>
@@ -130,16 +144,3 @@
         <button class="close btn" data-dismiss="modal"><?php rie('Close')?></button>
     </div>
 </div>
-<script>
-    $(function () {
-        $('#tabPlugin a').click(function (e) {
-            e.preventDefault();
-            if($(this).attr('href') == '#plugins'){
-                $('.tab-content').find('.tab-pane').removeClass('active');
-                $('#plugins').addClass('active');
-            }
-            $(this).tab('show');
-            $("#table-name").text($(this).text());
-        });
-    })
-</script>
