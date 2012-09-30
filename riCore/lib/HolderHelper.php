@@ -1,13 +1,46 @@
 <?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
 
 namespace plugins\riCore;
 
 use plugins\riPlugin\Plugin;
 use Symfony\Component\Templating\Helper\Helper;
 
+/**
+ * core holder class
+ */
 class HolderHelper extends Helper{
-    
-    protected $slots = array(), $dispatcher, $container;    
+
+    /**
+     * holder array
+     *
+     * @var array
+     */
+    protected $holders = array();
+
+    /**
+     * dispatcher
+     *
+     * @var
+     */
+    protected $dispatcher;
+
+    /**
+     * container
+     *
+     * @var
+     */
+    protected $container;
     
     /**
      * returns the name of this helper
@@ -25,7 +58,7 @@ class HolderHelper extends Helper{
      * @return HolderHelper
      */
     public function add($holder, $content, $order = 0){
-        $this->slots[$holder][] = array('order' => $order, 'content' => $content);
+        $this->holders[$holder][] = array('order' => $order, 'content' => $content);
         return $this;
     }
 
@@ -40,8 +73,8 @@ class HolderHelper extends Helper{
         Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderStart . '.' . $holder, $event);
 
         $content = '';
-		if(isset($this->slots[$holder]) && count($this->slots[$holder])> 0){
-			usort($this->slots[$holder], function($a, $b) {
+		if(isset($this->holders[$holder]) && count($this->holders[$holder])> 0){
+			usort($this->holders[$holder], function($a, $b) {
 				if ($a['order'] == $b['order']) {
 	        		return 0;
 				}
@@ -49,14 +82,14 @@ class HolderHelper extends Helper{
 			});
 			
 			
-			foreach ($this->slots[$holder] as $c)
+			foreach ($this->holders[$holder] as $c)
 				$content .= $c['content'];
 		}
 		
 		Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderEnd, $event);
         Plugin::get('dispatcher')->dispatch(HolderHelperEvents::onHolderEnd . '.' .$holder, $event);
 
-        $this->slots[$holder] = array();
+        $this->holders[$holder] = array();
 
 		return $content;
     }

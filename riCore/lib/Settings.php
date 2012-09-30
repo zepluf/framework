@@ -1,13 +1,39 @@
 <?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
+
 namespace plugins\riCore;
 
 use Symfony\Component\Yaml\Yaml;
 use plugins\riPlugin\Plugin;
 
+/**
+ * settings class which store all plugin's settings
+ */
 class Settings extends ParameterBag{
 
-    private $is_initiated = false,
-    $cache_folder;
+    /**
+     * is the settings inited?
+     *
+     * @var bool
+     */
+    private $is_initiated = false;
+
+    /**
+     * cache folder path?
+     *
+     * @var string
+     */
+    private $cache_folder;
 
     /**
      * init
@@ -68,8 +94,11 @@ class Settings extends ParameterBag{
 
     /**
      * loads settings from yaml files, load local settings as well
-     * @param string $path
+     *
+     * @param $root
+     * @param string $config_path
      * @param string $file
+     * @return array|bool|mixed
      */
     public function load($root, $config_path = '', $file = 'settings.yaml'){
         if(($settings = $this->loadCache($root)) === false){
@@ -98,15 +127,14 @@ class Settings extends ParameterBag{
         return $settings;
     }
 
-<<<<<<< HEAD
     /**
-     * loads the theme's settings
+     * loads settings directly from a file
      *
-     * @param string $env
+     * @param $root
      * @param string $config_path
-     * @return array|bool|mixed
+     * @param string $file
+     * @return array
      */
-=======
     public function loadFile($root, $config_path = '', $file = 'settings.yaml'){
 
         $settings = array();
@@ -121,7 +149,13 @@ class Settings extends ParameterBag{
         return $settings;
     }
 
->>>>>>> 4f76a9d35856f4f55a78c81e12851f8cb659d812
+    /**
+     * loads the theme's settings
+     *
+     * @param string $env
+     * @param string $config_path
+     * @return array|bool|mixed
+     */
     public function loadTheme($env = 'frontend', $config_path = ''){
         if(($settings = $this->loadCache('theme')) === false){
             $settings = array();

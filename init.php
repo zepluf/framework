@@ -1,5 +1,16 @@
-<?php 
+<?php
+/**
+ * intializes all the important variables that ZePLUF needs
+ */
+
+/**
+ * includes the global functions that we need
+ */
 require_once('riPlugin/lib/common.php');
+
+/**
+ * loads ZenMagick's loader
+ */
 require_once('riCore/vendor/zenmagick/lib/base/classloader/ClassLoader.php');
 
 // load the class loader and dependency injection component

@@ -1,11 +1,19 @@
 <?php
+/**
+ * the abstract class for any plugin's core class
+ */
 
 namespace plugins\riCore;
 
+/**
+ * plugin core class
+ */
 abstract class PluginCore{
 
     /**
      * This method will be called when the plugin is loaded
+     *
+     * optional
      */
     public function init(){
         

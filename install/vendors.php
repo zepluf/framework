@@ -2,14 +2,12 @@
 <?php
 
 /*
- * This file is based on vendor.php of the Symfony framework.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * loads all dependencies
  */
 
+/**
+ * baseDir will be the current folder
+ */
 $baseDir = dirname(dirname(__FILE__));
 $vendorDeps = array(
     $baseDir => array(

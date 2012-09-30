@@ -1,4 +1,15 @@
 <?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
 
 namespace plugins\riCore;
 
@@ -10,11 +21,38 @@ use Symfony\Component\Templating\Helper\SlotsHelper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
 
+/**
+ * the view class
+ */
 class View extends Object{
-    private $vars = array(),
-        $loader,
-        $engine,
-        $patterns = array();
+
+    /**
+     * the view vars array
+     *
+     * @var array
+     */
+    private $vars = array();
+
+    /**
+     * cjloader
+     *
+     * @var bool
+     */
+    private $loader;
+
+    /**
+     * template engine
+     *
+     * @var bool
+     */
+    private $engine;
+
+    /**
+     * path patterns
+     *
+     * @var array
+     */
+    private $patterns = array();
 
     /**
      * inits the view with some variables

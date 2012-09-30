@@ -9,11 +9,26 @@
 
 namespace plugins\riCore;
 
+/**
+ * parameterBag holding key/value pair
+ */
 class ParameterBag{
 
     const DEFAULT_KEY = 'THISISADEFAULTKEY';
 
-    protected $_parameters, $_cache;
+    /**
+     * parameter array
+     *
+     * @var
+     */
+    protected $_parameters;
+
+    /**
+     * cache array
+     *
+     * @var
+     */
+    protected $_cache;
 
     /**
      * sets a new/existing key/value into the bag

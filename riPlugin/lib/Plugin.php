@@ -1,4 +1,15 @@
 <?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
 
 namespace plugins\riPlugin;
 
@@ -9,19 +20,67 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Finder\Finder;
 
-
+/**
+ * core class handling anything related to a plugin
+ * also acts as the main service container
+ */
 class Plugin{
-	private static 
-	    $loaded = array(), 
-	    $info = array(),
-	    $version,
-	    $container, 
-	    $loader, 
-	    $routes, 
-	    $is_admin = false,
-        $environment;
-	
-	const GREATER = 1, EQUAL = 0, LESS = -1;
+
+    /**
+     * array of loaded plugins names
+     *
+     * @var array
+     */
+	private static $loaded = array();
+
+    /**
+     * array of plugins info
+     *
+     * @var array
+     */
+    private $info = array();
+
+    /**
+     * current version
+     *
+     * @var
+     */
+    private $version;
+
+    /**
+     * service container
+     *
+     * @var
+     */
+    private $container;
+
+    /**
+     * class loader
+     *
+     * @var
+     */
+    private $loader;
+
+    /**
+     * routes collection
+     *
+     * @var
+     */
+    private $routes;
+
+    /**
+     * is admin?
+     *
+     * @var bool
+     */
+    private $is_admin = false;
+
+    /**
+     * backend or frontend env?
+     *
+     * @var
+     */
+    private $environment;
 
     /**
      * inits the Plugin container
@@ -323,13 +382,9 @@ class Plugin{
         if(Plugin::get($plugin_class) !== false){
             if(!isset($settings['installed']) || !in_array($plugin, $settings['installed'])){
                 $settings['installed'][] = $plugin;
-<<<<<<< HEAD
+
                 if(Plugin::get($plugin_class) !== false && Plugin::get($plugin_class)->install()){
-=======
-                var_dump($plugin_class);
-                if(Plugin::get($plugin_class)->install()){
->>>>>>> 4f76a9d35856f4f55a78c81e12851f8cb659d812
-                    // we will put into the load
+                     // we will put into the load
 
                     arrayInsertValue($settings['installed'], $plugin);
 
@@ -437,7 +492,7 @@ class Plugin{
                                 )));
                         }
 
-                        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == self::LESS){
+                        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS){
                             // we need to check the version
                             $error = true;
                             self::get('riLog.Logs')->add(array(
@@ -545,33 +600,4 @@ class Plugin{
     public static function getEnvironment(){
         return self::$environment;
     }
-	
-    /**
-     * Checks if the compare_version is newer than base_version
-     *
-     * @param string $base_version
-     * @param string $compare_version
-     */
-	private function compareVersions($base_version, $compare_version){
-	   $base_version = (preg_split('/[^0-9a-z]/i', $base_version));
-	   $compare_version = (preg_split('/[^0-9a-z]/i', $compare_version));
-
-	   foreach($base_version as $key => $value){
-	       if($value > $compare_version[$key])
-	           return self::GREATER;
-	       elseif($value < $compare_version[$key])
-	           return self::LESS;
-	   }
-	   
-	   $count_base_version = count($base_version);
-	   $count_compare_version = count($compare_version);
-	   
-	   if($count_base_version == $count_compare_version)
-	       return self::EQUAL;
-	   
-	   if($count_base_version > $count_compare_version)
-	       return self::GREATER;
-	       
-	   return self::LESS;
-	}
 }

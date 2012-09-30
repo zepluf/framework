@@ -1,4 +1,15 @@
 <?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
 
 /**
  * gets the base href, mainly used inside the admin layout
@@ -110,11 +121,17 @@ function riGetAllGetParams($exclude_array = array(), $new_params = array()) {
 }
 
 /**
- *    first variation
- *    $input is input array
- *    $start is index of slice begin
- *    $end is index of slice end, if this is null, $replacement will be inserted (in the same way as original array_Slice())
- *indexes of $replacement are preserved in both examples
+ * first variation
+ * $input is input array
+ * $start is index of slice begin
+ * $end is index of slice end, if this is null, $replacement will be inserted (in the same way as original array_Slice())
+ * indexes of $replacement are preserved in both examples
+ *
+ * @param $input
+ * @param $start
+ * @param null $end
+ * @param null $replacement
+ * @return array|bool
  */
 function array_KSplice1(&$input, $start, $end=null, $replacement=null)
 {
@@ -161,10 +178,16 @@ function array_KSplice1(&$input, $start, $end=null, $replacement=null)
 }
 
 /**
- *    second variation
- *    $input is input array
- *    $start is index of slice begin
- *    $length is length of slice, what will be replaced, if is zero, $replacement will be inserted (in the same way as original array_Slice())
+ * second variation
+ * $input is input array
+ * $start is index of slice begin
+ * $length is length of slice, what will be replaced, if is zero, $replacement will be inserted (in the same way as original array_Slice())
+ *
+ * @param $input
+ * @param $start
+ * @param int $length
+ * @param null $replacement
+ * @return array|bool
  */
 function array_KSplice2(&$input, $start, $length=0, $replacement=null)
 {
@@ -203,6 +226,7 @@ function array_KSplice2(&$input, $start, $length=0, $replacement=null)
  * If an Element is an Array in both Arrays, Arrays are merged recursively,
  * otherwise the element in $ins will overwrite the element in $arr (only if key is not numeric).
  * This also applys to Arrays in $arr, if the Element is scalar in $ins (in difference to the previous approach).
+ *
  * @param array $arr
  * @param array $ins
  * @return array
@@ -335,6 +359,7 @@ function arrayInsertValue(&$array, $value){
  *
  * @param $absolute_path
  * @param int $chmod
+ * @param bool $recursive
  * @return bool
  */
 function riMkDir($absolute_path, $chmod = 0777, $recursive = true){
@@ -345,4 +370,37 @@ function riMkDir($absolute_path, $chmod = 0777, $recursive = true){
         umask($old_umask);
     }
     return $success;
+}
+
+define('VERSION_LESS', -1);
+define('VERSION_GREATER', 1);
+define('VERSION_EQUAL', 0);
+/**
+ * Checks if the compare_version is newer than base_version
+ *
+ * @param $base_version
+ * @param $compare_version
+ * @return int
+ */
+function compareVersions($base_version, $compare_version){
+    $base_version = (preg_split('/[^0-9a-z]/i', $base_version));
+    $compare_version = (preg_split('/[^0-9a-z]/i', $compare_version));
+
+    foreach($base_version as $key => $value){
+        if($value > $compare_version[$key])
+            return VERSION_GREATER;
+        elseif($value < $compare_version[$key])
+            return VERSION_LESS;
+    }
+
+    $count_base_version = count($base_version);
+    $count_compare_version = count($compare_version);
+
+    if($count_base_version == $count_compare_version)
+        return VERSION_EQUAL;
+
+    if($count_base_version > $count_compare_version)
+        return VERSION_GREATER;
+
+    return VERSION_LESS;
 }

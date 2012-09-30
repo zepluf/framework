@@ -1,4 +1,16 @@
 <?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
+
 namespace plugins\riCore;
 
 use Symfony\Component\Validator\Constraints\Email;
@@ -6,12 +18,31 @@ use Symfony\Component\Validator\Constraints\Email;
 use plugins\riResultList\ResultSource;
 use plugins\riPlugin\Plugin;
 
+/**
+ * core collection class (holding the model objects)
+ */
 class Collection extends ResultSource{
 
+    /**
+     * mock object
+     *
+     * @var null
+     */
     protected $mock_object = null;
+
+    /**
+     * model service
+     *
+     * @var string
+     */
     protected $model_service = '';
+
+    /**
+     * array of objects
+     *
+     * @var array
+     */
     protected $collection = array(0 => false);
-    protected $map = array();
 
     /**
      * sets the model service to be used when returning object from collection

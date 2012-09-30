@@ -1,4 +1,16 @@
 <?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
+
 namespace plugins\riCore;
 
 use plugins\riPlugin\Plugin;
@@ -8,6 +20,9 @@ use Symfony\Component\HttpFoundation\Request;
 use plugins\riSimplex\Controller;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * main controller for managing plugins in backend
+ */
 class AdminController extends Controller{
 
     /**
@@ -123,6 +138,12 @@ class AdminController extends Controller{
         )));
     }
 
+    /**
+     * shows the current settings of the plugin
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function pluginsShowSettings(Request $request){
         $riname = $request->get('name');
         $config_path = realpath(__DIR__.'/../../'.$riname.'/content/views') . '/';
@@ -135,6 +156,12 @@ class AdminController extends Controller{
         ));
     }
 
+    /**
+     * deletes the plugin
+     *
+     * @param $path
+     * @return bool
+     */
     public function deleteAction($path){
         if (is_dir($path))
             $dir_handle = opendir($path);
@@ -153,6 +180,12 @@ class AdminController extends Controller{
         rmdir($path);
     }
 
+    /**
+     * removes the plugin
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function pluginsDeleteAction(Request $request){
         $stt = false;
         $riname = $request->get('name');

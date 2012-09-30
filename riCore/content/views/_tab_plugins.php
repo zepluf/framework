@@ -1,4 +1,19 @@
-<?php $riview->get('loader')->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riCore::style.css', 'riCore::modal.js', 'ritools.lib', 'riCore::plugins.css'))?>
+<?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
+
+$riview->get('loader')->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riCore::style.css', 'riCore::modal.js', 'ritools.lib', 'riCore::plugins.css'))
+?>
+
 <?php $riview->get('loader')->startInline('js');?>
 <script type="text/javascript">
     //update row of table by status

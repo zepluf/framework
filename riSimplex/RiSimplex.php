@@ -12,6 +12,9 @@ use plugins\riPlugin\Plugin;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * plugin framework main class
+ */
 class RiSimplex extends \plugins\riCore\PluginCore{
 
     /**

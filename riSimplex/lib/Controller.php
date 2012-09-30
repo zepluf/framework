@@ -1,4 +1,16 @@
 <?php
+/**
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
+ */
+
 namespace plugins\riSimplex;
 
 use plugins\riPlugin\Plugin;
@@ -7,9 +19,35 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
+/**
+ * the core controller class. All controller classes should extend this class
+ */
 class Controller extends ContainerAware{
- 	protected $response, $view, $router;
-	
+
+    /**
+     * response
+     *
+     * @var \Symfony\Component\HttpFoundation\Response
+     */
+    protected $response;
+
+    /**
+     * view
+     *
+     * @var bool
+     */
+    protected $view;
+
+    /**
+     * router
+     *
+     * @var
+     */
+    protected $router;
+
+    /**
+     * setups some variables
+     */
 	public function __construct(){
 		$this->response = new Response();
 		$this->view = Plugin::get('view');
@@ -37,6 +75,9 @@ class Controller extends ContainerAware{
             die(ri('You do not have permission to access an admin route from here!'));
     }
 
+    /**
+     * placeholder for exceptionAction
+     */
 	public function exceptionAction(){
 		//
 	}

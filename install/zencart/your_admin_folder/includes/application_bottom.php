@@ -1,5 +1,7 @@
 <?php
 /**
+ * edited to add final call to ZePLUF
+ *
  * @package admin
  * @copyright Copyright 2003-2010 Zen Cart Development Team
  * @copyright Portions Copyright 2003 osCommerce

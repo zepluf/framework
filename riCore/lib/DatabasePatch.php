@@ -5,7 +5,7 @@
  */
 namespace plugins\riCore;
 
-// We want to use ZenCart sqlpatch.php,but for now we have to do it the ugly way.......
+/* We want to use ZenCart sqlpatch.php,but for now we have to do it the ugly way.......*/
 define('ERROR_NOTHING_TO_DO','Error: Nothing to do - no query or query-file specified.');
 if (!defined('DB_PREFIX')) define('DB_PREFIX','');
 if (!defined('TABLE_UPGRADE_EXCEPTIONS')) define('TABLE_UPGRADE_EXCEPTIONS', DB_PREFIX . 'upgrade_exceptions');
@@ -34,7 +34,17 @@ $linebreak = '
 // NOTE: this line break is intentional!!!!
 //////////////////////// End DEF //////////////////////////////////////
 
+/**
+ * reuse the original database patcher of Zencart with some minor changes
+ */
 class DatabasePatch{
+
+    /**
+     * executes sql file
+     *
+     * @param $upload_query
+     * @return bool
+     */
 	function executeSqlFile($upload_query){
 		global $messageStack;
 		$query_string  = $upload_query;
@@ -67,6 +77,14 @@ class DatabasePatch{
 		return $success;
 	}
 
+    /**
+     * executes sql lines
+     *
+     * @param $lines
+     * @param $database
+     * @param string $table_prefix
+     * @return array
+     */
 	function executeSql($lines, $database, $table_prefix = '') {
 		global $db, $debug, $keepslashes;
 		if (!get_cfg_var('safe_mode')) {
@@ -318,6 +336,13 @@ class DatabasePatch{
 		return array('queries'=> $results, 'string'=>$string, 'output'=>$return_output, 'ignored'=>($ignored_count), 'errors'=>$errors);
 	} //end function
 
+    /**
+     * checks to see if the table exists
+     *
+     * @param $tablename
+     * @param bool $append_prefix
+     * @return bool
+     */
 	function zen_table_exists($tablename, $append_prefix = true) {
 		global $db;
         if($append_prefix) $tablename = DB_PREFIX . $tablename;
@@ -331,6 +356,14 @@ class DatabasePatch{
 		}
 	}
 
+    /**
+     * checks database permission
+     *
+     * @param string $priv
+     * @param string $table
+     * @param bool $show_privs
+     * @return bool|string
+     */
 	function zen_check_database_privs($priv='',$table='',$show_privs=false) {
 		// bypass until future version
 		return true;
@@ -391,6 +424,12 @@ class DatabasePatch{
 		}
 	}
 
+    /**
+     * drops index
+     *
+     * @param $param
+     * @return string
+     */
 	function zen_drop_index_command($param) {
 		if (!$checkprivs = $this->zen_check_database_privs('INDEX')) return sprintf(REASON_NO_PRIVILEGES,'INDEX');
 		//this is only slightly different from the ALTER TABLE DROP INDEX command
@@ -411,6 +450,12 @@ class DatabasePatch{
 		return sprintf(REASON_INDEX_DOESNT_EXIST_TO_DROP,$index,$param[4]);
 	}
 
+    /**
+     * creates index
+     *
+     * @param $param
+     * @return string
+     */
 	function zen_create_index_command($param) {
 		//this is only slightly different from the ALTER TABLE CREATE INDEX command
 		if (!$checkprivs = $this->zen_check_database_privs('INDEX')) return sprintf(REASON_NO_PRIVILEGES,'INDEX');
@@ -435,6 +480,12 @@ class DatabasePatch{
 		*/
 	}
 
+    /**
+     * checks alter command
+     *
+     * @param $param
+     * @return string
+     */
 	function zen_check_alter_command($param) {
 		global $db;
 		if (!zen_not_null($param)) return "Empty SQL Statement";
@@ -580,6 +631,12 @@ class DatabasePatch{
 		} //end switch
 	}
 
+    /**
+     * checks config key
+     *
+     * @param $line
+     * @return string
+     */
 	function zen_check_config_key($line) {
 		global $db;
 		$values=array();
@@ -597,6 +654,12 @@ class DatabasePatch{
 		if ($result->RecordCount() >0 ) return sprintf(REASON_CONFIG_KEY_ALREADY_EXISTS,$key);
 	}
 
+    /**
+     * checks product type layout key
+     *
+     * @param $line
+     * @return string
+     */
 	function zen_check_product_type_layout_key($line) {
 		global $db;
 		$values=array();
@@ -608,6 +671,14 @@ class DatabasePatch{
 		if ($result->RecordCount() >0 ) return sprintf(REASON_PRODUCT_TYPE_LAYOUT_KEY_ALREADY_EXISTS,$key);
 	}
 
+    /**
+     * writes to upgrade excetions table
+     *
+     * @param $line
+     * @param $reason
+     * @param $sql_file
+     * @return mixed
+     */
 	function zen_write_to_upgrade_exceptions_table($line, $reason, $sql_file) {
 		global $db;
 		$this->zen_create_exceptions_table();
@@ -617,6 +688,11 @@ class DatabasePatch{
 		return $result;
 	}
 
+    /**
+     * empties exceptions table
+     *
+     * @return mixed
+     */
 	function zen_purge_exceptions_table() {
 		global $db;
 		$this->zen_create_exceptions_table();
@@ -624,6 +700,11 @@ class DatabasePatch{
 		return $result;
 	}
 
+    /**
+     * creates exceptions table
+     *
+     * @return mixed
+     */
 	function zen_create_exceptions_table() {
 		global $db;
 		if (!$this->zen_table_exists(TABLE_UPGRADE_EXCEPTIONS, false)) {
@@ -638,6 +719,12 @@ class DatabasePatch{
 		}
 	}
 
+    /**
+     * gets the column list
+     *
+     * @param $table
+     * @return array
+     */
     public function getColumns($table){
         global $db;
         $fields = $db->Execute("SHOW fields FROM " . TABLE_PRODUCTS_DESCRIPTION);

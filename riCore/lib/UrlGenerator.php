@@ -1,10 +1,14 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: Vu Hung
- * Date: 9/25/12
- * Time: 3:10 PM
- * To change this template use File | Settings | File Templates.
+ * Created by RubikIntegration Team.
+ *
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
  */
 
 namespace plugins\riCore;
@@ -45,8 +49,18 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator{
     }
 
     /**
-     * @throws MissingMandatoryParametersException When route has some missing mandatory parameters
-     * @throws InvalidParameterException When a parameter value is not correct
+     * custom generate function
+     *
+     * @param $variables
+     * @param $defaults
+     * @param $requirements
+     * @param $tokens
+     * @param $parameters
+     * @param $name
+     * @param $absolute
+     * @return null|string
+     * @throws InvalidParameterException
+     * @throws MissingMandatoryParametersException
      */
     protected function customDoGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $absolute)
     {

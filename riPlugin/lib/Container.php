@@ -1,21 +1,14 @@
 <?php
-/*
- * ZenMagick - Another PHP framework.
- * Copyright (C) 2006-2011 zenmagick.org
+/**
+ * Created by RubikIntegration Team.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or (at
- * your option) any later version.
+ * Date: 9/30/12
+ * Time: 4:31 PM
+ * Question? Come to our website at http://rubikintegration.com
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA  02110-1301, USA.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF
  */
 
 namespace plugins\riPlugin;
@@ -33,9 +26,13 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class Container extends ContainerBuilder {
 
-    
     /**
      * {@inheritDoc}
+     *
+     * @param $id
+     * @param $invalidBehavior
+     * @return null
+     * @throws \InvalidArgumentException
      */
     public function get($id, $invalidBehavior = ContainerInterface::EXCEPTION_ON_INVALID_REFERENCE) {
         $service = null;
