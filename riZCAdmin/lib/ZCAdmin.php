@@ -10,6 +10,7 @@
  * file that was distributed with this source code or refer to the LICENSE
  * file of ZePLUF
  */
+
 namespace plugins\riZCAdmin;
 
 use plugins\riPlugin\Plugin;
