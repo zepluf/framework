@@ -13,7 +13,7 @@
 	<!-- ============================================  -->
     <!-- Target: prepare                               -->
     <!-- ============================================  -->
-    <target name="prepare" depends="lint">
+    <target name="prepare">
         <echo msg="Deleting old build and deploy dirs" />
         <delete dir="${dir.build.src}" includeemptydirs="true" quiet="true" failonerror="false" />
 		<delete dir="${dir.tmp}" includeemptydirs="true" quiet="true" failonerror="false" />
@@ -28,7 +28,7 @@
 	<!-- ============================================  -->
     <!-- Target: lint                               -->
     <!-- ============================================  -->
-	<target name="lint" description="Check syntax of source.">
+	<target name="lint" description="Check syntax of source." depends="prepare">
 		<echo msg="Checking for syntax issues" />	
 		<phplint>
 			<fileset dir="${dir.src}">
@@ -40,7 +40,7 @@
 	<!-- ============================================  -->
     <!-- Target: build	                              -->
     <!-- ============================================  -->
-	<target name="build" depends="prepare">		
+	<target name="build" depends="lint">		
 		
 		<echo msg="Copying files to temp directory..." />
         <copy todir="${dir.tmp}">
@@ -48,7 +48,8 @@
 				<include name="**" />
 				<exclude name="**/.git/**" />
                 <exclude name="**/.idea/**" />
-				<exclude name="${dir.build}" />
+				<exclude name="build/**" />
+				<exclude name="tmp/**" />
 			</fileset>
         </copy>
 		
