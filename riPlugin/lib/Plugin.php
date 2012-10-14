@@ -38,49 +38,49 @@ class Plugin{
      *
      * @var array
      */
-    private $info = array();
+    private static $info = array();
 
     /**
      * current version
      *
      * @var
      */
-    private $version;
+    private static $version;
 
     /**
      * service container
      *
      * @var
      */
-    private $container;
+    private static $container;
 
     /**
      * class loader
      *
      * @var
      */
-    private $loader;
+    private static $loader;
 
     /**
      * routes collection
      *
      * @var
      */
-    private $routes;
+    private static $routes;
 
     /**
      * is admin?
      *
      * @var bool
      */
-    private $is_admin = false;
+    private static $is_admin = false;
 
     /**
      * backend or frontend env?
      *
      * @var
      */
-    private $environment;
+    private static $environment;
 
     /**
      * inits the Plugin container

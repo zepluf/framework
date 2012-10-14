@@ -1,6 +1,6 @@
 <?php 
 /**
- * a sample test file for simple tests     asdsadsadsa
+ * a sample test file for simple tests
  */
 
 // set up env to include application top
