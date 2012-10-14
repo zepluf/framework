@@ -8,19 +8,7 @@
 	<property name="dir.src" value="." />
 	<property name="dir.tmp" value="./tmp" />
 	<property name="dir.tmp.vendor.symfony.component" value="${dir.tmp}/riCore/vendor/symfony/src/Symfony/Component" />
-	<property name="dir.tmp.vendor.symfony.bundle" value="${dir.tmp}/riCore/vendor/symfony/src/Symfony/Bundle" />
-    
-	<!-- ============================================  -->
-    <!-- Target: lint                               -->
-    <!-- ============================================  -->
-	<target name="lint" description="Check syntax of source.">
-		<echo msg="Checking for syntax issues" />	
-		<phplint>
-			<fileset dir="${dir.src}">
-				<include name="**/*.php" />				
-			</fileset>
-		</phplint>
-	</target>
+	<property name="dir.tmp.vendor.symfony.bundle" value="${dir.tmp}/riCore/vendor/symfony/src/Symfony/Bundle" />   
 	
 	<!-- ============================================  -->
     <!-- Target: prepare                               -->
@@ -38,6 +26,18 @@
     </target>
 	
 	<!-- ============================================  -->
+    <!-- Target: lint                               -->
+    <!-- ============================================  -->
+	<target name="lint" description="Check syntax of source.">
+		<echo msg="Checking for syntax issues" />	
+		<phplint>
+			<fileset dir="${dir.src}">
+				<include name="**/*.php" />				
+			</fileset>
+		</phplint>
+	</target>
+	
+	<!-- ============================================  -->
     <!-- Target: build	                              -->
     <!-- ============================================  -->
 	<target name="build" depends="prepare">		
@@ -47,6 +47,7 @@
             <fileset dir="${dir.src}">
 				<include name="**" />
 				<exclude name="**/.git/**" />
+                <exclude name="**/.idea/**" />
 				<exclude name="${dir.build}" />
 			</fileset>
         </copy>
