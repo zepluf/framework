@@ -26,29 +26,57 @@ function getBaseHref($admin = true){
 }
 
 /**
- *
  * function used for translation
- * @param string $id
+ *
+ * @param string $id is the string to be translated
  * @param array $parameters
- * @param string $domain
- * @param string $locale
+ * @param string $domain is the domain/context of the string
+ * @param string $locale is the string locale, default value is the default locale (usually en)
  * $return translated string
  */
-function ri($id, $parameters = array(), $domain = 'default', $locale = null){
+function ri($id, $parameters = array(), $domain = 'default', $locale = null) {
     return plugins\riPlugin\Plugin::get('translator')->trans($id, (array)$parameters, $domain, $locale);
 }
 
 /**
- *
  * function used for translation
+ *
  * @param string $id
  * @param array $parameters
  * @param string $domain
  * @param string $locale
  * $return void
  */
-function rie($id, $parameters = array(), $domain = 'default', $locale = null){
+function rie($id, $parameters = array(), $domain = 'default', $locale = null) {
     echo ri($id, $parameters, $domain, $locale);
+}
+
+/**
+ * function used for translation with plurals
+ *
+ * @param string $id is the string to be translated
+ * @param integer $number
+ * @param array $parameters
+ * @param string $domain is the domain/context of the string
+ * @param string $locale is the string locale, default value is the default locale (usually en)
+ * $return translated string
+ */
+function riChoice($id, $number, $parameters = array(), $domain = 'default', $locale = null) {
+    return plugins\riPlugin\Plugin::get('translator')->transChoice($id, $number, (array)$parameters, $domain, $locale);
+}
+
+/**
+ * function used for translation with plurals
+ *
+ * @param string $id is the string to be translated
+ * @param integer $number
+ * @param array $parameters
+ * @param string $domain is the domain/context of the string
+ * @param string $locale is the string locale, default value is the default locale (usually en)
+ * $return translated string
+ */
+function rieChoice($id, $number, $parameters = array(), $domain = 'default', $locale = null) {
+    echo riChoice($id, $number, (array)$parameters, $domain, $locale);
 }
 
 /**

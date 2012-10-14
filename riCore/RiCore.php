@@ -38,7 +38,7 @@ class RiCore extends PluginCore{
         if(!IS_ADMIN_FLAG){
             $autoLoadConfig[999][] = array('autoType' => 'require', 'loadFile' => __DIR__ . '/lib/frontend_routing.php');
         }
-	}	
+	}
 
     /**
      * injects content into holders at pageEnd

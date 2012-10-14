@@ -25,6 +25,17 @@ class RiSimplex extends \plugins\riCore\PluginCore{
     }
 
     /**
+     * for ZePLUF to run smoothly we will need to turn of the MISSING_PAGE_CHECK
+     *
+     * @return bool
+     */
+    public function install(){
+        global $db;
+        $db->Execute('UPDATE TABLE ' . TABLE_CONFIGURATION . " SET configuration_value = 'Off' WHERE configuration_value = 'MISSING_PAGE_CHECK'");
+        return true;
+    }
+
+    /**
      * triggers the beforeAction
      *
      * @param \Symfony\Component\EventDispatcher\Event $event
