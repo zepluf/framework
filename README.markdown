@@ -9,9 +9,8 @@ This framework is meant to be used with Zencart version 1.3.9h and above (certai
 - Allows developers to save time while developing their modules by making use of the framework's useful features (such at the ability to inject content into any location)
 - Many of our modules also rely on ZePLUF to work, you won't be able to use our modules without ZePLUF
 
-**Installation**
+**Documentation**
 
-http://rubikintegration.com/2012/05/20/zencart-plugin-framework-day-1-installation/
-
+http://rubikin.com/wiki/zencart/plugin_framework/about
 
 
