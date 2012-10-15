@@ -109,8 +109,8 @@ $riview->get('loader')->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippe
         <li class="active">
             <a href="#plugins"><?php rie('Plugins')?></a>
         </li>
-        <li><a href="#install"><?php rie('Install')?></a></li>
-        <li><a href="#feature"><?php rie('Feature')?></a></li>
+        <!--<li><a href="#install"><?php rie('Install')?></a></li>
+        <li><a href="#feature"><?php rie('Featured')?></a></li>-->
         <li><a href="#about"><?php rie('About')?></a></li>
     </ul>
 </div>
@@ -127,8 +127,32 @@ $riview->get('loader')->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippe
         <div class="tab-pane" id="install">
             <?php echo $riview->render('riCore::_tab_install.php');?>
         </div>
-        <div class="tab-pane" id="feature">             ...               </div>
-        <div class="tab-pane" id="about">...</div>
+        <div class="tab-pane" id="feature">
+            <div class="content">
+                This tab will display featured plugins. Content coming soon...
+            </div>
+        </div>
+        <div class="tab-pane" id="about">
+            <div class="content">
+                The Zencart Plugin Framework (ZePLUF) is a product of RubikIntegration.com <br /><br />
+
+                This framework is meant to be used with Zencart version 1.3.9h and above<br /><br />
+
+                <h3 class="heading">Features</h3>
+
+                <ol>
+                    <li>Allows developers to package their plugin(s) in one single place (in most cases) instead of spreading the files all over the place.</li>
+                    <li>Installing a Zencart plugin has never been easier, in many cases it's just a matter of uploading the new plugin folder. No more messing around with various Zencart folders.</li>
+                    <li>Files/Classes are loaded on demand with PHP 5.3 lazy load feature.</li>
+                    <li>Allows developers to save time while developing their modules by making use of the framework's useful features (such at the ability to inject content into any location)</li>
+                    <li>Many of our modules also rely on ZePLUF to work, you won't be able to use our modules without ZePLUF</li>
+                </ol>
+
+                <h3 class="heading">Documentation</h3>
+
+                Check our <a href="http://rubikin.com/wiki/zencart/plugin_framework/about">wiki</a>
+            </div>
+        </div>
     </div>
 </div>
 <a href="#" class="news"></a>

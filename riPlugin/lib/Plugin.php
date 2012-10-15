@@ -218,6 +218,9 @@ class Plugin{
 				if(is_dir($plugin_path."vendor"))
 				    self::$loader->addConfig($plugin_path."vendor");
 
+                if(is_dir($plugin_path."tests"))
+                    self::$loader->addConfig($plugin_path."tests");
+
                 $loaded_services = false;
 				if(file_exists($config_path.'services.xml')){
                     $loader = new XMLFileLoader(self::$container, new FileLocator($config_path));
@@ -234,7 +237,10 @@ class Plugin{
 				if(!$loaded_services){
 					foreach (glob($plugin_path."/lib/*.php") as $file) { 
 						$filename = basename($file, '.php');
-						self::$container->register($plugin.'.'.$filename, 'plugins\\'.$plugin.'\\'.$filename);						    		
+
+                        // we only register the filenames started with uppercase since these are class files
+                        if(ctype_upper($filename[0]))
+						    self::$container->register($plugin.'.'.$filename, 'plugins\\'.$plugin.'\\'.$filename);
 					}	
 				}
 

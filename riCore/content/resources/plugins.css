@@ -11,14 +11,16 @@
     width: auto;
     margin: 10px;
 }
-.plugins .tab-content{
-    overflow: inherit;
+
+.plugins .content{
+    padding: 15px 10px
 }
+
 .plugins .span2{
     width: 16.894%;
 }
 .plugins .span2 .ajax-link{
-    width: 185px;
+    width: 160px;
 }
 .plugins .span10{
     border-left: 1px solid #cccccc;
@@ -80,7 +82,7 @@
     padding-right: 5px;
     text-align: left;
     font-size: 12px;
-    width: 155px;
+    width: 130px;
 }
 .plugins .form-search .btn{
     background: url(icon-search.png) center center no-repeat;

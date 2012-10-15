@@ -1,6 +1,6 @@
 The Zencart Plugin Framework (ZePLUF) is a product of RubikIntegration.com
 
-This framework is meant to be used with Zencart version 1.3.9h and above (certain features may NOT work with the new Zencart 1.5.0 admin menu yet)
+This framework is meant to be used with Zencart version 1.3.9h and above
 
 **Features**
 - Allows developers to package their plugin(s) in one single place (in most cases) instead of spreading the files all over the place.

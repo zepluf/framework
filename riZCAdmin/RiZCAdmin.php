@@ -33,5 +33,4 @@ class RiZCAdmin extends PluginCore{
         }
 
     }
-
 }
