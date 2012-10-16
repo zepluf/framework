@@ -149,15 +149,15 @@ class Object implements \Serializable{
      */
     public function serialize() {
         $sprops = array();
-        foreach ($this->getProperties() as $name => $obj) {
+        foreach ($this->properties_ as $name => $obj) {
             $sprops[$name] = serialize($obj);
         }
 
         $serialized = serialize($sprops);
 
-        if (function_exists('gzcompress')) {
-            $serialized =  base64_encode(gzcompress($serialized));
-        }
+//        if (function_exists('gzcompress')) {
+//            $serialized =  base64_encode(gzcompress($serialized));
+//        }
 
         return $serialized;
     }
@@ -168,11 +168,11 @@ class Object implements \Serializable{
      * @param string serialized The serialized data.
      */
     public function unserialize($serialized) {
-        if (function_exists('gzcompress')) {
-            $serialized = base64_decode(gzuncompress($serialized));
-        }
+//        if (function_exists('gzuncompress')) {
+//            $serialized = base64_decode(gzuncompress($serialized));
+//        }
 
-        $sprops = base64_decode(unserialize($serialized));
+        $sprops = unserialize($serialized);
 
         foreach ($sprops as $name => $sprop) {
             $this->set($name, unserialize($sprop));

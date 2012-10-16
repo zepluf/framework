@@ -29,6 +29,7 @@
     	<service id="riCore.DatabasePatch" class="plugins\riCore\DatabasePatch"></service>
     	
     	<service id="view" class="plugins\riCore\View" scope="container">
+            <argument>%container%</argument>
         </service> 
         
         <service id="riCore.TemplateLoader" class="plugins\riCore\TemplateLoader" scope="prototype">        		

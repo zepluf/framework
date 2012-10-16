@@ -24,7 +24,15 @@ use Symfony\Component\Routing;
 /**
  * the view class
  */
-class View extends Object{
+class View extends Object
+{
+
+    /**
+     * the container
+     *
+     * @var \plugins\riPlugin\Container
+     */
+    private $container;
 
     /**
      * the view vars array
@@ -57,29 +65,31 @@ class View extends Object{
     /**
      * inits the view with some variables
      */
-    public function __construct(){
+    public function __construct(\plugins\riPlugin\Container $container){
 
-        $this->loader = Plugin::get('riCore.TemplateLoader');
+        $this->container = $container;
+
+        $this->loader = $this->container->get('riCore.TemplateLoader');
 
         //$this->patterns['default'] =  __DIR__.'/../../riSimplex/content/views/%name%';
 
-        Plugin::getContainer()->setParameter('templating.loader', $this->loader);
-        Plugin::getContainer()->setParameter('templating.nameparser', Plugin::get('templating.nameparser'));
+        $this->container->setParameter('templating.loader', $this->loader);
+        $this->container->setParameter('templating.nameparser', $this->container->get('templating.nameparser'));
 
-        $this->engine = Plugin::get('riCore.TemplateEngine');
-	    foreach(Plugin::get('settings')->get('framework.templating.engines', array()) as $engine_name){
-	        if(($engine = Plugin::get('templating.engine.' . $engine_name)) !== false){
-                $engine->addHelpers(array(Plugin::get('templating.helper.slot'), Plugin::get('templating.holder')));
+        $this->engine = $this->container->get('riCore.TemplateEngine');
+	    foreach($this->container->get('settings')->get('framework.templating.engines', array()) as $engine_name){
+	        if(($engine = $this->container->get('templating.engine.' . $engine_name)) !== false){
+                $engine->addHelpers(array($this->container->get('templating.helper.slot'), $this->container->get('templating.holder')));
                 $this->engine->addEngine($engine);
             }
         }
 
         // always set router and reference to this
         $this->set(array(
-            'router' => new UrlGenerator(Plugin::getContainer()->getParameter('routes'), Plugin::get('context')),
+            'router' => new UrlGenerator($this->container->getParameter('routes'), $this->container->get('context')),
             'riview' => $this,
-            'container' => Plugin::getContainer(),
-            'holder' => Plugin::get('templating.holder')
+            'container' => $this->container,
+            'holder' => $this->container->get('templating.holder')
         ));
     }
 
@@ -149,7 +159,7 @@ class View extends Object{
      */
     public function findRenderPath($view){
         $view = explode('::', $view);
-        if(count($view > 1))
+        if(count($view) > 1)
             $view_path = $view[0] . '/content/views/' . $view[1];
         else
             $view_path = $view[0];
@@ -208,6 +218,7 @@ class View extends Object{
 //            unset($patterns['default']);
 //            $patterns['default'] = $default;
 //        }
+
         return $patterns;
     }
 
