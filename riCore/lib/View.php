@@ -13,7 +13,6 @@
 
 namespace plugins\riCore;
 
-use plugins\riPlugin\Plugin;
 use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\Templating\TemplateReference;

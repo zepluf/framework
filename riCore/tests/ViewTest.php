@@ -51,13 +51,10 @@ class ViewTest extends \UnitTestCase
         $this->assertEqual($filePath, realpath($renderedPath));
 
         @unlink($filePath);
-
-        // put the file in a plugin path
     }
 
     public function testFindRenderPathPlugin(){
-        // put the template into the current template
-        $filePath = DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'plugins/riSample/content/views/test_template.php';
+        $filePath = DIR_FS_CATALOG . 'plugins/riSample/content/views/test_template.php';
         $fp = fopen($filePath, 'w');
         fwrite($fp, 'sample template file');
 
@@ -73,8 +70,42 @@ class ViewTest extends \UnitTestCase
 
         $this->assertEqual($filePath, realpath($renderedPath));
 
-        @unlink($filePath);
+        // put the template into the plugin overrride
+        // now the view should load the overriding file instead
 
-        // put the file in a plugin path
+        $filePath2 = DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'plugins/riSample/content/views/test_template.php';
+        $fp = fopen($filePath2, 'w');
+        fwrite($fp, 'sample template file');
+
+        fclose($fp);
+
+        $filePath2 = realpath($filePath2);
+
+        $renderedPath = $this->view->findRenderPath('riSample::test_template.php');
+
+        $this->assertTrue(is_string($renderedPath));
+
+        $this->assertEqual($filePath2, realpath($renderedPath));
+
+        @unlink($filePath);
+        @unlink($filePath2);
+
+    }
+
+    public function testRender(){
+        $filePath = DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'templates/tpl_test_template.php';
+        $fp = fopen($filePath, 'w');
+        fwrite($fp, 'sample <?php echo $text?> file');
+
+        fclose($fp);
+
+        $filePath = realpath($filePath);
+
+        $this->view->addDefaultPathPattern('template', DIR_FS_CATALOG . DIR_WS_TEMPLATE);
+        $renderedContent = $this->view->render('templates/tpl_test_template.php', array('text' => 'template'));
+
+        $this->assertEqual($renderedContent, 'sample template file');
+
+        @unlink($filePath);
     }
 }
