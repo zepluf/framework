@@ -16,12 +16,12 @@ require_once('riCore/vendor/zenmagick/lib/base/classloader/ClassLoader.php');
 // load the class loader and dependency injection component
 $class_loader = new zenmagick\base\classloader\ClassLoader();
 
-$class_loader->addNamespaces(array(	
+$class_loader->addNamespaces(array(
+    'plugins' => __DIR__ . '/..',
 	'plugins\riPlugin' => __DIR__.'/riPlugin/lib@plugins\riPlugin',
     'plugins\riCore' => __DIR__.'/riCore/lib@plugins\riCore',
+    'Symfony' => __DIR__.'/riCore/vendor/symfony/src'
 ));
-
-$class_loader->addNamespace('Symfony',__DIR__.'/riCore/vendor/symfony/src');
 
 $class_loader->register(true);
 

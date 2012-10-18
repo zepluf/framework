@@ -4,7 +4,7 @@
  *
  * Date: 9/30/12
  * Time: 4:31 PM
- * Question? Come to our website at http://rubikintegration.com
+ * Question? Come to our website at http://rubikin.com
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or refer to the LICENSE
@@ -87,10 +87,10 @@ class AdminController extends Controller{
             Plugin::get('settings')->saveLocal();
         }
 
-        return new Response(json_encode(array(
+        return $this->renderJson(array(
         	'activated' => $activated,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
-        )));        
+        ));
     }
 
     /**
@@ -111,10 +111,10 @@ class AdminController extends Controller{
             Plugin::get('settings')->saveLocal();
         }
 
-        return new Response(json_encode(array(
+        return $this->renderJson(array(
             'activated' => !$deactivated,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
-        )));
+        ));
     }
 
     /**
@@ -132,10 +132,10 @@ class AdminController extends Controller{
             $stt = true;
         }
 
-        return new Response(json_encode(array(
+        return $this->renderJson(array(
             'status' => $stt,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
-        )));
+        ));
     }
 
     /**
@@ -150,10 +150,10 @@ class AdminController extends Controller{
         if(file_exists($config_path . '_settings.php'))
             $view = $this->view->render($riname . '::_settings.php', array('riname' => $riname));
 
-        return new Response(json_encode(array(
+        return $this->renderJson(array(
             'view' => isset($view) ? $view : false
             )
-        ));
+        );
     }
 
     /**
@@ -196,10 +196,10 @@ class AdminController extends Controller{
         if(!file_exists($path))
             $stt = true;
 
-        return new Response(json_encode(array(
+        return $this->renderJson(array(
                 'status' => $stt
             )
-        ));
+        );
     }
 
     /**
@@ -222,10 +222,10 @@ class AdminController extends Controller{
 
         Plugin::get('riLog.Logs')->copyFromZen();
 
-        return new Response(json_encode(array(
+        return $this->renderJson(array(
             'installed' => $installed,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
-        )));
+        ));
     }
 
     /**
@@ -246,10 +246,10 @@ class AdminController extends Controller{
             Plugin::get('settings')->saveLocal();
         }
 
-        return new Response(json_encode(array(
+        return $this->renderJson(array(
             'installed' => !$uninstalled,
             'messages' => Plugin::get('riLog.Logs')->getAsArray()
-        )));
+        ));
     }
 
     /**
@@ -281,11 +281,11 @@ class AdminController extends Controller{
         Plugin::get('settings')->resetCache('theme');
         Plugin::get('settings')->loadTheme('frontend', __DIR__ . '/../../../' . DIR_WS_TEMPLATE);
 
-        return new Response(json_encode(array(
+        return $this->renderJson(array(
             'messages' => array(array(
                 'type' => 'success',
                 'message' => ri('Theme %theme% settings have been loaded', array('%theme%' => DIR_WS_TEMPLATE))
             ))
-        )));
+        ));
     }
 }

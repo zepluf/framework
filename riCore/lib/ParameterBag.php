@@ -4,7 +4,7 @@
  * User: vunguyen
  * Date: 6/26/12
  * Time: 6:38 PM
- * Question? Come to our website at http://rubikintegration.com
+ * Question? Come to our website at http://rubikin.com
  */
 
 namespace plugins\riCore;
@@ -12,7 +12,8 @@ namespace plugins\riCore;
 /**
  * parameterBag holding key/value pair
  */
-class ParameterBag{
+class ParameterBag
+{
 
     const DEFAULT_KEY = 'THISISADEFAULTKEY';
 

@@ -4,7 +4,7 @@
  *
  * Date: 9/30/12
  * Time: 4:31 PM
- * Question? Come to our website at http://rubikintegration.com
+ * Question? Come to our website at http://rubikin.com
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code or refer to the LICENSE
@@ -134,7 +134,7 @@ $riview->get('loader')->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippe
         </div>
         <div class="tab-pane" id="about">
             <div class="content">
-                The Zencart Plugin Framework (ZePLUF) is a product of RubikIntegration.com <br /><br />
+                The Zencart Plugin Framework (ZePLUF) is a product of rubikin.com <br /><br />
 
                 This framework is meant to be used with Zencart version 1.3.9h and above<br /><br />
 

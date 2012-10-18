@@ -6,7 +6,7 @@
  * Created by RubikIntegration Team.
  * Date: 9/2/12
  * Time: 10:06 AM
- * Question? Come to our website at http://rubikintegration.com
+ * Question? Come to our website at http://rubikin.com
  */
 
 /**

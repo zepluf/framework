@@ -3,7 +3,7 @@
  * Created by RubikIntegration Team.
  * Date: 9/26/12
  * Time: 2:12 PM
- * Question? Come to our website at http://rubikintegration.com
+ * Question? Come to our website at http://rubikin.com
  */
 // bof ri: ZePLUF
 $content = ob_get_clean();

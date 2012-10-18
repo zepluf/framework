@@ -4,7 +4,7 @@
  * User: vunguyen
  * Date: 6/25/12
  * Time: 3:53 PM
- * Question? Come to our website at http://rubikintegration.com
+ * Question? Come to our website at http://rubikin.com
  */
 use plugins\riPlugin\Plugin;
 

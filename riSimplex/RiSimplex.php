@@ -3,7 +3,7 @@
  * Created by RubikIntegration Team.
  * Date: 8/13/12
  * Time: 8:24 PM
- * Question? Come to our website at http://rubikintegration.com
+ * Question? Come to our website at http://rubikin.com
  */
 
 namespace plugins\riSimplex;

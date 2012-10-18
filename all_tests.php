@@ -25,10 +25,21 @@ class AllTests extends TestSuite {
      */
     function __construct() {
         parent::__construct();
-        foreach(Plugin::getLoaded() as $plugin){
-        	foreach (glob(__DIR__ . '/' . $plugin . "/tests/*.php") as $file) {
-				$this->addFile($file);
-			}
+        if (defined('STDIN')) {
+            // unfortunately we will have to use global here
+            if(isset($GLOBALS['argv'][1])) {
+                foreach (glob(__DIR__ . '/' . $GLOBALS['argv'][1] . "/tests/*.php") as $file) {
+                    $this->addFile($file);
+                }
+            }
+
+            else {
+                foreach(Plugin::getLoaded() as $plugin){
+                    foreach (glob(__DIR__ . '/' . $plugin . "/tests/*.php") as $file) {
+                        $this->addFile($file);
+                    }
+                }
+            }
         }
     }
 }
