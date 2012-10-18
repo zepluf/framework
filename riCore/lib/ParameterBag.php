@@ -40,14 +40,15 @@ class ParameterBag
      * @param $value
      * @param bool $merge
      */
-    public function set($key, $value, $merge = false){
+    public function set($key, $value, $merge = false)
+    {
 
         $key = explode('.', $key);
 
         $r = & $this->_parameters;
         $keys = array();
-        foreach ($key as $k){
-            if(!isset($r[$k])) $r[$k] = null;
+        foreach ($key as $k) {
+            if (!isset($r[$k])) $r[$k] = null;
             $r = & $r[$k];
 
             // we need to reset cache
@@ -55,9 +56,9 @@ class ParameterBag
             unset($this->_cache[implode('.', $keys)]);
         }
 
-        if(!$merge || !is_array($r))
+        if (!$merge || !is_array($r))
             $r = $value;
-        else{
+        else {
             $r = arrayMergeWithReplace($r, $value);
         }
     }
@@ -67,8 +68,26 @@ class ParameterBag
      *
      * @param $key
      */
-    public function remove($key){
-        unset($this->_parameters[$key]);
+    public function remove($key)
+    {
+        $_key = explode('.', $key);
+        $_keyCount = count($_key);
+        $r = & $this->_parameters;
+        foreach ($_key as $k) {
+            if (!isset($r[$k])) break;
+
+            if ($_keyCount == 1) {
+                if (isset($r[$k])) unset($r[$k]);
+                break;
+            }
+            else {
+                $r = & $r[$k];
+            }
+
+            $_keyCount--;
+        }
+
+        unset($this->_cache[$key]);
     }
 
     /**
@@ -77,22 +96,25 @@ class ParameterBag
      * @param $key
      * @return bool
      */
-    public function has($key){
-        if(isset($this->_cache[$key])) return true;
+    public function has($key)
+    {
+        if (isset($this->_cache[$key])) return true;
 
         return $this->get($key, 'THISISADEFAULTKEY') != 'THISISADEFAULTKEY';
     }
 
     /**
      * gets the value of a key, it's possible to use multi.array.level here
+     *
      * @param null $key
      * @param string $default is optional, is used to return if the key does not exist
      * @return mixed
      */
-    public function get($key = null, $default = self::DEFAULT_KEY){
-        if(empty($key)) return $this->_parameters;
+    public function get($key = null, $default = self::DEFAULT_KEY)
+    {
+        if (empty($key)) return $this->_parameters;
 
-        if(!isset($this->_cache[$key])){
+        if (!isset($this->_cache[$key])) {
             $_key = explode('.', $key);
             $this->_cache[$key] = $this->_get($_key, $this->_parameters, $default);
         }
@@ -107,17 +129,21 @@ class ParameterBag
      * @param $default
      * @return mixed
      */
-    protected function _get($key, $settings, $default){
-        foreach($key as $k){
-            if(array_key_exists($k, $settings)){
+    protected function _get($key, $settings, $default)
+    {
+        foreach ($key as $k) {
+            if (array_key_exists($k, $settings)) {
                 array_shift($key);
-                if(count($key) > 0)
+                if (count($key) > 0) {
                     return $this->_get($key, $settings[$k], $default);
-                else
+                }
+                else {
                     return $settings[$k];
+                }
             }
-            else
+            else {
                 return $default;
+            }
         }
     }
 }
