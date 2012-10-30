@@ -12,11 +12,3 @@ This framework is meant to be used with Zencart version 1.3.9h and above
 **Documentation**
 
 http://rubikin.com/wiki/zencart/plugin_framework/about
-
-**Roadmap**
-
-Version 1.5:
-- Bug fixes
-- Fix issue with links not accessible in admin of Zen 1.5+ for non-superuser
-- More unit-test for the core
-- First step toward Doctrine

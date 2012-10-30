@@ -1,0 +1,10 @@
+parameters:
+  plugins.root_dir: "%kernel.root_dir%/plugins"
+
+framework:
+  router:
+    resource: "%kernel.root_dir%/config/routing.yml"
+    strict_requirements: %kernel.debug%
+  templating:
+    engines: ['php'] #assets_version: SomeVersionScheme
+    loaders:  [RiStoreBundle.templating.loader]

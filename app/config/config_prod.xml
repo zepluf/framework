@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+	<parameters>
+        <parameter key="kernel.debug">false</parameter>
+        <parameter key="kernel.bundles" type="collection"></parameter>
+        <parameter key="http_kernel.class">Zepluf\Bundle\RiStoreBundle\HttpKernel</parameter>
+        <parameter key="locale">en</parameter>
+        <parameter key="charset">UTF-8</parameter>
+        <parameter key="templating.path_patterns" type="collection"></parameter>
+        <parameter key="templating.name_parser.class">Zepluf\Bundle\RiStoreBundle\Templating\TemplateNameParser</parameter>
+        <parameter key="router.options.generator_class">Zepluf\Bundle\RiStoreBundle\Routing\Generator\UrlGenerator</parameter>
+        <parameter key="router.options.generator_base_class">Zepluf\Bundle\RiStoreBundle\Routing\Generator\UrlGenerator</parameter>
+	</parameters>
+
+    <services>
+
+        <service id="resolver" class="Symfony\Component\HttpKernel\Controller\ControllerResolver"></service>
+
+        <service id="http_kernel" class="Zepluf\Bundle\RiStoreBundle\HttpKernel">
+            <argument type="service" id="event_dispatcher"/>
+            <argument type="service" id="service_container"/>
+            <argument type="service" id="resolver"/>
+        </service>
+
+    	<service id="translation.loader.mo" class="Symfony\Component\Translation\Loader\MoFileLoader"></service>
+
+    	<service id="translation.loader.po" class="Symfony\Component\Translation\Loader\PoFileLoader"></service>
+
+    	<service id="translator.selector" class="Symfony\Component\Translation\MessageSelector" public="false" />
+    	<service id="translator" class="Symfony\Component\Translation\Translator">
+    		<argument>%locale%</argument>
+    		<argument type="service" id="translator.selector" />
+    		<call method="addLoader">
+    			<argument>mo</argument>
+    			<argument type="service" id="translation.loader.mo" />
+    		</call>	    		
+    		<call method="addLoader">
+    			<argument>po</argument>
+    			<argument type="service" id="translation.loader.po" />
+    		</call>
+    	</service>
+
+        <service id="settings" class="plugins\riCore\Settings" scope="container"></service>
+
+        <service id="riCore.Model" class="plugins\riCore\Model" scope="prototype">
+        </service>
+
+        <service id="RiStoreBundle.templating.loader" class="Zepluf\Bundle\RiStoreBundle\Templating\Loader\TemplateLoader">
+            <argument>%templating.path_patterns%</argument>
+        </service>
+
+
+        <service id="templating.helper.holders" class="Zepluf\Bundle\RiStoreBundle\Templating\Helper\HoldersHelper">
+            <tag name="templating.helper" alias="holders" />
+        </service>
+
+        <service id="riCore.Collection" class="plugins\riCore\Collection" scope="prototype"></service>
+
+        <service id="riCore.DatabasePatch" class="plugins\riCore\DatabasePatch"></service>
+
+        <service id="view" class="plugins\riCore\View" scope="container">
+            <argument type="service" id="templating" />
+            <argument type="service" id="RiStoreBundle.templating.loader" />
+            <call method="setPathPatterns">
+                <argument type="service" id="templating.loader" />
+            </call>
+        </service>
+
+        <service id="riCore.Event" class="Zepluf\Bundle\RiStoreBundle\Event\CoreEvent" scope="prototype"></service>
+
+        <service id="riCore.Events" class="Zepluf\Bundle\RiStoreBundle\HoldersHelperEvents"></service>
+
+        <service id="riCore.Listener" class="plugins\riCore\Listener"></service>
+
+    </services>
+
+</container>

@@ -9,7 +9,7 @@
 $content = ob_get_clean();
 if(is_object($core_event)){
     $core_event->setContent($content);
-    $container->get('dispatcher')->dispatch(plugins\riCore\Events::onPageEnd, $core_event);
+    $container->get('event_dispatcher')->dispatch(Zepluf\Bundle\RiStoreBundle\Events::onPageEnd, $core_event);
     $content = $core_event->getContent();
 }
 if(!isset($print_content) || $print_content) echo $content;

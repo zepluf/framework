@@ -1,0 +1,43 @@
+initalized: true
+installed:
+    - riCore
+    - riUtility
+    - riCache
+    - riLog
+    - riSimplex
+    - riZCAdmin
+    - riCjLoader
+    - riImage
+    - riValidation
+    - riCart
+    - riProduct
+    - riMenu
+    - riElement
+    - riResultList
+    - riCategory
+    - riMeta
+    - riBanner
+    - riSample
+activated:
+    - riCore
+    - riUtility
+    - riCache
+    - riLog
+    - riSimplex
+    - riZCAdmin
+    - riCjLoader
+    - riValidation
+    - riImage
+    - riCart
+    - riProduct
+    - riElement
+    - riResultList
+    - riCategory
+    - riMenu
+    - riMeta
+    - riBanner
+    - riSample
+backend:
+    preload: [riCore, riUtility, riCache, riLog, riZCAdmin, riCjLoader, riValidation, riImage, riCart, riProduct, riElement, riResultList, riCategory, riMenu, riMeta, riSample]
+frontend:
+    preload: [riCore, riUtility, riCache, riLog, riCjLoader, riValidation, riImage, riCart, riProduct, riElement, riResultList, riCategory, riMenu, riMeta, riBanner, riSample]

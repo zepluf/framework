@@ -1,0 +1,28 @@
+# do not ever edit this file
+
+# status
+initalized: false
+
+# plugins
+installed:
+  - riPlugin
+  
+activated:
+  - riPlugin
+
+core:
+  - riCore
+  - riUtility
+  - riCache
+  - riLog
+  - riSimplex
+  #- riSession
+  - riZCAdmin
+  - riCjLoader
+  - riResultList
+
+backend:
+    preload: []
+
+frontend:
+    preload: []
