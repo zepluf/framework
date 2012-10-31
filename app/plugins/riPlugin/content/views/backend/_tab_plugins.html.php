@@ -11,7 +11,7 @@
  * file of ZePLUF
  */
 
-$view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riCore::style.css', 'riCore::modal.js', 'ritools.lib', 'riCore::plugins.css'))
+$view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riPlugin::style.css', 'riPlugin::modal.js', 'ritools.lib', 'riPlugin::plugins.css'))
 ?>
 
 <?php $view['loader']->startInline('js');?>
@@ -53,7 +53,7 @@ $view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jqu
             var riname = $(this).attr('data-parent');
             $.ajax({
                 type: "POST",
-                url: "<?php echo $view['router']->generate('ricore_admin_plugins_show_settings', array(), 'NONSSL', false, 'ri.php'); ?>",
+                url: "<?php echo $view['router']->generate('riplugin_admin_plugins_show_settings', array(), 'NONSSL', false, 'ri.php'); ?>",
                 data: {name: riname},
                 dataType: 'json',
                 success: function(data){
@@ -104,7 +104,7 @@ $view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jqu
             var riname = $(this).attr('data-parent');
             $.ajax({
                 type: "POST",
-                url: "<?php echo $view['router']->generate('ricore_admin_plugins_delete', array(), 'NONSSL', false, 'ri.php'); ?>",
+                url: "<?php echo $view['router']->generate('riplugin_admin_plugins_delete', array(), 'NONSSL', false, 'ri.php'); ?>",
                 data: {name: riname},
                 dataType: 'json',
                 success: function(data){
@@ -127,7 +127,7 @@ $view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jqu
 <?php $view['loader']->endInline();?>
 <div class="show-plugin">
     <div class="span2 col-left">
-        <button class="ajax-link btn" data-href="<?php echo $view['router']->generate('ricore_admin_plugins_load_theme_settings');?>">Load theme settings</button>
+        <button class="ajax-link btn" data-href="<?php echo $view['router']->generate('riplugin_admin_plugins_load_theme_settings');?>">Load theme settings</button>
         <form class="form-search">
             <div class="input-append">
                 <input type="text" class="span2 search-query" id="search-term" placeholder="Search install Plugins">
@@ -163,20 +163,20 @@ $view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jqu
                 <td><?php echo $plugin['code_name']?></td>
                 <td><?php echo $info->release?></td>
                 <td>
-                    <a class="toggle-plugin installation install" <?php echo $installed ? 'style="display:none"' : '' ?> href="<?php echo $view['router']->generate('ricore_admin_plugins_install', array('plugin' => $plugin['code_name']));?>">
+                    <a class="toggle-plugin installation install" <?php echo $installed ? 'style="display:none"' : '' ?> href="<?php echo $view['router']->generate('riplugin_admin_plugins_install', array('plugin' => $plugin['code_name']));?>">
                         <?php rie('install')?>
                     </a>
 
-                    <a class="toggle-plugin installation uninstall" <?php echo !$installed ? 'style="display:none"' : '' ?> href="<?php echo $view['router']->generate('ricore_admin_plugins_uninstall', array('plugin' => $plugin['code_name']))?>">
+                    <a class="toggle-plugin installation uninstall" <?php echo !$installed ? 'style="display:none"' : '' ?> href="<?php echo $view['router']->generate('riplugin_admin_plugins_uninstall', array('plugin' => $plugin['code_name']))?>">
                         <?php rie('un-install')?>
                     </a>
                 </td>
                 <td>
-                    <a class="toggle-plugin activation activate <?php echo $activated ? 'act' : '' ?>" <?php echo !$installed || $activated ? 'style="display:none"' : '' ?> href="<?php echo $view['router']->generate('ricore_admin_plugins_activate', array('plugin' => $plugin['code_name']))?>">
+                    <a class="toggle-plugin activation activate <?php echo $activated ? 'act' : '' ?>" <?php echo !$installed || $activated ? 'style="display:none"' : '' ?> href="<?php echo $view['router']->generate('riplugin_admin_plugins_activate', array('plugin' => $plugin['code_name']))?>">
                         <?php rie('activate')?>
                     </a>
 
-                    <a class="toggle-plugin activation deactivate <?php echo !$activated ? 'deact' : '' ?>" <?php echo !$installed || !$activated ? 'style="display:none"' : '' ?> href="<?php echo $view['router']->generate('ricore_admin_plugins_deactivate', array('plugin' => $plugin['code_name']))?>">
+                    <a class="toggle-plugin activation deactivate <?php echo !$activated ? 'deact' : '' ?>" <?php echo !$installed || !$activated ? 'style="display:none"' : '' ?> href="<?php echo $view['router']->generate('riplugin_admin_plugins_deactivate', array('plugin' => $plugin['code_name']))?>">
                         <?php rie('de-activate')?>
                     </a>
 
@@ -187,7 +187,7 @@ $view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jqu
                         <ul class="dropdown-menu">
                             <li><a class="modal-link" href="#" data-plugin="<?php echo $plugin['code_name']?>"><i class="icon-file"></i> <?php rie('View info')?></a></li>
                             <li><a href="#" class="show-setting deactivate" <?php echo $installed && $activated ? '':'style="display:none"'; ?> data-parent="<?php echo $plugin['code_name'];?>"><i class="icon-cog"></i> <?php rie('Settings')?></a></li>
-                            <li><a class="toggle-plugin deactivate" <?php echo $installed && $activated ? '':'style="display:none"'; ?> href="<?php echo $view['router']->generate('ricore_admin_plugins_reset', array('plugin' => $plugin['code_name']))?>"><i class="icon-refresh"></i> <?php rie('Reload Settings')?></a></li>
+                            <li><a class="toggle-plugin deactivate" <?php echo $installed && $activated ? '':'style="display:none"'; ?> href="<?php echo $view['router']->generate('riplugin_admin_plugins_reset', array('plugin' => $plugin['code_name']))?>"><i class="icon-refresh"></i> <?php rie('Reload Settings')?></a></li>
                             <li><a href="#" class="delete" data-parent="<?php echo $plugin['code_name'];?>"><i class="icon-remove"></i> <?php rie('Delete')?></a></li>
                         </ul>
                     </div>

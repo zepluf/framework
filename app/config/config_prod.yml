@@ -1,5 +1,6 @@
 parameters:
   plugins.root_dir: "%kernel.root_dir%/plugins"
+  kernel.config_dir: "%kernel.root_dir%/config"
 
 framework:
   router:
@@ -8,3 +9,14 @@ framework:
   templating:
     engines: ['php'] #assets_version: SomeVersionScheme
     loaders:  [RiStoreBundle.templating.loader]
+
+monolog:
+  handlers:
+    main:
+      type: fingers_crossed
+      action_level: error
+      handler:      nested
+    nested:
+      type:  stream
+      path:  %kernel.logs_dir%/%kernel.environment%.log
+      level: debug

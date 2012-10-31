@@ -18,6 +18,8 @@
 
     <services>
 
+        <service id="riLog.Logs" class="Zepluf\Bundle\RiStoreBundle\Logs" scope="container"></service>
+
         <service id="resolver" class="Symfony\Component\HttpKernel\Controller\ControllerResolver"></service>
 
         <service id="http_kernel" class="Zepluf\Bundle\RiStoreBundle\HttpKernel">
@@ -44,7 +46,11 @@
     		</call>
     	</service>
 
-        <service id="settings" class="plugins\riCore\Settings" scope="container"></service>
+        <service id="settings" class="Zepluf\Bundle\RiStoreBundle\Settings">
+            <argument>%kernel.config_dir%</argument>
+            <argument>%kernel.cache_dir%</argument>
+            <argument>%plugins.root_dir%</argument>
+        </service>
 
         <service id="riCore.Model" class="plugins\riCore\Model" scope="prototype">
         </service>
@@ -62,7 +68,7 @@
 
         <service id="riCore.DatabasePatch" class="plugins\riCore\DatabasePatch"></service>
 
-        <service id="view" class="plugins\riCore\View" scope="container">
+        <service id="view" class="Zepluf\Bundle\RiStoreBundle\Templating\View">
             <argument type="service" id="templating" />
             <argument type="service" id="RiStoreBundle.templating.loader" />
             <call method="setPathPatterns">

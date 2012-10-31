@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * plugin framework main class
  */
-class RiSimplex extends \plugins\riCore\PluginCore{
+class RiSimplex extends \Zepluf\Bundle\RiStoreBundle\PluginCore{
 
     /**
      * listens to controller start

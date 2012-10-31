@@ -91,11 +91,11 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller{
      *
      * @return Response A Response instance
      */
-    public function render($view, array $parameters = array(), Response $response = null)
-    {
-    	if($response == null) $response = $this->response;
-        return $this->view->renderResponse($view, $parameters, $response);
-    }
+//    public function render($view, array $parameters = array(), Response $response = null)
+//    {
+//    	if($response == null) $response = $this->response;
+//        return $this->view->renderResponse($view, $parameters, $response);
+//    }
 
     /**
      * renders the response as json the exits right away

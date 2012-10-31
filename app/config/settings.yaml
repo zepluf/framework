@@ -5,16 +5,14 @@ initalized: false
 
 # plugins
 installed:
-  - riPlugin
-  
+
 activated:
-  - riPlugin
 
 core:
+  - riPlugin
   - riCore
   - riUtility
   - riCache
-  - riLog
   - riSimplex
   #- riSession
   - riZCAdmin

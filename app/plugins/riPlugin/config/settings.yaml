@@ -1,0 +1,42 @@
+# the settings from here should not be edited or overwritten
+routes:
+  admin_plugins:
+    pattern:  /manager/
+    defaults: { _controller: plugins\riPlugin\Controller\AdminController::indexAction }
+  admin_plugins_info:
+    pattern:  /info/
+    defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsInfoAction }
+  admin_plugins_install:
+    pattern:  /install/
+    defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsInstallAction }
+  admin_plugins_uninstall:
+    pattern:  /uninstall/
+    defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsUninstallAction }
+  admin_plugins_activate:
+    pattern:  /activate/
+    defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsActivateAction }
+  admin_plugins_deactivate:
+    pattern:  /deactivate/
+    defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsDeactivateAction }
+  admin_plugins_reset:
+    pattern:  /reset_settings/
+    defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsResetAction }
+  admin_plugins_load_theme_settings:
+    pattern:  /load_theme_settings/
+    defaults: { _controller: plugins\riPlugin\Controller\AdminController::loadThemeSettingsAction }
+  admin_plugins_configs_settings:
+      pattern:  /configs_settings/
+      defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsConfigAction }
+  admin_plugins_show_settings:
+        pattern:  /show_settings/
+        defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsShowSettings }
+  admin_plugins_delete:
+          pattern:  /delete/
+          defaults: { _controller: plugins\riPlugin\Controller\AdminController::pluginsDeleteAction }
+
+global:    
+  backend:
+    menu:
+      # append the Plugin Manager link into the Extras menu
+      extras:
+        - {text: Plugins Manager, link: ri.php/riplugin/manager/}

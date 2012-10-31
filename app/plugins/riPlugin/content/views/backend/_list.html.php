@@ -11,10 +11,9 @@
  * file of ZePLUF
  */
 
-$view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.form.lib', 'jquery.gritter.lib', 'riCore::jquery.tablesorter.js', 'riCore::style.css', 'riCore::modal.js', 'ritools.lib', 'riCore::plugins.css'))
+$view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.form.lib', 'jquery.gritter.lib', 'riPlugin::jquery.tablesorter.js', 'riPlugin::style.css', 'riPlugin::modal.js', 'ritools.lib', 'riPlugin::plugins.css'));
 
 ?>
-
 <?php $view['loader']->startInline('js');?>
 <script type="text/javascript">
     $(function () {
@@ -26,7 +25,7 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib',
 
         $('.modal-link').bind('click', function (e) {
             $.ajax({
-                url: '<?php echo $view['router']->generate('ricore_admin_plugins_info');?>',
+                url: '<?php echo $view['router']->generate('riplugin_admin_plugins_info');?>',
                 data: {plugin: $(this).data('plugin')},
                 success: function(response){
                     $('#myModal .modal-body').html(response);
@@ -103,6 +102,7 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib',
     });
 </script>
 <?php $view['loader']->endInline();?>
+
 <div class="logo pull-left"></div>
 <div class="menus pull-right">
     <ul class="nav nav-pills" id="tabPlugin">
@@ -119,13 +119,13 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib',
     <div class="span12 title" id="table-name"><?php rie('Plugins')?></div>
     <div class="tab-content" style="width: 100%;">
         <div class="tab-pane active" id="plugins">
-            <?php echo $riview->render('riCore:backend:_tab_plugins.html.php', array('plugins' => $plugins, 'core' => $core));?>
+            <?php echo $view->render('riPlugin:backend:_tab_plugins.html.php', array('plugins' => $plugins, 'core' => $core));?>
         </div>
         <div class="tab-pane" id="settings">
 
         </div>
         <div class="tab-pane" id="install">
-            <?php echo $riview->render('riCore:backend:_tab_install.html.php');?>
+            <?php echo $view->render('riPlugin:backend:_tab_install.html.php');?>
         </div>
         <div class="tab-pane" id="feature">
             <div class="content">

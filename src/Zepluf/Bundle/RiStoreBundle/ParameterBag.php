@@ -7,7 +7,7 @@
  * Question? Come to our website at http://rubikin.com
  */
 
-namespace plugins\riCore;
+namespace Zepluf\Bundle\RiStoreBundle;
 
 /**
  * parameterBag holding key/value pair

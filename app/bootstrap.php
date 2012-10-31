@@ -23,6 +23,7 @@ $class_loader->addNamespaces(array(
     'Symfony' => __DIR__ . '/../vendor/symfony/src',
     'Zepluf' => __DIR__ . '/../src',
     'Sensio\\Bundle\\FrameworkExtraBundle' => __DIR__ . '/../vendor/sensio/framework-extra-bundle/',
+    'Monolog' => __DIR__ . '/../vendor/monolog/monolog/src/',
     'Doctrine\\Common' =>  __DIR__ . '/../vendor/doctrine/common/lib',
     'Doctrine\\ORM' => __DIR__ . '/../vendor/doctrine/orm/lib/',
     'Doctrine\\DBAL' => __DIR__ . '/../vendor/doctrine/dbal/lib/',

@@ -3,7 +3,7 @@
  * the abstract class for any plugin's core class
  */
 
-namespace plugins\riCore;
+namespace Zepluf\Bundle\RiStoreBundle;
 
 /**
  * plugin core class

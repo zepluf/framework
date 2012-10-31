@@ -11,7 +11,7 @@
  * file of ZePLUF
  */
 
-namespace plugins\riCore;
+namespace Zepluf\Bundle\RiStoreBundle;
 
 use Symfony\Component\Yaml\Yaml;
 use plugins\riPlugin\Plugin;
@@ -36,11 +36,24 @@ class Settings extends ParameterBag{
     private $cache_folder;
 
     /**
+     * @var
+     */
+    private $pluginsDir;
+
+    /**
+     * @var
+     */
+    private $configDir;
+
+    /**
      * init
      */
-    public function __construct(){
-        $this->cache_root_folder =  realpath(__DIR__ . '/../../../cache') . '/';
+    public function __construct($configDir, $cacheDir, $pluginsDir){
+        $this->configDir = $configDir . '/';
+        $this->pluginsDir = $pluginsDir . '/';
+        $this->cache_root_folder =  $cacheDir . '/';
         $this->cache_folder = $this->cache_root_folder . 'ZePLUF/';
+
         Yaml::enablePhpParsing();
     }
 
@@ -86,9 +99,9 @@ class Settings extends ParameterBag{
      */
     public function reload(){
         // reload the framework settings
-        $framework_settings = $this->load('framework', __DIR__ . '/');
-        if(is_array($framework_settings['backend']['preload'])) Plugin::load($framework_settings['backend']['preload']);
-        if(is_array($framework_settings['frontend']['preload'])) Plugin::load($framework_settings['frontend']['preload']);
+        $framework_settings = $this->load('framework', $this->configDir);
+        if(is_array($framework_settings['backend']['preload'])) Plugin::loadPlugin($framework_settings['backend']['preload']);
+        if(is_array($framework_settings['frontend']['preload'])) Plugin::loadPlugin($framework_settings['frontend']['preload']);
         $this->loadTheme('frontend');
     }
 
@@ -105,7 +118,7 @@ class Settings extends ParameterBag{
             $settings = array();
 
             if(empty($config_path)){
-                $config_path = realpath(__DIR__.'/../../'.$root.'/config') . '/';
+                $config_path = realpath($this->pluginsDir . $root . '/config') . '/';
             }
 
             if(file_exists($config_path . $file))
@@ -140,7 +153,7 @@ class Settings extends ParameterBag{
         $settings = array();
 
         if(empty($config_path)){
-            $config_path = realpath(__DIR__.'/../../'.$root.'/config') . '/';
+            $config_path = realpath($this->pluginsDir . $root . '/config') . '/';
         }
 
         if(file_exists($config_path . $file))
@@ -198,10 +211,10 @@ class Settings extends ParameterBag{
     public function saveLocal($plugin = 'framework', $settings = array()){
 
         if($plugin == 'framework'){
-            $config_path = __DIR__ .'/../../';
+            $config_path = $this->configDir;
         }
         else
-            $config_path = __DIR__ .'/../../' . $plugin . '/config/';
+            $config_path = $this->pluginsDir . $plugin . '/config/';
 
         if(empty($settings)){
             $all_settings = $this->get($plugin);
@@ -213,7 +226,7 @@ class Settings extends ParameterBag{
         }
 
         // put into local.yaml
-        @file_put_contents($config_path . 'local.yaml', Yaml::dump($settings));
+        file_put_contents($config_path . 'local.yaml', Yaml::dump($settings));
 
         $this->resetCache($plugin);
     }

@@ -11,17 +11,14 @@
  * file of ZePLUF
  */
 
-namespace plugins\riCore;
+namespace Zepluf\Bundle\RiStoreBundle;
 
-use Symfony\Component\Validator\Constraints\Email;
-
-use plugins\riResultList\ResultSource;
 use plugins\riPlugin\Plugin;
 
 /**
  * core collection class (holding the model objects)
  */
-class Collection extends ResultSource{
+class Collection{
 
     /**
      * mock object

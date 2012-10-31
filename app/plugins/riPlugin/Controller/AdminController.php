@@ -11,7 +11,7 @@
  * file of ZePLUF
  */
 
-namespace plugins\riCore;
+namespace plugins\riPlugin\Controller;
 
 use plugins\riPlugin\Plugin;
 use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass;
@@ -30,24 +30,23 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(){
-		$settings = Yaml::parse($this->container->getParameter('kernel.root_dir') .'/config/settings.yaml');
+		$settings = $this->container->get('settings')->get('framework');
 
 		// a temporary hack to avoid displaying installation folder
 		$ignore = array('install', 'simpletest');
-
 		$plugins = array();
         foreach(glob($this->container->getParameter('plugins.root_dir') . '/*', GLOB_ONLYDIR) as $plugin)
         {
 			$code_name = basename($plugin);
 			// the core modules are not to be exposed
-			if(!in_array($code_name, $ignore) && !in_array($code_name, $settings['installed'])){
+			if(!in_array($code_name, $ignore)){
 				$plugins[] = array(
 					'code_name' => $code_name,
 				);             
 			}
         }
 
-        $this->container->get('templating.helper.holders')->add('main', $this->view->render('riCore:backend:_list.html.php', array('plugins' => $plugins, 'core' => Plugin::get('settings')->get('framework.core', array()))));
+        $this->container->get('templating.helper.holders')->add('main', $this->view->render('riPlugin:backend:_list.html.php', array('plugins' => $plugins, 'core' => Plugin::get('settings')->get('framework.core', array()))));
 
         return $this->render('riZCAdmin:backend:layout.html.php');
     }
@@ -64,7 +63,7 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         if(!empty($plugin)){
             $info = Plugin::info($plugin);                
         }
-        return $this->render('riCore:backend:_plugins_info.html.php', array('info' => $info));
+        return $this->render('riPlugin:backend:_plugins_info.html.php', array('info' => $info));
     }
 
     /**
@@ -237,16 +236,16 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
             $uninstalled = Plugin::uninstall($plugin);
-            Plugin::get('riLog.Logs')->copyFromZen();
+            $this->container->get('riLog.Logs')->copyFromZen();
         }
 
         if($uninstalled){
-            Plugin::get('settings')->saveLocal();
+            $this->container->get('settings')->saveLocal();
         }
 
         return $this->renderJson(array(
             'installed' => !$uninstalled,
-            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+            'messages' => $this->container->get('riLog.Logs')->getAsArray()
         ));
     }
 

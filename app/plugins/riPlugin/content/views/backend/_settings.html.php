@@ -23,7 +23,7 @@ $local = Plugin::get('settings')->loadFile('riSsu', '', 'local.yaml');
     </ul>
 </div>
 <div class="span10 col-right">
-    <form class="form-horizontal ajax-form" method="POST" id="form-config" action="<?php echo $view['router']->generate('ricore_admin_plugins_configs_settings', array(), 'NONSSL', false, 'ri.php')?>" >
+    <form class="form-horizontal ajax-form" method="POST" id="form-config" action="<?php echo $view['router']->generate('riplugin_admin_plugins_configs_settings', array(), 'NONSSL', false, 'ri.php')?>" >
     <input type="hidden" name="riname" value="<?php echo $riname;?>">
     <table class="table settings">
         <tr>

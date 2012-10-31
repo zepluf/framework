@@ -159,13 +159,13 @@ class Plugin{
                 // register the plugin main file
                 self::registerCore($plugin, $plugin_name);
 
-                if(file_exists($config_path.'services.xml')) {
+                if(file_exists($config_path . 'services.xml')) {
                     $loader = new XMLFileLoader($container, new FileLocator($config_path));
                     $loader->load('services.xml');
                     $loaded_services = true;
                 }
 
-                if(file_exists($config_path.'local.xml')) {
+                if(file_exists($config_path . 'local.xml')) {
                     $loader = new XMLFileLoader($container, new FileLocator($config_path));
                     $loader->load('local.xml');
                     $loaded_services = true;
@@ -186,7 +186,7 @@ class Plugin{
 
     public static function loadPlugins($container){
         self::$container = $container;
-        self::get('settings')->load('framework', __DIR__ . '/../../');
+        self::get('settings')->load('framework', self::$container->getParameter('kernel.config_dir'));
         self::$framework_settings = self::get('settings')->get('framework');
 
         // a hack for zen
@@ -279,7 +279,7 @@ class Plugin{
         if(!self::get('settings')->preCheck())
             die(sprintf("ZePLUF is using this folder %s to write cache files, please make it writeable!", self::get('settings')->getCacheRoot()));
 
-        $local_folder = realpath(__DIR__ . '/../../');
+        $local_folder = self::$container->getParameter('kernel.root_dir') . '/config';
         $local_file = $local_folder . '/' . 'local.yaml';
         if(file_exists($local_file) && !is_writable($local_file))
             die(sprintf("ZePLUF is using this file %s to write cache files, please create/make it writeable!", $local_file));
@@ -468,18 +468,21 @@ class Plugin{
 
         $plugin_class = ucfirst($plugin);
 
-        // we need to load this plugin even if it has been de-activated
-
-        var_dump(Plugin::get($plugin_class));die();
         if(!isset($settings['installed']) || in_array($plugin, $settings['installed'])){
-            if(Plugin::get($plugin_class) !== false && Plugin::get($plugin_class)->uninstall()){
-                // we will put into the load
-                arrayRemoveValue($settings['installed'], $plugin);
-                self::get('settings')->set('framework.installed', $settings['installed'], false);
 
-                self::deactivate($plugin);
-                return true;
+            // we need to deactivate the plugin first
+            if(!self::deactivate($plugin)) return false;
+
+            // attempt to call the plugin uninstall method
+            if(Plugin::get($plugin_class) !== false && !Plugin::get($plugin_class)->uninstall()){
+                return false;
             }
+
+            // remove from the installed list
+            arrayRemoveValue($settings['installed'], $plugin);
+            self::get('settings')->set('framework.installed', $settings['installed'], false);
+
+            return true;
         }
 
         return false;
@@ -543,7 +546,7 @@ class Plugin{
                                 )));
                         }
 
-                        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS){
+                        elseif(!self::isActivated($dependent_plugin->codename) || compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS){
                             // we need to check the version
                             $error = true;
                             self::get('riLog.Logs')->add(array(

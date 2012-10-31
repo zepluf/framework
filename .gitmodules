@@ -1,0 +1,39 @@
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/ClassLoader"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/ClassLoader
+	url = git://github.com/symfony/ClassLoader.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/DependencyInjection"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/DependencyInjection
+	url = git://github.com/symfony/DependencyInjection.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Config"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Config
+	url = https://github.com/symfony/Config.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Yaml"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Yaml
+	url = https://github.com/symfony/Yaml.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Routing"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Routing
+	url = https://github.com/symfony/Routing.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/HttpFoundation"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/HttpFoundation
+	url = https://github.com/symfony/HttpFoundation.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/EventDispatcher"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/EventDispatcher
+	url = https://github.com/symfony/EventDispatcher.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/HttpKernel"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/HttpKernel
+	url = https://github.com/symfony/HttpKernel.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Validator"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Validator
+	url = https://github.com/symfony/Validator.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Translation"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Translation
+	url = https://github.com/symfony/Translation.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Templating"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Templating
+	url = https://github.com/symfony/Templating.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Finder"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Component/Finder
+	url = https://github.com/symfony/Finder.git
+[submodule "installation/zencart/zenmagick/vendor/symfony/src/Symfony/Bundle/TwigBundle"]
+	path = installation/zencart/zenmagick/vendor/symfony/src/Symfony/Bundle/TwigBundle
+	url = https://github.com/symfony/TwigBundle.git

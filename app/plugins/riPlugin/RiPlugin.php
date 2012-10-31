@@ -11,9 +11,9 @@
  * file of ZePLUF
  */
 
-namespace plugins\riCore;
+namespace plugins\riPlugin;
 
-use plugins\riCore\PluginCore;
+use Zepluf\Bundle\RiStoreBundle\PluginCore;
 use plugins\riPlugin\Plugin;
 use Zepluf\Bundle\RiStoreBundle\Event\CoreEvent;
 use Zepluf\Bundle\RiStoreBundle\HoldersHelperEvents;
@@ -22,12 +22,12 @@ use Zepluf\Bundle\RiStoreBundle\Events;
 /**
  * plugin core class
  */
-class RiCore extends PluginCore{
+class RiPlugin extends PluginCore{
 
     /**
      * inits
      */
-	public function init(\Symfony\Component\DependencyInjection\Container $container){
+    public function init(\Symfony\Component\DependencyInjection\Container $container){
 
         // initialize some parameters and services
 //        $container->setParameter('templating.loader', $container->get('riCore.TemplateLoader'));
@@ -43,14 +43,14 @@ class RiCore extends PluginCore{
         if(!IS_ADMIN_FLAG){
             $autoLoadConfig[999][] = array('autoType' => 'require', 'loadFile' => __DIR__ . '/lib/frontend_routing.php');
         }
-	}
+    }
 
     /**
      * injects content into holders at pageEnd
      *
      * @param Event $event
      */
-	public function onPageEnd(CoreEvent $event)
+    public function onPageEnd(CoreEvent $event)
     {
         $holders = Plugin::get('settings')->get('global.' . Plugin::getEnvironment() . '.holders', array());
 
@@ -80,7 +80,7 @@ class RiCore extends PluginCore{
                     $load = false;
             }
             if($load)
-            Plugin::get('templating.helper.holders')->add($event->getHolder(), Plugin::get('view')->render($content['template'], $content['parameters']));
+                Plugin::get('templating.helper.holders')->add($event->getHolder(), Plugin::get('view')->render($content['template'], $content['parameters']));
         }
     }
 }

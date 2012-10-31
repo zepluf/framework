@@ -11,7 +11,7 @@
  * file of ZePLUF
  */
 
-namespace plugins\riCore;
+namespace Zepluf\Bundle\RiStoreBundle\Templating;
 
 use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\PhpEngine;
@@ -23,7 +23,7 @@ use Symfony\Component\Routing;
 /**
  * the view class
  */
-class View extends Object
+class View extends \Zepluf\Bundle\RiStoreBundle\Object
 {
 
     /**
@@ -65,14 +65,8 @@ class View extends Object
      * inits the view with some variables
      */
     public function __construct($engine){
-
         //$this->patterns['default'] =  __DIR__.'/../../riSimplex/content/views/%name%';
         $this->engine = $engine;
-
-        // always set router and reference to this
-        $this->set(array(
-            'riview' => $this,
-        ));
     }
 
     /**

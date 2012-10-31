@@ -11,7 +11,7 @@
  * file of ZePLUF
  */
 
-namespace plugins\riCore;
+namespace Zepluf\Bundle\RiStoreBundle;
 
 use plugins\riUtility\String;
 
