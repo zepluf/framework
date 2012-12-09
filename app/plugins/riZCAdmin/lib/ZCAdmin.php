@@ -12,12 +12,20 @@
  */
 namespace plugins\riZCAdmin\lib;
 
-use plugins\riPlugin\Plugin;
-
 /**
  * ZCAdmin class
  */
 class ZCAdmin{
+
+    /**
+     * @var
+     */
+    private $settings;
+
+    public function __construct($settings)
+    {
+        $this->settings = $settings;
+    }
 
     /**
      * inject plugins' menu into Zencart menus
@@ -26,14 +34,14 @@ class ZCAdmin{
      * @param $menu
      */
     public function injectAdminMenu($key, &$menu){
-        $links = Plugin::get('settings')->get('global.backend.menu.'.$key);
+        $links = $this->settings->get('global.backend.menu.'.$key);
         if(is_array($links))
             foreach($links as $link){
                 if(isset($link['route'])) {
-                    $menu[] = array('text' => ri($link['text']), 'link' => riLink($link['route'], $link['parameters'], 'SSL', true));
+                    $menu[] = array('text' => $this->container->get("translator")->trans($link['text']), 'link' => riLink($link['route'], $link['parameters'], 'SSL', true));
                 }
                 else {
-                    $menu[] = array('text' => ri($link['text']), 'link' => $link['link']);
+                    $menu[] = array('text' => $this->container->get("translator")->trans($link['text']), 'link' => $link['link']);
                 }
             }
     }

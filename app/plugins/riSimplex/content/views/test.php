@@ -1,1 +1,0 @@
-test thing <?php echo $foo?>

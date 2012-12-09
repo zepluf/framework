@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+	<parameters>
+        <parameter key="kernel.debug">false</parameter>
+        <parameter key="kernel.bundles" type="collection"></parameter>
+        <parameter key="http_kernel.class">Zepluf\Bundle\StoreBundle\HttpKernel</parameter>
+        <parameter key="locale">en</parameter>
+        <parameter key="charset">UTF-8</parameter>
+        <parameter key="templating.path_patterns" type="collection"></parameter>
+        <parameter key="templating.name_parser.class">Zepluf\Bundle\StoreBundle\Templating\TemplateNameParser</parameter>
+        <parameter key="router.options.generator_class">Zepluf\Bundle\StoreBundle\Routing\Generator\UrlGenerator</parameter>
+        <parameter key="router.options.generator_base_class">Zepluf\Bundle\StoreBundle\Routing\Generator\UrlGenerator</parameter>
+	</parameters>
+
+    <services>
+
+        <service id="plugin" class="plugins\riPlugin\Plugin" scope="container">
+            <argument type="service" id="settings" />
+            <argument type="service" id="event_dispatcher" />
+            <argument>%kernel.environment%</argument>
+            <argument>%kernel.root_dir%</argument>
+        </service>
+
+        <service id="riLog.Logs" class="Zepluf\Bundle\StoreBundle\Logs" scope="container"></service>
+
+        <!-- settings -->
+        <service id="settings" class="Zepluf\Bundle\StoreBundle\Settings">
+            <argument>%kernel.config_dir%</argument>
+            <argument>%kernel.cache_dir%</argument>
+            <argument>%plugins.root_dir%</argument>
+        </service>
+
+        <service id="riCore.Model" class="plugins\riCore\Model" scope="prototype">
+        </service>
+
+        <service id="database_patcher" class="Zepluf\Bundle\StoreBundle\DatabasePatcher"></service>
+
+        <service id="StoreBundle.CoreEvent" class="Zepluf\Bundle\StoreBundle\Event\CoreEvent" scope="prototype">
+            <argument type="service" id="service_container"/>
+        </service>
+
+        <service id="StoreBundle.ControllerListener" class="Zepluf\Bundle\StoreBundle\EventListener\ControllerListener" >
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+        </service>
+
+        <!-- templating -->
+        <service id="StoreBundle.templating.loader" class="Zepluf\Bundle\StoreBundle\Templating\Loader\TemplateLoader">
+            <argument>%templating.path_patterns%</argument>
+        </service>
+
+        <service id="view" class="Zepluf\Bundle\StoreBundle\Templating\View">
+            <argument type="service" id="templating" />
+            <argument type="service" id="StoreBundle.templating.loader" />
+            <call method="setPathPatterns">
+                <argument type="service" id="templating.loader" />
+            </call>
+        </service>
+
+        <service id="templating.helper.holders" class="Zepluf\Bundle\StoreBundle\Templating\Helper\HoldersHelper">
+            <argument type="service" id="event_dispatcher" />
+            <tag name="templating.helper" alias="holders" />
+        </service>
+
+        <service id="StoreBundle.HoldersHelperEvents" class="Zepluf\Bundle\StoreBundle\HoldersHelperEvents"></service>
+
+        <!-- utility services -->
+        <service id="utility.database_result" class="Zepluf\Bundle\StoreBundle\Utility\DatabaseResult"></service>
+        <service id="utility.file" class="Zepluf\Bundle\StoreBundle\Utility\File"></service>
+        <service id="utility.string" class="Zepluf\Bundle\StoreBundle\Utility\String"></service>
+        <service id="utility.uri" class="Zepluf\Bundle\StoreBundle\Utility\Uri"></service>
+
+        <!-- routing -->
+        <service id="plugin_route_loader" class="Zepluf\Bundle\StoreBundle\Routing\PluginRouteLoader" public="false">
+            <argument type="service" id="settings"/>
+            <tag name="routing.loader" />
+        </service>
+
+    </services>
+
+</container>

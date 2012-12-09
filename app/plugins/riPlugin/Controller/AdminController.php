@@ -22,7 +22,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * main controller for managing plugins in backend
  */
-class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller{
+class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
 
     /**
      * return the list of current plugins
@@ -30,7 +30,7 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(){
-		$settings = $this->container->get('settings')->get('framework');
+		$settings = $this->get('settings')->get('framework');
 
 		// a temporary hack to avoid displaying installation folder
 		$ignore = array('install', 'simpletest');
@@ -46,7 +46,13 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
 			}
         }
 
-        $this->container->get('templating.helper.holders')->add('main', $this->view->render('riPlugin:backend:_list.html.php', array('plugins' => $plugins, 'core' => Plugin::get('settings')->get('framework.core', array()))));
+        foreach($plugins as $key => $plugin) {
+            $plugins[$key]['installed'] = $this->get("plugin")->isInstalled($plugin['code_name']);
+            $plugins[$key]['activated'] = $this->get("plugin")->isActivated($plugin['code_name']);
+            $plugins[$key]['info'] = $this->get("plugin")->info($plugin['code_name']);
+        }
+
+        $this->get('templating.helper.holders')->add('main', $this->renderView('riPlugin:backend:_list.html.php', array('plugins' => $plugins, 'core' => $this->container->get('settings')->get('framework.core', array()))));
 
         return $this->render('riZCAdmin:backend:layout.html.php');
     }
@@ -61,7 +67,7 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         $info = null;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
-            $info = Plugin::info($plugin);                
+            $info = $this->container->get("plugin")->info($plugin);                
         }
         return $this->render('riPlugin:backend:_plugins_info.html.php', array('info' => $info));
     }
@@ -76,17 +82,17 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         $activated = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
-            $info = Plugin::info($plugin);
-            $activated = Plugin::activate($plugin);                            
+            $info = $this->container->get("plugin")->info($plugin);
+            $activated = $this->container->get("plugin")->activate($plugin);                            
         }
 
         if($activated){
-            Plugin::get('settings')->saveLocal();
+            $this->container->get('settings')->saveLocal();
         }
 
         return $this->renderJson(array(
         	'activated' => $activated,
-            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+            'messages' => $this->container->get('riLog.Logs')->getAsArray()
         ));
     }
 
@@ -100,17 +106,17 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         $deactivated = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
-            $info = Plugin::info($plugin);
-            $deactivated = Plugin::deactivate($plugin);                            
+            $info = $this->container->get("plugin")->info($plugin);
+            $deactivated = $this->container->get("plugin")->deactivate($plugin);                            
         }
 
         if($deactivated){
-            Plugin::get('settings')->saveLocal();
+            $this->container->get('settings')->saveLocal();
         }
 
         return $this->renderJson(array(
             'activated' => !$deactivated,
-            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+            'messages' => $this->container->get('riLog.Logs')->getAsArray()
         ));
     }
 
@@ -125,13 +131,13 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         $configs = $request->get('configs');
 
         if(!empty($configs) && !empty($riname)){
-            Plugin::get('settings')->saveLocal($riname, $configs);
+            $this->container->get('settings')->saveLocal($riname, $configs);
             $stt = true;
         }
 
         return $this->renderJson(array(
             'status' => $stt,
-            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+            'messages' => $this->container->get('riLog.Logs')->getAsArray()
         ));
     }
 
@@ -187,7 +193,7 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         $stt = false;
         $riname = $request->get('name');
         $path = realpath(__DIR__.'/../../'.$riname);
-        //var_dump($path);
+
         $this->deleteAction($path);
 
         if(!file_exists($path))
@@ -209,19 +215,19 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         $installed = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
-            $installed = Plugin::install($plugin);
-            Plugin::get('riLog.Logs')->copyFromZen();
+            $installed = $this->container->get("plugin")->install($this->container, $plugin);
+            $this->container->get('riLog.Logs')->copyFromZen();
         }
 
         if($installed){
-            Plugin::get('settings')->saveLocal();
+            $this->container->get('settings')->saveLocal();
         }
 
-        Plugin::get('riLog.Logs')->copyFromZen();
+        $this->container->get('riLog.Logs')->copyFromZen();
 
         return $this->renderJson(array(
             'installed' => $installed,
-            'messages' => Plugin::get('riLog.Logs')->getAsArray()
+            'messages' => $this->container->get('riLog.Logs')->getAsArray()
         ));
     }
 
@@ -235,17 +241,17 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
         $uninstalled = false;
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
-            $uninstalled = Plugin::uninstall($plugin);
-            $this->container->get('riLog.Logs')->copyFromZen();
+            $uninstalled = $this->container->get("plugin")->uninstall($this->container, $plugin);
+            $this->get('riLog.Logs')->copyFromZen();
         }
 
         if($uninstalled){
-            $this->container->get('settings')->saveLocal();
+            $this->get('settings')->saveLocal();
         }
 
         return $this->renderJson(array(
             'installed' => !$uninstalled,
-            'messages' => $this->container->get('riLog.Logs')->getAsArray()
+            'messages' => $this->get('riLog.Logs')->getAsArray()
         ));
     }
 
@@ -255,16 +261,16 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
      * @param \Symfony\Component\HttpFoundation\Request $request
      */
     public function pluginsResetAction(Request $request){
-        Plugin::get('settings')->resetCache($request->get('plugin'));
-        Plugin::get('settings')->load($request->get('plugin'));
+        $this->container->get('settings')->resetCache($request->get('plugin'));
+        $this->container->get('settings')->load($request->get('plugin'));
 
-        Plugin::get('riLog.Logs')->add(array(
+        $this->container->get('riLog.Logs')->add(array(
             'type' => 'success',
             'message' => 'settings reloaded'
         ));
 
         return $this->renderJson(array(
-            'messages' => Plugin::get('riLog.Logs')->getAsArray())
+            'messages' => $this->container->get('riLog.Logs')->getAsArray())
         );
     }
 
@@ -275,13 +281,13 @@ class AdminController extends \Zepluf\Bundle\RiStoreBundle\Controller\Controller
      */
     public function loadThemeSettingsAction(){
         // we need to load theme settings
-        Plugin::get('settings')->resetCache('theme');
-        Plugin::get('settings')->loadTheme('frontend', __DIR__ . '/../../../' . DIR_WS_TEMPLATE);
+        $this->container->get('settings')->resetCache('theme');
+        $this->container->get('settings')->loadTheme('frontend', __DIR__ . '/../../../' . DIR_WS_TEMPLATE);
 
         return $this->renderJson(array(
             'messages' => array(array(
                 'type' => 'success',
-                'message' => ri('Theme %theme% settings have been loaded', array('%theme%' => DIR_WS_TEMPLATE))
+                'message' => $this->get("translator")->trans('Theme %theme% settings have been loaded', array('%theme%' => DIR_WS_TEMPLATE))
             ))
         ));
     }

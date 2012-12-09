@@ -1,0 +1,4 @@
+services:
+  rizcadmin.zcadmin:
+    class: plugins\riZCAdmin\ZCAdmin
+    arguments: [@settings]

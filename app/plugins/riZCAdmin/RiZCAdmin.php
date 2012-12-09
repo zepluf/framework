@@ -13,7 +13,7 @@
 
 namespace plugins\riZCAdmin;
 
-use Zepluf\Bundle\RiStoreBundle\PluginCore;
+use Zepluf\Bundle\StoreBundle\PluginCore;
 
 /**
  * the main class of riZCAdmin

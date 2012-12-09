@@ -6,12 +6,16 @@
 /**
  * includes the global functions that we need
  */
-require_once('plugins/riPlugin/lib/common.php');
+
+$environment = "prod";
+$coreDir = __DIR__ . '/../';
+
+require_once($coreDir . 'src/ZePluf/Bundle/StoreBundle/Functions/common.php');
 
 /**
  * loads ZenMagick's loader
  */
-require_once(__DIR__ . '/../vendor/zenmagick/lib/base/classloader/ClassLoader.php');
+require_once($coreDir . 'vendor/zenmagick/lib/base/classloader/ClassLoader.php');
 
 // load the class loader and dependency injection component
 $class_loader = new zenmagick\base\classloader\ClassLoader();
@@ -35,40 +39,18 @@ $class_loader->register(true);
 use Symfony\Component\HttpFoundation\Request;
 use plugins\riPlugin\Plugin;
 
-Plugin::setLoader($class_loader);
-\plugins\riPlugin\Plugin::init();
 require_once 'AppKernel.php';
-$kernel = new AppKernel('prod', false);
+$kernel = new AppKernel($environment, false);
 $kernel->loadClassCache();
+
 $kernel->boot();
+
 $container = $kernel->getContainer();
+$container->get("plugin")->setLoader($class_loader);
+$container->get("plugin")->init(__DIR__);
+$container->get("plugin")->loadPlugins($container);
 
-\plugins\riPlugin\Plugin::loadPlugins($container);
-
-
-
-
-//
-//$doctrineExtension = new Doctrine\Bundle\DoctrineBundle\DependencyInjection\DoctrineExtension;
-//$doctrineExtension->load(
-//    array(array('dbal' => array(
-//        'connections' => array('default' => array(
-//            'user' => 'simple_shop',
-//            'password' => 'simple_shop',
-//            'dbname' => 'demo'
-//        ))),
-//                'orm' => array(
-//                    'default_entity_manager' => 'default',
-//                    'entity_managers' => array(
-//                        'default' => array(
-//                            'mappings' => array(
-//                                //'YamlBundle' => array()
-//                            )
-//                        )
-//                    )
-//                )
-//    )
-//    ), $container);
-//var_dump($container->get('database_connection'));die('hereee');
-
+// some global vars to be used on Zencart as well
 $request = Request::createFromGlobals();
+$core_event = $container->get('StoreBundle.CoreEvent');
+$riview = $container->get('view');

@@ -8,9 +8,9 @@ class AppKernel extends Kernel
     public function registerBundles()
     {
         $bundles = array(
-            new Zepluf\Bundle\RiStoreBundle\RiStoreBundle(),
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new Zepluf\Bundle\StoreBundle\StoreBundle(),
 //            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
 //            new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
@@ -35,7 +35,6 @@ class AppKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.xml');
         $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
     }
 }

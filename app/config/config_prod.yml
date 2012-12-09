@@ -1,14 +1,16 @@
 parameters:
   plugins.root_dir: "%kernel.root_dir%/plugins"
   kernel.config_dir: "%kernel.root_dir%/config"
+  locale: en
 
 framework:
+  translator: { fallback: %locale% }
   router:
     resource: "%kernel.root_dir%/config/routing.yml"
     strict_requirements: %kernel.debug%
   templating:
     engines: ['php'] #assets_version: SomeVersionScheme
-    loaders:  [RiStoreBundle.templating.loader]
+    loaders:  [StoreBundle.templating.loader]
 
 monolog:
   handlers:
