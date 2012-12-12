@@ -498,7 +498,7 @@ class Plugin{
                                 )));
                         }
 
-                        elseif(!self::isActivated($dependent_plugin->codename) || self::compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS){
+                        elseif(!self::isActivated($dependent_plugin->codename) || compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS){
                             // we need to check the version
                             $error = true;
                             self::get('riLog.Logs')->add(array(

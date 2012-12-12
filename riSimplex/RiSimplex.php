@@ -31,7 +31,7 @@ class RiSimplex extends \plugins\riCore\PluginCore{
      */
     public function install(){
         global $db;
-        $db->Execute('UPDATE TABLE ' . TABLE_CONFIGURATION . " SET configuration_value = 'Off' WHERE configuration_value = 'MISSING_PAGE_CHECK'");
+        $db->Execute('UPDATE TABLE ' . TABLE_CONFIGURATION . " SET configuration_value = 'Off' WHERE configuration_key = 'MISSING_PAGE_CHECK'");
         return true;
     }
 
