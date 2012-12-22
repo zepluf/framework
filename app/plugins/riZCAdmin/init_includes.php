@@ -10,7 +10,6 @@
  * file that was distributed with this source code or refer to the LICENSE
  * file of ZePLUF
  */
-use plugins\riPlugin\Plugin;
 
 if(IS_ADMIN_FLAG){
     // add menu for ZC 1.5.0 >

@@ -8,15 +8,17 @@ namespace Zepluf\Bundle\StoreBundle;
 /**
  * plugin core class
  */
-abstract class PluginCore extends \Symfony\Component\DependencyInjection\ContainerAware{
+abstract class PluginCore extends \Symfony\Component\DependencyInjection\ContainerAware
+{
 
     /**
      * This method will be called when the plugin is loaded
      *
      * optional
      */
-    public function init(){
-        
+    public function init()
+    {
+
     }
 
     /**
@@ -24,7 +26,8 @@ abstract class PluginCore extends \Symfony\Component\DependencyInjection\Contain
      *
      * @return bool
      */
-    public function install(){
+    public function install()
+    {
         return true;
     }
 
@@ -33,7 +36,8 @@ abstract class PluginCore extends \Symfony\Component\DependencyInjection\Contain
      *
      * @return bool
      */
-    public function uninstall(){
+    public function uninstall()
+    {
         return true;
     }
 
@@ -42,7 +46,8 @@ abstract class PluginCore extends \Symfony\Component\DependencyInjection\Contain
      *
      * @return bool
      */
-    public function activate(){          
+    public function activate()
+    {
         return true;
     }
 
@@ -51,7 +56,8 @@ abstract class PluginCore extends \Symfony\Component\DependencyInjection\Contain
      *
      * @return bool
      */
-    public function deactivate(){
+    public function deactivate()
+    {
         return true;
     }
 }

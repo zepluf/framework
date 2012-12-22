@@ -11,18 +11,11 @@
  * file of ZePLUF
  */
 
-namespace plugins\riPlugin;
+namespace Zepluf\Bundle\StoreBundle;
 
 use Zepluf\Bundle\StoreBundle\PluginEvents;
 use Zepluf\Bundle\StoreBundle\Event\PluginEvent;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Resource\DirectoryResource;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\Finder\Finder;
 
 /**
  * core class handling anything related to a plugin
@@ -53,13 +46,6 @@ class Plugin
     private $version;
 
     /**
-     * service container
-     *
-     * @var
-     */
-    private $container;
-
-    /**
      * class loader
      *
      * @var
@@ -88,8 +74,13 @@ class Plugin
      *
      * @var
      */
-    private $environment;
+    private $subEnv;
 
+    /**
+     * @var string
+     */
+    private $env;
+    
     /**
      * @var
      */
@@ -106,33 +97,34 @@ class Plugin
     private $appDir;
 
     /**
+     * @var
+     */
+    private $pluginsDir;
+    /**
      * inject dependencies
      *
      * @param $settings
      * @param $event_dispatcher
      */
-    public function __construct($settings, $event_dispatcher, $environment, $appDir) {
-
+    public function __construct($settings, $event_dispatcher, $environment, $appDir, $pluginsDir) {
         $this->settings = $settings;
-        $this->environment = $environment;
+        $this->env = $environment;
         $this->eventDispatcher = $event_dispatcher;
         $this->appDir = $appDir;
+        $this->pluginsDir = $pluginsDir;
 
         if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
             $this->is_admin = true;
-            $this->environment = 'backend';
+            $this->subEnv = 'backend';
         }
         else {
-            $this->environment = 'frontend';
+            $this->subEnv = 'frontend';
         }
 
         // check version
         if ((int)PROJECT_VERSION_MAJOR > 1 || (int)PROJECT_VERSION_MINOR > 0) {
             $this->version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
         }
-
-        Yaml::enablePhpParsing();
-
     }
 
     /**
@@ -142,20 +134,6 @@ class Plugin
     public function setLoader($loader)
     {
         $this->loader = $loader;
-    }
-
-    /**
-     * inits the Plugin container
-     *
-     * @static
-     * @param $loader
-     * @param $container
-     * @param $routes
-     */
-    public function init($appDir)
-    {
-
-        //$this->container->get('event_dispatcher')->dispatch(PluginEvents::onInitEnd, new PluginEvent());
     }
 
     /**
@@ -181,6 +159,7 @@ class Plugin
 
         // if this is the first time ZePLUF is loaded we need to do some init
         foreach ($this->sysSettings['core'] as $plugin) {
+            $this->uninstall($container, $plugin);
             $this->install($container, $plugin);
             $this->activate($container, $plugin);
         }
@@ -191,15 +170,6 @@ class Plugin
         global $db;
         $db->Execute('UPDATE ' . TABLE_CONFIGURATION . " SET configuration_value = 'Off' WHERE configuration_value = 'MISSING_PAGE_CHECK'");
         return true;
-    }
-
-    private function saveSettings(){
-        $this->settings->saveLocal($this->appDir . '/config/sys_prod.yml', $this->settings->get('sys'));
-    }
-
-    private function resetCache($utility_file)
-    {
-        $utility_file->sureRemoveDir($this->appDir . '/cache');
     }
 
     public function loadSysSettings(){
@@ -219,22 +189,26 @@ class Plugin
     {
         $this->loadSysSettings();
 
+        Yaml::enablePhpParsing();
+
         if(!$this->settings->has('plugins'))
         {
             // now try to load from all the cache files
             if(($this->plugins_settings = $this->settings->loadCache('plugins')) === false)
             {
+                $configs = array();
+                // load local plugins settings
+                $local_config = Yaml::parse($this->appDir . '/config/plugins_' . $this->env . '.yml');
                 foreach($this->sysSettings['activated'] as $plugin)
                 {
-                    if(file_exists($file = $this->appDir . '/plugins/' . $plugin . '/Resources/config/config.yml'))
+                    if(file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml'))
                     {
                         $config = Yaml::parse($file);
 
                         $plugin_lc_name = strtolower($plugin);
                         // $plugin_uc_name = ucfirst($plugin);
 
-                        $this->settings->set('plugins.' . $plugin_lc_name, $config);
-
+                        $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
                     }
                 }
 
@@ -251,52 +225,6 @@ class Plugin
     /**
      * @param $container
      */
-    public function loadPluginsServices($container)
-    {
-        // load framework settings
-        $this->loadPluginsSettings();
-        // a hack for zen
-        if ($this->isAdmin()) {
-            if (is_array($this->sysSettings['backend'])) {
-                $this->loadPluginServices($container, $this->sysSettings['backend']);
-            }
-        }
-        else {
-            if (is_array($this->sysSettings['frontend'])) {
-                $this->loadPluginServices($container, $this->sysSettings['frontend']);
-            }
-        }
-    }
-
-    /**
-     * loads a plugin or an array of plugin.
-     * This will add all the classes to the the classes loader etc
-     *
-     * @static
-     * @param $plugins
-     */
-    public function loadPluginServices($container, $plugins)
-    {
-        if (!is_array($plugins)) $plugins = array($plugins);
-        foreach ($plugins as $plugin) {
-
-            $this->loadTranslations($plugin, $container);
-
-            if (!in_array($plugin, $this->loaded)) {
-                $plugin_path = $this->appDir . '/plugins/' . $plugin . '/';
-
-                $plugin_name = ucfirst($plugin);
-
-                $config_path = $plugin_path . 'Resources/config/';
-
-                if (file_exists($config_path . 'services.yml')) {
-                    $loader = new YamlFileLoader($container, new FileLocator($config_path));
-                    $loader->load('services.yml');
-                }
-            }
-        }
-    }
-
     public function loadPlugins($container)
     {
         $this->loadPluginsSettings($container->get("settings"));
@@ -325,7 +253,7 @@ class Plugin
 
         foreach ($plugins as $plugin) {
             if (!in_array($plugin, $this->loaded)) {
-                $plugin_path = $this->appDir . '/plugins/' . $plugin . '/';
+                $plugin_path = $this->pluginsDir . '/' . $plugin . '/';
 //                $this->loadTranslations($plugin, 'en');
                 $plugin_name = ucfirst($plugin);
                 $plugin_lc_name = strtolower($plugin);
@@ -383,64 +311,6 @@ class Plugin
     }
 
     /**
-     * register the core plugins
-     *
-     * @static
-     * @param $plugin_name
-     * @param $plugin_class
-     */
-    private function registerCore($container, $plugin_name, $plugin_class)
-    {
-        if (file_exists($this->appDir . '/plugins/' . $plugin_name . '/' . $plugin_class . '.php')) {
-
-            $container->setDefinition($plugin_class, new Definition(
-                'plugins\\' . $plugin_name . '\\' . $plugin_class,
-                array(
-                    new Reference('database_patcher'),
-                    new Reference('event_dispatcher')
-                )
-            ));
-        }
-    }
-
-    /**
-     * Load the translation files of the plugin
-     *
-     * @static
-     * @param $plugin_path
-     * @param $fallback
-     */
-    private function loadTranslations($plugin, $container)
-    {
-        if (is_dir($dir = $this->appDir . '/plugins/' . $plugin . '/Resources/translations')) {
-            $translator = $container->findDefinition('translator.default');
-
-            // Discover translation directories
-            $dirs = array($dir);
-
-            // Register translation resources
-            if ($dirs) {
-                foreach ($dirs as $dir) {
-                    $container->addResource(new DirectoryResource($dir));
-                }
-                $finder = Finder::create()
-                    ->files()
-                    ->filter(function (\SplFileInfo $file) {
-                    return 2 === substr_count($file->getBasename(), '.') && preg_match('/\.\w+$/', $file->getBasename());
-                })
-                    ->in($dirs)
-                ;
-
-                foreach ($finder as $file) {
-                    // filename is domain.locale.format
-                    list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-                    $translator->addMethodCall('addResource', array($format, (string) $file, $locale, $domain));
-                }
-            }
-        }
-    }
-
-    /**
      * This function will uninstall a plugin
      * It will also call the plugins/pluginfolder/PluginClass->install() method of exists
      *
@@ -459,8 +329,8 @@ class Plugin
             $settings['installed'][] = $plugin;
 
             // we need to do this because this plugin is not installed yet so the service is not registered
-            if (($pluginObject = $this->getPluginCoreObject($container, $plugin)) !== false) {
-                if ($pluginObject->install()) {
+            if ($container->has($plugin)) {
+                if ($container->get($plugin)->install()) {
                     // we will put into the load
 
                     arrayInsertValue($settings['installed'], $plugin);
@@ -509,8 +379,8 @@ class Plugin
             if (!$this->deactivate($container, $plugin)) return false;
 
             // attempt to call the plugin uninstall method
-            if (($pluginObject = $this->getPluginCoreObject($container, $plugin)) !== false) {
-                if(!$pluginObject->uninstall()) {
+            if ($container->has($plugin)) {
+                if(!$container->get($plugin)->uninstall()) {
                     return false;
                 }
             }
@@ -550,7 +420,7 @@ class Plugin
     public function info($plugin)
     {
         if (!isset($this->info[$plugin]))
-            if (file_exists($file_path = $this->appDir . '/plugins/' . $plugin . '/plugin.xml'))
+            if (file_exists($file_path = $this->pluginsDir . '/' . $plugin . '/plugin.xml'))
                 $this->info[$plugin] = new \SimpleXMLElement(file_get_contents($file_path));
             else
                 $this->info[$plugin] = false;
@@ -574,7 +444,7 @@ class Plugin
         }
 
         if (!in_array($plugin, $settings['activated'])) {
-            if ($this->get($plugin) === false || $this->get($plugin)->activate() !== false) {
+            if (!$container->has($plugin) || $container->get($plugin)->activate() !== false) {
                 $settings['activated'][] = $plugin;
 
                 // we will put into the load
@@ -586,7 +456,7 @@ class Plugin
                     foreach ($info->dependencies->plugins->plugin as $dependent_plugin) {
                         if (!$this->isInstalled($dependent_plugin->codename)) {
                             $error = true;
-                            $this->get('riLog.Logs')->add(array(
+                            $container->get('riLog.Logs')->add(array(
                                 'message' => sprintf('Plugin %s min version %s is required', $dependent_plugin->codename, $dependent_plugin->min)
                                 ));
                         }
@@ -594,7 +464,7 @@ class Plugin
                         elseif (!$this->isActivated($dependent_plugin->codename) || compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS) {
                             // we need to check the version
                             $error = true;
-                            $this->get('riLog.Logs')->add(array(
+                            $container->get('riLog.Logs')->add(array(
                                 'message' => sprintf('Plugin %s min version %s is required', $dependent_plugin->codename, $dependent_plugin->min
                                 )
                             ));
@@ -616,10 +486,12 @@ class Plugin
                 // set back to settings
                 $this->settings->set('sys', $settings, true);
 
+                $this->saveSettings();
+
                 // add menu for ZC 1.5.0 >
                 if (function_exists('zen_register_admin_page')) {
                     $this->loadPlugin($container, $plugin);
-                    if (($menus = $this->settings->get($plugin . '.global.backend.menu', null)) != null) {
+                    if (($menus = $this->settings->get($plugin . '.menu', null)) != null) {
                         foreach ($menus as $menu_key => $sub_menus)
                             foreach ($sub_menus as $menu) {
                                 $id = md5($menu['link']);
@@ -631,7 +503,6 @@ class Plugin
             }
         }
 
-        $settings = $this->settings->load($plugin);
         return true;
     }
 
@@ -647,16 +518,17 @@ class Plugin
         $settings = $this->settings->get('sys');
 
         if (in_array($plugin, $settings['activated'])) {
-            if ($container->get($plugin) === false || $this->get($plugin)->deactivate() !== false) {
+            if (!$container->has($plugin) || $container->get($plugin)->deactivate() !== false) {
                 arrayRemoveValue($settings['activated'], $plugin);
                 arrayRemoveValue($settings['frontend'], $plugin);
                 arrayRemoveValue($settings['backend'], $plugin);
 
                 $this->settings->set('sys', $settings);
 
+                $this->saveSettings();
                 // add menu for ZC 1.5.0 >
                 if (function_exists('zen_deregister_admin_pages')) {
-                    if (($menus = $this->settings->get($plugin . '.global.backend.menu', null)) != null) {
+                    if (($menus = $this->settings->get("plugins." . $plugin . ".menu", null)) != null) {
                         foreach ($menus as $menu_key => $sub_menus)
                             foreach ($sub_menus as $menu) {
                                 $id = md5($menu['link']);
@@ -698,22 +570,37 @@ class Plugin
      * @static
      * @return mixed
      */
-    public function getEnvironment()
+    public function getSubEnv()
     {
-        return $this->environment;
+        return $this->subEnv;
     }
 
-    private function getPluginCoreObject($container, $plugin)
+    public function getAvailablePlugins()
     {
-        $plugin_class = ucfirst($plugin);
+        $plugins = array();
 
-        if (file_exists($file = $this->appDir . '/plugins/' . $plugin . '/' . $plugin_class . '.php')) {
-            $plugin_class = 'plugins\\' . $plugin . '\\' . $plugin_class;
-            $pluginObject = new $plugin_class();
-            $pluginObject->setContainer($container);
-            return $pluginObject;
+        foreach(glob($this->pluginsDir . '/*', GLOB_ONLYDIR) as $plugin)
+        {
+            $plugins[] = basename($plugin);
         }
 
-        return false;
+        return $plugins;
+    }
+
+    /**
+     * saves settings
+     */
+    private function saveSettings(){
+        $this->settings->saveLocal($this->appDir . '/config/sys_prod.yml', $this->settings->get('sys'));
+    }
+
+    /**
+     * resets cache
+     *
+     * @param $utility_file
+     */
+    private function resetCache($utility_file)
+    {
+        $utility_file->sureRemoveDir($this->appDir . '/cache');
     }
 }

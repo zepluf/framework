@@ -13,8 +13,6 @@
 
 namespace plugins\riPlugin\Controller;
 
-use plugins\riPlugin\Plugin;
-use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
@@ -30,12 +28,10 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(){
-		$settings = $this->get('settings')->get('framework');
-
-		// a temporary hack to avoid displaying installation folder
+        // a temporary hack to avoid displaying installation folder
 		$ignore = array('install', 'simpletest');
-		$plugins = array();
-        foreach(glob($this->container->getParameter('plugins.root_dir') . '/*', GLOB_ONLYDIR) as $plugin)
+		$plugins_names = $this->get("plugin")->getAvailablePlugins();
+        foreach($plugins_names as $plugin)
         {
 			$code_name = basename($plugin);
 			// the core modules are not to be exposed
@@ -52,9 +48,9 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
             $plugins[$key]['info'] = $this->get("plugin")->info($plugin['code_name']);
         }
 
-        $this->get('templating.helper.holders')->add('main', $this->renderView('riPlugin:backend:_list.html.php', array('plugins' => $plugins, 'core' => $this->container->get('settings')->get('framework.core', array()))));
+        $this->get('templating.helper.holders')->add('main', $this->renderView('riPlugin:backend/_list.html.php', array('plugins' => $plugins, 'core' => $this->container->get('settings')->get('framework.core', array()))));
 
-        return $this->render('riZCAdmin:backend:layout.html.php');
+        return $this->render('riZCAdmin:backend/layout.html.php');
     }
 
     /**
@@ -69,7 +65,7 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
         if(!empty($plugin)){
             $info = $this->container->get("plugin")->info($plugin);                
         }
-        return $this->render('riPlugin:backend:_plugins_info.html.php', array('info' => $info));
+        return $this->render('riPlugin:backend/_plugins_info.html.php', array('info' => $info));
     }
 
     /**
@@ -83,11 +79,7 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
             $info = $this->container->get("plugin")->info($plugin);
-            $activated = $this->container->get("plugin")->activate($plugin);                            
-        }
-
-        if($activated){
-            $this->container->get('settings')->saveLocal();
+            $activated = $this->container->get("plugin")->activate($this->container, $plugin);
         }
 
         return $this->renderJson(array(
@@ -107,11 +99,7 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
         $plugin = $request->get('plugin');
         if(!empty($plugin)){
             $info = $this->container->get("plugin")->info($plugin);
-            $deactivated = $this->container->get("plugin")->deactivate($plugin);                            
-        }
-
-        if($deactivated){
-            $this->container->get('settings')->saveLocal();
+            $deactivated = $this->container->get("plugin")->deactivate($this->container, $plugin);
         }
 
         return $this->renderJson(array(
@@ -126,7 +114,6 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
      */
     public function pluginsConfigAction(Request $request){
         $stt = false;
-        $configs = array();
         $riname = $request->get('riname');
         $configs = $request->get('configs');
 
@@ -148,14 +135,11 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function pluginsShowSettings(Request $request){
-        $riname = $request->get('name');
-        $config_path = realpath(__DIR__.'/../../'.$riname.'/content/views') . '/';
-        if(file_exists($config_path . '_settings.php'))
-            $view = $this->view->render($riname . ':backend:_settings.html.php', array('riname' => $riname));
-
-        return $this->renderJson(array(
-            'view' => isset($view) ? $view : false
-            )
+        return $this->renderAjax(
+            $this->view->render($request->get('name') . ':backend/_settings.html.php', array(
+                'riname' => $request->get('name'),
+                'settings' => $this->container->get("settings")->get("plugins." . $request->get('name'))
+            ))
         );
     }
 
@@ -219,10 +203,6 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
             $this->container->get('riLog.Logs')->copyFromZen();
         }
 
-        if($installed){
-            $this->container->get('settings')->saveLocal();
-        }
-
         $this->container->get('riLog.Logs')->copyFromZen();
 
         return $this->renderJson(array(
@@ -243,10 +223,6 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
         if(!empty($plugin)){
             $uninstalled = $this->container->get("plugin")->uninstall($this->container, $plugin);
             $this->get('riLog.Logs')->copyFromZen();
-        }
-
-        if($uninstalled){
-            $this->get('settings')->saveLocal();
         }
 
         return $this->renderJson(array(
@@ -282,7 +258,8 @@ class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller{
     public function loadThemeSettingsAction(){
         // we need to load theme settings
         $this->container->get('settings')->resetCache('theme');
-        $this->container->get('settings')->loadTheme('frontend', __DIR__ . '/../../../' . DIR_WS_TEMPLATE);
+        // TODO: remove the constants
+        $this->container->get('settings')->loadTheme('frontend', DIR_FS_CATALOG . DIR_WS_TEMPLATE);
 
         return $this->renderJson(array(
             'messages' => array(array(

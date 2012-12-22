@@ -10,14 +10,13 @@ class AppKernel extends Kernel
         $bundles = array(
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Zepluf\Bundle\StoreBundle\StoreBundle(),
 //            new Symfony\Bundle\SecurityBundle\SecurityBundle(),
-//            new Symfony\Bundle\TwigBundle\TwigBundle(),
+            new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
 //            new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
 //            new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-
+            new Zepluf\Bundle\StoreBundle\StoreBundle(),
 //            new JMS\AopBundle\JMSAopBundle(),
 //            new JMS\DiExtraBundle\JMSDiExtraBundle($this),
 //            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
@@ -25,9 +24,9 @@ class AppKernel extends Kernel
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
 //            $bundles[] = new Acme\DemoBundle\AcmeDemoBundle();
-//            $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
-//            $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
-//            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
+            $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
+            $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
+            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
         }
 
         return $bundles;

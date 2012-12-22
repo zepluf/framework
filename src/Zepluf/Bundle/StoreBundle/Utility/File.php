@@ -18,8 +18,7 @@ class File
                 if ($dir === $to[$depth]) {
                     unset($to[$depth]);
                     unset($from[$depth]);
-                }
-                else {
+                } else {
                     break;
                 }
             }
@@ -132,8 +131,7 @@ class File
             if ($request_type == "SSL") {
                 $admin_path = DIR_WS_HTTPS_ADMIN;
                 $catalog_path = DIR_WS_HTTPS_CATALOG;
-            }
-            else {
+            } else {
                 $admin_path = DIR_WS_ADMIN;
                 $catalog_path = DIR_WS_CATALOG;
             }
@@ -148,8 +146,7 @@ class File
             if ($request_type == "SSL") {
                 $admin_path = DIR_WS_HTTPS_ADMIN;
                 $catalog_path = DIR_WS_HTTPS_CATALOG;
-            }
-            else {
+            } else {
                 $admin_path = DIR_WS_ADMIN;
                 $catalog_path = DIR_WS_CATALOG;
             }

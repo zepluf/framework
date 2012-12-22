@@ -26,30 +26,31 @@ class PluginRouteLoader extends Loader
         $this->settings = $settings;
     }
 
-    public function supports($resource, $type=null)
+    public function supports($resource, $type = null)
     {
         return 'my_new_resource_type' === $type;
     }
 
-    public function load($resource, $type=null)
+    public function load($resource, $type = null)
     {
         $sysSettings = $this->settings->get('sys');
         $pluginsSettings = $this->settings->get('plugins');
 
         $collection = new RouteCollection();
 
-        foreach($sysSettings['activated'] as $plugin){
+        foreach ($sysSettings['activated'] as $plugin) {
             $plugin_lc_name = strtolower($plugin);
             if (isset($pluginsSettings[$plugin_lc_name]['routes'])) {
                 foreach ($pluginsSettings[$plugin_lc_name]['routes'] as $key => $route) {
-                    $route = array_merge(array('pattern'      => '',
-                                               'defaults'     => array(),
-                                               'requirements' => array(),
-                                               'options'      => array()), $route);
-                    if (strpos($route['pattern'], '/') !== false)
+                    $route = array_merge(array('pattern' => '',
+                        'defaults' => array(),
+                        'requirements' => array(),
+                        'options' => array()), $route);
+                    if (strpos($route['pattern'], '/') !== false) {
                         $route['pattern'] = $plugin_lc_name . $route['pattern'];
-                    else
+                    } else {
                         $route['pattern'] = $plugin_lc_name . '_' . $route['pattern'];
+                    }
 
                     $collection->add($plugin_lc_name . '_' . $key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
                 }

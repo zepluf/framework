@@ -29,7 +29,7 @@ class RiZCAdmin extends PluginCore{
 
         if(IS_ADMIN_FLAG){
             global $autoLoadConfig;
-            $autoLoadConfig[200][] = array('autoType' => 'require', 'loadFile' => __DIR__ . '/lib/init_includes.php');
+            $autoLoadConfig[200][] = array('autoType' => 'require', 'loadFile' => __DIR__ . '/init_includes.php');
         }
 
     }

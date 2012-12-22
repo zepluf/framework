@@ -45,14 +45,29 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
     }
 
     /**
-     * renders the response as json the exits right away
+     * renders the response as json then exits right away
      *
      * @param $data
      * @param null|\Symfony\Component\HttpFoundation\Response $response
      */
     public function renderJson($data, Response $response = null){
+        session_write_close();
         if($response == null) $response = new Response();
         $response->setContent(json_encode($data));
+        $response->send();
+        exit();
+    }
+
+    /**
+     * renders the response as ajax then exits right away
+     *
+     * @param $data
+     * @param null|\Symfony\Component\HttpFoundation\Response $response
+     */
+    public function renderAjax($data, Response $response = null) {
+        session_write_close();
+        if($response == null) $response = new Response();
+        $response->setContent($data);
         $response->send();
         exit();
     }

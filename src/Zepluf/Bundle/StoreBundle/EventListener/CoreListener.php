@@ -25,15 +25,13 @@ class CoreListener implements EventSubscriberInterface
      */
     public function onPageEnd(CoreEvent $event)
     {
-        $holders = Plugin::get('settings')->get('global.' . Plugin::getEnvironment() . '.holders', array());
+        $holders = $event->getContainer->get('settings')->get('theme.holders', array());
 
-        foreach($holders as $holder => $content) {
+        foreach ($holders as $holder => $content) {
             $this->eventDispatcher->addListener(HoldersHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
         }
 
-        $event->setContent(Plugin::get('templating.helper.holders')->injectHolders($event->getContent()));
-        // extend here the functionality of the core
-        // ...
+        $event->setContent($event->getContainer->get('templating.helper.holders')->injectHolders($event->getContent()));
     }
 
     /**
@@ -41,20 +39,25 @@ class CoreListener implements EventSubscriberInterface
      *
      * @param Event $event
      */
-    public function onHolderStart(Event $event){
-        $holder_content = Plugin::get('settings')->get('global.' . Plugin::getEnvironment() . '.holders.' . $event->getHolder());
-        foreach($holder_content as $content){
+    public function onHolderStart(Event $event)
+    {
+        $holder_content = $event->getContainer->get('settings')->get('theme.holders.' . $event->getHolder());
+        foreach ($holder_content as $content) {
             $load = true;
-
             // we will check to see if this is a plugin's template, and if so we need to check if it is activated
-            if(strpos($content['template'], '::') !== false){
-                $plugin = current(explode('::', $content['template']));
-                if(!Plugin::isActivated($plugin)) {
+            if (strpos($content['template'], ':') !== false) {
+                $plugin = current(explode(':', $content['template']));
+                if (!$event->getContainer->get("plugin")->isActivated($plugin)) {
                     $load = false;
                 }
             }
-            if($load) {
-                Plugin::get('templating.helper.holders')->add($event->getHolder(), Plugin::get('view')->render($content['template'], $content['parameters']));
+            if ($load) {
+                // run calls
+                $data = (array)$content['parameters'];
+                $data = array_merge($data, calls());
+
+
+                $event->getContainer->get('templating.helper.holders')->add($event->getHolder(), $event->getContainer->get('view')->render($content['template'], $data));
             }
         }
     }
@@ -66,7 +69,7 @@ class CoreListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return array(
-            Events::onPageEnd => array('onPageEnd', 128),
+            Events::onPageEnd => array('onPageEnd', 128)
         );
     }
 

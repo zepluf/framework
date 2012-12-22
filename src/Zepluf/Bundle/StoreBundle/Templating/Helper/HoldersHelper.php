@@ -13,7 +13,6 @@
 
 namespace Zepluf\Bundle\StoreBundle\Templating\Helper;
 
-use plugins\riPlugin\Plugin;
 use Symfony\Component\Templating\Helper\Helper;
 use Zepluf\Bundle\StoreBundle\HoldersHelperEvents;
 use Zepluf\Bundle\StoreBundle\Event\HoldersHelperEvent;
@@ -21,7 +20,8 @@ use Zepluf\Bundle\StoreBundle\Event\HoldersHelperEvent;
 /**
  * core holder class
  */
-class HoldersHelper extends Helper{
+class HoldersHelper extends Helper
+{
 
     /**
      * holder array
@@ -41,6 +41,7 @@ class HoldersHelper extends Helper{
     {
         $this->eventDispatcher = $event_dispatcher;
     }
+
     /**
      * returns the name of this helper
      * @return string
@@ -49,7 +50,7 @@ class HoldersHelper extends Helper{
     {
         return 'holders';
     }
-    
+
     /**
      * add content into holder
      * @param $holder is the holder name
@@ -57,7 +58,8 @@ class HoldersHelper extends Helper{
      * @param int $order is optional to sort the content inside this holder
      * @return HolderHelper
      */
-    public function add($holder, $content, $order = 0){
+    public function add($holder, $content, $order = 0)
+    {
         $this->holders[$holder][] = array('order' => $order, 'content' => $content);
         return $this;
     }
@@ -67,31 +69,32 @@ class HoldersHelper extends Helper{
      * @param $holder is the holder name
      * @return string
      */
-    public function get($holder){
+    public function get($holder)
+    {
         $event = new HoldersHelperEvent($holder);
         $this->eventDispatcher->dispatch(HoldersHelperEvents::onHolderStart, $event);
         $this->eventDispatcher->dispatch(HoldersHelperEvents::onHolderStart . '.' . $holder, $event);
 
         $content = '';
-		if(isset($this->holders[$holder]) && count($this->holders[$holder])> 0){
-			usort($this->holders[$holder], function($a, $b) {
-				if ($a['order'] == $b['order']) {
-	        		return 0;
-				}
-	    		return ($a['order'] < $b['order']) ? -1 : 1;
-			});
-			
-			
-			foreach ($this->holders[$holder] as $c)
-				$content .= $c['content'];
-		}
+        if (isset($this->holders[$holder]) && count($this->holders[$holder]) > 0) {
+            usort($this->holders[$holder], function ($a, $b) {
+                if ($a['order'] == $b['order']) {
+                    return 0;
+                }
+                return ($a['order'] < $b['order']) ? -1 : 1;
+            });
+
+
+            foreach ($this->holders[$holder] as $c)
+                $content .= $c['content'];
+        }
 
         $this->eventDispatcher->dispatch(HoldersHelperEvents::onHolderEnd, $event);
-        $this->eventDispatcher->dispatch(HoldersHelperEvents::onHolderEnd . '.' .$holder, $event);
+        $this->eventDispatcher->dispatch(HoldersHelperEvents::onHolderEnd . '.' . $holder, $event);
 
         $this->holders[$holder] = array();
 
-		return $content;
+        return $content;
     }
 
     /**
@@ -99,16 +102,17 @@ class HoldersHelper extends Helper{
      * @param $content
      * @return mixed
      */
-    public function injectHolders($content){
+    public function injectHolders($content)
+    {
         // we want to loop through all the registered holders
         // scan the content to find holders
-		preg_match_all("/(<!-- holder:)(.*?)(-->)/", $content, $matches, PREG_SET_ORDER);
-		foreach ($matches as $val) {
+        preg_match_all("/(<!-- holder:)(.*?)(-->)/", $content, $matches, PREG_SET_ORDER);
+        foreach ($matches as $val) {
             $inject_content = $this->get(trim($val[2]));
             // now we need to inject into inject content *_*
             $inject_content = $this->injectHolders($inject_content);
-			$content = str_replace($val[0], $inject_content . "<!-- holder:" . $val[2] . "-->", $content);
-		}
+            $content = str_replace($val[0], $inject_content . "<!-- holder:" . $val[2] . "-->", $content);
+        }
 
         return $content;
     }

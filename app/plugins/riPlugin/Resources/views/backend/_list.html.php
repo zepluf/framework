@@ -10,8 +10,7 @@
  * file that was distributed with this source code or refer to the LICENSE
  * file of ZePLUF
  */
-
-$view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.form.lib', 'jquery.gritter.lib', 'riPlugin::js/jquery.tablesorter.js', 'riPlugin::css/style.css', 'riPlugin::js/modal.js', 'ritools.lib', 'riPlugin::css/plugins.css'));
+$view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.form.lib', 'jquery.gritter.lib', 'riPlugin:js/jquery.tablesorter.js', 'riPlugin:css/style.css', 'riPlugin:js/modal.js', 'ritools.lib', 'riPlugin:css/plugins.css'));
 ?>
 <?php $view['loader']->startInline('js');?>
 <script type="text/javascript">
@@ -118,13 +117,13 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib',
     <div class="span12 title" id="table-name"><?php echo $view['translator']->trans('Plugins')?></div>
     <div class="tab-content" style="width: 100%;">
         <div class="tab-pane active" id="plugins">
-            <?php echo $view->render('riPlugin:backend:_tab_plugins.html.php', array('plugins' => $plugins, 'core' => $core));?>
+            <?php echo $view->render('riPlugin:backend/_tab_plugins.html.php', array('plugins' => $plugins, 'core' => $core));?>
         </div>
         <div class="tab-pane" id="settings">
 
         </div>
         <div class="tab-pane" id="install">
-            <?php echo $view->render('riPlugin:backend:_tab_install.html.php');?>
+            <?php echo $view->render('riPlugin:backend/_tab_install.html.php');?>
         </div>
         <div class="tab-pane" id="feature">
             <div class="content">

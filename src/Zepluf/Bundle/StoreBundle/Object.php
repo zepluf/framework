@@ -18,24 +18,26 @@ use Zepluf\Bundle\StoreBundle\Utility\String;
 /**
  * core object class
  */
-class Object implements \Serializable{
+class Object implements \Serializable
+{
 
     /**
      * property array holding all properties
      *
      * @var array
      */
-	protected $properties_ = array();		   
+    protected $properties_ = array();
 
-	/**
+    /**
      * allows accessing $this->properties_[$key_name] by calling $object->keyName
      *
      * @param $key
      * @return null
      */
-	public function __get($key){	
-		return $this->get($key);        
-	}
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
 
     /**
      * allows settings $this->properties_[$key_name] by calling $object->keyName = $value
@@ -44,9 +46,10 @@ class Object implements \Serializable{
      * @param $value
      * @return Object
      */
-	public function __set($key, $value){	
-		return $this->set($key, $value);
-	}
+    public function __set($key, $value)
+    {
+        return $this->set($key, $value);
+    }
 
     /**
      * allows setting and getting $this->properties_ elements by calling $object->getKeyName() and $object->setKeyName($value)
@@ -55,16 +58,16 @@ class Object implements \Serializable{
      * @param $args
      * @return null
      */
-	public function __call($name, $args){	
-		if(strpos($name, 'get') === 0){
-			$name = substr($name, 3);
-			return $this->get($name);
-		}
-		elseif(strpos($name, 'set') === 0){
-			$name = substr($name, 3);
-			$this->set($name, $args[0]);
-		}
-	}
+    public function __call($name, $args)
+    {
+        if (strpos($name, 'get') === 0) {
+            $name = substr($name, 3);
+            return $this->get($name);
+        } elseif (strpos($name, 'set') === 0) {
+            $name = substr($name, 3);
+            $this->set($name, $args[0]);
+        }
+    }
 
     /**
      * checks if $this->properties_[$key] exists
@@ -72,10 +75,11 @@ class Object implements \Serializable{
      * @param $key
      * @return bool
      */
-	public function __isset($key){
-		$key = String::fromCamelCase($key);
-		return isset($this->properties_[$key]);
-	}
+    public function __isset($key)
+    {
+        $key = String::fromCamelCase($key);
+        return isset($this->properties_[$key]);
+    }
 
     /**
      * checks if $this->properties_[$key] exists
@@ -83,9 +87,10 @@ class Object implements \Serializable{
      * @param $key
      * @return bool
      */
-	public function has($key){
-	    return $this->__isset($key);
-	}
+    public function has($key)
+    {
+        return $this->__isset($key);
+    }
 
     /**
      * sets element on $this->properties_
@@ -94,11 +99,12 @@ class Object implements \Serializable{
      * @param $value
      * @return Object
      */
-	public function set($key, $value){
-		$key = String::fromCamelCase($key);
-		$this->properties_[$key] = $value;
-		return $this;
-	}
+    public function set($key, $value)
+    {
+        $key = String::fromCamelCase($key);
+        $this->properties_[$key] = $value;
+        return $this;
+    }
 
     /**
      * gets element on $this->properties_
@@ -107,10 +113,11 @@ class Object implements \Serializable{
      * @param null $default
      * @return null
      */
-	public function get($key, $default = null){
-		$key = String::fromCamelCase($key);
-		return isset($this->properties_[$key]) ? $this->properties_[$key] : $default;		
-	}
+    public function get($key, $default = null)
+    {
+        $key = String::fromCamelCase($key);
+        return isset($this->properties_[$key]) ? $this->properties_[$key] : $default;
+    }
 
     /**
      * sets $this->properties_ using an array
@@ -118,14 +125,15 @@ class Object implements \Serializable{
      * @param $array
      * @return Object
      */
-	public function setArray($array){
-		if(!is_array($array)) $array = array($array);
-		
-		foreach($array as $key => $value){
-			$this->set($key, $value);	
-		}
-		return $this;
-	}
+    public function setArray($array)
+    {
+        if (!is_array($array)) $array = array($array);
+
+        foreach ($array as $key => $value) {
+            $this->set($key, $value);
+        }
+        return $this;
+    }
 
     /**
      * gets $this->properties_ excluding certain keys
@@ -133,21 +141,23 @@ class Object implements \Serializable{
      * @param array $exclude
      * @return array
      */
-	public function getArray($exclude = array()){
-	    $data = $this->properties_;
-	    if(!empty($exclude))
-	        foreach ($exclude as $key)
-	            unset($data[$key]);
-	            
-		return $data;
-	}
-	
-	/**
+    public function getArray($exclude = array())
+    {
+        $data = $this->properties_;
+        if (!empty($exclude))
+            foreach ($exclude as $key)
+                unset($data[$key]);
+
+        return $data;
+    }
+
+    /**
      * Serialize this instance.
      *
      * @return string
      */
-    public function serialize() {
+    public function serialize()
+    {
         $sprops = array();
         foreach ($this->properties_ as $name => $obj) {
             $sprops[$name] = serialize($obj);
@@ -167,7 +177,8 @@ class Object implements \Serializable{
      *
      * @param string serialized The serialized data.
      */
-    public function unserialize($serialized) {
+    public function unserialize($serialized)
+    {
 //        if (function_exists('gzuncompress')) {
 //            $serialized = base64_decode(gzuncompress($serialized));
 //        }

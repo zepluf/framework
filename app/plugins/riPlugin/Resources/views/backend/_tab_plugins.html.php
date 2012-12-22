@@ -11,7 +11,7 @@
  * file of ZePLUF
  */
 
-$view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riPlugin::css/style.css', 'riPlugin::js/modal.js', 'ritools.lib', 'riPlugin::css/plugins.css'))
+$view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riPlugin:css/style.css', 'riPlugin:js/modal.js', 'ritools.lib', 'riPlugin:css/plugins.css'))
 ?>
 
 <?php $view['loader']->startInline('js');?>
@@ -55,13 +55,8 @@ $view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jqu
                 type: "POST",
                 url: "<?php echo $view['router']->generate('riplugin_admin_plugins_show_settings', array(), 'NONSSL', false, 'ri.php'); ?>",
                 data: {name: riname},
-                dataType: 'json',
-                success: function(data){
-                    if(data.view){
-                        $('#settings').html(data.view);
-                    }else{
-                        $('#settings').html("<br /><p style='padding: 10px;'>This plugin can not edit settings.</p>");
-                    }
+                success: function(response){
+                    $('#settings').html(response);
                 }
             });
         });

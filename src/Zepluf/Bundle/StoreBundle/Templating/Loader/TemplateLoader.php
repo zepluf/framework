@@ -21,7 +21,8 @@ use Symfony\Component\Templating\TemplateReferenceInterface;
 /**
  * template loader class
  */
-class TemplateLoader extends FilesystemLoader{
+class TemplateLoader extends FilesystemLoader
+{
 
     /**
      * template array
@@ -49,7 +50,7 @@ class TemplateLoader extends FilesystemLoader{
 
         $replacements = array();
         foreach ($template->all() as $key => $value) {
-            $replacements['%'.$key.'%'] = $value;
+            $replacements['%' . $key . '%'] = $value;
         }
 
         // customize the path
@@ -94,7 +95,8 @@ class TemplateLoader extends FilesystemLoader{
      *
      * @param $path_pattern
      */
-    public function unshiftPathPattern($path_pattern){
+    public function unshiftPathPattern($path_pattern)
+    {
         array_unshift($this->templatePathPatterns, $path_pattern);
     }
 
@@ -103,7 +105,8 @@ class TemplateLoader extends FilesystemLoader{
      *
      * @param $path_pattern
      */
-    public function pushPathPattern($path_pattern){
+    public function pushPathPattern($path_pattern)
+    {
         $this->templatePathPatterns[] = $path_pattern;
     }
 
@@ -112,7 +115,8 @@ class TemplateLoader extends FilesystemLoader{
      *
      * @param $path_patterns
      */
-    public function pushPathPatterns($path_patterns){
+    public function pushPathPatterns($path_patterns)
+    {
         $this->templatePathPatterns = array_merge($this->templatePathPatterns, $path_patterns);
     }
 
@@ -121,7 +125,8 @@ class TemplateLoader extends FilesystemLoader{
      *
      * @param $path_patterns
      */
-    public function setPathPatterns($path_patterns){
+    public function setPathPatterns($path_patterns)
+    {
         $this->templatePathPatterns = $path_patterns;
     }
 }

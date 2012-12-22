@@ -16,14 +16,16 @@ namespace Zepluf\Bundle\StoreBundle\Routing\Generator;
 /**
  * extends Symfony UrlGenerator for our needs
  */
-class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator{
+class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator
+{
 
     /**
      * gets the current base url
      *
      * @return string
      */
-    public function getBaseUrl(){
+    public function getBaseUrl()
+    {
         return $this->context->getBaseUrl();
     }
 
@@ -79,10 +81,10 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator{
         $optional = true;
         foreach ($tokens as $token) {
             if ('variable' === $token[0]) {
-                if (false === $optional || !array_key_exists($token[3], $defaults) || (isset($parameters[$token[3]]) && (string) $parameters[$token[3]] != (string) $defaults[$token[3]])) {
+                if (false === $optional || !array_key_exists($token[3], $defaults) || (isset($parameters[$token[3]]) && (string)$parameters[$token[3]] != (string)$defaults[$token[3]])) {
                     if (!$isEmpty = in_array($tparams[$token[3]], array(null, '', false), true)) {
                         // check requirement
-                        if ($tparams[$token[3]] && !preg_match('#^'.$token[2].'$#', $tparams[$token[3]])) {
+                        if ($tparams[$token[3]] && !preg_match('#^' . $token[2] . '$#', $tparams[$token[3]])) {
                             $message = sprintf('Parameter "%s" for route "%s" must match "%s" ("%s" given).', $token[3], $name, $token[2], $tparams[$token[3]]);
                             if ($this->strictRequirements) {
                                 throw new InvalidParameterException($message);
@@ -97,13 +99,13 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator{
                     }
 
                     if (!$isEmpty || !$optional) {
-                        $url = $token[1].$tparams[$token[3]].$url;
+                        $url = $token[1] . $tparams[$token[3]] . $url;
                     }
 
                     $optional = false;
                 }
             } elseif ('text' === $token[0]) {
-                $url = $token[1].$url;
+                $url = $token[1] . $url;
                 $optional = false;
             }
         }
@@ -130,7 +132,7 @@ class UrlGenerator extends \Symfony\Component\Routing\Generator\UrlGenerator{
         // add a query string if needed
         $extra = array_diff_key($originParameters, $variables, $defaults);
         if ($extra && $query = http_build_query($extra, '', '&')) {
-            $url .= '?'.$query;
+            $url .= '?' . $query;
         }
 
 //        if ($this->context->getHost()) {

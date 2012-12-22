@@ -27,6 +27,9 @@ class HoldersHelperEvent extends Event
      */
     private $holder;
 
+    /**
+     * @param $holder
+     */
     public function __construct($holder){
         $this->setHolder($holder);
     }

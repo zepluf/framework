@@ -59,7 +59,7 @@ class ParameterBag
         if (!$merge || !is_array($r))
             $r = $value;
         else {
-            $r = arrayMergeWithReplace($r, $value);
+            $r = \arrayMergeWithReplace($r, $value);
         }
     }
 
@@ -79,8 +79,7 @@ class ParameterBag
             if ($_keyCount == 1) {
                 if (isset($r[$k])) unset($r[$k]);
                 break;
-            }
-            else {
+            } else {
                 $r = & $r[$k];
             }
 
@@ -136,12 +135,10 @@ class ParameterBag
                 array_shift($key);
                 if (count($key) > 0) {
                     return $this->_get($key, $settings[$k], $default);
-                }
-                else {
+                } else {
                     return $settings[$k];
                 }
-            }
-            else {
+            } else {
                 return $default;
             }
         }

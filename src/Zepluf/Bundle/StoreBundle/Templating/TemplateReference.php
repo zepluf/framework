@@ -23,11 +23,11 @@ class TemplateReference extends BaseTemplateReference
     public function __construct($template = null, $plugin = null, $path = null, $name = null, $format = null, $engine = null)
     {
         $this->parameters = array(
-            'plugin'     => $plugin,
-            'path'       => $path,
-            'name'       => $name,
-            'format'     => $format,
-            'engine'     => $engine,
+            'plugin' => $plugin,
+            'path' => $path,
+            'name' => $name,
+            'format' => $format,
+            'engine' => $engine,
         );
     }
 

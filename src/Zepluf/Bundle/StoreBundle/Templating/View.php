@@ -13,25 +13,16 @@
 
 namespace Zepluf\Bundle\StoreBundle\Templating;
 
-use Symfony\Component\Templating\DelegatingEngine;
 use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\Templating\TemplateReference;
-use Symfony\Component\Templating\Helper\SlotsHelper;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
 
 /**
  * the view class
  */
-class View extends \Zepluf\Bundle\StoreBundle\Object
+class View
 {
-
-    /**
-     * the container
-     *
-     * @var \plugins\riPlugin\Container
-     */
-    private $container;
 
     /**
      * the view vars array
@@ -39,13 +30,6 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * @var array
      */
     private $vars = array();
-
-    /**
-     * cjloader
-     *
-     * @var bool
-     */
-    private $loader;
 
     /**
      * template engine
@@ -62,32 +46,87 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
     private $patterns = array();
 
     /**
+     * @var
+     */
+    private $subEnv;
+
+    /**
+     * @var
+     */
+    private $rootDir;
+
+    /**
+     * @var
+     */
+    private $backendDir;
+
+    /**
+     * @var
+     */
+    private $templateDir;
+
+    /**
+     * @var
+     */
+    private $nameParser;
+
+    /**
+     * @var
+     */
+    private $loader;
+
+    /**
      * inits the view with some variables
      */
-    public function __construct($engine){
-        //$this->patterns['default'] =  __DIR__.'/../../riSimplex/content/views/%name%';
+    public function __construct($engine, $nameParser, $loader, $rootDir, $backendDir)
+    {
         $this->engine = $engine;
+        $this->nameParser = $nameParser;
+        $this->loader = $loader;
+        $this->rootDir = $rootDir;
+        $this->backendDir = $backendDir;
+    }
+
+    /**
+     * sets template dir
+     *
+     * @param $templateDir
+     */
+    public function setTemplateDir($templateDir)
+    {
+        $this->templateDir = $templateDir;
+    }
+
+    /**
+     * sets the env
+     *
+     * @param $subEnv
+     */
+    public function setSubEnv($subEnv)
+    {
+        $this->subEnv = $subEnv;
     }
 
     /**
      * @param $loader
      * TODO: remove the use of constants
      */
-    public function setPathPatterns($loader) {
+    public function setPathPatterns($templateDir)
+    {
         // we need to add some default paths into our view so that it knows where to look for template files
-        if(IS_ADMIN_FLAG){
-            $loader->setPathPatterns(array(
-                DIR_FS_ADMIN . 'includes/templates/template_default/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
-                DIR_FS_CATALOG . 'zepluf/app/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
-            ));
+        if ($this->subEnv == "backend") {
+            $path = $this->backendDir;
+        } else {
+            $path = $this->rootDir;
         }
-        else{
-            $loader->setPathPatterns(array(
-                DIR_FS_CATALOG . DIR_WS_TEMPLATE . 'plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
-                DIR_FS_CATALOG . 'zepluf/app/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
-                DIR_FS_CATALOG . '%path%/%name%.%format%.%engine%'
-            ));
-        }
+
+        $this->loader->setPathPatterns(array(
+            $path . '/includes/templates/' . $templateDir . '/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
+            $path . '/includes/templates/template_default/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
+            $this->rootDir . '/zepluf/app/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
+            $path . '/includes/templates/' . $templateDir . '/%path%/%name%.%format%.%engine%',
+            $path . '/includes/templates/template_default/%path%/%name%.%format%.%engine%'
+        ));
     }
 
     /**
@@ -95,11 +134,13 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      *
      * @return bool
      */
-    public function getEngine(){
+    public function getEngine()
+    {
         return $this->engine;
     }
 
-    public function getHelper($helper) {
+    public function getHelper($helper)
+    {
         return $this->engine->get($helper);
     }
 
@@ -113,7 +154,7 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * to render a plugin's template
      *
      * <code>
-     * render('pluginName::path/template_name.extension', $array_of_data_to_pass_into_template);
+     * render('pluginName:path/template_name.extension', $array_of_data_to_pass_into_template);
      * </code>
      *
      * Note: $array_of_data_to_pass_into_template should be like this: array('key1' => 'value1', 'key2' => 'value2')
@@ -131,23 +172,10 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * @param null $parameters
      * @return mixed
      */
-    public function render($view, $parameters = null){
+    public function render($view, $parameters = null)
+    {
 
         $parameters = is_array($parameters) ? array_merge($this->vars, $parameters) : $this->vars;
-
-//        $view = explode('::', $view);
-//
-//        if(count($view) > 1)
-//            $view_path = $view[0] . '/content/views/' . $view[1];
-//        else
-//            $view_path = $view[0];
-//
-//        // we will have to set path patterns to make sure we dont look for template files at extra places
-//        $patterns = $this->findPathPatterns($view);
-//        $this->loader->setPathPatterns($patterns);
-//
-//        // default to php
-//        if(strpos($view_path, '.') === false) $view_path .= '.php';
 
         return $this->engine->render($view, $parameters);
     }
@@ -158,20 +186,11 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * @param $view
      * @return bool|mixed
      */
-    public function findRenderPath($view){
-        $view = explode('::', $view);
-        if(count($view) > 1)
-            $view_path = $view[0] . '/Resources/views/' . $view[1];
-        else
-            $view_path = $view[0];
-
-        $patterns = $this->findPathPatterns($view);
-
-        foreach ($patterns as $scope => $path){
-            if(file_exists($render_path = str_replace('%name%', $view_path, $path)))
-                return $render_path;
-        }
-        return false;
+    public function findRenderPath($view)
+    {
+        $template = $this->nameParser->parse($view);
+        $file = $this->loader->load($template);
+        return $file !== false ? (string)$file : false;
     }
 
     /**
@@ -180,7 +199,8 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * @param $scope
      * @param $pattern
      */
-    public function addDefaultPathPattern($scope, $pattern){
+    public function addDefaultPathPattern($scope, $pattern)
+    {
         $this->patterns[$scope] = $pattern;
     }
 
@@ -191,28 +211,9 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * @param $pattern
      * @param $patterns
      */
-    public function addPathPattern($scope, $pattern, &$patterns){
+    public function addPathPattern($scope, $pattern, &$patterns)
+    {
         $patterns[$scope] = $pattern;
-    }
-
-    /**
-     * used by render and findRenderPath to find the template location
-     *
-     * @param $view
-     * @return array
-     */
-    private function findPathPatterns($view){
-        $patterns = $this->patterns;
-        if(!empty($view[1])){
-            $this->addPathPattern('template', $this->patterns['template'] . 'plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%', $patterns);
-            $this->addPathPattern($view[0], __DIR__ . '/../../%plugin%/Resources/views/%path%/%name%.%format%.%engine%', $patterns);
-        }
-        else {
-            // this is not a plugin template
-            $this->addPathPattern('template', $this->patterns['template'] . '%path%/%name%.%format%.%engine%', $patterns);
-        }
-
-        return $patterns;
     }
 
     /**
@@ -223,7 +224,8 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * @param null|\Symfony\Component\HttpFoundation\Response $response
      * @return null|\Symfony\Component\HttpFoundation\Response
      */
-    public function renderResponse($view, $parameters = null, Response $response = null){
+    public function renderResponse($view, $parameters = null, Response $response = null)
+    {
         $response->setContent($this->render($view, $parameters));
         return $response;
     }
@@ -234,8 +236,9 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * @param $vars
      * @return View
      */
-    public function set($vars){
-        if(!is_array($vars)) $vars = array($vars);
+    public function set($vars)
+    {
+        if (!is_array($vars)) $vars = array($vars);
         $this->vars = array_merge($this->vars, $vars);
         return $this;
     }
@@ -246,7 +249,8 @@ class View extends \Zepluf\Bundle\StoreBundle\Object
      * @param $name
      * @return mixed
      */
-    public function get($name){
+    public function get($name)
+    {
         return $this->vars[$name];
     }
 }

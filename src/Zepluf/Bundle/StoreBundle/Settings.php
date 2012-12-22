@@ -14,7 +14,6 @@
 namespace Zepluf\Bundle\StoreBundle;
 
 use Symfony\Component\Yaml\Yaml;
-use plugins\riPlugin\Plugin;
 
 /**
  * settings class which store all plugin's settings
@@ -103,12 +102,12 @@ class Settings extends ParameterBag
     /**
      * reloads all settings
      */
-    public function reload()
+    public function reload($pluginService)
     {
         // reload the framework settings
         $framework_settings = $this->load('framework', $this->configDir);
-        if (is_array($framework_settings['backend']['preload'])) Plugin::loadPlugin($framework_settings['backend']['preload']);
-        if (is_array($framework_settings['frontend']['preload'])) Plugin::loadPlugin($framework_settings['frontend']['preload']);
+        if (is_array($framework_settings['backend']['preload'])) $pluginService->loadPlugin($framework_settings['backend']['preload']);
+        if (is_array($framework_settings['frontend']['preload'])) $pluginService->loadPlugin($framework_settings['frontend']['preload']);
         $this->loadTheme('frontend');
     }
 
@@ -183,22 +182,16 @@ class Settings extends ParameterBag
             if (file_exists($config_path . 'theme.yml'))
                 $settings = Yaml::parse($config_path . 'theme.yml');
 
-//            if (file_exists($config_path . 'local.yaml')) {
-//                $local = (array)Yaml::parse($config_path . 'local.yaml');
-//                $settings = empty($settings) ? $local : arrayMergeWithReplace($settings, $local);
-//            }
-
             $this->saveCache('theme', $settings);
         }
 
-        // a bit hacky here, but we want the theme global to be set specifically to the correct env
-        if (isset($settings['global'])) $this->set('global.' . $env, $settings['global'], true);
-
         // and we also want to override plugin settings
         // a hack to let theme's settings to always override plugins'
-        if (isset($settings['plugins']) && is_array($settings['plugins']))
-            foreach ($settings['plugins'] as $plugin => $plugin_settings)
+        if (isset($settings['plugins']) && is_array($settings['plugins'])) {
+            foreach ($settings['plugins'] as $plugin => $plugin_settings) {
                 $this->set($plugin, $plugin_settings, true);
+            }
+        }
 
         $this->set('theme', $settings);
 
@@ -253,14 +246,17 @@ class Settings extends ParameterBag
      */
     public function resetCache($root = '')
     {
-        if (!empty($root)) @unlink($this->cache_folder . $root . '.cache');
+        if (!empty($root)) {
+            @unlink($this->cache_folder . $root . '.cache');
+        }
         else {
             $cache_files = glob($this->cache_folder . "*.cache");
 
-            if ($cache_files !== false)
+            if ($cache_files !== false) {
                 foreach ($cache_files as $file) {
                     @unlink($file);
                 }
+            }
         }
     }
 }

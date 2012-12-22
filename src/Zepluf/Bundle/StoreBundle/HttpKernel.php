@@ -61,7 +61,8 @@ class HttpKernel extends \Symfony\Bundle\FrameworkBundle\HttpKernel
      * @throws \LogicException
      * @throws \InvalidArgumentException
      */
-    public function customHandleRaw($main_page, $request, $type){
+    public function customHandleRaw($main_page, $request, $type)
+    {
         // request
         $event = new GetResponseEvent($this, $request, $type);
         //$this->dispatcher->dispatch(KernelEvents::REQUEST, $event);
@@ -198,6 +199,6 @@ class HttpKernel extends \Symfony\Bundle\FrameworkBundle\HttpKernel
             return 'true';
         }
 
-        return (string) $var;
+        return (string)$var;
     }
 }

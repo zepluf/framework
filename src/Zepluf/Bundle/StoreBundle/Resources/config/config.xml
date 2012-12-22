@@ -12,20 +12,12 @@
         <parameter key="charset">UTF-8</parameter>
         <parameter key="templating.path_patterns" type="collection"></parameter>
         <parameter key="templating.name_parser.class">Zepluf\Bundle\StoreBundle\Templating\TemplateNameParser</parameter>
+        <parameter key="templating.helper.router.class">Zepluf\Bundle\StoreBundle\Templating\Helper\RouterHelper</parameter>
         <parameter key="router.options.generator_class">Zepluf\Bundle\StoreBundle\Routing\Generator\UrlGenerator</parameter>
         <parameter key="router.options.generator_base_class">Zepluf\Bundle\StoreBundle\Routing\Generator\UrlGenerator</parameter>
 	</parameters>
 
     <services>
-
-        <service id="plugin" class="plugins\riPlugin\Plugin" scope="container">
-            <argument type="service" id="settings" />
-            <argument type="service" id="event_dispatcher" />
-            <argument>%kernel.environment%</argument>
-            <argument>%kernel.root_dir%</argument>
-        </service>
-
-        <service id="riLog.Logs" class="Zepluf\Bundle\StoreBundle\Logs" scope="container"></service>
 
         <!-- settings -->
         <service id="settings" class="Zepluf\Bundle\StoreBundle\Settings">
@@ -34,8 +26,15 @@
             <argument>%plugins.root_dir%</argument>
         </service>
 
-        <service id="riCore.Model" class="plugins\riCore\Model" scope="prototype">
+        <service id="plugin" class="Zepluf\Bundle\StoreBundle\Plugin">
+            <argument type="service" id="settings" />
+            <argument type="service" id="event_dispatcher" />
+            <argument>%kernel.environment%</argument>
+            <argument>%kernel.root_dir%</argument>
+            <argument>%plugins.root_dir%</argument>
         </service>
+
+        <service id="StoreBundle.Logs" class="Zepluf\Bundle\StoreBundle\Logs"></service>
 
         <service id="database_patcher" class="Zepluf\Bundle\StoreBundle\DatabasePatcher"></service>
 
@@ -54,9 +53,12 @@
 
         <service id="view" class="Zepluf\Bundle\StoreBundle\Templating\View">
             <argument type="service" id="templating" />
-            <argument type="service" id="StoreBundle.templating.loader" />
+            <argument type="service" id="templating.name_parser" />
+            <argument type="service" id="templating.loader" />
+            <argument>%store.root_dir%</argument>
+            <argument>%store.backend_dir%</argument>
             <call method="setPathPatterns">
-                <argument type="service" id="templating.loader" />
+                <argument>%current_template%</argument>
             </call>
         </service>
 
@@ -64,8 +66,6 @@
             <argument type="service" id="event_dispatcher" />
             <tag name="templating.helper" alias="holders" />
         </service>
-
-        <service id="StoreBundle.HoldersHelperEvents" class="Zepluf\Bundle\StoreBundle\HoldersHelperEvents"></service>
 
         <!-- utility services -->
         <service id="utility.database_result" class="Zepluf\Bundle\StoreBundle\Utility\DatabaseResult"></service>
@@ -75,8 +75,14 @@
 
         <!-- routing -->
         <service id="plugin_route_loader" class="Zepluf\Bundle\StoreBundle\Routing\PluginRouteLoader" public="false">
-            <argument type="service" id="settings"/>
+            <argument type="service" id="settings" />
             <tag name="routing.loader" />
+        </service>
+
+        <!-- doctrine listener -->
+        <service id="StoreBundle.tblprefix_subscriber" class="Zepluf\Bundle\StoreBundle\Subscriber\TablePrefixSubscriber">
+            <argument>%table_prefix%</argument>
+            <tag name="doctrine.event_subscriber" />
         </service>
 
     </services>

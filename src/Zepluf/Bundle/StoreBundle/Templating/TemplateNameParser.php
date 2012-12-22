@@ -58,16 +58,12 @@ class TemplateNameParser implements TemplateNameParserInterface
 
         $parts = explode(':', $name);
 
-        switch(count($parts)) {
+        switch (count($parts)) {
             case 1:
-                $plugin = '';
-                $path = '';
-                break;
-            case 2:
                 $plugin = '';
                 $path = $parts[0];
                 break;
-            case 3:
+            case 2:
                 $plugin = $parts[0];
                 $path = $parts[1];
                 break;
@@ -76,11 +72,12 @@ class TemplateNameParser implements TemplateNameParserInterface
                 break;
         }
 
-        $elements = explode('.', end($parts));
+        $elements = explode('.', basename($path));
+        $path = dirname($path);
 
         $engine = array_pop($elements);
 
-        switch(count($elements)) {
+        switch (count($elements)) {
             case 1:
                 $format = 'html';
                 break;
@@ -88,7 +85,7 @@ class TemplateNameParser implements TemplateNameParserInterface
                 $format = array_pop($elements);
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin::path/template.format.engine" or "plugin::path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
+                throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
                 break;
         }
 

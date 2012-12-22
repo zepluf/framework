@@ -1,0 +1,25 @@
+parameters:
+  plugins.root_dir: "%kernel.root_dir%/plugins"
+  store.root_dir: "%kernel.root_dir%/../.."
+  store.backend_dir: "%store.root_dir%/manager"
+  kernel.config_dir: "%kernel.root_dir%/config"
+  web_dir: "%kernel.root_dir%/../web"
+  web_cache_dir: "%web_dir%/cache"
+  current_template: "0007"
+  locale: en
+
+  database_driver:   pdo_mysql
+  database_host:     localhost
+  database_port:     ~
+  database_name:     demo
+  database_user:     simple_shop
+  database_password: simple_shop
+  table_prefix:      zen_
+
+  mailer_transport:  smtp
+  mailer_host:       localhost
+  mailer_user:       ~
+  mailer_password:   ~
+
+  locale:            en
+  secret:            asd214322dewd1e121eq
