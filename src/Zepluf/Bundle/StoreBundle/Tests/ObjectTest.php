@@ -22,6 +22,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
     public function setUp(){
         $this->object = new Object();
     }
+
     public function testSet(){
         $this->object->set('key', 'value');
         $this->assertEquals($this->object->get('key'), 'value');

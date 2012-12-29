@@ -16,6 +16,7 @@ namespace Zepluf\Bundle\StoreBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\TemplatingPass;
+use Symfony\Component\Yaml\Yaml;
 use Zepluf\Bundle\StoreBundle\DependencyInjection\Compiler\ZeplufPass;
 
 /**
@@ -30,6 +31,25 @@ class StoreBundle extends Bundle
 
         $container->addCompilerPass(new ZeplufPass());
         $container->addCompilerPass(new TemplatingPass());
+
+        $appDir = $container->getParameter("kernel.root_dir");
+        $pluginsDir = $appDir . '/plugins';
+
+        if (file_exists($sys_file = $appDir . '/config/sys_' . $container->getParameter("kernel.environment") . '.yml')) {
+            $sysConfig = Yaml::parse($sys_file);
+
+            $container->setParameter("sys_config", $sysConfig);
+
+            foreach ($sysConfig["activated"] as $plugin) {
+                //
+                if(is_dir($pluginsDir .  '/' . $plugin . '/DependencyInjection/Compiler')) {
+                    foreach (glob($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler/*Pass.php', GLOB_NOSORT) as $pass) {
+                        $class = 'plugins\\' . $plugin . '\DependencyInjection\Compiler\\' . (basename($pass, ".php"));
+                        $container->addCompilerPass(new $class());
+                    }
+                }
+            }
+        }
     }
 
     public function getParent()

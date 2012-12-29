@@ -14,14 +14,13 @@
 namespace Zepluf\Bundle\StoreBundle\Templating;
 
 use Symfony\Component\Templating\PhpEngine;
-use Symfony\Component\Templating\TemplateReference;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing;
 
 /**
  * the view class
  */
-class View
+class View implements \ArrayAccess
 {
 
     /**
@@ -39,16 +38,16 @@ class View
     private $engine;
 
     /**
+     * @var
+     */
+    private $phEngine;
+
+    /**
      * path patterns
      *
      * @var array
      */
     private $patterns = array();
-
-    /**
-     * @var
-     */
-    private $subEnv;
 
     /**
      * @var
@@ -78,9 +77,10 @@ class View
     /**
      * inits the view with some variables
      */
-    public function __construct($engine, $nameParser, $loader, $rootDir, $backendDir)
+    public function __construct($engine, $phpEngine, $nameParser, $loader, $rootDir, $backendDir)
     {
         $this->engine = $engine;
+        $this->phpEngine = $phpEngine;
         $this->nameParser = $nameParser;
         $this->loader = $loader;
         $this->rootDir = $rootDir;
@@ -98,33 +98,23 @@ class View
     }
 
     /**
-     * sets the env
-     *
-     * @param $subEnv
-     */
-    public function setSubEnv($subEnv)
-    {
-        $this->subEnv = $subEnv;
-    }
-
-    /**
      * @param $loader
      * TODO: remove the use of constants
      */
-    public function setPathPatterns($templateDir)
+    public function setPathPatterns($templateDir, $environment)
     {
         // we need to add some default paths into our view so that it knows where to look for template files
-        if ($this->subEnv == "backend") {
+        if ($environment->getSubEnvironment() == "backend") {
             $path = $this->backendDir;
         } else {
             $path = $this->rootDir;
         }
 
         $this->loader->setPathPatterns(array(
-            $path . '/includes/templates/' . $templateDir . '/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
+            $templateDir . '/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
             $path . '/includes/templates/template_default/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
             $this->rootDir . '/zepluf/app/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
-            $path . '/includes/templates/' . $templateDir . '/%path%/%name%.%format%.%engine%',
+            $templateDir . '/%path%/%name%.%format%.%engine%',
             $path . '/includes/templates/template_default/%path%/%name%.%format%.%engine%'
         ));
     }
@@ -137,11 +127,6 @@ class View
     public function getEngine()
     {
         return $this->engine;
-    }
-
-    public function getHelper($helper)
-    {
-        return $this->engine->get($helper);
     }
 
     /**
@@ -177,7 +162,14 @@ class View
 
         $parameters = is_array($parameters) ? array_merge($this->vars, $parameters) : $this->vars;
 
-        return $this->engine->render($view, $parameters);
+        $content = $this->engine->render($view, $parameters);
+
+        if($content !== false) {
+            return "<!-- bof: $view --> \r\n" . $content . "<!-- eof: $view --> \r\n";
+        }
+        else {
+            return "";
+        }
     }
 
     /**
@@ -217,20 +209,6 @@ class View
     }
 
     /**
-     * renders and then returns a response object
-     *
-     * @param $view
-     * @param null $parameters
-     * @param null|\Symfony\Component\HttpFoundation\Response $response
-     * @return null|\Symfony\Component\HttpFoundation\Response
-     */
-    public function renderResponse($view, $parameters = null, Response $response = null)
-    {
-        $response->setContent($this->render($view, $parameters));
-        return $response;
-    }
-
-    /**
      * sets local variables to be available within the templates
      *
      * @param $vars
@@ -252,5 +230,60 @@ class View
     public function get($name)
     {
         return $this->vars[$name];
+    }
+
+    /**
+     * Gets a helper value.
+     *
+     * @param string $name The helper name
+     *
+     * @return mixed The helper value
+     *
+     * @throws \InvalidArgumentException if the helper is not defined
+     *
+     * @api
+     */
+    public function offsetGet($name)
+    {
+        return $this->phpEngine->get($name);
+    }
+
+    /**
+     * Returns true if the helper is defined.
+     *
+     * @param string $name The helper name
+     *
+     * @return Boolean true if the helper is defined, false otherwise
+     *
+     * @api
+     */
+    public function offsetExists($name)
+    {
+        return $this->phpEngine->has($name);
+    }
+
+    /**
+     * Sets a helper.
+     *
+     * @param HelperInterface $name  The helper instance
+     * @param string          $value An alias
+     *
+     * @api
+     */
+    public function offsetSet($name, $value)
+    {
+        $this->phEngine->set($name, $value);
+    }
+
+    /**
+     * Removes a helper.
+     *
+     * @param string $name The helper name
+     *
+     * @api
+     */
+    public function offsetUnset($name)
+    {
+        throw new \LogicException(sprintf('You can\'t unset a helper (%s).', $name));
     }
 }

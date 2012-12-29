@@ -26,16 +26,6 @@ class CoreEvent extends \Symfony\Component\EventDispatcher\Event
     private $content;
 
     /**
-     * @var
-     */
-    private $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
-    /**
      * sets content
      *
      * @param $content
@@ -53,13 +43,5 @@ class CoreEvent extends \Symfony\Component\EventDispatcher\Event
 	public function getContent()
     {
         return $this->content;        
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContainer()
-    {
-        return $this->container;
     }
 }

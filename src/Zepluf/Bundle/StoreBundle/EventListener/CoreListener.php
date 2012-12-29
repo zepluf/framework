@@ -14,10 +14,21 @@
 namespace Zepluf\Bundle\StoreBundle\EventListener;
 
 use Zepluf\Bundle\StoreBundle\Events;
+use Zepluf\Bundle\StoreBundle\HoldersHelperEvents;
 use Zepluf\Bundle\StoreBundle\Event\CoreEvent;
+use Zepluf\Bundle\StoreBundle\Event\HoldersHelperEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CoreListener implements EventSubscriberInterface
 {
+    protected $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * injects content into holders at pageEnd
      *
@@ -25,13 +36,13 @@ class CoreListener implements EventSubscriberInterface
      */
     public function onPageEnd(CoreEvent $event)
     {
-        $holders = $event->getContainer->get('settings')->get('theme.holders', array());
+        $holders = $this->container->get('settings')->get('theme.holders', array());
 
         foreach ($holders as $holder => $content) {
-            $this->eventDispatcher->addListener(HoldersHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
+            $this->container->get('event_dispatcher')->addListener(HoldersHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
         }
 
-        $event->setContent($event->getContainer->get('templating.helper.holders')->injectHolders($event->getContent()));
+        $event->setContent($this->container->get('templating.helper.holders')->injectHolders($event->getContent()));
     }
 
     /**
@@ -39,25 +50,43 @@ class CoreListener implements EventSubscriberInterface
      *
      * @param Event $event
      */
-    public function onHolderStart(Event $event)
-    {
-        $holder_content = $event->getContainer->get('settings')->get('theme.holders.' . $event->getHolder());
+    public function onHolderStart(HoldersHelperEvent $event)
+    {                 
+        $holder_content = $this->container->get('settings')->get('theme.holders.' . $event->getHolder());
         foreach ($holder_content as $content) {
             $load = true;
             // we will check to see if this is a plugin's template, and if so we need to check if it is activated
-            if (strpos($content['template'], ':') !== false) {
-                $plugin = current(explode(':', $content['template']));
-                if (!$event->getContainer->get("plugin")->isActivated($plugin)) {
+            if (strpos($content["template"]["name"], ':') !== false) {
+                $plugin = current(explode(':', $content["template"]["name"]));
+                if (!$this->container->get("plugin")->isActivated($plugin)) {
                     $load = false;
                 }
             }
             if ($load) {
                 // run calls
-                $data = (array)$content['parameters'];
-                $data = array_merge($data, calls());
+                $data = (array)$content["template"]["parameters"];
 
+                foreach($content["calls"] as $call) {
+                    // is this a public function or a class method
+                    if(strpos($call[0], "::") !== false) {
+                        list($class, $method) = explode("::", $call[0]);
+                        // is this a service?
+                        if(strpos($class, "@") !== false) {
+                            $service = substr($class, 1);
+                            $object = $this->container->get($service);
+                        }
+                        else {
+                            $object = new $class;
+                        }
 
-                $event->getContainer->get('templating.helper.holders')->add($event->getHolder(), $event->getContainer->get('view')->render($content['template'], $data));
+                        $data = array_merge($data, call_user_func_array(array($object, $method), $call[1]));
+                    }
+                    else {
+                        $data = array_merge($data, $call[0]($call[1]));
+                    }
+                }
+
+                $this->container->get('templating.helper.holders')->add($event->getHolder(), $this->container->get('view')->render($content["template"]["name"], $data));
             }
         }
     }

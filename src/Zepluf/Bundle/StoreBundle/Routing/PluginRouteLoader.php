@@ -28,7 +28,7 @@ class PluginRouteLoader extends Loader
 
     public function supports($resource, $type = null)
     {
-        return 'my_new_resource_type' === $type;
+        return 'plugin_resource_type' === $type;
     }
 
     public function load($resource, $type = null)

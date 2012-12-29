@@ -5,12 +5,16 @@ installed:
     - riCjLoader
     - riResultList
     - riBanner
+    - riSample
+    - riCart
 activated:
     - riPlugin
     - riCache
     - riZCAdmin
     - riCjLoader
     - riResultList
+    - riCart
+    - riBanner
 core:
     - riPlugin
     - riCache
@@ -23,8 +27,11 @@ backend:
     - riZCAdmin
     - riCjLoader
     - riResultList
+    - riCart
 frontend:
     - riPlugin
     - riCache
     - riCjLoader
     - riResultList
+    - riCart
+    - riBanner

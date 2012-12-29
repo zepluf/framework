@@ -2,48 +2,42 @@
 
 namespace Zepluf\Bundle\StoreBundle;
 
-class Logs extends Object
+class Logs
 {
 
     private $logs = array();
 
-    public function add($log)
+    private $logger;
+
+    private $environment;
+
+    public function __construct($logger, $environment)
     {
-        if (!$log instanceof Log) {
-            $args = array_merge(array(
-                'message' => '',
-                'session' => false,
-                'type' => 'error',
-                'scope' => 'global'
-            ), $log);
-
-            $log = new Log();
-            $log->put($args['message'], $args['session'], $args['type'], $args['scope']);
-
-        }
-        $this->logs[] = $log;
+        $this->environment = $environment;
+        $this->logger = $logger;
     }
-
 
     function count()
     {
         return count($this->logs);
     }
 
-    public function copyToZen($admin = false)
+    public function copyToZen()
     {
         global $messageStack;
         foreach ($this->logs as $log) {
             if ($log->session) {
-                if ($admin)
+                if ($this->environment->getSubEnvironment() == "backend") {
                     $messageStack->add_session($log->message, $log->type);
-                else
+                } else {
                     $messageStack->add_session($log->scope, $log->message, $log->type);
+                }
             } else {
-                if ($admin)
+                if ($this->environment->getSubEnvironment() == "backend") {
                     $messageStack->add($log->message, $log->type);
-                else
+                } else {
                     $messageStack->add($log->scope, $log->message, $log->type);
+                }
             }
         }
 
@@ -53,7 +47,7 @@ class Logs extends Object
     public function copyFromZen()
     {
         global $messageStack;
-        if (!IS_ADMIN_FLAG) {
+        if ($this->environment->getSubEnvironment() == "frontend") {
             foreach ($messageStack->messages as $message) {
                 $this->add(array(
                     'message' => $message['text'],
@@ -80,9 +74,11 @@ class Logs extends Object
             'messageStackSuccess' => 'success',
             'messageStackCaution' => 'caution',
         );
+
         foreach ($types as $identified => $type) {
-            if (strpos($class, $identified) !== false)
+            if (strpos($class, $identified) !== false) {
                 return $type;
+            }
         }
         return 'error';
     }
@@ -90,13 +86,20 @@ class Logs extends Object
     public function getAsArray()
     {
         $logs = array();
-        foreach ($this->logs as $log)
+        foreach ($this->logs as $log) {
             $logs[] = $log->getArray();
+        }
         return $logs;
     }
 
     public function clear()
     {
         $this->logs = array();
+    }
+
+    public function __call($name, $args)
+    {
+        $args[1]["zencart"] = true;
+        call_user_func_array(array($this->logger, $name), $args);
     }
 }

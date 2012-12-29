@@ -31,10 +31,21 @@ $kernel->loadClassCache();
 $kernel->boot();
 
 $container = $kernel->getContainer();
+
+// set the environment
+$container->get("environment")->setEnvironment($environment);
+if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
+    $container->get("environment")->setSubEnvironment("backend");
+}
+else {
+    $container->get("environment")->setSubEnvironment("frontend");
+}
+
 $container->get("plugin")->setLoader($loader);
 $container->get("plugin")->loadPlugins($container);
 
 // some global vars to be used on Zencart as well
 $request = Request::createFromGlobals();
 $core_event = $container->get('StoreBundle.CoreEvent');
-$riview = $container->get('view');
+
+$view = $container->get("view");

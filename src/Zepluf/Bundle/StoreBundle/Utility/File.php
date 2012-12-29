@@ -154,4 +154,50 @@ class File
         }
         return $this->path['c2a'][$request_type];
     }
+
+    /**
+     * Copy a file, or recursively copy a folder and its contents
+     * @param       string   $source    Source path
+     * @param       string   $dest      Destination path
+     * @param       string   $permissions New folder creation permissions
+     * @return      bool     Returns true on success, false on failure
+     */
+    public function xcopy($source, $dest, $permissions = 0755)
+    {
+        if(is_readable($source)){
+            // Check for symlinks
+            if (is_link($source)) {
+                return symlink(readlink($source), $dest);
+            }
+
+            // Simple copy for a file
+            if (is_file($source)) {
+                return copy($source, $dest);
+            }
+
+            // Make destination directory
+            if (!is_dir($dest)) {
+                riMkDir($dest, $permissions);
+            }
+
+            // Loop through the folder
+            $dir = dir($source);
+            while (false !== $entry = $dir->read()) {
+                // Skip pointers
+                if ($entry == '.' || $entry == '..') {
+                    continue;
+                }
+
+                // Deep copy directories
+                $this->xcopy("$source/$entry", "$dest/$entry", $permissions);
+            }
+
+            // Clean up
+            $dir->close();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

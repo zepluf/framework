@@ -68,7 +68,7 @@ class TemplateNameParser implements TemplateNameParserInterface
                 $path = $parts[1];
                 break;
             default:
-                throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path:template.format.engine" or "plugin::path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
+                throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
                 break;
         }
 

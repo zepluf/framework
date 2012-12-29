@@ -132,7 +132,6 @@ class Settings extends ParameterBag
                 $settings = Yaml::parse($config_path . $file);
             }
 
-            //$this->saveCache($root, $settings);
         }
 
         $this->set($root, $settings);
@@ -179,8 +178,9 @@ class Settings extends ParameterBag
                 return $settings;
             }
 
-            if (file_exists($config_path . 'theme.yml'))
-                $settings = Yaml::parse($config_path . 'theme.yml');
+            if (file_exists($config_file = $config_path . '/' . 'theme.yml')) {
+                $settings = Yaml::parse($config_file);
+            }
 
             $this->saveCache('theme', $settings);
         }

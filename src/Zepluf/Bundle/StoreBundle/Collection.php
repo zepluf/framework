@@ -13,8 +13,6 @@
 
 namespace Zepluf\Bundle\StoreBundle;
 
-use plugins\riPlugin\Plugin;
-
 /**
  * core collection class (holding the model objects)
  */

@@ -63,13 +63,6 @@ class Plugin
     private $eventDispatcher;
 
     /**
-     * is admin?
-     *
-     * @var bool
-     */
-    private $is_admin = false;
-
-    /**
      * backend or frontend env?
      *
      * @var
@@ -112,14 +105,6 @@ class Plugin
         $this->eventDispatcher = $event_dispatcher;
         $this->appDir = $appDir;
         $this->pluginsDir = $pluginsDir;
-
-        if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
-            $this->is_admin = true;
-            $this->subEnv = 'backend';
-        }
-        else {
-            $this->subEnv = 'frontend';
-        }
 
         // check version
         if ((int)PROJECT_VERSION_MAJOR > 1 || (int)PROJECT_VERSION_MINOR > 0) {
@@ -198,7 +183,7 @@ class Plugin
             {
                 $configs = array();
                 // load local plugins settings
-                $local_config = Yaml::parse($this->appDir . '/config/plugins_' . $this->env . '.yml');
+                $local_config = Yaml::parse($this->appDir . '/config/plugins_' . $this->env->getEnvironment() . '.yml');
                 foreach($this->sysSettings['activated'] as $plugin)
                 {
                     if(file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml'))
@@ -229,18 +214,9 @@ class Plugin
     {
         $this->loadPluginsSettings($container->get("settings"));
 
-        // a hack for zen
-        if ($this->isAdmin()) {
-            if (is_array($this->sysSettings['backend'])) {
-                $this->loadPlugin($container, $this->sysSettings['backend']);
-            }
-        }
-        else {
-            if (is_array($this->sysSettings['frontend'])) {
-                $this->loadPlugin($container, $this->sysSettings['frontend']);
-            }
+        $this->loadPlugin($container, $this->sysSettings[$this->env->getSubEnvironment()]);
 
-            // load theme settings
+        if($this->env->getSubEnvironment() == "frontend") {
             $this->settings->loadTheme('frontend');
         }
     }
@@ -254,7 +230,7 @@ class Plugin
         foreach ($plugins as $plugin) {
             if (!in_array($plugin, $this->loaded)) {
                 $plugin_path = $this->pluginsDir . '/' . $plugin . '/';
-//                $this->loadTranslations($plugin, 'en');
+
                 $plugin_name = ucfirst($plugin);
                 $plugin_lc_name = strtolower($plugin);
 
@@ -323,6 +299,7 @@ class Plugin
 
         $settings = $this->settings->get('sys');
 
+        $installed = false;
 
         if (!isset($settings['installed']) || !in_array($plugin, $settings['installed'])) {
 
@@ -341,7 +318,7 @@ class Plugin
 
                     $this->resetCache($container->get('utility.file'));
 
-                    return true;
+                    $installed = true;
                 }
             }
             else {
@@ -353,11 +330,16 @@ class Plugin
 
                 $this->resetCache($container->get('utility.file'));
 
-                return true;
+                $installed = true;
             }
         }
 
-        return false;
+        if($installed) {
+            // move the public files to web folder
+            $container->get('utility.file')->xcopy($this->pluginsDir . '/' . $plugin . '/Resources/public', $container->getParameter("web_dir") . '/plugins/' . $plugin);
+        }
+
+        return $installed;
     }
 
     /**
@@ -371,12 +353,14 @@ class Plugin
     {
         $settings = $this->settings->get('sys');
 
-        $plugin_class = ucfirst($plugin);
+        $uninstalled = false;
 
         if (isset($settings['installed']) && in_array($plugin, $settings['installed'])) {
 
             // we need to deactivate the plugin first
-            if (!$this->deactivate($container, $plugin)) return false;
+            if (!$this->deactivate($container, $plugin)) {
+                return false;
+            }
 
             // attempt to call the plugin uninstall method
             if ($container->has($plugin)) {
@@ -394,10 +378,15 @@ class Plugin
 
             $this->resetCache($container->get('utility.file'));
 
-            return true;
+            $uninstalled = true;
         }
 
-        return false;
+        if($uninstalled) {
+            // remove all
+            $container->get('utility.file')->sureRemoveDir($container->getParameter("web_dir") . '/plugins/' . $plugin, true);
+        }
+
+        return $uninstalled;
     }
 
     /**
@@ -456,18 +445,13 @@ class Plugin
                     foreach ($info->dependencies->plugins->plugin as $dependent_plugin) {
                         if (!$this->isInstalled($dependent_plugin->codename)) {
                             $error = true;
-                            $container->get('riLog.Logs')->add(array(
-                                'message' => sprintf('Plugin %s min version %s is required', $dependent_plugin->codename, $dependent_plugin->min)
-                                ));
+                            $container->get('logs')->err(sprintf('Plugin %s min version %s is required', $dependent_plugin->codename, $dependent_plugin->min));
                         }
 
                         elseif (!$this->isActivated($dependent_plugin->codename) || compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS) {
                             // we need to check the version
                             $error = true;
-                            $container->get('riLog.Logs')->add(array(
-                                'message' => sprintf('Plugin %s min version %s is required', $dependent_plugin->codename, $dependent_plugin->min
-                                )
-                            ));
+                            $container->get('logs')->err(sprintf('Plugin %s min version %s is required', $dependent_plugin->codename, $dependent_plugin->min));
                         }
                     }
 
@@ -551,17 +535,6 @@ class Plugin
     public function isActivated($plugin)
     {
         return in_array($plugin, $this->settings->get('sys.activated'));
-    }
-
-    /**
-     * Checks if we are in admin
-     *
-     * @static
-     * @return bool
-     */
-    public function isAdmin()
-    {
-        return $this->is_admin;
     }
 
     /**

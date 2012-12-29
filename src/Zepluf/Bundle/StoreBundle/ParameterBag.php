@@ -120,6 +120,27 @@ class ParameterBag
         return $this->_cache[$key];
     }
 
+    public function __set($key, $val)
+    {
+        $this->set($key, $val);
+    }
+
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    public function __call($name, $args)
+    {
+        if (strpos($name, 'get') === 0) {
+            $name = substr($name, 3);
+            return $this->get($name);
+        } elseif (strpos($name, 'set') === 0) {
+            $name = substr($name, 3);
+            $this->set($name, $args[0]);
+        }
+    }
+
     /**
      * helper for the get method
      *
