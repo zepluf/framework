@@ -38,34 +38,36 @@ class StoreExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('config.xml');
 
-        $appDir = $container->getParameter("kernel.root_dir");
-        $pluginsDir = $appDir . '/plugins';
+        if($container->hasParameter("sys_config")) {
+            $appDir = $container->getParameter("kernel.root_dir");
+            $pluginsDir = $appDir . '/plugins';
 
-        $sysConfig = $container->getParameter("sys_config");
+            $sysConfig = $container->getParameter("sys_config");
 
-        // load all plugins routes
-        foreach ($sysConfig["activated"] as $plugin) {
-            $plugin = basename($plugin);
+            // load all plugins routes
+            foreach ($sysConfig["activated"] as $plugin) {
+                $plugin = basename($plugin);
 
-            // only for activated plugin
-            $plugin_path = $pluginsDir . '/' . $plugin . '/Resources/config/';
+                // only for activated plugin
+                $plugin_path = $pluginsDir . '/' . $plugin . '/Resources/config/';
 
-            // register the plugin's core class
-            $plugin_class = ucfirst($plugin);
-            if (file_exists($pluginsDir . '/' . $plugin . '/' . $plugin_class . '.php')) {
+                // register the plugin's core class
+                $plugin_class = ucfirst($plugin);
+                if (file_exists($pluginsDir . '/' . $plugin . '/' . $plugin_class . '.php')) {
 
-                $container->setDefinition($plugin_class, new Definition(
-                    'plugins\\' . $plugin . '\\' . $plugin_class,
-                    array(
-                        new Reference('database_patcher'),
-                        new Reference('event_dispatcher')
-                    )
-                ));
-            }
+                    $container->setDefinition($plugin_class, new Definition(
+                        'plugins\\' . $plugin . '\\' . $plugin_class,
+                        array(
+                            new Reference('database_patcher'),
+                            new Reference('event_dispatcher')
+                        )
+                    ));
+                }
 
-            if (file_exists($plugin_path . 'services.yml')) {
-                $ymlLoader = new YamlFileLoader($container, new FileLocator($plugin_path));
-                $ymlLoader->load('services.yml');
+                if (file_exists($plugin_path . 'services.yml')) {
+                    $ymlLoader = new YamlFileLoader($container, new FileLocator($plugin_path));
+                    $ymlLoader->load('services.yml');
+                }
             }
         }
     }

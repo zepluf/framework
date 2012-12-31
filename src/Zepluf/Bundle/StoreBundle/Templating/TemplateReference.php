@@ -20,7 +20,7 @@ use Symfony\Component\Templating\TemplateReference as BaseTemplateReference;
  */
 class TemplateReference extends BaseTemplateReference
 {
-    public function __construct($template = null, $plugin = null, $path = null, $name = null, $format = null, $engine = null)
+    public function __construct($plugin = null, $path = null, $name = null, $format = null, $engine = null)
     {
         $this->parameters = array(
             'plugin' => $plugin,
@@ -36,6 +36,11 @@ class TemplateReference extends BaseTemplateReference
      */
     public function getLogicalName()
     {
-        return sprintf('%s:%s/%s.%s.%s', $this->parameters['plugin'], $this->parameters['path'], $this->parameters['name'], $this->parameters['format'], $this->parameters['engine']);
+        if(!empty($this->parameters['format'])) {
+            return sprintf('%s:%s/%s.%s.%s', $this->parameters['plugin'], $this->parameters['path'], $this->parameters['name'], $this->parameters['format'], $this->parameters['engine']);
+        }
+        else {
+            return sprintf('%s:%s/%s.%s', $this->parameters['plugin'], $this->parameters['path'], $this->parameters['name'], $this->parameters['engine']);
+        }
     }
 }

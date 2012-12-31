@@ -1,11 +1,23 @@
 {
     "name": "zepluf/standard-edition",
     "description": "The \"ZePLUF Standard Edition\" distribution",
+    "authors": [
+        {
+            "name": "Raine Ng",
+            "email": "vunguyen@rubikin.com",
+            "homepage": "http://rubikin.com"
+        }
+    ],
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": {
+            "": "src/",
+            "Zepluf" : "src/Zepluf/"
+        }
     },
     "require": {
         "php": ">=5.3.3",
+        "composer/installers": "*",
+        "zepluf/installer": "*",
         "symfony/symfony": ">=2.1",
         "symfony/framework-bundle": ">=2.1",
         "doctrine/orm": ">=2.2.3,<2.4-dev",
@@ -16,7 +28,8 @@
         "symfony/monolog-bundle": "2.1.*",
         "sensio/distribution-bundle": "2.1.*",
         "sensio/framework-extra-bundle": "2.1.*",
-        "sensio/generator-bundle": "2.1.*"
+        "sensio/generator-bundle": "2.1.*",
+        "zepluf/plugin-ricjloader": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [

@@ -56,6 +56,11 @@ class TemplateLoader extends FilesystemLoader
         // customize the path
         $logs = array();
         foreach ($this->templatePathPatterns as $templatePathPattern) {
+            // we allow normal template with no "format" in the name
+            if($replacements["%format%"] == "") {
+                $templatePathPattern = str_replace("%format%.", "", $templatePathPattern);
+            }
+
             if (is_file($file = strtr($templatePathPattern, $replacements)) && is_readable($file)) {
                 if (null !== $this->debugger) {
                     $this->debugger->log(sprintf('Loaded template file "%s"', $file));

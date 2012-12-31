@@ -73,13 +73,18 @@ class TemplateNameParser implements TemplateNameParserInterface
         }
 
         $elements = explode('.', basename($path));
+
         $path = dirname($path);
+
+        if($path == '.') {
+            $path = '';
+        }
 
         $engine = array_pop($elements);
 
         switch (count($elements)) {
             case 1:
-                $format = 'html';
+                $format = '';
                 break;
             case 2:
                 $format = array_pop($elements);
@@ -89,7 +94,7 @@ class TemplateNameParser implements TemplateNameParserInterface
                 break;
         }
 
-        $template = new TemplateReference('', $plugin, $path, implode('.', $elements), $format, $engine);
+        $template = new TemplateReference($plugin, $path, implode('.', $elements), $format, $engine);
 
         return $this->cache[$name] = $template;
     }
