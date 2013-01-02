@@ -149,7 +149,11 @@ class Plugin
             $this->activate($container, $plugin);
         }
 
-        $this->saveSettings();
+        $this->settings->set('sys.initialized', true);
+
+        $this->saveSysSettings();
+
+        $this->resetCache($container->get('utility.file'));
 
         // setup missing page check to off
         global $db;
@@ -160,7 +164,7 @@ class Plugin
     public function loadSysSettings(){
         if(!$this->settings->has('sys'))
         {
-            $this->sysSettings = $this->settings->load('sys', $this->appDir . '/config/', 'sys_prod.yml');
+            $this->sysSettings = $this->settings->load('sys', $this->appDir . '/config/', 'sys_' . $this->env->getEnvironment() . '.yml');
         }
     }
 
@@ -314,7 +318,7 @@ class Plugin
 
                     $this->settings->set('sys.installed', $settings['installed'], false);
 
-                    $this->saveSettings();
+                    $this->saveSysSettings();
 
                     $this->resetCache($container->get('utility.file'));
 
@@ -326,7 +330,7 @@ class Plugin
 
                 $this->settings->set('sys.installed', $settings['installed'], false);
 
-                $this->saveSettings();
+                $this->saveSysSettings();
 
                 $this->resetCache($container->get('utility.file'));
 
@@ -351,6 +355,8 @@ class Plugin
      */
     public function uninstall($container, $plugin)
     {
+        $this->loadPlugin($container, $plugin);
+
         $settings = $this->settings->get('sys');
 
         $uninstalled = false;
@@ -374,7 +380,7 @@ class Plugin
 
             $this->settings->set('sys.installed', $settings['installed'], false);
 
-            $this->saveSettings();
+            $this->saveSysSettings();
 
             $this->resetCache($container->get('utility.file'));
 
@@ -470,7 +476,7 @@ class Plugin
                 // set back to settings
                 $this->settings->set('sys', $settings, true);
 
-                $this->saveSettings();
+                $this->saveSysSettings();
 
                 // add menu for ZC 1.5.0 >
                 if (function_exists('zen_register_admin_page')) {
@@ -509,7 +515,7 @@ class Plugin
 
                 $this->settings->set('sys', $settings);
 
-                $this->saveSettings();
+                $this->saveSysSettings();
                 // add menu for ZC 1.5.0 >
                 if (function_exists('zen_deregister_admin_pages')) {
                     if (($menus = $this->settings->get("plugins." . $plugin . ".menu", null)) != null) {
@@ -563,8 +569,8 @@ class Plugin
     /**
      * saves settings
      */
-    private function saveSettings(){
-        $this->settings->saveLocal($this->appDir . '/config/sys_prod.yml', $this->settings->get('sys'));
+    private function saveSysSettings(){
+        $this->settings->saveLocal($this->appDir . '/config/sys_' . $this->env->getEnvironment() . '.yml', $this->settings->get('sys'));
     }
 
     /**

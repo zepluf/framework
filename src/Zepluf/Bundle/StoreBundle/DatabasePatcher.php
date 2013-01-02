@@ -24,6 +24,9 @@ define('REASON_INDEX_ALREADY_EXISTS', 'Cannot add index %s to table %s because i
 define('REASON_PRIMARY_KEY_ALREADY_EXISTS', 'Cannot add primary key to table %s because a primary key already exists.');
 define('REASON_NO_PRIVILEGES', 'User ' . DB_SERVER_USERNAME . '@' . DB_SERVER . ' does not have %s privileges to database ' . DB_DATABASE . '.');
 // can be set later
+define('ZC_UPG_DEBUG', false);
+define('ZC_UPG_DEBUG2', false);
+define('ZC_UPG_DEBUG3', false);
 //if (isset($_GET['debug']) && $_GET['debug']=='ON') $debug=true;
 //if (!isset($_GET['debug'])  && !\zen_not_null($_POST['debug']) && $debug!=true)  define('ZC_UPG_DEBUG',false);
 //if (!isset($_GET['debug2']) && !\zen_not_null($_POST['debug2']) && $debug!=true) define('ZC_UPG_DEBUG2',false);
