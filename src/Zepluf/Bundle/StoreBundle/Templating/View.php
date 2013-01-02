@@ -165,7 +165,7 @@ class View implements \ArrayAccess
         $content = $this->engine->render($view, $parameters);
 
         if($content !== false) {
-            return "<!-- bof: $view --> \r\n" . $content . "<!-- eof: $view --> \r\n";
+            return "\r\n <!-- bof: $view --> \r\n" . $content . "\r\n <!-- eof: $view --> \r\n";
         }
         else {
             return "";

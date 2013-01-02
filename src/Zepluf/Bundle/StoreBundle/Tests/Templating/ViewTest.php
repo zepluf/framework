@@ -23,8 +23,9 @@ class ViewTest extends BaseTestCase
 
     public function setUp(){
         $this->view = $this->get("view");
-        $this->view->setSubEnv("frontend");
-        $this->view->setPathPatterns("includes/templates/classic/");
+        $environment = $this->get("environment");
+        $environment->setSubEnvironment("frontend");
+        $this->view->setPathPatterns("includes/templates/classic/", $environment);
         $this->defaultTemplateDir = $this->getParameter("store.root_dir") . "/includes/templates/template_default";
     }
 
@@ -60,7 +61,7 @@ class ViewTest extends BaseTestCase
     }
 
     public function testFindRenderPathPlugin(){
-        $filePath = $this->getParameter("plugins.root_dir") . '/riSample/Resources/views/test_template.html.php';
+        $filePath = $this->getParameter("plugins.root_dir") . '/riSample/Resources/views/test_template.html.php';echo $filePath;
         $fp = fopen($filePath, 'w');
         fwrite($fp, 'sample template file');
 
@@ -110,7 +111,7 @@ class ViewTest extends BaseTestCase
         $this->view->addDefaultPathPattern('template', $this->defaultTemplateDir);
         $renderedContent = $this->view->render('templates/tpl_test_template.html.php', array('text' => 'template'));
 
-        $this->assertEquals($renderedContent, 'sample template file');
+        $this->assertEquals($renderedContent, "\r\n <!-- bof: templates/tpl_test_template.html.php --> \r\n" . "sample template file" . "\r\n <!-- eof: templates/tpl_test_template.html.php --> \r\n");
 
         @unlink($filePath);
     }
