@@ -57,7 +57,7 @@
 		<!-- Clone repository -->
 		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-riCjLoader.git" targetPath="${dir.tmp}/riCjLoader" />
 		<!-- create and switch to "mybranch" branch -->
-		<gitcheckout gitPath="git" repository="${dir.tmp}/riCjLoader" branchname="ZePLUF" quiet="true" />
+		<gitcheckout gitPath="git" repository="${dir.tmp}/riCjLoader" branchname="ZePLUF.v1" quiet="true" />
         
 		<!-- Clone repository -->
 		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-riCategory.git" targetPath="${dir.tmp}/riCategory" />		
