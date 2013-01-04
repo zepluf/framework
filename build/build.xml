@@ -55,27 +55,27 @@
 		
         <echo msg="Grabbing dependencies from git ..." />		
 		<!-- Clone repository -->
-		<gitclone gitPath="git" repository="git://github.com/yellow1912/cjloader.git" targetPath="${dir.tmp}/riCjLoader" />
+		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-riCjLoader.git" targetPath="${dir.tmp}/riCjLoader" />
 		<!-- create and switch to "mybranch" branch -->
 		<gitcheckout gitPath="git" repository="${dir.tmp}/riCjLoader" branchname="ZePLUF" quiet="true" />
         
 		<!-- Clone repository -->
-		<gitclone gitPath="git" repository="git://github.com/yellow1912/riCategory.git" targetPath="${dir.tmp}/riCategory" />		
+		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-riCategory.git" targetPath="${dir.tmp}/riCategory" />		
 		
 		<!-- Clone repository -->
-		<gitclone gitPath="git" repository="git://github.com/yellow1912/riCache.git" targetPath="${dir.tmp}/riCache" />		
+		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-riCache.git" targetPath="${dir.tmp}/riCache" />		
 		
 		<!-- Clone repository -->
-		<gitclone gitPath="git" repository="git://github.com/yellow1912/riUtility.git" targetPath="${dir.tmp}/riUtility" />		
+		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-riUtility.git" targetPath="${dir.tmp}/riUtility" />		
 		
 		<!-- Clone repository -->
-		<gitclone gitPath="git" repository="git://github.com/yellow1912/riLog.git" targetPath="${dir.tmp}/riLog" />		
+		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-riLog.git" targetPath="${dir.tmp}/riLog" />		
 		
 		<!-- Clone repository -->
-		<gitclone gitPath="git" repository="git://github.com/ZePLUF/riResultList.git" targetPath="${dir.tmp}/riResultList" />		
+		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-riResultList.git" targetPath="${dir.tmp}/riResultList" />
 		
 		<!-- Clone repository -->
-		<gitclone gitPath="git" repository="git://github.com/yellow1912/classloader.git" targetPath="${dir.tmp}/riCore/vendor/zenmagick/lib/base/classloader" />
+		<gitclone gitPath="git" repository="git://github.com/zepluf/plugin-classloader.git" targetPath="${dir.tmp}/riCore/vendor/zenmagick/lib/base/classloader" />
 		
 		<!-- Clone repository -->
 		<gitclone gitPath="git" repository="git://github.com/symfony/ClassLoader.git" targetPath="${dir.tmp.vendor.symfony.component}/ClassLoader" />
