@@ -11,16 +11,16 @@
  * file of ZePLUF
  */
 
-namespace plugins\riPlugin\Controller;
+namespace Zepluf\Bundle\StoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
-use Zepluf\Bundle\StoreBundle\Controller;
+
 /**
  * main controller for managing plugins in backend
  */
-class AdminController extends Controller
+class AdminPluginController extends Controller
 {
 
     /**
@@ -49,7 +49,7 @@ class AdminController extends Controller
             $plugins[$key]['info'] = $this->get("plugin")->info($plugin['code_name']);
         }
 
-        $this->get('templating.helper.holders')->add('main', $this->renderView('riPlugin:backend/_list.html.php', array('plugins' => $plugins, 'core' => $this->get('settings')->get('framework.core', array()))));
+        $this->get('templating.helper.holders')->add('main', $this->renderView('riZCAdmin:backend/plugin/_list.html.php', array('plugins' => $plugins, 'core' => $this->get('settings')->get('framework.core', array()))));
 
         return $this->render('riZCAdmin:backend/layout.html.php');
     }
@@ -67,7 +67,7 @@ class AdminController extends Controller
         if (!empty($plugin)) {
             $info = $this->get("plugin")->info($plugin);
         }
-        return $this->render('riPlugin:backend/_plugins_info.html.php', array('info' => $info));
+        return $this->render('riZCAdmin:backend/plugin/_plugins_info.html.php', array('info' => $info));
     }
 
     /**

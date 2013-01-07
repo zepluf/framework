@@ -1,3 +1,4 @@
 <?php
 
-require(__DIR__.'/../../plugins/init.php');
+require(__DIR__.'/../../zepluf/app/bootstrap.php');
+
