@@ -45,15 +45,17 @@ class StoreExtension extends Extension
             $sysConfig = $container->getParameter("sys_config");
 
             // load all plugins routes
-            foreach ($sysConfig["activated"] as $plugin) {
-                $plugin = basename($plugin);
+            if(isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
+                foreach ($sysConfig["activated"] as $plugin) {
+                    $plugin = basename($plugin);
 
-                // only for activated plugin
-                $plugin_path = $pluginsDir . '/' . $plugin . '/Resources/config/';
+                    // only for activated plugin
+                    $plugin_path = $pluginsDir . '/' . $plugin . '/Resources/config/';
 
-                if (file_exists($plugin_path . 'services.yml')) {
-                    $ymlLoader = new YamlFileLoader($container, new FileLocator($plugin_path));
-                    $ymlLoader->load('services.yml');
+                    if (file_exists($plugin_path . 'services.yml')) {
+                        $ymlLoader = new YamlFileLoader($container, new FileLocator($plugin_path));
+                        $ymlLoader->load('services.yml');
+                    }
                 }
             }
         }
@@ -80,6 +82,16 @@ class StoreExtension extends Extension
     public function getConfiguration(array $config, ContainerBuilder $container)
     {
         return new Configuration($container->getParameter('kernel.debug'));
+    }
+
+    /**
+     * Returns the base path for the XSD files.
+     *
+     * @return string The XSD base path
+     */
+    public function getXsdValidationBasePath()
+    {
+        return __DIR__.'/../Resources/config/schema';
     }
 
     /**

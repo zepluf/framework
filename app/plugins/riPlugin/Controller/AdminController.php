@@ -16,11 +16,11 @@ namespace plugins\riPlugin\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
-
+use Zepluf\Bundle\StoreBundle\Controller;
 /**
  * main controller for managing plugins in backend
  */
-class AdminController extends \Zepluf\Bundle\StoreBundle\Controller\Controller
+class AdminController extends Controller
 {
 
     /**

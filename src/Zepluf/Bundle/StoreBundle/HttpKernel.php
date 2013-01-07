@@ -15,17 +15,21 @@ namespace Zepluf\Bundle\StoreBundle;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernel as BaseHttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\HttpKernel as BaseHttpKernel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-
+use Symfony\Bundle\FrameworkBundle\HttpKernel as StoreBundleHttpKernel;
 /**
  * main framework class, responsible for handling requests
  */
-class HttpKernel extends \Symfony\Bundle\FrameworkBundle\HttpKernel
+class HttpKernel extends StoreBundleHttpKernel
 {
     /**
      * handles the _main_page=something to match the routes defined in plugins' settings
@@ -72,7 +76,7 @@ class HttpKernel extends \Symfony\Bundle\FrameworkBundle\HttpKernel
         }
 
         try {
-            $match = \plugins\riPlugin\Plugin::get('router')->match('/' . $main_page);
+            $match = $this->container->get('router')->match('/' . $main_page);
             list($class, $method) = explode('::', $match['_controller'], 2);
 
             if (!class_exists($class)) {

@@ -14,15 +14,14 @@ use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\HttpFoundation\Request;
 
 // copy config files from dist folder
-foreach(glob(__DIR__ . '/config_dist/*', GLOB_NOSORT) as $config_file)
-{
+foreach (glob(__DIR__ . '/config_dist/*', GLOB_NOSORT) as $config_file) {
     $config_filename = basename($config_file);
-    if(!file_exists($dest_config_file = __DIR__ . '/config/' . $config_filename)) {
+    if (!file_exists($dest_config_file = __DIR__ . '/config/' . $config_filename)) {
         copy($config_file, $dest_config_file);
     }
 }
 
-$loader = require_once __DIR__.'/bootstrap.php.cache';
+$loader = require_once __DIR__ . '/bootstrap.php.cache';
 
 $loader->add('plugins', __DIR__);
 
@@ -45,8 +44,7 @@ $container = $kernel->getContainer();
 $container->get("environment")->setEnvironment($environment);
 if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
     $container->get("environment")->setSubEnvironment("backend");
-}
-else {
+} else {
     $container->get("environment")->setSubEnvironment("frontend");
 }
 

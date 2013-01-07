@@ -32,6 +32,7 @@ class StoreBundle extends Bundle
         $container->addCompilerPass(new ZeplufPass());
         $container->addCompilerPass(new TemplatingPass());
 
+        // allow plugins to have their own compiler passes
         $appDir = $container->getParameter("kernel.root_dir");
         $pluginsDir = $appDir . '/plugins';
 
@@ -40,12 +41,14 @@ class StoreBundle extends Bundle
 
             $container->setParameter("sys_config", $sysConfig);
 
-            foreach ($sysConfig["activated"] as $plugin) {
-                //
-                if(is_dir($pluginsDir .  '/' . $plugin . '/DependencyInjection/Compiler')) {
-                    foreach (glob($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler/*Pass.php', GLOB_NOSORT) as $pass) {
-                        $class = 'plugins\\' . $plugin . '\DependencyInjection\Compiler\\' . (basename($pass, ".php"));
-                        $container->addCompilerPass(new $class());
+            if(isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
+                foreach ($sysConfig["activated"] as $plugin) {
+                    //
+                    if(is_dir($pluginsDir .  '/' . $plugin . '/DependencyInjection/Compiler')) {
+                        foreach (glob($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler/*Pass.php', GLOB_NOSORT) as $pass) {
+                            $class = 'plugins\\' . $plugin . '\DependencyInjection\Compiler\\' . (basename($pass, ".php"));
+                            $container->addCompilerPass(new $class());
+                        }
                     }
                 }
             }

@@ -13,11 +13,8 @@
 
 namespace Zepluf\Bundle\StoreBundle\Controller;
 
-use plugins\riPlugin\Plugin;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * the core controller class. All controller classes should extend this class

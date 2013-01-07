@@ -29,7 +29,9 @@ class ControllerListener implements EventSubscriberInterface
     public function onKernelController(FilterControllerEvent $event)
     {
         $controller = $event->getController();
-        $controller[0]->beforeAction($event);
+        if(method_exists($controller[0], "beforeAction")) {
+            $controller[0]->beforeAction($event);
+        }
     }
 
     /**
