@@ -6,6 +6,7 @@
 
     <route id="storebundle.contact_us" pattern="/contact-us">
         <default key="_controller">StoreBundle:Zencart:static</default>
+        <default key="parameter_main_page">contact_us</default>
     </route>
 
 </routes>

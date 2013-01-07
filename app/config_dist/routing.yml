@@ -1,3 +1,6 @@
 plugin_route:
   resource: .
   type: plugin_resource_type
+
+store_bundle_routes:
+    resource: "@StoreBundle/Resources/config/routing/routing.xml"

@@ -24,7 +24,10 @@
         <parameter key="storebundle.controller_listener.class">Zepluf\Bundle\StoreBundle\EventListener\ControllerListener</parameter>
         <parameter key="storebundle.template_loader.class">Zepluf\Bundle\StoreBundle\Templating\Loader\TemplateLoader</parameter>
         <parameter key="storebundle.view.class">Zepluf\Bundle\StoreBundle\Templating\View</parameter>
+
         <parameter key="storebundle.holders_helper">Zepluf\Bundle\StoreBundle\Templating\Helper\HoldersHelper</parameter>
+        <parameter key="storebundle.settings_helper">Zepluf\Bundle\StoreBundle\Templating\Helper\SettingsHelper</parameter>
+
         <parameter key="storebundle.utility.database_result.class">Zepluf\Bundle\StoreBundle\Utility\DatabaseResult</parameter>
         <parameter key="storebundle.utility.file.class">Zepluf\Bundle\StoreBundle\Utility\File</parameter>
         <parameter key="storebundle.utility.string.class">Zepluf\Bundle\StoreBundle\Utility\String</parameter>
@@ -86,9 +89,15 @@
             </call>
         </service>
 
+        <!-- templating helpers -->
         <service id="templating.helper.holders" class="%storebundle.holders_helper%">
             <argument type="service" id="event_dispatcher" />
             <tag name="templating.helper" alias="holders" />
+        </service>
+
+        <service id="templating.helper.settings" class="%storebundle.settings_helper%">
+            <argument type="service" id="settings" />
+            <tag name="templating.helper" alias="settings" />
         </service>
 
         <!-- utility services -->
