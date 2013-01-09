@@ -26,18 +26,19 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
      *
      * @param \Symfony\Component\EventDispatcher\Event $event
      */
-    public function beforeAction(Event $event){
+    public function beforeAction(Event $event)
+    {
         $is_permitted = true;
-        if($event->getRequest()->get('role', '') == 'isAdmin'){
-            if(!defined('IS_ADMIN_FLAG') || !IS_ADMIN_FLAG)
+        if ($event->getRequest()->get('role', '') == 'isAdmin') {
+            if (!defined('IS_ADMIN_FLAG') || !IS_ADMIN_FLAG)
                 $is_permitted = false;
-        }else{
+        } else {
             $route_parts = explode('_', $event->getRequest()->get('_route'));
-            if($route_parts[1] == 'admin' && !IS_ADMIN_FLAG){
+            if ($route_parts[1] == 'admin' && !IS_ADMIN_FLAG) {
                 $is_permitted = false;
             }
         }
-        if(!$is_permitted)
+        if (!$is_permitted)
             die(ri('You do not have permission to access an admin route from here!'));
     }
 
@@ -47,9 +48,10 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
      * @param $data
      * @param null|\Symfony\Component\HttpFoundation\Response $response
      */
-    public function renderJson($data, Response $response = null){
+    public function renderJson($data, Response $response = null)
+    {
         session_write_close();
-        if($response == null) $response = new Response();
+        if ($response == null) $response = new Response();
         $response->setContent(json_encode($data));
         $response->send();
         exit();
@@ -61,9 +63,10 @@ class Controller extends \Symfony\Bundle\FrameworkBundle\Controller\Controller
      * @param $data
      * @param null|\Symfony\Component\HttpFoundation\Response $response
      */
-    public function renderAjax($data, Response $response = null) {
+    public function renderAjax($data, Response $response = null)
+    {
         session_write_close();
-        if($response == null) $response = new Response();
+        if ($response == null) $response = new Response();
         $response->setContent($data);
         $response->send();
         exit();
