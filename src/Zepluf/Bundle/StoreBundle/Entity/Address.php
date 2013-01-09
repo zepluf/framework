@@ -57,7 +57,7 @@ class Address
      *
      * @ORM\Column(name="entry_firstname", type="string", length=32, nullable=false)
      */
-    private $irstName;
+    private $firstName;
     /**
      * @var string $lastName
      *
@@ -116,7 +116,7 @@ class Address
      */
     public function __construct()
     {
-        parent::__construct();
+//        parent::__construct();
 
         $this->addressId = 0;
         $this->accountId = 0;

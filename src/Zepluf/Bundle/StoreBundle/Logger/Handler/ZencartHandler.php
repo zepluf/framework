@@ -33,8 +33,8 @@ class ZencartHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        if($record["context"]["zencart"]) {
-            switch($record["level"]) {
+        if (isset($record["context"]["zencart"]) && $record["context"]["zencart"]) {
+            switch ($record["level"]) {
                 case Logger::INFO:
                     $this->add($record, "success");
                     break;
@@ -58,19 +58,16 @@ class ZencartHandler extends AbstractProcessingHandler
     protected function add($record, $type)
     {
         global $messageStack;
-        if($this->environment->getSubEnvironment() == "backend") {
-            if($record["context"]["session"]) {
+        if ($this->environment->getSubEnvironment() == "backend") {
+            if ($record["context"]["session"]) {
                 $messageStack->add_session($record["message"], $type);
-            }
-            else {
+            } else {
                 $messageStack->add($record["message"], $type);
             }
-        }
-        else {
-            if($record["context"]["session"]) {
+        } else {
+            if ($record["context"]["session"]) {
                 $messageStack->add_session($record["context"]["class"], $record["message"], $type);
-            }
-            else {
+            } else {
                 $messageStack->add($record["context"]["class"], $record["message"], $type);
             }
         }

@@ -13,7 +13,10 @@ namespace Zepluf\Bundle\StoreBundle\Tests;
 
 class SettingsTest extends \PHPUnit_Framework_TestCase
 {
-    public function testResetCache(){
+    protected $object;
+
+    public function testResetCache()
+    {
         $this->assertEquals(1, 1);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Zepluf\Bundle\StoreBundle;
 
+use Monolog\Logger;
+
 class Logs
 {
 
@@ -22,57 +24,29 @@ class Logs
         return count($this->logs);
     }
 
-    public function copyToZen()
-    {
-        global $messageStack;
-        foreach ($this->logs as $log) {
-            if ($log->session) {
-                if ($this->environment->getSubEnvironment() == "backend") {
-                    $messageStack->add_session($log->message, $log->type);
-                } else {
-                    $messageStack->add_session($log->scope, $log->message, $log->type);
-                }
-            } else {
-                if ($this->environment->getSubEnvironment() == "backend") {
-                    $messageStack->add($log->message, $log->type);
-                } else {
-                    $messageStack->add($log->scope, $log->message, $log->type);
-                }
-            }
-        }
-
-        return $this;
-    }
-
     public function copyFromZen()
     {
         global $messageStack;
         if ($this->environment->getSubEnvironment() == "frontend") {
             foreach ($messageStack->messages as $message) {
-                $this->add(array(
-                    'message' => $message['text'],
-                    'scope' => $message['class'],
-                    'type' => $this->getZenMessageType($message['class'])
-                ));
+                $this->logger->addRecord($this->getZenMessageType($message['class']), $message['text']);
+                $this->logs[] = array($this->getZenMessageType($message['class']) => $message['text']);
             }
         } else {
             foreach ($messageStack->errors as $message) {
-                $this->add(array(
-                    'message' => $message['text'],
-                    'scope' => 'global',
-                    'type' => $this->getZenMessageType($message['params'])
-                ));
+                $this->logger->addRecord($this->getZenMessageType($message['params']), $message['text']);
+                $this->logs[] = array($this->getZenMessageType($message['params']) => $message['text']);
             }
         }
     }
 
-    private function getZenMessageType($class)
+    public function getZenMessageType($class)
     {
         $types = array(
-            'messageStackError' => 'error',
-            'messageStackWarning' => 'warning',
-            'messageStackSuccess' => 'success',
-            'messageStackCaution' => 'caution',
+            'messageStackError' => Logger::ERROR,
+            'messageStackWarning' => Logger::WARNING,
+            'messageStackSuccess' => Logger::INFO,
+            'messageStackCaution' => Logger::NOTICE,
         );
 
         foreach ($types as $identified => $type) {
@@ -80,16 +54,7 @@ class Logs
                 return $type;
             }
         }
-        return 'error';
-    }
-
-    public function getAsArray()
-    {
-        $logs = array();
-        foreach ($this->logs as $log) {
-            $logs[] = $log->getArray();
-        }
-        return $logs;
+        return Logger::ERROR;
     }
 
     public function clear()
@@ -100,6 +65,15 @@ class Logs
     public function __call($name, $args)
     {
         $args[1]["zencart"] = true;
-        call_user_func_array(array($this->logger, $name), $args);
+        if (method_exists($this->logger, $name)) {
+            call_user_func_array(array($this->logger, $name), $args);
+
+            $this->logs[] = array($name => $args[0]);
+        }
+    }
+
+    public function getLogs()
+    {
+        return $this->logs;
     }
 }
