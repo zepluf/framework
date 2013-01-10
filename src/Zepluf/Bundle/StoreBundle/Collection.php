@@ -16,7 +16,7 @@ namespace Zepluf\Bundle\StoreBundle;
 /**
  * core collection class (holding the model objects)
  */
-class Collection
+class Collection extends \Symfony\Component\DependencyInjection\ContainerAware
 {
 
     /**
@@ -71,7 +71,7 @@ class Collection
      */
     public function getMockObject()
     {
-        if ($this->mock_object === null) $this->mock_object = Plugin::get($this->model_service);
+        if ($this->mock_object === null) $this->mock_object = $this->container->get($this->model_service);
         return $this->mock_object;
     }
 
@@ -171,6 +171,6 @@ class Collection
      */
     public function create($data)
     {
-        return Plugin::get($this->model_service)->create($data);
+        return $this->container->get($this->model_service)->create($data);
     }
 }

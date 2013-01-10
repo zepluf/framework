@@ -95,8 +95,6 @@
             <tag name="templating.helper" alias="holders" />
         </service>
 
-        <service id="holders" alias="templating.helper.holders" />
-
         <service id="templating.helper.settings" class="%storebundle.settings_helper%">
             <argument type="service" id="settings" />
             <tag name="templating.helper" alias="settings" />

@@ -31,7 +31,7 @@ class ZencartHandler extends AbstractProcessingHandler
     /**
      * @param array $record
      */
-    public function write(array $record)
+    protected function write(array $record)
     {
         if (isset($record["context"]["zencart"]) && $record["context"]["zencart"]) {
             switch ($record["level"]) {
@@ -55,8 +55,7 @@ class ZencartHandler extends AbstractProcessingHandler
      * @param $record
      * @param $type
      */
-//    protected function add($record, $type)
-    public function add($record, $type)
+    protected function add($record, $type)
     {
         global $messageStack;
         if ($this->environment->getSubEnvironment() == "backend") {

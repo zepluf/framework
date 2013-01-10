@@ -1,0 +1,385 @@
+/* plugins */
+.logo{
+    background: url('../images/logo.png') 0 0 no-repeat;
+    width: 167px;
+    height: 39px;
+    margin: 10px;
+}
+.plugins{
+    font-family: Arial, "Helvetica Neue",Helvetica,sans-serif;
+    border: 1px solid #ccc;
+    width: auto;
+    margin: 10px;
+}
+
+.plugins .content{
+    padding: 15px 10px
+}
+
+.plugins .span2{
+    width: 16.894%;
+}
+.plugins .span2 .ajax-link{
+    width: 160px;
+}
+.plugins .span10{
+    border-left: 1px solid #cccccc;
+    min-height: 300px;
+}
+.plugins .title{
+    background: #eeeeee;
+    padding: 20px 10px;
+    border-bottom: 1px solid #cccccc;
+    font-size: 22px;
+    height: 60px;
+}
+.menus, .menus ul{
+    margin: 0;
+}
+.menus{
+    padding: 10px;
+    width: 25.530%;
+}
+.menus .nav li{
+    border-bottom: 1px solid #75cbfc;
+    height: 32px;
+}
+.menus .nav li a{
+    background: none;
+    -webkit-border-radius:0;
+    -moz-border-radius:0;
+    border-radius:0;
+    margin: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #939191;
+    padding: 8px 10px;
+}
+.menus .nav li.active a,.menus .nav li:hover a{
+    border-bottom: 2px solid #75cbfc;
+    color: #48afea;
+    background: none;
+}
+.plugins .col-right, .plugins .col-left{
+    margin: 0;
+    border-bottom-width: 2px;
+}
+.plugins .col-left{
+    padding: 20px 10px;
+    text-align: center;
+}
+.plugins .form-search{
+    display: block;
+    margin-top: 10px;
+}
+.plugins .form-search input.search-query{
+    -webkit-border-radius:4px 0px 0px 4px;
+    -moz-border-radius:4px 0px 0px 4px;
+    border-radius:4px 0px 0px 4px;
+    height: 30px;
+    border-right: none;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: left;
+    font-size: 12px;
+    width: 130px;
+}
+.plugins .form-search .btn{
+    background: url(../images/icon-search.png) center center no-repeat;
+    height: 20px;
+    outline: none;
+    -webkit-border-radius:0px 4px 4px 0px;
+    -moz-border-radius:0px 4px 4px 0px;
+    border-radius:0px 4px 4px 0px;
+    border: 1px solid #cccccc;
+}
+.plugins .nav{
+    margin-top: 30px;
+}
+.plugins .nav > li{
+    color: #a5a5a5;
+}
+.plugins .nav > li > a{
+    display: inline-block;
+    font-size: 13px;
+    color: #50a6da;
+    padding-right: 0;
+    font-family: Arial, "Helvetica Neue",Helvetica,sans-serif;
+}
+.plugins .nav > li.active > a, .plugins .nav > li > a, .plugins .nav > li > a:hover{
+    background: none;
+}
+.plugins .nav > li > a:hover, .plugins .nav > li.active > a{
+    color: #535353;
+}
+.plugins .nav > li.active > a{
+    font-weight: bold;
+}
+.plugins .nav > li{
+    text-align: left;
+}
+.table{
+    margin-bottom: 0;
+}
+.table th{
+    height: 40px;
+    vertical-align: middle;
+}
+.table td{
+    height: 60px;
+    vertical-align: middle;
+    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+    font-size: 14px;
+    color: #535353;
+}
+.table .core td{
+    background: none;
+}
+.table td .btn-group{
+    width: 48px;
+    height: 30px;
+}
+.table td .btn-group .btn{
+    padding: 5px 10px;
+}
+.table td > a{
+    font-size: 13px;
+    font-weight: bold;
+    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+    padding: 5px 10px;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    background: #008fe1;
+    color: #ffffff;
+    border: 1px solid #0f7fbf;
+}
+.table td > a:hover{
+    background: #027bc1;
+    text-decoration: none;
+}
+.table td .uninstall, .table td .deactivate{
+    background: #b3b3b3;
+    border: 1px solid #a8a8a8;
+}
+.table td .uninstall:hover, .table td .deactivate:hover{
+    background: #8f8f8f;
+}
+.table td .install{
+    background: #8bbb36;
+    border: 1px solid #83b52b;
+}
+.table td .install:hover{
+    background: #77a722;
+}
+.table td .dropdown-menu li > a:hover, .table td .dropdown-menu li > a:focus,
+.table td .dropdown-submenu li > a:hover{
+    background-image: none;
+    background-color: #5db2e3;
+}
+.table td .dropdown-menu{
+    right: -2px;
+    left: inherit;
+}
+.table td .dropdown-menu .deactivate{
+    background: none;
+    border: none;
+}
+.table td .alert{
+    background: #f1f1f1;
+    border: 1px solid #d8d8d8;
+    margin-bottom: 0;
+    color: #535353;
+}
+.table td .alert a{
+    font-size: 14px;
+    font-weight: bold;
+    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+}
+.table tr.update td{
+    border-bottom: none;
+}
+.table tr.odd td{
+    background: #f6fcfe;
+}
+.table tr.info-plugin td{
+    border-top: medium none; padding-top: 0px; vertical-align: top; height: 45px;
+}
+.news{
+    background: url("../images/news.png") 0 0 no-repeat;
+    width: 36px;
+    height: 107px;
+    position: fixed;
+    right: 0;
+    top: 40%;
+}
+/* install */
+.selectbox{
+    width: 90%;
+}
+.table-install td{
+    line-height: 25px;
+    vertical-align: top;
+}
+.table-install .name{
+    margin: 10px 0;
+    width: 390px;
+}
+.table-install .version{
+    width: 200px;
+    margin: 10px 0;
+}
+.table-install td > a.author{
+    background: none;
+    color: #50a6da;
+    border: none;
+    padding-left: 0;
+}
+.table-install td > a.author:hover{
+    text-decoration: underline;
+}
+/* contact */
+.menu-contact{
+    margin-top: 0 !important;
+}
+.menu-contact li{
+    background: url("../images/arrow-left.png") 0 center no-repeat;
+}
+.settings > tr td{
+    vertical-align: top;
+    width: 50%;
+}
+.settings .control-label{
+    width: 350px;
+    text-align: left;
+    font-size: 13px;
+    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+    font-weight: bold;
+    color: #535353;
+}
+.settings .control-group input[type='text']{
+    height: 30px;
+}
+.settings .help-block{
+    color: #777777;
+    font-size: 13px;
+    margin-left: 10px;
+    text-align: left;
+    width: 85%;
+}
+.settings .td-right .control-label{
+    width: 225px;
+}
+.settings .td-right .controls{
+    margin-left: 175px;
+}
+.settings .td-right .control-group.viewform{
+    margin-bottom: 0;
+}
+.settings .td-right .controls.choose{
+    margin-left: 0;
+}
+.settings .td-right .btn-group .btn{
+    font-size: 12px;
+}
+.settings .td-right em{
+    color: #0290e2;
+}
+.settings .btn-primary{
+    border-color: #0083ce;
+    background-color:#3F87DF;
+    *background-color:#4C9CEB;
+    background-image:-webkit-gradient(linear, 0 0, 0 100%, from(#4C9CEB), to(#3F87DF));
+    background-image:-webkit-linear-gradient(top, #4C9CEB, #3F87DF);
+    background-image:-o-linear-gradient(top, #4C9CEB, #3F87DF);
+    background-image:linear-gradient(to bottom, #4C9CEB, #3F87DF);
+    background-image:-moz-linear-gradient(top, #4C9CEB, #3F87DF);
+}
+
+.manager > th{
+    font-size: 16px;
+}
+.manager > th, .manager > td{
+    background: none;
+    border: none;
+}
+.list-manager > th{
+    font-size: 13px;
+    font-weight: bold;
+}
+.list-manager > td, .list-manager > th{
+    border: 1px solid #ccc;
+    width: auto;
+}
+.list-manager{
+    margin-bottom: 30px;
+}
+.list-manager .col1{width: 20px;}
+.list-manager .col2{width: 125px;}
+.list-manager .col3{width: 200px;}
+.list-manager .col4{width: auto;}
+.list-manager select.span1{
+    width: 70px;
+}
+.form-horizontal input[type='text'], .form-horizontal select{
+    height: 30px;
+}
+.settings textarea{
+    width: 69%;
+    height: 100px;
+}
+.settings .report{
+    padding-top: 20px;
+}
+.settings .report .col-report2{
+    margin-left: 70px;
+}
+.settings .report .control-group .control-label{
+    width: 130px;
+}
+.settings .report .control-group .controls{
+    margin-left: 130px;
+}
+.settings .report .col-report2 .control-group .control-label{
+    width: 175px;
+}
+.settings .report .col-report2 .control-group .controls{
+    margin-left: 175px;
+}
+.settings .report .btn-message{
+    margin-left: 55% !important;
+    margin-top: 15px;
+}
+.action-hide{
+    display: none;
+}
+a:focus{
+    outline: none;
+}
+.core .delete{
+    display: none;
+}
+
+/* sortable table */
+table.tablesorter {
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+}
+table.tablesorter thead tr .header {
+    background-image: url(../images/bg.gif);
+    background-repeat: no-repeat;
+    background-position: center right;
+    cursor: pointer;
+}
+table.tablesorter tbody td {
+}
+table.tablesorter tbody tr.odd td {
+}
+table.tablesorter thead tr .headerSortUp {
+    background-image: url(../images/asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+    background-image: url(../images/desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+}

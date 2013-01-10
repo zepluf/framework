@@ -23,7 +23,7 @@ class HoldersHelperTest extends BaseTestCase
 
     public function setUp()
     {
-        $this->object = $this->get("holders");
+        $this->object = $this->get("templating.helper.holders");
     }
 
     public function testGetName()
@@ -55,6 +55,18 @@ class HoldersHelperTest extends BaseTestCase
         $this->assertEquals(trim('priority content herecontent here'), trim($content));
     }
 
+    public function onHolder1(HoldersHelperEvent $event)
+    {
+        $this->get('templating.helper.holders')->add($event->getHolder(), 'content here', 2);
+        $this->get('templating.helper.holders')->add($event->getHolder(), 'priority content here', 1);
+    }
+
+    public function onHolder2(HoldersHelperEvent $event)
+    {
+        $content = '<a href="http://www.w3schools.com">Visit W3Schools</a>.';
+        $this->get('templating.helper.holders')->add($event->getHolder(), $content);
+    }
+
     public function testInjectHolders()
     {
         $holder1 = 'test';
@@ -84,17 +96,5 @@ class HoldersHelperTest extends BaseTestCase
     public function tearDown()
     {
         unset($this->object);
-    }
-
-    public function onHolder1(HoldersHelperEvent $event)
-    {
-        $this->get('holders')->add($event->getHolder(), 'content here', 2);
-        $this->get('holders')->add($event->getHolder(), 'priority content here', 1);
-    }
-
-    public function onHolder2(HoldersHelperEvent $event)
-    {
-        $content = '<a href="http://www.w3schools.com">Visit W3Schools</a>.';
-        $this->get('holders')->add($event->getHolder(), $content);
     }
 }
