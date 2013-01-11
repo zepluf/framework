@@ -27,6 +27,13 @@ class RouterHelperTest extends BaseTestCase
 
     public function testZenLink()
     {
-        $this->assertEquals('d', $this->object->zenLink('www.asd.com/index.php?main_page=abc'));
+        define('HTTP_SERVER', 'http://localhost');
+        define('HTTPS_SERVER', 'https://localhost');
+        $this->assertEquals('a', $this->object->zenLink('a'));
+    }
+
+    public function tearDown()
+    {
+        unset($this->object);
     }
 }

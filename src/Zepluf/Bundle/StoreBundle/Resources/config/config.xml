@@ -46,6 +46,7 @@
             <argument>%kernel.config_dir%</argument>
             <argument>%kernel.cache_dir%</argument>
             <argument>%plugins.root_dir%</argument>
+            <argument>%kernel.environment%</argument>
         </service>
 
         <service id="plugin" class="%storebundle.plugin.class%">
@@ -94,6 +95,8 @@
             <argument type="service" id="event_dispatcher" />
             <tag name="templating.helper" alias="holders" />
         </service>
+
+        <service id="holders" alias="templating.helper.holders" />
 
         <service id="templating.helper.settings" class="%storebundle.settings_helper%">
             <argument type="service" id="settings" />

@@ -35,7 +35,7 @@ class ZencartHandlerTest extends BaseTestCase
 
         $messageStack->expects($this->once())
             ->method('add_session')
-            ->with($this->equalTo('error message'), $this->equalTo('error'));
+            ->with('error message', 'error');
 
         $this->object->add($record, $type);
 
@@ -44,7 +44,7 @@ class ZencartHandlerTest extends BaseTestCase
 
         $messageStack->expects($this->once())
             ->method('add')
-            ->with($this->equalTo('error message'), $this->equalTo('error'));
+            ->with('error message', 'error');
 
         $this->object->add($record, $type);
     }
@@ -65,7 +65,7 @@ class ZencartHandlerTest extends BaseTestCase
 
         $messageStack->expects($this->once())
             ->method('add_session')
-            ->with($this->equalTo('messageStackError'), $this->equalTo('error message'), $this->equalTo('error'));
+            ->with('messageStackError', 'error message', 'error');
 
         $this->object->add($record, $type);
 
@@ -74,7 +74,7 @@ class ZencartHandlerTest extends BaseTestCase
 
         $messageStack->expects($this->once())
             ->method('add')
-            ->with($this->equalTo('messageStackError'), $this->equalTo('error message'), $this->equalTo('error'));
+            ->with('messageStackError', 'error message', 'error');
 
         $this->object->add($record, $type);
     }
@@ -94,7 +94,7 @@ class ZencartHandlerTest extends BaseTestCase
 
         $messageStack->expects($this->once())
             ->method('add_session')
-            ->with($this->equalTo('success message'), $this->equalTo('success'));
+            ->with('success message', 'success');
 
         $this->object->write($record);
     }
@@ -114,7 +114,7 @@ class ZencartHandlerTest extends BaseTestCase
 
         $messageStack->expects($this->once())
             ->method('add')
-            ->with($this->equalTo('messageStackSuccess'), $this->equalTo('success message'), $this->equalTo('success'));
+            ->with('messageStackSuccess', 'success message', 'success');
 
         $this->object->write($record);
     }
