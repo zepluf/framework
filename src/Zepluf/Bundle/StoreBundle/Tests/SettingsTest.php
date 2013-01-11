@@ -1,12 +1,15 @@
 <?php
-
-/*
- * This file is part of the Symfony package.
+/**
+ * Created by RubikIntegration Team.
  *
- * (c) Fabien Potencier <fabien@symfony.com>
+ * User: Tuan Nguyen
+ * Date: 1/10/13
+ * Time: 2:12 PM
+ * Question? Come to our website at http://rubikin.com
  *
  * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * file that was distributed with this source code or refer to the LICENSE
+ * file of ZePLUF framework
  */
 
 namespace Zepluf\Bundle\StoreBundle\Tests;
@@ -26,9 +29,29 @@ class SettingsTest extends BaseTestCase
     {
         $this->configDir = __DIR__ . '/Fixtures/appDir/config';
         $this->cacheDir = __DIR__ . '/Fixtures/appDir/cache';
-        $this->pluginDir = __DIR__ . '/Fixtures/appDir/plugin';
+        $this->pluginDir = __DIR__ . '/Fixtures/appDir/plugins';
 
         $this->object = $this->get('settings');
+    }
+
+    public function testResetCache()
+    {
+        $this->object = $this->getFixtureObject();
+
+        //create some junk cache
+        $this->object->saveCache('a', array());
+        $this->object->saveCache('b', array());
+        $this->object->saveCache('c', array());
+
+        //Reset specific cache
+        $this->object->resetCache('a');
+        //Assertion: no a cache existed
+        $this->assertTrue(!file_exists($this->cacheDir . "/ZePLUF/a_" . $this->env . "cache"));
+
+        //Reset all cache
+        $this->object->resetCache();
+        //Assertion: no cache existed
+        $this->assertTrue($this->dir_is_empty($this->cacheDir . "/ZePLUF"));
     }
 
     public function testGetCacheRoot()
@@ -93,6 +116,7 @@ class SettingsTest extends BaseTestCase
         //Reload local setting file
         $this->object->set('local', ($this->object->loadFile('', __DIR__ . '/Fixtures/appDir/local/', 'local.yml')));
 
+
         //Assertion
         $this->assertFalse($this->object->get('local.ricjloader.settings.cache'));
     }
@@ -122,25 +146,6 @@ class SettingsTest extends BaseTestCase
         $this->assertEquals($local_config, $settings);
     }
 
-    public function testResetCache()
-    {
-        $this->object = $this->getFixtureObject();
-
-        //create some junk cache
-        $this->object->saveCache('a', array());
-        $this->object->saveCache('b', array());
-        $this->object->saveCache('c', array());
-
-        //Reset specific cache
-        $this->object->resetCache('a');
-        //Assertion: no a cache existed
-        $this->assertTrue(!file_exists($this->cacheDir . "/ZePLUF/a_" . $this->env . "cache"));
-
-        //Reset all cache
-        $this->object->resetCache();
-        //Assertion: no cache existed
-        $this->assertTrue($this->dir_is_empty($this->cacheDir . "/ZePLUF"));
-    }
 
     public function tearDown()
     {

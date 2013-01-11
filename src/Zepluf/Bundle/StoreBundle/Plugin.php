@@ -46,13 +46,6 @@ class Plugin
     private $version;
 
     /**
-     * class loader
-     *
-     * @var
-     */
-    private $loader;
-
-    /**
      * @var
      */
     private $settings;
@@ -94,11 +87,15 @@ class Plugin
      */
     private $pluginsDir;
 
+
     /**
      * inject dependencies
      *
      * @param $settings
      * @param $event_dispatcher
+     * @param $environment
+     * @param $appDir
+     * @param $pluginsDir
      */
     public function __construct($settings, $event_dispatcher, $environment, $appDir, $pluginsDir)
     {
@@ -108,9 +105,6 @@ class Plugin
         $this->appDir = $appDir;
         $this->pluginsDir = $pluginsDir;
 
-        var_dump($this->environment);
-        die();
-
         // check version
         if ((int)PROJECT_VERSION_MAJOR > 1 || (int)PROJECT_VERSION_MINOR > 0) {
             $this->version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
@@ -118,19 +112,11 @@ class Plugin
     }
 
     /**
-     * @static
-     * @param $loader
-     */
-    public function setLoader($loader)
-    {
-        $this->loader = $loader;
-    }
-
-    /**
-     * setups ZePLUF
+     * Setups ZePLUF
      *
-     * @static
+     * @param $container
      * @param bool $force
+     * @return bool
      */
     public function setup($container, $force = false)
     {
@@ -166,19 +152,19 @@ class Plugin
         return true;
     }
 
+
+    /**
+     * Load system setting file
+     */
     public function loadSysSettings()
     {
         if (!$this->settings->has('sys')) {
             $this->sysSettings = $this->settings->load('sys', $this->appDir . '/config/', 'sys_' . $this->environment->getEnvironment() . '.yml');
         }
-        return $this->sysSettings;
     }
 
     /**
-     * loads all plugins settings from cache, if not available then try to load the setting files
-     *
-     * @static
-     *
+     * Loads all plugins settings from cache, if not available then try to load the setting files
      */
     public function loadPluginsSettings()
     {
@@ -212,11 +198,12 @@ class Plugin
     }
 
     /**
+     * Loads all plugins
      * @param $container
      */
     public function loadPlugins($container)
     {
-        $this->loadPluginsSettings($container->get("settings"));
+        $this->loadPluginsSettings();
 
         $this->loadPlugin($container, $this->sysSettings[$this->environment->getSubEnvironment()]);
 
@@ -270,7 +257,6 @@ class Plugin
     /**
      * gets the array of loaded plugins
      *
-     * @static
      * @return array
      */
     public function getLoaded()
@@ -281,7 +267,6 @@ class Plugin
     /**
      * checks if a plugin is loaded
      *
-     * @static
      * @param $plugin
      * @return bool
      */
@@ -291,9 +276,10 @@ class Plugin
     }
 
     /**
-     * This function will uninstall a plugin
+     * This function will install a plugin
      * It will also call the plugins/pluginfolder/PluginClass->install() method of exists
      *
+     * @param $container
      * @param $plugin
      * @return bool
      */
@@ -349,6 +335,7 @@ class Plugin
      * This function will uninstall a plugin
      * It will also call the plugins/pluginfolder/PluginClass->uninstall() method of exists
      *
+     * @param $container
      * @param $plugin
      * @return bool
      */
@@ -426,6 +413,7 @@ class Plugin
      * This function will activate a plugin
      * It will also call the plugins/pluginfolder/PluginClass->activate() method of exists
      *
+     * @param $container
      * @param $plugin
      * @return bool
      */
@@ -497,6 +485,7 @@ class Plugin
      * This function will deactivate a plugin
      * It will also call the plugins/pluginfolder/PluginClass->deactivate() method of exists
      *
+     * @param $container
      * @param $plugin
      * @return bool
      */
@@ -541,9 +530,8 @@ class Plugin
     }
 
     /**
-     * gets the current enviornment
+     * gets the current environment
      *
-     * @static
      * @return mixed
      */
     public function getSubEnv()

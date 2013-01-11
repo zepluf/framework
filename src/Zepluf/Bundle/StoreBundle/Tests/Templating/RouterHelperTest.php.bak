@@ -20,6 +20,12 @@ class RouterHelperTest extends BaseTestCase
 {
     protected $object;
 
+    public static function setUpBeforeClass()
+    {
+            define('HTTP_SERVER', 'http://localhost');
+            define('HTTPS_SERVER', 'https://localhost');
+    }
+
     public function setUp()
     {
         $this->object = new RouterHelper($this->get('router'));
@@ -27,8 +33,7 @@ class RouterHelperTest extends BaseTestCase
 
     public function testZenLink()
     {
-        define('HTTP_SERVER', 'http://localhost');
-        define('HTTPS_SERVER', 'https://localhost');
+
         $this->assertEquals('a', $this->object->zenLink('a'));
     }
 
