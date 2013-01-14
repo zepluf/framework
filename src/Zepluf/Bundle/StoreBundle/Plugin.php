@@ -46,13 +46,6 @@ class Plugin
     private $version;
 
     /**
-     * class loader
-     *
-     * @var
-     */
-    private $loader;
-
-    /**
      * @var
      */
     private $settings;
@@ -72,8 +65,8 @@ class Plugin
     /**
      * @var string
      */
-    private $env;
-    
+    private $environment;
+
     /**
      * @var
      */
@@ -93,15 +86,21 @@ class Plugin
      * @var
      */
     private $pluginsDir;
+
+
     /**
      * inject dependencies
      *
      * @param $settings
      * @param $event_dispatcher
+     * @param $environment
+     * @param $appDir
+     * @param $pluginsDir
      */
-    public function __construct($settings, $event_dispatcher, $environment, $appDir, $pluginsDir) {
+    public function __construct($settings, $event_dispatcher, $environment, $appDir, $pluginsDir)
+    {
         $this->settings = $settings;
-        $this->env = $environment;
+        $this->environment = $environment;
         $this->eventDispatcher = $event_dispatcher;
         $this->appDir = $appDir;
         $this->pluginsDir = $pluginsDir;
@@ -113,19 +112,11 @@ class Plugin
     }
 
     /**
-     * @static
-     * @param $loader
-     */
-    public function setLoader($loader)
-    {
-        $this->loader = $loader;
-    }
-
-    /**
-     * setups ZePLUF
+     * Setups ZePLUF
      *
-     * @static
+     * @param $container
      * @param bool $force
+     * @return bool
      */
     public function setup($container, $force = false)
     {
@@ -161,18 +152,19 @@ class Plugin
         return true;
     }
 
-    public function loadSysSettings(){
-        if(!$this->settings->has('sys'))
-        {
-            $this->sysSettings = $this->settings->load('sys', $this->appDir . '/config/', 'sys_' . $this->env->getEnvironment() . '.yml');
+
+    /**
+     * Load system setting file
+     */
+    public function loadSysSettings()
+    {
+        if (!$this->settings->has('sys')) {
+            $this->sysSettings = $this->settings->load('sys', $this->appDir . '/config/', 'sys_' . $this->environment->getEnvironment() . '.yml');
         }
     }
 
     /**
-     * loads all plugins settings from cache, if not available then try to load the setting files
-     *
-     * @static
-     *
+     * Loads all plugins settings from cache, if not available then try to load the setting files
      */
     public function loadPluginsSettings()
     {
@@ -180,47 +172,47 @@ class Plugin
 
         Yaml::enablePhpParsing();
 
-        if(!$this->settings->has('plugins'))
-        {
+        if (!$this->settings->has('plugins')) {
             // now try to load from all the cache files
-            if(($this->plugins_settings = $this->settings->loadCache('plugins')) === false)
-            {
+            if (($this->plugins_settings = $this->settings->loadCache('plugins')) === false) {
                 $configs = array();
                 // load local plugins settings
-                $local_config = Yaml::parse($this->appDir . '/config/plugins_' . $this->env->getEnvironment() . '.yml');
-                foreach($this->sysSettings['activated'] as $plugin)
-                {
-                    if(file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml'))
-                    {
+                $local_config = Yaml::parse($this->appDir . '/config/plugins_' . $this->environment->getEnvironment() . '.yml');
+                foreach ($this->sysSettings['activated'] as $plugin) {
+                    if (file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml')) {
                         $config = Yaml::parse($file);
 
                         $plugin_lc_name = strtolower($plugin);
                         // $plugin_uc_name = ucfirst($plugin);
 
-                        $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
+                        if (isset($local_config[$plugin_lc_name])) {
+                            $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
+                        } else {
+                            $this->settings->set('plugins.' . $plugin_lc_name, $config);
+                        }
+
                     }
                 }
 
                 $this->settings->saveCache('plugins', $this->settings->get('plugins'));
-
-                $this->plugins_settings =  $this->settings->get('plugins');
-            }
-            else{
+                $this->plugins_settings = $this->settings->get('plugins');
+            } else {
                 $this->settings->set('plugins', $this->plugins_settings);
             }
         }
     }
 
     /**
+     * Loads all plugins
      * @param $container
      */
     public function loadPlugins($container)
     {
-        $this->loadPluginsSettings($container->get("settings"));
+        $this->loadPluginsSettings();
 
-        $this->loadPlugin($container, $this->sysSettings[$this->env->getSubEnvironment()]);
+        $this->loadPlugin($container, $this->sysSettings[$this->environment->getSubEnvironment()]);
 
-        if($this->env->getSubEnvironment() == "frontend") {
+        if ($this->environment->getSubEnvironment() == "frontend") {
             $this->settings->loadTheme('frontend');
         }
     }
@@ -268,9 +260,8 @@ class Plugin
     }
 
     /**
-     * gets the array of loaded plugins
+     * Gets the array of loaded plugins
      *
-     * @static
      * @return array
      */
     public function getLoaded()
@@ -279,9 +270,8 @@ class Plugin
     }
 
     /**
-     * checks if a plugin is loaded
+     * Checks if a plugin is loaded
      *
-     * @static
      * @param $plugin
      * @return bool
      */
@@ -291,9 +281,10 @@ class Plugin
     }
 
     /**
-     * This function will uninstall a plugin
+     * This function will install a plugin
      * It will also call the plugins/pluginfolder/PluginClass->install() method of exists
      *
+     * @param $container
      * @param $plugin
      * @return bool
      */
@@ -324,8 +315,7 @@ class Plugin
 
                     $installed = true;
                 }
-            }
-            else {
+            } else {
                 arrayInsertValue($settings['installed'], $plugin);
 
                 $this->settings->set('sys.installed', $settings['installed'], false);
@@ -338,7 +328,7 @@ class Plugin
             }
         }
 
-        if($installed) {
+        if ($installed) {
             // move the public files to web folder
             $container->get('utility.file')->xcopy($this->pluginsDir . '/' . $plugin . '/Resources/public', $container->getParameter("web_dir") . '/plugins/' . $plugin);
         }
@@ -350,6 +340,7 @@ class Plugin
      * This function will uninstall a plugin
      * It will also call the plugins/pluginfolder/PluginClass->uninstall() method of exists
      *
+     * @param $container
      * @param $plugin
      * @return bool
      */
@@ -370,7 +361,7 @@ class Plugin
 
             // attempt to call the plugin uninstall method
             if ($container->has($plugin)) {
-                if(!$container->get($plugin)->uninstall()) {
+                if (!$container->get($plugin)->uninstall()) {
                     return false;
                 }
             }
@@ -387,7 +378,7 @@ class Plugin
             $uninstalled = true;
         }
 
-        if($uninstalled) {
+        if ($uninstalled) {
             // remove all
             $container->get('utility.file')->sureRemoveDir($container->getParameter("web_dir") . '/plugins/' . $plugin, true);
         }
@@ -407,10 +398,9 @@ class Plugin
     }
 
     /**
+     * Get plugin info located in plugin.xml file
      *
-     * Enter description here ...
-     *
-     * @param unknown_type $plugin
+     * @param mixed $plugin
      */
     public function info($plugin)
     {
@@ -427,6 +417,7 @@ class Plugin
      * This function will activate a plugin
      * It will also call the plugins/pluginfolder/PluginClass->activate() method of exists
      *
+     * @param $container
      * @param $plugin
      * @return bool
      */
@@ -452,9 +443,7 @@ class Plugin
                         if (!$this->isInstalled($dependent_plugin->codename)) {
                             $error = true;
                             $container->get('logs')->err(sprintf('Plugin %s min version %s is required', $dependent_plugin->codename, $dependent_plugin->min));
-                        }
-
-                        elseif (!$this->isActivated($dependent_plugin->codename) || compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS) {
+                        } elseif (!$this->isActivated($dependent_plugin->codename) || compareVersions($info->release, $dependent_plugin->min) == VERSION_LESS) {
                             // we need to check the version
                             $error = true;
                             $container->get('logs')->err(sprintf('Plugin %s min version %s is required', $dependent_plugin->codename, $dependent_plugin->min));
@@ -500,6 +489,7 @@ class Plugin
      * This function will deactivate a plugin
      * It will also call the plugins/pluginfolder/PluginClass->deactivate() method of exists
      *
+     * @param $container
      * @param $plugin
      * @return bool
      */
@@ -533,7 +523,7 @@ class Plugin
     }
 
     /**
-     * checks if a plugin is activated
+     * Checks if a plugin is activated
      *
      * @param $plugin
      * @return bool
@@ -544,9 +534,8 @@ class Plugin
     }
 
     /**
-     * gets the current enviornment
+     * Gets the current environment
      *
-     * @static
      * @return mixed
      */
     public function getSubEnv()
@@ -558,8 +547,7 @@ class Plugin
     {
         $plugins = array();
 
-        foreach(glob($this->pluginsDir . '/*', GLOB_ONLYDIR) as $plugin)
-        {
+        foreach (glob($this->pluginsDir . '/*', GLOB_ONLYDIR) as $plugin) {
             $plugins[] = basename($plugin);
         }
 
@@ -567,14 +555,15 @@ class Plugin
     }
 
     /**
-     * saves settings
+     * Saves settings
      */
-    private function saveSysSettings(){
-        $this->settings->saveLocal($this->appDir . '/config/sys_' . $this->env->getEnvironment() . '.yml', $this->settings->get('sys'));
+    private function saveSysSettings()
+    {
+        $this->settings->saveLocal($this->appDir . '/config/sys_' . $this->environment->getEnvironment() . '.yml', $this->settings->get('sys'));
     }
 
     /**
-     * resets cache
+     * Resets cache
      *
      * @param $utility_file
      */

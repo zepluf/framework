@@ -1,0 +1,28 @@
+installed:
+    - riCache
+    - riZCAdmin
+    - riCjLoader
+    - riResultList
+    - riTest
+activated:
+    - riCache
+    - riZCAdmin
+    - riCjLoader
+    - riResultList
+    - riTest
+core:
+    - riCache
+    - riZCAdmin
+    - riCjLoader
+    - riResultList
+backend:
+    - riCache
+    - riZCAdmin
+    - riCjLoader
+    - riResultList
+    - riTest
+frontend:
+    - riCache
+    - riCjLoader
+    - riResultList
+    - riTest

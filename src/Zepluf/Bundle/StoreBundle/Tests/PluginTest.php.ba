@@ -1,0 +1,48 @@
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Zepluf\Bundle\StoreBundle\Tests;
+
+use \Zepluf\Bundle\StoreBundle\Plugin;
+
+class PluginTest extends BaseTestCase
+{
+    protected $object;
+
+    public function setUp()
+    {
+        //$this->get('environment')->setEnvironment('test');
+        define('PROJECT_VERSION_MAJOR', '1');
+        define('PROJECT_VERSION_MINOR', '5.1');
+        $this->object = $this->get('plugin');
+    }
+
+    public function testLoadSysSettings()
+    {
+        $this->object = $this->getFixtureObject();
+        var_dump($this->object->loadSysSettings());
+        $this->assertEquals(1, 1);
+    }
+
+    private function getFixtureObject()
+    {
+        unset($this->object);
+        $appDir = __DIR__ . '/Fixtures/appDir';
+        $configDir = $appDir . '/config';
+        $cacheDir = $appDir . '/cache';
+        $pluginDir = $appDir . '/plugin';
+        $environment = $this->get('kernel')->getEnvironment();
+        var_dump($environment);
+        die();
+
+        return new Plugin($this->get('settings'), $this->get('event_dispatcher'), $environment, $appDir, $pluginDir);
+    }
+}

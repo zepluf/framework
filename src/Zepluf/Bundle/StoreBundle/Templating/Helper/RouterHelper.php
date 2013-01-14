@@ -19,6 +19,7 @@ class RouterHelper extends FrameworkRouterHelper
         if ($is_admin === null) $is_admin = defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG;
 
         $host = ($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER;
+//        $host = ($request_type == 'SSL') ? 'https://localhost' : 'http://localhost';
 
         $link = $this->generator->generate($route, (array)$params);
 
