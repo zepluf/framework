@@ -185,7 +185,12 @@ class Plugin
                         $plugin_lc_name = strtolower($plugin);
                         // $plugin_uc_name = ucfirst($plugin);
 
-                        $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
+                        if (isset($local_config[$plugin_lc_name])) {
+                            $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
+                        } else {
+                            $this->settings->set('plugins.' . $plugin_lc_name, $config);
+                        }
+
                     }
                 }
 
@@ -255,7 +260,7 @@ class Plugin
     }
 
     /**
-     * gets the array of loaded plugins
+     * Gets the array of loaded plugins
      *
      * @return array
      */
@@ -265,7 +270,7 @@ class Plugin
     }
 
     /**
-     * checks if a plugin is loaded
+     * Checks if a plugin is loaded
      *
      * @param $plugin
      * @return bool
@@ -393,10 +398,9 @@ class Plugin
     }
 
     /**
+     * Get plugin info located in plugin.xml file
      *
-     * Enter description here ...
-     *
-     * @param unknown_type $plugin
+     * @param mixed $plugin
      */
     public function info($plugin)
     {
@@ -519,7 +523,7 @@ class Plugin
     }
 
     /**
-     * checks if a plugin is activated
+     * Checks if a plugin is activated
      *
      * @param $plugin
      * @return bool
@@ -530,7 +534,7 @@ class Plugin
     }
 
     /**
-     * gets the current environment
+     * Gets the current environment
      *
      * @return mixed
      */
@@ -551,7 +555,7 @@ class Plugin
     }
 
     /**
-     * saves settings
+     * Saves settings
      */
     private function saveSysSettings()
     {
@@ -559,7 +563,7 @@ class Plugin
     }
 
     /**
-     * resets cache
+     * Resets cache
      *
      * @param $utility_file
      */

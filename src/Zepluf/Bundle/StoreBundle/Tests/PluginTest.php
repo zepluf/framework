@@ -17,6 +17,8 @@ namespace Zepluf\Bundle\StoreBundle\Tests;
 use \Zepluf\Bundle\StoreBundle\Plugin;
 use Symfony\Component\Yaml\Yaml;
 use \Zepluf\Bundle\StoreBundle\Settings;
+use Zepluf\Bundle\StoreBundle\PluginEvents;
+use Zepluf\Bundle\StoreBundle\Event\PluginEvent;
 
 class PluginTest extends BaseTestCase
 {
@@ -69,6 +71,7 @@ class PluginTest extends BaseTestCase
     public function testLoadPluginSettings()
     {
         $this->settings->resetCache();
+
         $this->object->loadPluginsSettings();
 
         $local_file = Yaml::parse($this->cacheDir . '/ZePLUF/plugins_' . $this->environment->getEnvironment() . '.cache');
@@ -78,11 +81,17 @@ class PluginTest extends BaseTestCase
         $this->assertEquals($local_file, serialize($this->settings->get('plugins')));
     }
 
-//    public function testLoadPlugins()
-//    {
-//        $this->object->loadPlugins($this->_container);
-//
-//    }
+    public function testLoadPlugin()
+    {
+        //Notice: This will init plugin in app/plugins
+        try {
+            $this->object->loadPlugins($this->_container);
+        } catch (\Exception $e) {
+            var_dump($e);
+        }
+
+        $this->get('event_dispatcher')->addListener(PluginEvents::onPluginLoadEnd, array($this, 'onPluginLoad'));
+    }
 
     public function testGetLoaded()
     {
@@ -99,5 +108,10 @@ class PluginTest extends BaseTestCase
     public function tearDown()
     {
         unset($this->object);
+    }
+
+    public function onPluginLoad(PluginEvents $event)
+    {
+
     }
 }

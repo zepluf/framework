@@ -1,30 +1,28 @@
 installed:
-    - riPlugin
     - riCache
     - riZCAdmin
     - riCjLoader
     - riResultList
-    - riBanner
+    - riTest
 activated:
-    - riPlugin
     - riCache
     - riZCAdmin
     - riCjLoader
     - riResultList
+    - riTest
 core:
-    - riPlugin
     - riCache
     - riZCAdmin
     - riCjLoader
     - riResultList
 backend:
-    - riPlugin
     - riCache
     - riZCAdmin
     - riCjLoader
     - riResultList
+    - riTest
 frontend:
-    - riPlugin
     - riCache
     - riCjLoader
     - riResultList
+    - riTest

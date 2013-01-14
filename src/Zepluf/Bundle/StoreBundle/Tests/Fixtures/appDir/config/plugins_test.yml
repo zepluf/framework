@@ -1,3 +1,6 @@
 ricjloader:
   settings:
     cache: false
+ritest:
+  settings:
+    cache: false
