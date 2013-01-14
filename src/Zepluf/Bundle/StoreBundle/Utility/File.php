@@ -2,12 +2,22 @@
 
 namespace Zepluf\Bundle\StoreBundle\Utility;
 
-use plugins\riPlugin\Plugin;
-
 class File
 {
     protected $path = array();
 
+    protected $stringUtility;
+
+    public function __construct($stringUtility)
+    {
+        $this->stringUtility = $stringUtility;
+    }
+
+    /**
+     * @param $from
+     * @param $to
+     * @return string
+     */
     public function getRelativePath($from, $to)
     {
         $from = explode('/', $from);
@@ -44,7 +54,7 @@ class File
     public function calculatePath($name, $cache_folder, $use_subfolder = 0)
     {
         if ($use_subfolder > 0) {
-            $name = Plugin::get('riUtility.String')->stripNonAlphaNumeric(strtolower($name));
+            $name = $this->stringUtility->stripNonAlphaNumeric(strtolower($name));
             $path = substr($name, 0, $use_subfolder);
             $cache_folder .= chunk_split($path, 1, '/');
         }

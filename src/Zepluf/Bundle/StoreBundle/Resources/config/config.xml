@@ -103,7 +103,9 @@
 
         <!-- utility services -->
         <service id="utility.database_result" class="%storebundle.utility.database_result.class%"></service>
-        <service id="utility.file" class="%storebundle.utility.file.class%"></service>
+        <service id="utility.file" class="%storebundle.utility.file.class%">
+            <argument type="service" id="utility.string" />
+        </service>
         <service id="utility.string" class="%storebundle.utility.string.class%"></service>
         <service id="utility.uri" class="%storebundle.utility.uri.class%"></service>
 
