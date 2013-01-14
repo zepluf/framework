@@ -27,6 +27,7 @@ class PluginTest extends BaseTestCase
     private $cacheDir;
     private $pluginDir;
     private $environment;
+    private $listenerResult = '';
 
     protected $settings;
 
@@ -76,42 +77,155 @@ class PluginTest extends BaseTestCase
 
         $local_file = Yaml::parse($this->cacheDir . '/ZePLUF/plugins_' . $this->environment->getEnvironment() . '.cache');
 
-        $this->assertFalse($this->settings->get('plugins.ricjloader.settings.cache'));
-
         $this->assertEquals($local_file, serialize($this->settings->get('plugins')));
+    }
+
+    public function testLoadPlugins()
+    {
+        $this->get('event_dispatcher')->addListener(PluginEvents::onPluginLoadEnd, array($this, 'onPluginLoad'));
+
+        //Notice: This will init plugin in app/plugins
+        $this->object->loadPlugins($this->_container);
+
+        //Assertion: getLoader, test event dispatcher
+        $this->assertEquals(array('riCjLoader'), $this->object->getLoaded());
+        $this->assertEquals("OK", $this->listenerResult);
     }
 
     public function testLoadPlugin()
     {
-        //Notice: This will init plugin in app/plugins
-        try {
-            $this->object->loadPlugins($this->_container);
-        } catch (\Exception $e) {
-            var_dump($e);
-        }
+        $content = 'init run successfully';
+        $this->object->loadPlugin($this->_container, array('riTest'));
 
-        $this->get('event_dispatcher')->addListener(PluginEvents::onPluginLoadEnd, array($this, 'onPluginLoad'));
+        $this->assertEquals($content, file_get_contents(__DIR__ . '/Fixtures/junks/test_init_file'));
     }
 
-    public function testGetLoaded()
+
+    public function testInstall()
     {
+        //get and parse system setting file first
+        $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+        arrayInsertValue($localConfig['installed'], 'riTest');
 
+        //Install riTest
+        $this->object->loadSysSettings();
+        $this->object->install($this->_container, 'riTest');
+
+        //get and parse new system setting file
+
+        $newLocalConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+
+        //Assertion 1: Make sure riTest append to settings by compare two setting array
+        $this->assertEquals($localConfig, $newLocalConfig);
+
+        //Assertion 2: Make sure public files moved into web dir
+        $this->assertFileExists(($this->getParameter('web_dir') . '/plugins/riTest/test_public.css'));
+
+        //Assertion 3: Make sure install code executed
+        $this->assertEquals('install run successfully', file_get_contents(__DIR__ . '/Fixtures/junks/test_install_file'));
+
+        //Final assertion
+        $this->assertTrue($this->object->isInstalled('riTest'));
     }
+
+    public function testInfo()
+    {
+        $plugin = 'riTest';
+        $info = $this->object->info($plugin);
+        $this->assertEquals("RiTest", $info->name);
+        $this->assertEquals("RiTest for ZePLUF unit testing", $info->summary);
+        $this->assertTrue((bool)$info->preload->frontend);
+    }
+
+    public function testActivate()
+    {
+        global $messageStack;
+        $messageStack = $this->getMock('messageStack', array('add_session', 'add'));
+        $messageStack->expects($this->once())
+            ->method('add_session')
+            ->with('messageStackError', sprintf('Plugin %s min version %s is required', 'riTest2', '1.0'), 'error');
+
+        //get and parse system setting file first
+        $this->object->loadSysSettings();
+
+        $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+
+        $this->assertTrue(!in_array('riTest', $localConfig['activated']));
+
+        $this->object->activate($this->_container, 'riTest');
+
+        $newLocalConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+        $this->assertTrue(in_array('riTest', $newLocalConfig['activated']));
+
+        //Test Dependencies
+    }
+
+    public function testDeactivate()
+    {
+        //get and parse system setting file first
+        $this->object->loadSysSettings();
+
+        $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+        arrayRemoveValue($localConfig['activated'], 'riTest');
+        arrayRemoveValue($localConfig['frontend'], 'riTest');
+        arrayRemoveValue($localConfig['backend'], 'riTest');
+
+        $this->object->deactivate($this->_container, 'riTest');
+
+        $newLocalConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+
+        $this->assertEquals($localConfig, $newLocalConfig);
+    }
+
+    public function testUninstall()
+    {
+        //get and parse system setting file first
+        $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+        arrayRemoveValue($localConfig['installed'], 'riTest');
+        arrayRemoveValue($localConfig['activated'], 'riTest');
+        arrayRemoveValue($localConfig['backend'], 'riTest');
+        arrayRemoveValue($localConfig['frontend'], 'riTest');
+
+        //Uninstall riTest
+        $this->object->loadSysSettings();
+        $this->object->uninstall($this->_container, 'riTest');
+
+        //get and parse new system setting file
+
+        $newLocalConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+
+        //Assertion 1: Make sure riTest removed to settings by compare two setting array
+        $this->assertEquals($localConfig, $newLocalConfig);
+
+        //Assertion 2: Make sure public files moved into web dir
+        $this->assertFileNotExists(($this->getParameter('web_dir') . '/plugins/riTest/test_public.css'));
+
+        //Assertion 3: Make sure install code executed
+        $this->assertEquals('uninstall run successfully', file_get_contents(__DIR__ . '/Fixtures/junks/test_uninstall_file'));
+
+        //Final assertion
+        $this->assertFalse($this->object->isInstalled('riTest'));
+    }
+
 
     public function testGetAvailablePlugins()
     {
-        $avail_plugins_array = array('riCjLoader', 'riTest');
-        $this->assertEquals($avail_plugins_array, $this->object->getAvailablePlugins());
+        $availablePlugins = array('riCjLoader', 'riTest');
+        $this->assertEquals($availablePlugins, $this->object->getAvailablePlugins());
     }
 
+    public function onPluginLoad(PluginEvent $event)
+    {
+        $this->listenerResult = 'OK';
+    }
 
     public function tearDown()
     {
         unset($this->object);
-    }
 
-    public function onPluginLoad(PluginEvents $event)
-    {
-
+        //Remove junk files
+        if (file_exists(__DIR__ . '/Fixtures/test_init_file.txt')) {
+            unlink(__DIR__ . '/Fixtures/test_init_file.txt');
+        }
     }
 }

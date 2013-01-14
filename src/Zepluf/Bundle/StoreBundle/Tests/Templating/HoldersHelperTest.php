@@ -23,7 +23,7 @@ class HoldersHelperTest extends BaseTestCase
 
     public function setUp()
     {
-        $this->object = $this->get("templating.helper.holders");
+        $this->object = $this->get("holders");
     }
 
     public function testGetName()
