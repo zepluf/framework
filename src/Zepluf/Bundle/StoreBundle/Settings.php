@@ -22,14 +22,14 @@ class Settings extends ParameterBag
 {
 
     /**
-     * is the settings inited?
+     * Is the settings initiated?
      *
      * @var bool
      */
     private $is_initiated = false;
 
     /**
-     * cache folder path?
+     * Cache folder path?
      *
      * @var string
      */
@@ -46,20 +46,26 @@ class Settings extends ParameterBag
     private $configDir;
 
     /**
+     * @var string
+     */
+    private $environment;
+
+    /**
      * init
      */
-    public function __construct($configDir, $cacheDir, $pluginsDir)
+    public function __construct($configDir, $cacheDir, $pluginsDir, $environment)
     {
         $this->configDir = $configDir . '/';
         $this->pluginsDir = $pluginsDir . '/';
         $this->cache_root_folder = $cacheDir . '/';
         $this->cache_folder = $this->cache_root_folder . 'ZePLUF/';
+        $this->environment = $environment;
 
         Yaml::enablePhpParsing();
     }
 
     /**
-     * checks if the cache folder is writable
+     * Checks if the cache folder is writable
      *
      * @return bool
      */
@@ -69,7 +75,7 @@ class Settings extends ParameterBag
     }
 
     /**
-     * gets the cache root folder
+     * Gets the cache root folder
      *
      * @return string
      */
@@ -79,7 +85,7 @@ class Settings extends ParameterBag
     }
 
     /**
-     * inits the settings with an input array
+     * Init the settings with an input array
      *
      * @param $settings
      */
@@ -90,7 +96,7 @@ class Settings extends ParameterBag
     }
 
     /**
-     * checks if the init settings are already loaded
+     * Checks if the init settings are already loaded
      *
      * @return bool
      */
@@ -100,7 +106,7 @@ class Settings extends ParameterBag
     }
 
     /**
-     * reloads all settings
+     * Reloads all settings
      */
     public function reload($pluginService)
     {
@@ -112,12 +118,12 @@ class Settings extends ParameterBag
     }
 
     /**
-     * loads settings from yaml files, load local settings as well
+     * Loads settings from yml files, load local settings as well
      *
      * @param $root
      * @param string $config_path
      * @param string $file
-     * @return array|bool|mixed
+     * @return array|bool|mixed Return setting array parsed from yml file
      */
     public function load($root, $config_path = '', $file = 'config.yml')
     {
@@ -140,16 +146,15 @@ class Settings extends ParameterBag
     }
 
     /**
-     * loads settings directly from a file
+     * Loads settings directly from a file
      *
      * @param $root
      * @param string $config_path
      * @param string $file
-     * @return array
+     * @return array Return setting array parsed from yml file
      */
     public function loadFile($root, $config_path = '', $file = 'config.yml')
     {
-
         $settings = array();
 
         if (empty($config_path)) {
@@ -163,7 +168,7 @@ class Settings extends ParameterBag
     }
 
     /**
-     * loads the theme's settings
+     * Loads the theme's settings
      *
      * @param string $env
      * @param string $config_path
@@ -199,10 +204,11 @@ class Settings extends ParameterBag
     }
 
     /**
-     * saves the local settings
+     * Saves the local settings
      *
-     * @param string $plugin
+     * @param string $path
      * @param array $settings
+     *
      */
     public function saveLocal($path, $settings = array())
     {
@@ -211,45 +217,42 @@ class Settings extends ParameterBag
     }
 
     /**
-     * loads settings from cache file ...
+     * Loads settings from cache file ...
      *
      * @param $root
      * @return bool|mixed
      */
     public function loadCache($root)
     {
-        if (file_exists($this->cache_folder . $root . '.cache')) {
-            $settings = unserialize(@file_get_contents($this->cache_folder . $root . '.cache'));
+        if (file_exists($cache_file = $this->cache_folder . $root . '_' . $this->environment . '.cache')) {
+            $settings = unserialize(@file_get_contents($cache_file));
             return $settings;
         }
         return false;
     }
 
     /**
-     * saves settings into cache file ...
-     *
-     * @param $cache_file
-     * @param null $settings
+     * Saves settings into cache file ...
+     * @param $root
+     * @param $settings
      * @return int
      */
     public function saveCache($root, $settings = null)
     {
         riMkDir($this->cache_folder);
-        return @file_put_contents($this->cache_folder . $root . '.cache', serialize($settings));
+        return @file_put_contents($this->cache_folder . $root . '_' . $this->environment . '.cache', serialize($settings));
     }
 
-
     /**
-     * deletes all cache files
+     * Deletes all cache files
      *
      * @param string $root
      */
     public function resetCache($root = '')
     {
         if (!empty($root)) {
-            @unlink($this->cache_folder . $root . '.cache');
-        }
-        else {
+            @unlink($this->cache_folder . $root . '_' . $this->environment . '.cache');
+        } else {
             $cache_files = glob($this->cache_folder . "*.cache");
 
             if ($cache_files !== false) {
