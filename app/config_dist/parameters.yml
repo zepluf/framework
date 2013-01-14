@@ -4,6 +4,7 @@ parameters:
   store.backend_dir: "%store.root_dir%/manager"
   store.current_template: "0007"
   store.current_template_dir: "%store.root_dir%/includes/templates/%store.current_template%"
+  store.default_template_dir: "%store.root_dir%/includes/templates/default_template"
   kernel.config_dir: "%kernel.root_dir%/config"
   web_dir: "%kernel.root_dir%/../web"
   web_cache_dir: "%web_dir%/cache"
