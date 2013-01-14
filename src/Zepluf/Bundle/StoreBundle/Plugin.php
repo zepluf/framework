@@ -225,7 +225,14 @@ class Plugin
 
         foreach ($plugins as $plugin) {
             if (!in_array($plugin, $this->loaded)) {
+
+                // load vendor if any
+
                 $plugin_path = $this->pluginsDir . '/' . $plugin . '/';
+
+                if(file_exists($autoload_file = $plugin_path . "vendor/autoload.php")) {
+                    require($autoload_file);
+                }
 
                 $plugin_name = ucfirst($plugin);
                 $plugin_lc_name = strtolower($plugin);
@@ -450,7 +457,9 @@ class Plugin
                         }
                     }
 
-                    if ($error) return false;
+                    if ($error) {
+                        return false;
+                    }
                 }
 
                 if ($info->preload->frontend == 'true') {
