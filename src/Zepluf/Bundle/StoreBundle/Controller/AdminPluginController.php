@@ -87,7 +87,7 @@ class AdminPluginController extends Controller
 
         return $this->renderJson(array(
             'activated' => $activated,
-            'messages' => $this->get('logs')->getAsArray()
+            'messages' => $this->get('logs')->getLogs()
         ));
     }
 
@@ -108,7 +108,7 @@ class AdminPluginController extends Controller
 
         return $this->renderJson(array(
             'activated' => !$deactivated,
-            'messages' => $this->get('logs')->getAsArray()
+            'messages' => $this->get('logs')->getLogs()
         ));
     }
 
@@ -129,7 +129,7 @@ class AdminPluginController extends Controller
 
         return $this->renderJson(array(
             'status' => $stt,
-            'messages' => $this->get('logs')->getAsArray()
+            'messages' => $this->get('logs')->getLogs()
         ));
     }
 
@@ -216,7 +216,7 @@ class AdminPluginController extends Controller
 
         return $this->renderJson(array(
             'installed' => $installed,
-            'messages' => $this->get('logs')->getAsArray()
+            'messages' => $this->get('logs')->getLogs()
         ));
     }
 
@@ -237,7 +237,7 @@ class AdminPluginController extends Controller
 
         return $this->renderJson(array(
             'installed' => !$uninstalled,
-            'messages' => $this->get('logs')->getAsArray()
+            'messages' => $this->get('logs')->getLogs()
         ));
     }
 
@@ -254,7 +254,7 @@ class AdminPluginController extends Controller
         $this->get('logs')->notify('settings reloaded');        
 
         return $this->renderJson(array(
-                'messages' => $this->get('logs')->getAsArray())
+                'messages' => $this->get('logs')->getLogs())
         );
     }
 

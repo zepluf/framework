@@ -30,12 +30,12 @@ class Logs
         if ($this->environment->getSubEnvironment() == "frontend") {
             foreach ($messageStack->messages as $message) {
                 $this->logger->addRecord($this->getZenMessageType($message['class']), $message['text']);
-                $this->logs[] = array($this->getZenMessageType($message['class']) => $message['text']);
+                $this->addLog($this->getZenMessageType($message['class']), $message['text']);
             }
         } else {
             foreach ($messageStack->errors as $message) {
                 $this->logger->addRecord($this->getZenMessageType($message['params']), $message['text']);
-                $this->logs[] = array($this->getZenMessageType($message['params']) => $message['text']);
+                $this->addLog($this->getZenMessageType($message['params']), $message['text']);
             }
         }
     }
@@ -68,12 +68,17 @@ class Logs
         if (method_exists($this->logger, $name)) {
             call_user_func_array(array($this->logger, $name), $args);
 
-            $this->logs[] = array($name => $args[0]);
+            $this->addLog($name, $args[0]);
         }
     }
 
     public function getLogs()
     {
         return $this->logs;
+    }
+
+    private function addLog($type, $message)
+    {
+        $this->logs[] = array("type" => $type, "message" => $message);
     }
 }

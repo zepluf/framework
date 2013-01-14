@@ -55,7 +55,6 @@ class ZencartHandler extends AbstractProcessingHandler
      * @param $record
      * @param $type
      */
-//    protected function add($record, $type)
     public function add($record, $type)
     {
         global $messageStack;

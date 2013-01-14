@@ -48,7 +48,6 @@ if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
     $container->get("environment")->setSubEnvironment("frontend");
 }
 
-$container->get("plugin")->setLoader($loader);
 $container->get("plugin")->loadPlugins($container);
 
 // some global vars to be used on Zencart as well

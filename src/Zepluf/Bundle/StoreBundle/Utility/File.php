@@ -135,7 +135,7 @@ class File
                 $admin_path = DIR_WS_ADMIN;
                 $catalog_path = DIR_WS_CATALOG;
             }
-            $this->path['a2c'][$request_type] = Plugin::get('riUtility.File')->getRelativePath($admin_path, $catalog_path);
+            $this->path['a2c'][$request_type] = $this->getRelativePath($admin_path, $catalog_path);
         }
         return $this->path['a2c'][$request_type];
     }
@@ -150,7 +150,7 @@ class File
                 $admin_path = DIR_WS_ADMIN;
                 $catalog_path = DIR_WS_CATALOG;
             }
-            $this->path['c2a'][$request_type] = Plugin::get('riUtility.File')->getRelativePath($catalog_path, $admin_path);
+            $this->path['c2a'][$request_type] = $this->getRelativePath($catalog_path, $admin_path);
         }
         return $this->path['c2a'][$request_type];
     }

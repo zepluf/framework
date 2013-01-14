@@ -71,7 +71,10 @@ class Collection extends \Symfony\Component\DependencyInjection\ContainerAware
      */
     public function getMockObject()
     {
-        if ($this->mock_object === null) $this->mock_object = $this->container->get($this->model_service);
+        if ($this->mock_object === null) {
+            $this->mock_object = $this->container->get($this->model_service);
+        }
+
         return $this->mock_object;
     }
 

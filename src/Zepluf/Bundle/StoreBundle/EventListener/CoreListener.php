@@ -51,7 +51,7 @@ class CoreListener implements EventSubscriberInterface
      * @param Event $event
      */
     public function onHolderStart(HoldersHelperEvent $event)
-    {                 
+    {
         $holder_content = $this->container->get('settings')->get('theme.holders.' . $event->getHolder());
         foreach ($holder_content as $content) {
             $load = true;
