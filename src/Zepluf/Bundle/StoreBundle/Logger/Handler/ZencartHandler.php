@@ -31,7 +31,7 @@ class ZencartHandler extends AbstractProcessingHandler
     /**
      * @param array $record
      */
-    public function write(array $record)
+    protected function write(array $record)
     {
         if (isset($record["context"]["zencart"]) && $record["context"]["zencart"]) {
             switch ($record["level"]) {
@@ -55,20 +55,21 @@ class ZencartHandler extends AbstractProcessingHandler
      * @param $record
      * @param $type
      */
-    public function add($record, $type)
+//    protected function add($record, $type)
+    protected function add($record, $type)
     {
         global $messageStack;
         if ($this->environment->getSubEnvironment() == "backend") {
-            if ($record["context"]["session"]) {
+            if (isset($record["context"]["session"]) && $record["context"]["session"]) {
                 $messageStack->add_session($record["message"], $type);
             } else {
                 $messageStack->add($record["message"], $type);
             }
         } else {
-            if ($record["context"]["session"]) {
+            if (isset($record["context"]["session"]) && $record["context"]["session"]) {
                 $messageStack->add_session($record["context"]["class"], $record["message"], $type);
             } else {
-                $messageStack->add($record["context"]["class"], $record["message"], $type);
+                $messageStack->add(isset($record["context"]["class"]) ? $record["context"]["class"] : "header", $record["message"], $type);
             }
         }
     }

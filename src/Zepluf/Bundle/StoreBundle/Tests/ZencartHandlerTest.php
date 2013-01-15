@@ -27,6 +27,8 @@ class ZencartHandlerTest extends BaseTestCase
 
     public function testAddBackEnd()
     {
+        $add = self::getMethod('add');
+
         global $messageStack;
         $messageStack = $this->getMock('messageStack', array('add_session', 'add'));
 
@@ -42,7 +44,7 @@ class ZencartHandlerTest extends BaseTestCase
             ->method('add_session')
             ->with('error message', 'error');
 
-        $this->object->add($record, $type);
+        $add->invokeArgs($this->object, array($record, $type));
 
         //Case #2
         $record["context"]["session"] = false;
@@ -51,11 +53,13 @@ class ZencartHandlerTest extends BaseTestCase
             ->method('add')
             ->with('error message', 'error');
 
-        $this->object->add($record, $type);
+        $add->invokeArgs($this->object, array($record, $type));
     }
 
     public function testAddFrontEnd()
     {
+        $add = self::getMethod('add');
+
         global $messageStack;
         $messageStack = $this->getMock('messageStack', array('add_session', 'add'));
 
@@ -72,7 +76,7 @@ class ZencartHandlerTest extends BaseTestCase
             ->method('add_session')
             ->with('messageStackError', 'error message', 'error');
 
-        $this->object->add($record, $type);
+        $add->invokeArgs($this->object, array($record, $type));
 
         //Case #4
         $record["context"]["session"] = false;
@@ -81,11 +85,13 @@ class ZencartHandlerTest extends BaseTestCase
             ->method('add')
             ->with('messageStackError', 'error message', 'error');
 
-        $this->object->add($record, $type);
+        $add->invokeArgs($this->object, array($record, $type));
     }
 
     public function testWriteBackEnd()
     {
+        $write = self::getMethod('write');
+
         $this->get('environment')->setSubEnvironment('backend');
 
         global $messageStack;
@@ -101,11 +107,13 @@ class ZencartHandlerTest extends BaseTestCase
             ->method('add_session')
             ->with('success message', 'success');
 
-        $this->object->write($record);
+        $write->invokeArgs($this->object, array($record));
     }
 
     public function testWriteFrontEnd()
     {
+        $write = self::getMethod('write');
+
         $this->get('environment')->setSubEnvironment('frontend');
 
         global $messageStack;
@@ -121,11 +129,19 @@ class ZencartHandlerTest extends BaseTestCase
             ->method('add')
             ->with('messageStackSuccess', 'success message', 'success');
 
-        $this->object->write($record);
+        $write->invokeArgs($this->object, array($record));
     }
 
     public function tearDown()
     {
         unset($this->object);
+    }
+
+    protected static function getMethod($name)
+    {
+        $class = new \ReflectionClass('Zepluf\Bundle\StoreBundle\Logger\Handler\ZencartHandler');
+        $method = $class->getMethod($name);
+        $method->setAccessible(true);
+        return $method;
     }
 }
