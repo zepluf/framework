@@ -129,7 +129,7 @@ class File
             fclose($fp);
 
             // Set filemtime
-            touch(file, time() + 3600);
+            touch($file, time() + 3600);
 
             if ($chmod != 0) @chmod($file, $chmod);
         }
