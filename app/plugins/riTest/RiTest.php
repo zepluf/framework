@@ -17,13 +17,13 @@ class RiTest extends PluginCore
     {
         // Save a file with some content
         $content = 'init run successfully';
-        @file_put_contents($this->container->getParameter('kernel.root_dir') . '/../src/Zepluf/Bundle/StoreBundle/Tests/Fixtures/junks/test_init_file', $content);
+        @file_put_contents($this->container->getParameter('kernel.root_dir') . '/../src/Zepluf/Bundle/StoreBundle/Tests/Fixtures/junks/plugins/test_init_file', $content);
     }
 
     public function install()
     {
         $content = 'install run successfully';
-        if (@file_put_contents($this->container->getParameter('kernel.root_dir') . '/../src/Zepluf/Bundle/StoreBundle/Tests/Fixtures/junks/test_install_file', $content)
+        if (@file_put_contents($this->container->getParameter('kernel.root_dir') . '/../src/Zepluf/Bundle/StoreBundle/Tests/Fixtures/junks/plugins/test_install_file', $content)
         ) {
             return true;
         }
@@ -33,7 +33,7 @@ class RiTest extends PluginCore
     {
         $content = 'uninstall run successfully';
         if (
-            @file_put_contents($this->container->getParameter('kernel.root_dir') . '/../src/Zepluf/Bundle/StoreBundle/Tests/Fixtures/junks/test_uninstall_file', $content)
+            @file_put_contents($this->container->getParameter('kernel.root_dir') . '/../src/Zepluf/Bundle/StoreBundle/Tests/Fixtures/junks/plugins/test_uninstall_file', $content)
         ) {
             return true;
         }

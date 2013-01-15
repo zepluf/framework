@@ -4,15 +4,39 @@ namespace Zepluf\Bundle\StoreBundle\Utility;
 
 class String
 {
-    public static function fromCamelCase($str)
+
+    /**
+     * Convert to string that is delimited by "_" from camel case
+     *
+     * Usage:
+     * <code>
+     * $result = String::fromCamelCase($string);
+     * </code>
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function fromCamelCase($string)
     {
         return preg_replace(
             '/(^|[a-z])([A-Z])/e',
             'strtolower(strlen("\\1") ? "\\1_\\2" : "\\2")',
-            $str
+            $string
         );
     }
 
+    /**
+     * Convert a string that is delimited by "_", "-" or space to camel case
+     *
+     * Usage:
+     * <code>
+     * $result = String::toCamelCase($string);
+     * </code>
+     *
+     * @param string $string
+     * @param bool $capitaliseFirstChar
+     * @return string
+     */
     public static function toCamelCase($string, $capitaliseFirstChar = false)
     {
         $string = str_replace(array('-', '_'), ' ', $string);
@@ -26,7 +50,8 @@ class String
     }
 
     /**
-     * @param $string
+     * @param string $string
+     * @param string $replacement
      * @return string
      * echo normal_chars('�lix----_�xel!?!?'); // Alix Axel
      * echo normal_chars('����������'); // aeiouAEIOU
@@ -64,11 +89,13 @@ class String
         return preg_replace('/  +/', ' ', $string);
     }
 
+
     /**
      * Generate a random string of specified length from a set of specified characters
      *
      * @param integer $size Default size is 30 characters.
      * @param string $chars The characters to use for randomization.
+     * @return string
      */
     function randomString($size = 30, $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
     {

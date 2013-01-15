@@ -33,7 +33,6 @@ class RouterHelperTest extends BaseTestCase
 
     public function testZenLink()
     {
-
         $this->assertEquals('a', $this->object->zenLink('a'));
     }
 
