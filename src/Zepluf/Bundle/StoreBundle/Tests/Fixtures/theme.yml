@@ -3,9 +3,9 @@ is_zepluf_theme: true
 # and now for the layout
 layouts:
   #index
-  index: three_column.php
+  index: index_one.php
   # the index.php?main_page=index&cPAth=123
-  category: two_column_right.php
+  category: category_two.php
   # the index.php?main_page=index&manufacturers_id=123
   manufacturer: three_column.php
   # and for other pages, simply use the main_page of the index.php?main_page=something

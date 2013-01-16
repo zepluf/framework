@@ -21,16 +21,10 @@ class FileTest extends \Zepluf\Bundle\StoreBundle\Tests\BaseTestCase
 
 //    public static function setUpBeforeClass()
 //    {
-//        define('HTTP_SERVER', 'http://localhost');
-//        define('HTTPS_SERVER', 'https://localhost');
-//        $t1 = parse_url(HTTP_SERVER);
-//        $p1 = $t1['path'];
-//        $t2 = parse_url(HTTPS_SERVER);
-//        $p2 = $t2['path'];
-//        define('DIR_WS_HTTPS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p2) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
-//        define('DIR_WS_HTTPS_CATALOG', '/');
-//        define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
-//        define('DIR_WS_CATALOG', '/');
+//        define('DIR_WS_HTTPS_ADMIN', self::getParameter('store.root_dir') . '/expadmin');
+//        define('DIR_WS_ADMIN', self::getParameter('store.root_dir') . '/expadmin');
+//        define('DIR_WS_HTTPS_CATALOG', self::getParameter('store.root_dir'));
+//        define('DIR_WS_CATALOG', self::getParameter('store.root_dir'));
 //    }
 
     public function setUp()
@@ -93,6 +87,10 @@ class FileTest extends \Zepluf\Bundle\StoreBundle\Tests\BaseTestCase
 
         $file_contents = file_get_contents($dir . "test");
         $this->assertEquals($file_contents, $data);
+    }
+
+    public function testGetCatalogToAdminRelativePath()
+    {
     }
 
     public function testXCopy()
