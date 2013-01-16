@@ -97,11 +97,15 @@ class SettingsTest extends BaseTestCase
         $this->assertEquals('Hello World', $this->object->get('abc.test'));
     }
 
-//    public function testLoadTheme()
-//    {
-////        var_dump($this->object->loadTheme('frontend', __DIR__ . '/Fixtures/', 'theme.yml'));
-//        $this->assertEquals('Hello World', $this->object->loadTheme('frontend', __DIR__ . '/Fixtures/', 'theme.yml'));
-//    }
+    public function testLoadTheme()
+    {
+        $this->object = $this->getFixtureObject();
+        $this->object->loadTheme('frontend', __DIR__ . '/Fixtures');
+
+        //Assertion
+        $this->assertTrue((bool)$this->object->get('theme.is_zepluf_theme'));
+        $this->assertEquals('two_column_left.php', $this->object->get('theme.layouts.category'));
+    }
 
     public function testSaveLocal()
     {
@@ -145,7 +149,6 @@ class SettingsTest extends BaseTestCase
         $settings = $this->object->loadCache('plugins');
         $this->assertEquals($local_config, $settings);
     }
-
 
     public function tearDown()
     {

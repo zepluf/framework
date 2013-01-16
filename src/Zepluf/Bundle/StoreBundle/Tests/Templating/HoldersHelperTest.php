@@ -88,13 +88,13 @@ class HoldersHelperTest extends BaseTestCase
 
     public function onHolder1(HoldersHelperEvent $event)
     {
-        $this->get('holders')->add($event->getHolder(), 'content here', 2);
-        $this->get('holders')->add($event->getHolder(), 'priority content here', 1);
+        $this->get('templating.helper.holders')->add($event->getHolder(), 'content here', 2);
+        $this->get('templating.helper.holders')->add($event->getHolder(), 'priority content here', 1);
     }
 
     public function onHolder2(HoldersHelperEvent $event)
     {
         $content = '<a href="http://www.w3schools.com">Visit W3Schools</a>.';
-        $this->get('holders')->add($event->getHolder(), $content);
+        $this->get('templating.helper.holders')->add($event->getHolder(), $content);
     }
 }
