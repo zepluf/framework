@@ -29,7 +29,7 @@ class TablePrefixSubscriber implements \Doctrine\Common\EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $args)
     {
         $classMetadata = $args->getClassMetadata();
-        $classMetadata->setTableName($this->prefix . $classMetadata->getTableName());
+        $classMetadata->setPrimaryTable(array('name' => $this->prefix . $classMetadata->getTableName()));
 
         foreach ($classMetadata->getAssociationMappings() as $fieldName => $mapping) {
             if ($mapping['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY) {

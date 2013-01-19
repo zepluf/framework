@@ -2,18 +2,26 @@
 
 namespace Zepluf\Bundle\StoreBundle\Utility;
 
+/**
+ * File Utilities offers convenience methods to handle files and directories
+ */
 class File
 {
     protected $path = array();
 
     protected $stringUtility;
 
+    /**
+     * Constructor
+     * @param $stringUtility
+     */
     public function __construct($stringUtility)
     {
         $this->stringUtility = $stringUtility;
     }
 
     /**
+     * Get relative path between 2 directories
      * @param $from
      * @param $to
      * @return string
@@ -38,9 +46,16 @@ class File
             array_unshift($to, '..');
         }
         $result = implode('/', $to);
+
         return $result;
     }
 
+    /**
+     * Generate a unique filename in specific directory
+     * @param $absolute_path
+     * @param $name
+     * @return mixed
+     */
     public function generateUniqueName($absolute_path, $name)
     {
         $now = time();
@@ -48,9 +63,16 @@ class File
             $now++;
             $name = $now . '-' . $name;
         }
+
         return $name;
     }
 
+    /**
+     * @param $name
+     * @param $cache_folder
+     * @param int $use_subfolder
+     * @return string
+     */
     public function calculatePath($name, $cache_folder, $use_subfolder = 0)
     {
         if ($use_subfolder > 0) {
@@ -64,6 +86,14 @@ class File
         return $cache_folder;
     }
 
+    /**
+     * Upload file to a specific dir
+     * @param $name
+     * @param $tmp_name
+     * @param $absolute_destination_path
+     * @param int $use_subfolder
+     * @return array
+     */
     public function uploadFile($name, $tmp_name, $absolute_destination_path, $use_subfolder = 0)
     {
         $_files_name = $relative_path = '';
@@ -87,9 +117,14 @@ class File
     }
 
     // TODO: log error?
+    /**
+     * Remove a dirs even contains hidden files.
+     * @param string $dir The target directory
+     * @param bool $DeleteMe If true delete also $dir, if false leave it alone
+     * @return mixed
+     */
     function sureRemoveDir($dir, $DeleteMe = false)
     {
-
         static $counter = 0;
 
         //global $messageStack;
@@ -102,7 +137,6 @@ class File
             if ($obj == '.' || $obj == '..') continue;
             if (!@unlink($dir . '/' . $obj)) $this->sureRemoveDir($dir . '/' . $obj, $DeleteMe);
             else $counter++;
-
         }
 
         closedir($dh);
@@ -113,9 +147,14 @@ class File
         return $counter;
     }
 
+    /**
+     * Write to file with given data
+     * @param $file
+     * @param $data
+     * @param int $chmod
+     */
     public function write($file, $data, $chmod = 0)
     {
-
         // if the dir does not exist lets try to generate it
         $dir = dirname($file);
         riMkDir($dir);
@@ -135,6 +174,10 @@ class File
         }
     }
 
+    /**
+     * @param $request_type
+     * @return mixed
+     */
     public function getAdminToCatalogRelativePath($request_type)
     {
         if (!isset($this->path['a2c'][$request_type])) {
@@ -150,6 +193,10 @@ class File
         return $this->path['a2c'][$request_type];
     }
 
+    /**
+     * @param $request_type
+     * @return mixed
+     */
     public function getCatalogToAdminRelativePath($request_type)
     {
         if (!isset($this->path['c2a'][$request_type])) {
@@ -168,26 +215,26 @@ class File
     /**
      * Copy a file, or recursively copy a folder and its contents
      * @param       string   $source    Source path
-     * @param       string   $dest      Destination path
-     * @param       string   $permissions New folder creation permissions
+     * @param       string   $destination      Destination path
+     * @param       int   $permissions New folder creation permissions
      * @return      bool     Returns true on success, false on failure
      */
-    public function xcopy($source, $dest, $permissions = 0755)
+    public function xcopy($source, $destination, $permissions = 0755)
     {
-        if(is_readable($source)){
+        if (is_readable($source)) {
             // Check for symlinks
             if (is_link($source)) {
-                return symlink(readlink($source), $dest);
+                return symlink(readlink($source), $destination);
             }
 
             // Simple copy for a file
             if (is_file($source)) {
-                return copy($source, $dest);
+                return copy($source, $destination);
             }
 
             // Make destination directory
-            if (!is_dir($dest)) {
-                riMkDir($dest, $permissions);
+            if (!is_dir($destination)) {
+                riMkDir($destination, $permissions);
             }
 
             // Loop through the folder
@@ -199,14 +246,15 @@ class File
                 }
 
                 // Deep copy directories
-                $this->xcopy("$source/$entry", "$dest/$entry", $permissions);
+                $this->xcopy("$source/$entry", "$destination/$entry", $permissions);
             }
 
             // Clean up
             $dir->close();
+
             return true;
-        }
-        else {
+        } else {
+
             return false;
         }
     }

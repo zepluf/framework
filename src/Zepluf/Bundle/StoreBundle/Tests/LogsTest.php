@@ -43,13 +43,17 @@ class LogsTest extends BaseTestCase
 
         //run actual method
         $this->object->copyFromZen();
-
         //get logs property
         $logs = $this->object->getLogs();
 
-        $this->assertEquals($logs[0][Logger::ERROR], 'test error');
-        $this->assertEquals($logs[1][Logger::WARNING], 'test warning');
-        $this->assertEquals($logs[2][Logger::NOTICE], 'test caution');
+        $this->assertEquals($logs[0]['type'], Logger::ERROR);
+        $this->assertEquals($logs[0]['message'], 'test error');
+
+        $this->assertEquals($logs[1]['type'], Logger::WARNING);
+        $this->assertEquals($logs[1]['message'], 'test warning');
+
+        $this->assertEquals($logs[2]['type'], Logger::NOTICE);
+        $this->assertEquals($logs[2]['message'], 'test caution');
     }
 
     public function testGetZenMessageType()

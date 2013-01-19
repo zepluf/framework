@@ -24,12 +24,12 @@
                 <min>5.3.0</min>
             </php>
         </required>
-        <plugins>
-            <plugin>
-                <codename>riTest2</codename>
-                <min>1.0</min>
-            </plugin>
-        </plugins>
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<codename>riTest2</codename>-->
+                <!--<min>1.0</min>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
     </dependencies>
     <changelog>
         <release>

@@ -16,7 +16,7 @@ namespace Zepluf\Bundle\StoreBundle;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * settings class which store all plugin's settings
+ * Settings class which store all plugin's settings
  */
 class Settings extends ParameterBag
 {
@@ -51,7 +51,7 @@ class Settings extends ParameterBag
     private $environment;
 
     /**
-     * init
+     * Constructor
      */
     public function __construct($configDir, $cacheDir, $pluginsDir, $environment)
     {
