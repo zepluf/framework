@@ -115,7 +115,8 @@ class View implements \ArrayAccess
             $path . '/includes/templates/template_default/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
             $this->rootDir . '/zepluf/app/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
             $templateDir . '/%path%/%name%.%format%.%engine%',
-            $path . '/includes/templates/template_default/%path%/%name%.%format%.%engine%'
+            $path . '/includes/templates/template_default/%path%/%name%.%format%.%engine%',
+            $this->rootDir . '/zepluf/src/Zepluf/Bundle/%bundle%/Resources/views/%controller%/%name%.%format%.%engine%',
         ));
     }
 
