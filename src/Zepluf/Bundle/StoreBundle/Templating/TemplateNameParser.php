@@ -67,34 +67,60 @@ class TemplateNameParser implements TemplateNameParserInterface
                 $plugin = $parts[0];
                 $path = $parts[1];
                 break;
-            default:
-                throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
-                break;
-        }
-
-        $elements = explode('.', basename($path));
-
-        $path = dirname($path);
-
-        if($path == '.') {
-            $path = '';
-        }
-
-        $engine = array_pop($elements);
-
-        switch (count($elements)) {
-            case 1:
-                $format = '';
-                break;
-            case 2:
-                $format = array_pop($elements);
+            case 3: // bundle case
+                $bundle = $parts[0];
+                $controller = $parts[1];
+                $isBundle = true;
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
                 break;
         }
 
-        $template = new TemplateReference($plugin, $path, implode('.', $elements), $format, $engine);
+        if (!$isBundle) {
+            $elements = explode('.', basename($path));
+            $path = dirname($path);
+            if ($path == '.') {
+                $path = '';
+            }
+            $engine = array_pop($elements);
+            switch (count($elements)) {
+                case 1:
+                    $format = '';
+                    break;
+                case 2:
+                    $format = array_pop($elements);
+                    break;
+                default:
+                    throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
+                    break;
+            }
+            $template = new TemplateReference($plugin, $path, implode('.', $elements), $format, $engine);
+        } else {
+            $elements = explode('.', $parts[2]);
+            $engine = array_pop($elements);
+            switch (count($elements)) {
+                case 1:
+                    $format = '';
+                    break;
+                case 2:
+                    $format = array_pop($elements);
+                    break;
+                default:
+                    throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
+                    break;
+            }
+            $template = new BundleTemplateReference($bundle, $controller, implode('.', $elements), $format, $engine);
+//            var_dump($template->getPath());
+//            die("here");
+            if ($template->get('bundle')) {
+                try {
+                    $this->kernel->getBundle($template->get('bundle'));
+                } catch (\Exception $e) {
+                    throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid.', $name), 0, $e);
+                }
+            }
+        }
 
         return $this->cache[$name] = $template;
     }
