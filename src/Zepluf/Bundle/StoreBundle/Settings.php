@@ -194,7 +194,7 @@ class Settings extends ParameterBag
         // a hack to let theme's settings to always override plugins'
         if (isset($settings['plugins']) && is_array($settings['plugins'])) {
             foreach ($settings['plugins'] as $plugin => $plugin_settings) {
-                $this->set($plugin, $plugin_settings, true);
+                $this->set('plugins.' . $plugin, $plugin_settings, true);
             }
         }
 

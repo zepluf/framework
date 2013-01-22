@@ -12,7 +12,14 @@
 /**
  * Always loads application_top
  */
-require(__DIR__ . '/../../includes/application_top.php');
+
+define("WEB_DIR", __DIR__);
+
+// some hacks for zencart
+$pathToZencart = __DIR__ . '/../vendor/zencart/';
+ini_set('include_path', $pathToZencart . PATH_SEPARATOR . ini_get('include_path'));
+chdir($pathToZencart);
+require('includes/application_top.php');
 
 // bof ri: ZePLUF
 

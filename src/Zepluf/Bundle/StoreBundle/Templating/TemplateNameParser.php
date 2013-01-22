@@ -111,8 +111,7 @@ class TemplateNameParser implements TemplateNameParserInterface
                     break;
             }
             $template = new BundleTemplateReference($bundle, $controller, implode('.', $elements), $format, $engine);
-//            var_dump($template->getPath());
-//            die("here");
+
             if ($template->get('bundle')) {
                 try {
                     $this->kernel->getBundle($template->get('bundle'));

@@ -66,23 +66,25 @@ class CoreListener implements EventSubscriberInterface
                 // run calls
                 $data = (array)$content["template"]["parameters"];
 
-                foreach($content["calls"] as $call) {
-                    // is this a public function or a class method
-                    if(strpos($call[0], "::") !== false) {
-                        list($class, $method) = explode("::", $call[0]);
-                        // is this a service?
-                        if(strpos($class, "@") !== false) {
-                            $service = substr($class, 1);
-                            $object = $this->container->get($service);
+                if(isset($content["calls"]) && is_array($content["calls"])) {
+                    foreach($content["calls"] as $call) {
+                        // is this a public function or a class method
+                        if(strpos($call[0], "::") !== false) {
+                            list($class, $method) = explode("::", $call[0]);
+                            // is this a service?
+                            if(strpos($class, "@") !== false) {
+                                $service = substr($class, 1);
+                                $object = $this->container->get($service);
+                            }
+                            else {
+                                $object = new $class;
+                            }
+
+                            $data = array_merge($data, call_user_func_array(array($object, $method), $call[1]));
                         }
                         else {
-                            $object = new $class;
+                            $data = array_merge($data, $call[0]($call[1]));
                         }
-
-                        $data = array_merge($data, call_user_func_array(array($object, $method), $call[1]));
-                    }
-                    else {
-                        $data = array_merge($data, $call[0]($call[1]));
                     }
                 }
 

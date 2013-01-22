@@ -85,7 +85,7 @@
             <argument>%store.root_dir%</argument>
             <argument>%store.backend_dir%</argument>
             <call method="setPathPatterns">
-                <argument>%store.current_template_dir%</argument>
+                <argument>%store.template_dir%/%store.current_template%</argument>
                 <argument type="service" id="environment" />
             </call>
         </service>
@@ -130,7 +130,7 @@
         <service id="storebundle.cache_warmer.settings" class="%storebundle.cache_warmer.settings.class%" public="false">
             <tag name="kernel.cache_warmer" priority="20" />
             <argument type="service" id="settings" />
-            <argument>%store.current_template_dir%</argument>
+            <argument>%store.template_dir%/%store.current_template%</argument>
         </service>
 
         <!-- listeners -->

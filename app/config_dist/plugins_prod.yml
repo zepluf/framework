@@ -1,3 +1,2 @@
 ricjloader:
-  settings:
-    cache: false
+  cache: false

@@ -268,7 +268,7 @@ class AdminPluginController extends Controller
         // we need to load theme settings
         $this->get('settings')->resetCache('theme');
         // TODO: remove the constants
-        $this->get('settings')->loadTheme('frontend', $this->container->getParameter("store.current_template_dir"));
+        $this->get('settings')->loadTheme('frontend', $this->container->getParameter("store.template_dir") . '/' . $this->container->getParameter("store.current_template"));
 
         return $this->renderJson(array(
             'messages' => array(array(
