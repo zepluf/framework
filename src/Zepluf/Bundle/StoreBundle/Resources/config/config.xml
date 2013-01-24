@@ -99,9 +99,6 @@
             <argument type="service" id="templating.engine.php" />
             <argument type="service" id="templating.name_parser" />
             <argument type="service" id="templating.loader" />
-            <argument>%store.zencart_dir%</argument>
-            <argument>%store.backend_dir%</argument>
-
         </service>
 
         <!-- templating helpers -->
@@ -144,7 +141,8 @@
         <service id="storebundle.cache_warmer.settings" class="%storebundle.cache_warmer.settings.class%" public="false">
             <tag name="kernel.cache_warmer" priority="20" />
             <argument type="service" id="settings" />
-            <argument>%store.template_dir%/%store.current_template%</argument>
+            <argument>%store.frontend.templates_dir%/%store.frontend.current_template%</argument>
+            <argument>%store.backend.templates_dir%/%store.backend.current_template%</argument>
         </service>
 
         <!-- listeners -->

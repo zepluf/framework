@@ -39,14 +39,16 @@ class TemplateLoader extends BaseLoader
 
     public function __construct($kernel)
     {
+
+        $subEnvironment = $kernel->getContainer()->get('environment')->getSubEnvironment();
+
         $this->templatePathPatterns = array(
             // look in the current template first
-            $kernel->getContainer()->getParameter('web.dir') . '/' .
-                $kernel->getContainer()->get('environment')->getSubEnvironment() . '/templates/' .
+            $kernel->getContainer()->getParameter('store.'.$subEnvironment.'.templates_dir') . '/' .
                 $kernel->getContainer()->get('environment')->getTemplate() .
-                 '/%path%/%name%.%format%.%engine%',
-            $kernel->getContainer()->getParameter('web.dir') . '/' .
-                $kernel->getContainer()->get('environment')->getSubEnvironment() . '/templates/' .
+                '/%path%/%name%.%format%.%engine%',
+
+            $kernel->getContainer()->getParameter('store.'.$subEnvironment.'.templates_dir') . '/' .
                 '/template_default/%path%/%name%.%format%.%engine%'
         );
     }

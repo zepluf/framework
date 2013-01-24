@@ -26,7 +26,7 @@ class ViewTest extends BaseTestCase
         $environment = $this->get("environment");
         $environment->setSubEnvironment("frontend");
         $this->view->setPathPatterns("includes/templates/classic/", $environment);
-        $this->defaultTemplateDir = $this->getParameter("store.zencart_dir") . "/includes/templates/template_default";
+        $this->defaultTemplateDir = $this->getParameter("store.frontend.templates_dir") . "/template_default";
     }
 
     public function testSetGet(){

@@ -22,19 +22,33 @@ use Zepluf\Bundle\StoreBundle\Settings;
  */
 class SettingsCacheWarmer implements CacheWarmerInterface
 {
+    /**
+     * the settings service
+     *
+     * @var \Zepluf\Bundle\StoreBundle\Settings
+     */
     protected $settings;
 
-    protected $templateDir;
+    /**
+     * @var string
+     */
+    protected $frontendTemplateDir;
+
+    /**
+     * @var string
+     */
+    protected $backendTemplateDir;
 
     /**
      * Constructor.
      *
      * @param RouterInterface $router A Router instance
      */
-    public function __construct(Settings $settings, $templateDir)
+    public function __construct(Settings $settings, $frontendTemplateDir, $backendTemplateDir)
     {
         $this->settings = $settings;
-        $this->templateDir = $templateDir;
+        $this->frontendTemplateDir = $frontendTemplateDir;
+        $this->backendTemplateDir = $backendTemplateDir;
     }
 
     /**
@@ -44,7 +58,8 @@ class SettingsCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp($cacheDir)
     {
-        $this->settings->loadTheme("frontend", $this->templateDir);
+        $this->settings->loadTheme("frontend", $this->frontendTemplateDir);
+        // TODO: warmup backend theme's cache as well, if any?
     }
 
     /**

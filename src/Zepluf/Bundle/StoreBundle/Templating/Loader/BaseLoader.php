@@ -41,18 +41,20 @@ class BaseLoader extends FilesystemLoader
     public function __construct($kernel)
     {
         $this->kernel = $kernel;
+
+        $subEnvironment = $kernel->getContainer()->get('environment')->getSubEnvironment();
+
         $this->templatePathPatterns = array(
             // look in the current template first
-            $kernel->getContainer()->getParameter('kernel.root_dir') . '/' .
-                $kernel->getContainer()->get('environment')->getSubEnvironment() . '/templates/' .
+            $kernel->getContainer()->getParameter('store.'.$subEnvironment.'.templates_dir') . '/' .
                 $kernel->getContainer()->get('environment')->getTemplate() .
                 '/%type%/%plugin%/%path%/%name%.%format%.%engine%',
 
             // look in the default template
-            $kernel->getContainer()->getParameter('kernel.root_dir') . '/' .
-                $kernel->getContainer()->get('environment')->getSubEnvironment() . '/templates/' .
+            $kernel->getContainer()->getParameter('store.'.$subEnvironment.'.templates_dir') . '/' .
                 'template_default/%type%/%plugin%/%path%/%name%.%format%.%engine%'
         );
+
     }
 
     /**

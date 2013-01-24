@@ -52,16 +52,6 @@ class View implements \ArrayAccess
     /**
      * @var
      */
-    private $rootDir;
-
-    /**
-     * @var
-     */
-    private $backendDir;
-
-    /**
-     * @var
-     */
     private $templateDir;
 
     /**
@@ -77,48 +67,14 @@ class View implements \ArrayAccess
     /**
      * inits the view with some variables
      */
-    public function __construct($engine, $phpEngine, $nameParser, $loader, $rootDir, $backendDir)
+    public function __construct($engine, $phpEngine, $nameParser, $loader)
     {
         $this->engine = $engine;
         $this->phpEngine = $phpEngine;
         $this->nameParser = $nameParser;
         $this->loader = $loader;
-        $this->rootDir = $rootDir;
-        $this->backendDir = $backendDir;
     }
-
-    /**
-     * sets template dir
-     *
-     * @param $templateDir
-     */
-    public function setTemplateDir($templateDir)
-    {
-        $this->templateDir = $templateDir;
-    }
-
-    /**
-     * @param $loader
-     * TODO: remove the use of constants
-     */
-    public function setPathPatterns($templateDir, $environment)
-    {
-        // we need to add some default paths into our view so that it knows where to look for template files
-        if ($environment->getSubEnvironment() == "backend") {
-            $path = $this->backendDir;
-        } else {
-            $path = $this->rootDir;
-        }
-
-        $this->loader->setPathPatterns(array(
-            $templateDir . '/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
-            $path . '/includes/templates/template_default/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
-            $this->rootDir . '/zepluf/app/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%',
-            $templateDir . '/%path%/%name%.%format%.%engine%',
-            $path . '/includes/templates/template_default/%path%/%name%.%format%.%engine%',
-            $this->rootDir . '/zepluf/src/Zepluf/Bundle/%bundle%/Resources/views/%controller%/%name%.%format%.%engine%',
-        ));
-    }
+    
 
     /**
      * gets the render engine
@@ -184,29 +140,6 @@ class View implements \ArrayAccess
         $template = $this->nameParser->parse($view);
         $file = $this->loader->load($template);
         return $file !== false ? (string)$file : false;
-    }
-
-    /**
-     * populates the default pathPattern array, view will use this to look for template
-     *
-     * @param $scope
-     * @param $pattern
-     */
-    public function addDefaultPathPattern($scope, $pattern)
-    {
-        $this->patterns[$scope] = $pattern;
-    }
-
-    /**
-     * populates the pathPattern array, view will use this to look for template
-     *
-     * @param $scope
-     * @param $pattern
-     * @param $patterns
-     */
-    public function addPathPattern($scope, $pattern, &$patterns)
-    {
-        $patterns[$scope] = $pattern;
     }
 
     /**
