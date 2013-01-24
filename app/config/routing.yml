@@ -1,0 +1,10 @@
+plugin_route:
+  resource: .
+  type: plugin_resource_type
+
+store_bundle_plugin_routes:
+    resource: "@StoreBundle/Resources/config/routing/plugin.xml"
+
+store_bundle_frontend_routes:
+    resource: "@StoreBundle/Resources/config/routing/frontend.xml"
+

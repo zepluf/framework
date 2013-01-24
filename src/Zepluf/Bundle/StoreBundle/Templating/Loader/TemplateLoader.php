@@ -41,11 +41,11 @@ class TemplateLoader extends BaseLoader
     {
         $this->templatePathPatterns = array(
             // look in the current template first
-            $kernel->getContainer()->getParameter('web_dir') . '/' .
+            $kernel->getContainer()->getParameter('web.dir') . '/' .
                 $kernel->getContainer()->get('environment')->getSubEnvironment() . '/templates/' .
                 $kernel->getContainer()->get('environment')->getTemplate() .
                  '/%path%/%name%.%format%.%engine%',
-            $kernel->getContainer()->getParameter('web_dir') . '/' .
+            $kernel->getContainer()->getParameter('web.dir') . '/' .
                 $kernel->getContainer()->get('environment')->getSubEnvironment() . '/templates/' .
                 '/template_default/%path%/%name%.%format%.%engine%'
         );

@@ -6,6 +6,8 @@ parameters:
   store.template_dir: "%store.zencart_dir%/includes/templates"
   kernel.config_dir: "%kernel.root_dir%/config"
   web.dir: "%kernel.root_dir%/../web"
+  # for the default zencart setup, the root dir may be different from the web dir
+  web.root_dir: "%kernel.root_dir%/../.."
   web.cache_dir: "%web.dir%/cache"
   web.images_dir: "%web.dir%/images"
 
