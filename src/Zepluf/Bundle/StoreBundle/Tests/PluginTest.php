@@ -119,7 +119,7 @@ class PluginTest extends BaseTestCase
         $this->assertEquals($localConfig, $newLocalConfig);
 
         //Assertion 2: Make sure public files moved into web dir
-        $this->assertFileExists(($this->getParameter('web_dir') . '/plugins/riTest/test_public.css'));
+        $this->assertFileExists(($this->getParameter('web.dir') . '/plugins/riTest/test_public.css'));
 
         //Assertion 3: Make sure install code executed
         $this->assertEquals('install run successfully', file_get_contents(__DIR__ . '/Fixtures/junks/plugins/test_install_file'));
@@ -198,7 +198,7 @@ class PluginTest extends BaseTestCase
         $this->assertEquals($localConfig, $newLocalConfig);
 
         //Assertion 2: Make sure public files moved into web dir
-        $this->assertFileNotExists(($this->getParameter('web_dir') . '/plugins/riTest/test_public.css'));
+        $this->assertFileNotExists(($this->getParameter('web.dir') . '/plugins/riTest/test_public.css'));
 
         //Assertion 3: Make sure install code executed
         $this->assertEquals('uninstall run successfully', file_get_contents(__DIR__ . '/Fixtures/junks/plugins/test_uninstall_file'));

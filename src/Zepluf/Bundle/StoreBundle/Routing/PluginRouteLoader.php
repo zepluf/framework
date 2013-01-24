@@ -38,21 +38,24 @@ class PluginRouteLoader extends Loader
 
         $collection = new RouteCollection();
 
-        foreach ($sysSettings['activated'] as $plugin) {
-            $plugin_lc_name = strtolower($plugin);
-            if (isset($pluginsSettings[$plugin_lc_name]['routes'])) {
-                foreach ($pluginsSettings[$plugin_lc_name]['routes'] as $key => $route) {
-                    $route = array_merge(array('pattern' => '',
-                        'defaults' => array(),
-                        'requirements' => array(),
-                        'options' => array()), $route);
-                    if (strpos($route['pattern'], '/') !== false) {
-                        $route['pattern'] = $plugin_lc_name . $route['pattern'];
-                    } else {
-                        $route['pattern'] = $plugin_lc_name . '_' . $route['pattern'];
-                    }
+        if(isset($sysSettings['activated']) && is_array($sysSettings['activated'])) {
+            foreach ($sysSettings['activated'] as $plugin) {
+                $plugin_lc_name = strtolower($plugin);
 
-                    $collection->add($plugin_lc_name . '_' . $key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
+                if (isset($pluginsSettings[$plugin_lc_name]['routes'])) {
+                    foreach ($pluginsSettings[$plugin_lc_name]['routes'] as $key => $route) {
+                        $route = array_merge(array('pattern' => '',
+                            'defaults' => array(),
+                            'requirements' => array(),
+                            'options' => array()), $route);
+                        if (strpos($route['pattern'], '/') !== false) {
+                            $route['pattern'] = $plugin_lc_name . $route['pattern'];
+                        } else {
+                            $route['pattern'] = $plugin_lc_name . '_' . $route['pattern'];
+                        }
+
+                        $collection->add($plugin_lc_name . '_' . $key, new Route($route['pattern'], $route['defaults'], $route['requirements'], $route['options']));
+                    }
                 }
             }
         }
