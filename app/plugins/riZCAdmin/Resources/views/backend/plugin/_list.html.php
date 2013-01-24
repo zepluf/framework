@@ -10,7 +10,7 @@
  * file that was distributed with this source code or refer to the LICENSE
  * file of ZePLUF
  */
-$view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.form.lib', 'jquery.gritter.lib', 'riZCAdmin:js/jquery.tablesorter.js', 'riZCAdmin:css/style.css', 'riZCAdmin:js/modal.js', 'ritools.lib', 'riZCAdmin:css/plugins.css'));
+$view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.form.lib', 'jquery.gritter.lib', 'plugins:riZCAdmin:js/jquery.tablesorter.js', 'plugins:riZCAdmin:css/style.css', 'plugins:riZCAdmin:js/modal.js', 'ritools.lib', 'plugins:riZCAdmin:css/plugins.css'));
 ?>
 <?php $view['loader']->startInline('js');?>
 <script type="text/javascript">
@@ -117,13 +117,13 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib',
     <div class="span12 title" id="table-name"><?php echo $view['translator']->trans('Plugins')?></div>
     <div class="tab-content" style="width: 100%;">
         <div class="tab-pane active" id="plugins">
-            <?php echo $view->render('riZCAdmin:backend/plugin/_tab_plugins.html.php', array('plugins' => $plugins, 'core' => $core));?>
+            <?php echo $view->render('plugins:riZCAdmin:backend/plugin/_tab_plugins.html.php', array('plugins' => $plugins, 'core' => $core));?>
         </div>
         <div class="tab-pane" id="settings">
 
         </div>
         <div class="tab-pane" id="install">
-            <?php echo $view->render('riZCAdmin:backend/plugin/_tab_install.html.php');?>
+            <?php echo $view->render('plugins:riZCAdmin:backend/plugin/_tab_install.html.php');?>
         </div>
         <div class="tab-pane" id="feature">
             <div class="content">

@@ -12,5 +12,4 @@ namespace Zepluf\Bundle\StoreBundle;
 
 class Environment extends ParameterBag
 {
-
 }

@@ -9,7 +9,7 @@ framework:
     strict_requirements: %kernel.debug%
   templating:
     engines: ['php', 'twig'] #assets_version: SomeVersionScheme
-    loaders:  [storebundle.templating.loader]
+    loaders:  [storebundle.templating.template_loader, storebundle.templating.plugin_loader, storebundle.templating.bundle_loader]
   secret: %secret%
 
 # Doctrine Configuration

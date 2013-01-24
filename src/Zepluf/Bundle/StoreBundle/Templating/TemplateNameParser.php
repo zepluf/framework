@@ -60,66 +60,45 @@ class TemplateNameParser implements TemplateNameParserInterface
 
         switch (count($parts)) {
             case 1:
-                $plugin = '';
-                $path = $parts[0];
+                array_unshift($parts, 'current', 'templates');
                 break;
             case 2:
-                $plugin = $parts[0];
-                $path = $parts[1];
+                array_unshift($parts, 'plugins');
                 break;
-            case 3: // bundle case
-                $bundle = $parts[0];
-                $controller = $parts[1];
-                $isBundle = true;
+            case 3:
+                break;
+            default:
+                throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugins:pluginName:path/template.format.engine" or
+                                                                                                    "plugins:pluginName:path/template.engine" or
+                                                                                                    "bundles:bundleName:path/template.format.engine" or
+                                                                                                    "bundles:bundleName:path/template.engine" or
+                                                                                                    "templates:templateName:path/template.format.engine" or
+                                                                                                    "templates:templateName:path/template.engine".', $name));
+
+                break;
+        }
+
+        $path = dirname($parts[2]);
+        if ($path == '.') {
+            $path = '';
+        }
+
+        $elements = explode('.', $parts[2]);
+        $engine = array_pop($elements);
+        switch (count($elements)) {
+            case 1:
+                $format = 'html';
+                break;
+            case 2:
+                $format = array_pop($elements);
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
                 break;
         }
 
-        if (!$isBundle) {
-            $elements = explode('.', basename($path));
-            $path = dirname($path);
-            if ($path == '.') {
-                $path = '';
-            }
-            $engine = array_pop($elements);
-            switch (count($elements)) {
-                case 1:
-                    $format = '';
-                    break;
-                case 2:
-                    $format = array_pop($elements);
-                    break;
-                default:
-                    throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
-                    break;
-            }
-            $template = new TemplateReference($plugin, $path, implode('.', $elements), $format, $engine);
-        } else {
-            $elements = explode('.', $parts[2]);
-            $engine = array_pop($elements);
-            switch (count($elements)) {
-                case 1:
-                    $format = '';
-                    break;
-                case 2:
-                    $format = array_pop($elements);
-                    break;
-                default:
-                    throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugin:path/template.format.engine" or "plugin:path/template.engine" or "path/template.format.engine" or "path/template.engine") or "template.format.engine" or "template.engine".', $name));
-                    break;
-            }
-            $template = new BundleTemplateReference($bundle, $controller, implode('.', $elements), $format, $engine);
+        $template = new TemplateReference($parts[0], $parts[1], $path, str_replace($path . '/', "", current($elements)), $format, $engine);
 
-            if ($template->get('bundle')) {
-                try {
-                    $this->kernel->getBundle($template->get('bundle'));
-                } catch (\Exception $e) {
-                    throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid.', $name), 0, $e);
-                }
-            }
-        }
 
         return $this->cache[$name] = $template;
     }

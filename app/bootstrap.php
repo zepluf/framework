@@ -41,11 +41,14 @@ $kernel->boot();
 $container = $kernel->getContainer();
 
 // set the environment
+// TODO: remove constants
 $container->get("environment")->setEnvironment($environment);
 if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
     $container->get("environment")->setSubEnvironment("backend");
+    $container->get("environment")->setTemplate('template_default');
 } else {
     $container->get("environment")->setSubEnvironment("frontend");
+    $container->get("environment")->setTemplate($container->getParameter('store.current_template'));
 }
 
 $container->get("plugin")->loadPlugins($container);

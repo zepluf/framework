@@ -11,7 +11,7 @@
  * file of ZePLUF
  */
 
-$view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'riZCAdmin:css/style.css', 'riZCAdmin:js/modal.js', 'ritools.lib', 'riZCAdmin:css/plugins.css'))
+$view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jquery.snippet.lib', 'jquery.gritter.lib', 'plugins:riZCAdmin:css/style.css', 'plugins:riZCAdmin:js/modal.js', 'ritools.lib', 'plugins:riZCAdmin:css/plugins.css'))
 ?>
 
 <?php $view['loader']->startInline('js');?>

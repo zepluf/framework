@@ -11,6 +11,8 @@
         <parameter key="locale">en</parameter>
         <parameter key="charset">UTF-8</parameter>
         <parameter key="templating.path_patterns" type="collection"></parameter>
+
+        <parameter key="storebundle.asset_finder.class">Zepluf\Bundle\StoreBundle\AssetFinder</parameter>
         <parameter key="templating.name_parser.class">Zepluf\Bundle\StoreBundle\Templating\TemplateNameParser</parameter>
         <parameter key="templating.helper.router.class">Zepluf\Bundle\StoreBundle\Templating\Helper\RouterHelper</parameter>
         <parameter key="router.options.generator.class">Zepluf\Bundle\StoreBundle\Routing\Generator\UrlGenerator</parameter>
@@ -22,7 +24,11 @@
         <parameter key="storebundle.database_patcher.class">Zepluf\Bundle\StoreBundle\DatabasePatcher</parameter>
         <parameter key="storebundle.core_event.class">Zepluf\Bundle\StoreBundle\Event\CoreEvent</parameter>
         <parameter key="storebundle.controller_listener.class">Zepluf\Bundle\StoreBundle\EventListener\ControllerListener</parameter>
-        <parameter key="storebundle.template_loader.class">Zepluf\Bundle\StoreBundle\Templating\Loader\TemplateLoader</parameter>
+
+        <parameter key="storebundle.templating.template_loader.class">Zepluf\Bundle\StoreBundle\Templating\Loader\TemplateLoader</parameter>
+        <parameter key="storebundle.templating.plugin_loader.class">Zepluf\Bundle\StoreBundle\Templating\Loader\PluginLoader</parameter>
+        <parameter key="storebundle.templating.bundle_loader.class">Zepluf\Bundle\StoreBundle\Templating\Loader\BundleLoader</parameter>
+
         <parameter key="storebundle.view.class">Zepluf\Bundle\StoreBundle\Templating\View</parameter>
 
         <parameter key="storebundle.holders_helper">Zepluf\Bundle\StoreBundle\Templating\Helper\HoldersHelper</parameter>
@@ -41,6 +47,9 @@
 
     <services>
 
+        <service id="storebundle.asset_finder" class="%storebundle.asset_finder.class%">
+            <argument type="service" id="kernel" />
+        </service>
         <!-- settings -->
         <service id="settings" class="%storebundle.settings.class%">
             <argument>%kernel.config_dir%</argument>
@@ -73,8 +82,16 @@
         </service>
 
         <!-- templating -->
-        <service id="storebundle.templating.loader" class="%storebundle.template_loader.class%">
-            <argument>%templating.path_patterns%</argument>
+        <service id="storebundle.templating.template_loader" class="%storebundle.templating.template_loader.class%">
+            <argument type="service" id="kernel" />
+        </service>
+
+        <service id="storebundle.templating.bundle_loader" class="%storebundle.templating.bundle_loader.class%">
+            <argument type="service" id="kernel" />
+        </service>
+
+        <service id="storebundle.templating.plugin_loader" class="%storebundle.templating.plugin_loader.class%">
+            <argument type="service" id="kernel" />
         </service>
 
         <service id="view" class="%storebundle.view.class%">
@@ -84,10 +101,7 @@
             <argument type="service" id="templating.loader" />
             <argument>%store.root_dir%</argument>
             <argument>%store.backend_dir%</argument>
-            <call method="setPathPatterns">
-                <argument>%store.template_dir%/%store.current_template%</argument>
-                <argument type="service" id="environment" />
-            </call>
+
         </service>
 
         <!-- templating helpers -->

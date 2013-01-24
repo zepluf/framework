@@ -7,6 +7,7 @@ parameters:
   kernel.config_dir: "%kernel.root_dir%/config"
   web_dir: "%kernel.root_dir%/../web"
   web_cache_dir: "%web_dir%/cache"
+  web_images_dir: "%web_dir%/images"
 
   locale: en
 

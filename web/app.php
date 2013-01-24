@@ -10,15 +10,17 @@
  */
 
 /**
+ * defines some paths here to support the different paths foz Zencart
+ */
+define("WEB_DIR", __DIR__);
+define("ZENCART_DIR", __DIR__ . '/../vendor/zencart');
+define("APP_DIR", __DIR__ . '/../app');
+/**
  * Always loads application_top
  */
-
-define("WEB_DIR", __DIR__);
-
 // some hacks for zencart
-$pathToZencart = __DIR__ . '/../vendor/zencart/';
-ini_set('include_path', $pathToZencart . PATH_SEPARATOR . ini_get('include_path'));
-chdir($pathToZencart);
+ini_set('include_path', ZENCART_DIR . PATH_SEPARATOR . ini_get('include_path'));
+chdir(ZENCART_DIR);
 require('includes/application_top.php');
 
 // bof ri: ZePLUF

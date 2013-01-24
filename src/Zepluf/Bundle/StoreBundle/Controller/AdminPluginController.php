@@ -49,9 +49,9 @@ class AdminPluginController extends Controller
             $plugins[$key]['info'] = $this->get("plugin")->info($plugin['code_name']);
         }
 
-        $this->get('templating.helper.holders')->add('main', $this->renderView('riZCAdmin:backend/plugin/_list.html.php', array('plugins' => $plugins, 'core' => $this->get('settings')->get('framework.core', array()))));
+        $this->get('templating.helper.holders')->add('main', $this->renderView('plugins:riZCAdmin:backend/plugin/_list.html.php', array('plugins' => $plugins, 'core' => $this->get('settings')->get('framework.core', array()))));
 
-        return $this->render('riZCAdmin:backend/layout.html.php');
+        return $this->render('plugins:riZCAdmin:backend/layout.html.php');
     }
 
     /**
@@ -67,7 +67,7 @@ class AdminPluginController extends Controller
         if (!empty($plugin)) {
             $info = $this->get("plugin")->info($plugin);
         }
-        return $this->render('riZCAdmin:backend/plugin/_plugins_info.html.php', array('info' => $info));
+        return $this->render('plugins:riZCAdmin:backend/plugin/_plugins_info.html.php', array('info' => $info));
     }
 
     /**
@@ -142,7 +142,7 @@ class AdminPluginController extends Controller
     public function pluginsShowSettings(Request $request)
     {
         return $this->renderAjax(
-            $this->view->render($request->get('name') . ':backend/_settings.html.php', array(
+            $this->view->render('plugins:' . $request->get('name') . ':backend/_settings.html.php', array(
                 'riname' => $request->get('name'),
                 'settings' => $this->get("settings")->get("plugins." . $request->get('name'))
             ))
