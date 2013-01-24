@@ -178,19 +178,22 @@ class Plugin
                 $configs = array();
                 // load local plugins settings
                 $local_config = Yaml::parse($this->appDir . '/config/plugins_' . $this->environment->getEnvironment() . '.yml');
-                foreach ($this->sysSettings['activated'] as $plugin) {
-                    if (file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml')) {
-                        $config = Yaml::parse($file);
 
-                        $plugin_lc_name = strtolower($plugin);
-                        // $plugin_uc_name = ucfirst($plugin);
+                if(isset($this->sysSettings['activated']) && is_array($this->sysSettings['activated'])) {
+                    foreach ($this->sysSettings['activated'] as $plugin) {
+                        if (file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml')) {
+                            $config = Yaml::parse($file);
 
-                        if (isset($local_config[$plugin_lc_name])) {
-                            $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
-                        } else {
-                            $this->settings->set('plugins.' . $plugin_lc_name, $config);
+                            $plugin_lc_name = strtolower($plugin);
+                            // $plugin_uc_name = ucfirst($plugin);
+
+                            if (isset($local_config[$plugin_lc_name])) {
+                                $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
+                            } else {
+                                $this->settings->set('plugins.' . $plugin_lc_name, $config);
+                            }
+
                         }
-
                     }
                 }
 
@@ -337,7 +340,7 @@ class Plugin
 
         if ($installed) {
             // move the public files to web folder
-            $container->get('utility.file')->xcopy($this->pluginsDir . '/' . $plugin . '/Resources/public', $container->getParameter("web_dir") . '/plugins/' . $plugin);
+            $container->get('utility.file')->xcopy($this->pluginsDir . '/' . $plugin . '/Resources/public', $container->getParameter("web.dir") . '/plugins/' . $plugin);
         }
 
         return $installed;
@@ -387,7 +390,7 @@ class Plugin
 
         if ($uninstalled) {
             // remove all
-            $container->get('utility.file')->sureRemoveDir($container->getParameter("web_dir") . '/plugins/' . $plugin, true);
+            $container->get('utility.file')->sureRemoveDir($container->getParameter("web.dir") . '/plugins/' . $plugin, true);
         }
 
         return $uninstalled;

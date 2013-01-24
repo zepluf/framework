@@ -28,8 +28,8 @@ class File
      */
     public function getRelativePath($from, $to)
     {
-        $from = explode('/', $from);
-        $to = explode('/', $to);
+        $from = explode(DIRECTORY_SEPARATOR, realpath($from));
+        $to = explode(DIRECTORY_SEPARATOR, realpath($to));
         foreach ($from as $depth => $dir) {
 
             if (isset($to[$depth])) {

@@ -68,7 +68,7 @@ class AssetFinder
         $this->environment = $kernel->getContainer()->get('environment')->getEnvironment();
         $this->subEnvironment = $kernel->getContainer()->get('environment')->getSubEnvironment();
 
-        $this->webDir = $kernel->getContainer()->getParameter('web_dir');
+        $this->webDir = $kernel->getContainer()->getParameter('web.dir');
         $this->appDir = $kernel->getContainer()->getParameter('kernel.root_dir');
     }
 

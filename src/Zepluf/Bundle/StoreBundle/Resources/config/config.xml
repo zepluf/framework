@@ -99,7 +99,7 @@
             <argument type="service" id="templating.engine.php" />
             <argument type="service" id="templating.name_parser" />
             <argument type="service" id="templating.loader" />
-            <argument>%store.root_dir%</argument>
+            <argument>%store.zencart_dir%</argument>
             <argument>%store.backend_dir%</argument>
 
         </service>

@@ -49,7 +49,7 @@ class BundleLoader extends BaseLoader
 
         if("bundles" == $template->get("type")) {
             $templatePathPatterns = $this->templatePathPatterns;
-            $templatePathPatterns[] = $this->kernel->getBundle($template->get("plugin"))->getPath() . '/Resources/view/%path%/%name%.%format%.%engine%';
+            $templatePathPatterns[] = $this->kernel->getBundle($template->get("plugin"))->getPath() . '/Resources/views/%path%/%name%.%format%.%engine%';
             return $this->locate($template, $templatePathPatterns);
         }
 
