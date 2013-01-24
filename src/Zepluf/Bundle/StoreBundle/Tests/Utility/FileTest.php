@@ -21,10 +21,10 @@ class FileTest extends \Zepluf\Bundle\StoreBundle\Tests\BaseTestCase
 
 //    public static function setUpBeforeClass()
 //    {
-//        define('DIR_WS_HTTPS_ADMIN', self::getParameter('store.root_dir') . '/expadmin');
-//        define('DIR_WS_ADMIN', self::getParameter('store.root_dir') . '/expadmin');
-//        define('DIR_WS_HTTPS_CATALOG', self::getParameter('store.root_dir'));
-//        define('DIR_WS_CATALOG', self::getParameter('store.root_dir'));
+//        define('DIR_WS_HTTPS_ADMIN', self::getParameter('store.zencart_dir') . '/expadmin');
+//        define('DIR_WS_ADMIN', self::getParameter('store.zencart_dir') . '/expadmin');
+//        define('DIR_WS_HTTPS_CATALOG', self::getParameter('store.zencart_dir'));
+//        define('DIR_WS_CATALOG', self::getParameter('store.zencart_dir'));
 //    }
 
     public function setUp()
@@ -34,10 +34,10 @@ class FileTest extends \Zepluf\Bundle\StoreBundle\Tests\BaseTestCase
 
     public function testGetRelativePath()
     {
-        $path = $this->object->getRelativePath($this->getParameter('kernel.root_dir'), $this->getParameter('store.root_dir'));
+        $path = $this->object->getRelativePath($this->getParameter('kernel.root_dir'), $this->getParameter('store.zencart_dir'));
         $this->assertEquals('../..', $path);
 
-        $path = $this->object->getRelativePath($this->getParameter('kernel.config_dir'), $this->getParameter('web_dir'));
+        $path = $this->object->getRelativePath($this->getParameter('kernel.config_dir'), $this->getParameter('web.dir'));
         $this->assertEquals('../web', $path);
     }
 

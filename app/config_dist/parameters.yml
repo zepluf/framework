@@ -1,13 +1,13 @@
 parameters:
   plugins.root_dir: "%kernel.root_dir%/plugins"
-  store.root_dir: "%kernel.root_dir%/../.."
-  store.backend_dir: "%store.root_dir%/manager"
+  store.zencart_dir: "%kernel.root_dir%/../.."
+  store.backend_dir: "%store.zencart_dir%/manager"
   store.current_template: "0007"
-  store.template_dir: "%store.root_dir%/includes/templates"
+  store.template_dir: "%store.zencart_dir%/includes/templates"
   kernel.config_dir: "%kernel.root_dir%/config"
-  web_dir: "%kernel.root_dir%/../web"
-  web_cache_dir: "%web_dir%/cache"
-  web_images_dir: "%web_dir%/images"
+  web.dir: "%kernel.root_dir%/../web"
+  web.cache_dir: "%web.dir%/cache"
+  web.images_dir: "%web.dir%/images"
 
   locale: en
 
