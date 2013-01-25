@@ -10,7 +10,9 @@ parameters:
   # path to the backend templates folder
   store.backend.templates_dir: "%kernel.root_dir%"
   store.backend.current_template: "template_default"
-
+  # absolute path to the website root dir (usually the public_html)
+  store.root_dir: "%kernel.root_dir%/../web"
+  
   # absolute path to the "web" dir
   web.dir: "%kernel.root_dir%/../web"
   # the relative path from the site root to the "web" folder
