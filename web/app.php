@@ -11,6 +11,8 @@
 
 require('config.php');
 
+require(APP_DIR . '/bootstrap.php');
+
 // some hacks for zencart
 ini_set('include_path', ZENCART_DIR . PATH_SEPARATOR . ini_get('include_path'));
 chdir(ZENCART_DIR);
@@ -38,7 +40,7 @@ $container->get('event_dispatcher')->dispatch(Zepluf\Bundle\StoreBundle\Events::
 
 ob_start();
 // eof ri: ZePLUF
-$language_page_directory = DIR_WS_LANGUAGES . $_SESSION['language'] . '/';
+$language_page_directory = DIR_FS_LANGUAGES . $_SESSION['language'] . '/';
 $directory_array = $template->get_template_part($code_page_directory, '/^header_php/');
 foreach ($directory_array as $value) {
     /**
@@ -138,6 +140,10 @@ if ($zepluf_theme) {
 $content = ob_get_clean();
 $core_event->setContent($content);
 $container->get('event_dispatcher')->dispatch(Zepluf\Bundle\StoreBundle\Events::onPageEnd, $core_event);
-echo $core_event->getContent();
+
+$response = new \Symfony\Component\HttpFoundation\Response();
+$response->setContent($core_event->getContent());
+$response->send();
+$kernel->terminate($request, $response);
 // eof ri: ZePLUF
 exit();

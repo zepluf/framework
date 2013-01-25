@@ -168,15 +168,15 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.snippet.lib',
     </div>
 </div>
 <script>
-    $(function () {
-        $('#tabPlugin a').click(function (e) {
+    jQuery(function () {
+        jQuery('#tabPlugin a').click(function (e) {
             e.preventDefault();
-            if($(this).attr('href') == '#plugins'){
-                $('.tab-content').find('.tab-pane').removeClass('active');
-                $('#plugins').addClass('active');
+            if(jQuery(this).attr('href') == '#plugins'){
+                jQuery('.tab-content').find('.tab-pane').removeClass('active');
+                jQuery('#plugins').addClass('active');
             }
-            $(this).tab('show');
-            $("#table-name").text($(this).text());
+            jQuery(this).tab('show');
+            jQuery("#table-name").text(jQuery(this).text());
         });
     })
 </script>

@@ -141,6 +141,10 @@
         <service id="storebundle.cache_warmer.settings" class="%storebundle.cache_warmer.settings.class%" public="false">
             <tag name="kernel.cache_warmer" priority="20" />
             <argument type="service" id="settings" />
+            <argument type="service" id="plugin" />
+            <argument>%kernel.environment%</argument>
+            <argument>%kernel.config_dir%</argument>
+            <argument>%plugins.root_dir%</argument>
             <argument>%store.frontend.templates_dir%/%store.frontend.current_template%</argument>
             <argument>%store.backend.templates_dir%/%store.backend.current_template%</argument>
         </service>

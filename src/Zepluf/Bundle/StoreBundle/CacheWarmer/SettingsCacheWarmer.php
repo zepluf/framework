@@ -13,7 +13,9 @@ namespace Zepluf\Bundle\StoreBundle\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
+use Symfony\Component\Yaml\Yaml;
 use Zepluf\Bundle\StoreBundle\Settings;
+use Zepluf\Bundle\StoreBundle\Plugin;
 
 /**
  * Generates the router matcher and generator classes.
@@ -30,6 +32,26 @@ class SettingsCacheWarmer implements CacheWarmerInterface
     protected $settings;
 
     /**
+     * @var
+     */
+    protected $plugins;
+
+    /**
+     * @var
+     */
+    protected $pluginsDir;
+
+    /**
+     * @var
+     */
+    protected $kernelEnvironment;
+
+    /**
+     * @var
+     */
+    protected $kernelConfigDir;
+
+    /**
      * @var string
      */
     protected $frontendTemplateDir;
@@ -44,9 +66,13 @@ class SettingsCacheWarmer implements CacheWarmerInterface
      *
      * @param RouterInterface $router A Router instance
      */
-    public function __construct(Settings $settings, $frontendTemplateDir, $backendTemplateDir)
+    public function __construct(Settings $settings, Plugin $plugins, $kernelEnvironment, $kernelConfigDir, $pluginsDir, $frontendTemplateDir, $backendTemplateDir)
     {
         $this->settings = $settings;
+        $this->plugins = $plugins;
+        $this->kernelEnvironment = $kernelEnvironment;
+        $this->kernelConfigDir = $kernelConfigDir;
+        $this->pluginsDir = $pluginsDir;
         $this->frontendTemplateDir = $frontendTemplateDir;
         $this->backendTemplateDir = $backendTemplateDir;
     }
@@ -58,6 +84,45 @@ class SettingsCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp($cacheDir)
     {
+        // loads sys settings
+        $sysSettings = $this->settings->load('sys', $this->kernelConfigDir . '/', 'sys_' . $this->kernelEnvironment . '.yml');
+        $this->settings->saveCache('sys', $sysSettings);
+
+        // loads plugins settings
+        Yaml::enablePhpParsing();
+
+        if (!$this->settings->has('plugins')) {
+            // now try to load from all the cache files
+            if (($pluginsSettings = $this->settings->loadCache('plugins')) === false) {
+                $configs = array();
+                // load local plugins settings
+                $local_config = Yaml::parse($this->kernelConfigDir . '/plugins_' . $this->kernelEnvironment . '.yml');
+
+                if(isset($sysSettings['activated']) && is_array($sysSettings['activated'])) {
+                    foreach ($sysSettings['activated'] as $plugin) {
+                        if (file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml')) {
+                            $config = Yaml::parse($file);
+
+                            $plugin_lc_name = strtolower($plugin);
+                            // $plugin_uc_name = ucfirst($plugin);
+
+                            if (isset($local_config[$plugin_lc_name])) {
+                                $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
+                            } else {
+                                $this->settings->set('plugins.' . $plugin_lc_name, $config);
+                            }
+
+                        }
+                    }
+                }
+
+                $this->settings->saveCache('plugins', $this->settings->get('plugins'));
+                $pluginsSettings = $this->settings->get('plugins');
+            } else {
+                $this->settings->set('plugins', $pluginsSettings);
+            }
+        }
+
         $this->settings->loadTheme("frontend", $this->frontendTemplateDir);
         // TODO: warmup backend theme's cache as well, if any?
     }

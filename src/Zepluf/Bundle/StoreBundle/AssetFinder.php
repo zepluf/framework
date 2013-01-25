@@ -126,11 +126,11 @@ class AssetFinder
             $path = $file;
         }
         // absolute?
-        if(!$options['external'] && (!is_file($path = $file) || !is_readable($path))) {
+        if(!$options['inline'] && !$options['external'] && (!is_file($path = $file) || !is_readable($path))) {
             // explode
             $fileParts = explode(":", $file);
 		
-	    // supports for path with missing elements
+	        // supports for path with missing elements
             switch(count($fileParts)) {
                 case 3:
                     // good
@@ -142,7 +142,9 @@ class AssetFinder
                     }
                     // assume plugin
                     else {
-                    array_unshift($fileParts, "plugins");
+                        if($fileParts[0] != "images") {
+                            array_unshift($fileParts, "plugins");
+                        }
                     }
 
                     break;

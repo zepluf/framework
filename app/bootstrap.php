@@ -7,11 +7,11 @@
  * includes the global functions that we need
  */
 
-$environment = "prod";
-$coreDir = __DIR__ . '/../';
+if(!isset($environment)) {
+    $environment = "prod";
+}
 
 use Symfony\Component\ClassLoader\ApcClassLoader;
-use Symfony\Component\HttpFoundation\Request;
 
 // copy config files from dist folder
 foreach (glob(__DIR__ . '/config_dist/*', GLOB_NOSORT) as $config_file) {
@@ -51,11 +51,7 @@ if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
     $container->get("environment")->setTemplate($container->getParameter('store.frontend.current_template'));
 }
 
-$container->get("plugin")->loadPlugins($container);
-
-// some global vars to be used on Zencart as well
-$request = Request::createFromGlobals();
-
-$core_event = $container->get('storebundle.core_event');
-
-$view = $container->get("view");
+// path to zencart dir, edit if you place zencart elsewhere
+define("ZENCART_DIR", $container->getParameter("store.zencart_dir"));
+// zencart admin folder name
+define("ZENCART_ADMIN_DIR", $container->getParameter("store.zencart_backend_dir"));

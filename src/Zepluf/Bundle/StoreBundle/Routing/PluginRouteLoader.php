@@ -41,7 +41,6 @@ class PluginRouteLoader extends Loader
         if(isset($sysSettings['activated']) && is_array($sysSettings['activated'])) {
             foreach ($sysSettings['activated'] as $plugin) {
                 $plugin_lc_name = strtolower($plugin);
-
                 if (isset($pluginsSettings[$plugin_lc_name]['routes'])) {
                     foreach ($pluginsSettings[$plugin_lc_name]['routes'] as $key => $route) {
                         $route = array_merge(array('pattern' => '',

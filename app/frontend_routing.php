@@ -13,11 +13,20 @@ if (strpos($request->getUri(), "index.php") === false) {
     if (!empty($path_info)) {
         try {
             $match = $container->get("router")->getMatcher()->match($path_info);
-            foreach ($match as $key => $value) {
-                if (strpos($key, "parameter_") !== false) {
-                    $_key = substr($key, 10);
-                    $_GET[$_key] = $_REQUEST[$_key] = $value;
+
+            // is this mapped to a default zencart template?
+            if (isset($match["parameter_main_page"])) {
+                foreach ($match as $key => $value) {
+                    if (strpos($key, "parameter_") !== false) {
+                        $_key = substr($key, 10);
+                        $_GET[$_key] = $_REQUEST[$_key] = $value;
+                    }
                 }
+            } else {
+                $response = $kernel->handle($request);
+                $response->send();
+                $kernel->terminate($request, $response);
+                exit();
             }
         } catch (Exception $e) {
 

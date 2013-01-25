@@ -194,7 +194,7 @@ $view['loader']->load(array('jquery.lib', 'jquery.ui.lib', 'bootstrap.lib', 'jqu
     </div>
 </div>
 <script>
-    $(function () {
-        $("#pluginGrid").tablesorter({headers: { 1:{sorter: false}, 2:{sorter: false}, 3:{sorter: false}, 4:{sorter: false}}});
+    jQuery(function () {
+        jQuery("#pluginGrid").tablesorter({headers: { 1:{sorter: false}, 2:{sorter: false}, 3:{sorter: false}, 4:{sorter: false}}});
     })
 </script>
