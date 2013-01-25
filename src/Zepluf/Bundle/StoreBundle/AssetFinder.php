@@ -129,6 +129,27 @@ class AssetFinder
         if(!$options['external'] && (!is_file($path = $file) || !is_readable($path))) {
             // explode
             $fileParts = explode(":", $file);
+		
+	    // supports for path with missing elements
+            switch(count($fileParts)) {
+                case 3:
+                    // good
+                    break;
+                case 2:
+                    // assumes bundle
+                    if("Bundle" == substr($fileParts[0], -6)) {
+                        array_unshift($fileParts, "bundles");
+                    }
+                    // assume plugin
+                    else {
+                    array_unshift($fileParts, "plugins");
+                    }
+
+                    break;
+                case 1:
+                    // assumes template
+                    array_unshift($fileParts, "templates", "current");
+            }
 
             switch($fileParts[0]) {
                 case "templates":

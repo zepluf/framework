@@ -12,5 +12,5 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     # Change below before deploying to production
     #RewriteRule ^(.*)$ /web/app.php [QSA,L]
-    RewriteRule ^(.*)$ /app.php [QSA,L]
+    RewriteRule ^(.*)$ app.php [QSA,L]
 </IfModule>

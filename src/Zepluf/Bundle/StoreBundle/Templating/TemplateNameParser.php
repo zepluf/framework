@@ -56,16 +56,46 @@ class TemplateNameParser implements TemplateNameParserInterface
             throw new \RuntimeException(sprintf('Template name "%s" contains invalid characters.', $name));
         }
 
+        // is this the symfony default style?
+        if(strpos($name, "::") !== false) {
+
+        }
         $parts = explode(':', $name);
 
         switch (count($parts)) {
             case 1:
-                array_unshift($parts, 'current', 'templates');
+                array_unshift($parts, "templates", "current");
                 break;
             case 2:
-                array_unshift($parts, 'plugins');
+                // assumes bundle
+                if("Bundle" == substr($parts[0], -6)) {
+                    array_unshift($parts, "bundles");
+                }
+                // assume plugin
+                else {
+                    array_unshift($parts, "plugins");
+                }
                 break;
             case 3:
+                switch($parts[0]) {
+                    case "templates":
+                    case "bundles":
+                    case "plugins":
+                        break;
+                    default:
+                        // assumes bundle
+                        if("Bundle" == substr($parts[0], -6)) {
+                            // change from BundleName:Controller:Path to bundles:BundleName:Controller/Path
+                            $parts[2] = (!empty($parts[1]) ? $parts[1] . '/' : '') . $parts[2];
+                            $parts[1] = $parts[0];
+                            $parts[0] = "bundles";
+                        }
+                        // assume plugin
+                        else {
+                            throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid, the first part of the name is not within the supported format', $name));
+                        }
+                        break;
+                }
                 break;
             default:
                 throw new \InvalidArgumentException(sprintf('Template name "%s" is not valid (format is "plugins:pluginName:path/template.format.engine" or
