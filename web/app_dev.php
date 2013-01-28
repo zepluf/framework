@@ -11,6 +11,7 @@
 
 require('zepluf_config.php');
 
+$environment = "dev";
 require(APP_DIR . '/bootstrap.php');
 
 // some hacks for zencart

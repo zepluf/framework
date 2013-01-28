@@ -106,9 +106,9 @@ class Plugin
         $this->pluginsDir = $pluginsDir;
 
         // check version
-        if ((int)PROJECT_VERSION_MAJOR > 1 || (int)PROJECT_VERSION_MINOR > 0) {
-            $this->version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
-        }
+//        if ((int)PROJECT_VERSION_MAJOR > 1 || (int)PROJECT_VERSION_MINOR > 0) {
+//            $this->version = PROJECT_VERSION_MAJOR . '.' . PROJECT_VERSION_MINOR;
+//        }
     }
 
     /**

@@ -23,7 +23,7 @@ foreach (glob(__DIR__ . '/config_dist/*', GLOB_NOSORT) as $config_file) {
 
 $loader = require_once __DIR__ . '/bootstrap.php.cache';
 
-$loader->add('plugins', __DIR__);
+//$loader->add('plugins', __DIR__);
 
 // Use APC for autoloading to improve performance
 // Change 'sf2' by the prefix you want in order to prevent key conflict with another application

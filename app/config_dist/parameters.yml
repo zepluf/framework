@@ -1,5 +1,6 @@
 parameters:
   kernel.config_dir: "%kernel.root_dir%/config"
+  kernel.cache_dir: "%kernel.root_dir%/cache"
 
   plugins.root_dir: "%kernel.root_dir%/plugins"
 

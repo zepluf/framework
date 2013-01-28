@@ -41,12 +41,12 @@ class StoreBundle extends Bundle
 
             $container->setParameter("sys_config", $sysConfig);
 
-            if(isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
+            if (isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
                 foreach ($sysConfig["activated"] as $plugin) {
                     //
-                    if(is_dir($pluginsDir .  '/' . $plugin . '/DependencyInjection/Compiler')) {
+                    if (is_dir($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler')) {
                         foreach (glob($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler/*Pass.php', GLOB_NOSORT) as $pass) {
-                            $class = 'plugins\\' . $plugin . '\DependencyInjection\Compiler\\' . (basename($pass, ".php"));
+                            $class = '\\plugins\\' . $plugin . '\DependencyInjection\Compiler\\' . (basename($pass, ".php"));
                             $container->addCompilerPass(new $class());
                         }
                     }
