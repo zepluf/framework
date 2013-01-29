@@ -1,9 +1,13 @@
 imports:
   - { resource: config.yml }
 
+parameters:
+  kernel.debug: true
+
 framework:
   profiler: { only_exceptions: false }
 
 web_profiler:
   toolbar: true
+  position: top
   intercept_redirects: false

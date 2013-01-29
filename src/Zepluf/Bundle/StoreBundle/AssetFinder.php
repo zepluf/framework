@@ -57,13 +57,15 @@ class AssetFinder
     public function __construct($kernel)
     {
         $this->kernel = $kernel;
-        $this->currentTemplate = $kernel->getContainer()->get('environment')->getTemplate();
 
         $this->environment = $kernel->getContainer()->get('environment')->getEnvironment();
         $this->subEnvironment = $kernel->getContainer()->get('environment')->getSubEnvironment();
 
         $this->webDir = $kernel->getContainer()->getParameter('web.dir');
         $this->appDir = $kernel->getContainer()->getParameter('kernel.root_dir');
+
+        $this->templatesDir = $kernel->getContainer()->getParameter('store.'.$this->subEnvironment.'.templates_dir');
+        $this->currentTemplate = $kernel->getContainer()->get('environment')->getTemplate();
     }
 
     /**
@@ -168,9 +170,9 @@ class AssetFinder
                     }
                     // in dev env we look in the app templates folders
                     else {
-                        if (!file_exists($path = sprintf($this->kernel->getContainer()->getParameter('store.'.$this->subEnvironment.'.templates_dir') . '/%s/%s', $template, $fileParts[2]))) {
+                        if (!file_exists($path = sprintf($this->templatesDir . '/%s/%s', $template, $fileParts[2]))) {
                             // look into the default template
-                            if (!file_exists($path = sprintf($this->kernel->getContainer()->getParameter('store.'.$this->subEnvironment.'.templates_dir') . '/template_default/%s', $fileParts[2]))) {
+                            if (!file_exists($path = sprintf($this->templatesDir . '/template_default/%s', $fileParts[2]))) {
                                 $error = true;
                             }
                         }

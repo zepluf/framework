@@ -46,7 +46,6 @@ class PluginLoader extends BaseLoader
      */
     public function load(TemplateReferenceInterface $template)
     {
-
         if ("plugins" == $template->get("type")) {
             $templatePathPatterns = $this->templatePathPatterns;
             $templatePathPatterns[] = $this->kernel->getContainer()->getParameter('kernel.root_dir') . '/plugins/%plugin%/Resources/views/%path%/%name%.%format%.%engine%';

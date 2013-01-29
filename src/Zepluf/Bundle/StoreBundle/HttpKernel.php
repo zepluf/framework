@@ -25,11 +25,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\HttpKernel as StoreBundleHttpKernel;
+use Symfony\Bundle\FrameworkBundle\HttpKernel as FrameworkBundleHttpKernel;
 /**
  * main framework class, responsible for handling requests
  */
-class HttpKernel extends StoreBundleHttpKernel
+class HttpKernel extends FrameworkBundleHttpKernel
 {
     /**
      * handles the _main_page=something to match the routes defined in plugins' settings

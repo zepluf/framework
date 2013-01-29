@@ -143,7 +143,19 @@ $container->get('event_dispatcher')->dispatch(Zepluf\Bundle\StoreBundle\Events::
 
 $response = new \Symfony\Component\HttpFoundation\Response();
 $response->setContent($core_event->getContent());
+
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+
+$request->attributes->set("_controller", "null");
+// request
+$event = new FilterResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST, $response);
+$container->get('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
+
+
 $response->send();
+
 $kernel->terminate($request, $response);
 // eof ri: ZePLUF
 exit();

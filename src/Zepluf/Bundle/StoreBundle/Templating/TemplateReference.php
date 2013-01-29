@@ -44,4 +44,16 @@ class TemplateReference extends BaseTemplateReference
             return sprintf('%s:%s:%s/%s.%s', $this->parameters['type'], $this->parameters['plugin'], $this->parameters['path'], $this->parameters['name'], $this->parameters['engine']);
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPath()
+    {
+        if("bundles" == $this->get('type')) {
+            return '@'.$this->get('plugin').'/Resources/views/'.$this->get('path');
+        }
+
+        return parent::getPath();
+    }
 }

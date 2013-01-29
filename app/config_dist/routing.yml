@@ -3,8 +3,15 @@ plugin_route:
   type: plugin_resource_type
 
 store_bundle_plugin_routes:
-    resource: "@StoreBundle/Resources/config/routing/plugin.xml"
+  resource: "@StoreBundle/Resources/config/routing/plugin.xml"
 
 store_bundle_frontend_routes:
-    resource: "@StoreBundle/Resources/config/routing/frontend.xml"
+  resource: "@StoreBundle/Resources/config/routing/frontend.xml"
 
+web_profiler_wdt:
+  resource: @WebProfilerBundle/Resources/config/routing/wdt.xml
+  prefix: profiler_wdt
+
+web_profiler_profiler:
+  resource: @WebProfilerBundle/Resources/config/routing/profiler.xml
+  prefix: profiler_profilier

@@ -30,6 +30,7 @@ class File
     {
         $from = explode(DIRECTORY_SEPARATOR, realpath($from));
         $to = explode(DIRECTORY_SEPARATOR, realpath($to));
+
         foreach ($from as $depth => $dir) {
 
             if (isset($to[$depth])) {
@@ -41,10 +42,13 @@ class File
                 }
             }
         }
+
         //$rawresult = implode('/', $to);
-        for ($i = 0; $i < count($from) - 1; $i++) {
+        $depth = count($from);
+        for ($i = 0; $i < $depth; $i++) {
             array_unshift($to, '..');
         }
+
         $result = implode('/', $to);
 
         return $result;

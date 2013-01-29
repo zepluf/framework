@@ -129,7 +129,6 @@ class TemplateNameParser implements TemplateNameParserInterface
 
         $template = new TemplateReference($parts[0], $parts[1], $path, str_replace($path . '/', "", current($elements)), $format, $engine);
 
-
         return $this->cache[$name] = $template;
     }
 }
