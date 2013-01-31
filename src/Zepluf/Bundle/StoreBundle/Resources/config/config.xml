@@ -76,7 +76,7 @@
         <service id="storebundle.core_event" class="%storebundle.core_event.class%" scope="prototype"></service>
 
         <service id="storebundle.controller_listener" class="%storebundle.controller_listener.class%">
-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <!-- templating -->

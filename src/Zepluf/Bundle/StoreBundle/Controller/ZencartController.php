@@ -12,11 +12,22 @@ namespace Zepluf\Bundle\StoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Zepluf\Bundle\StoreBundle\ZencartResponse;
 
 class ZencartController extends Controller
 {
     public function staticAction(Request $request)
     {
-        return new Response("zencartStaticPage");
+        $parameters = $request->attributes->all();
+        // if this is a zencart page, we do need to set the params
+        if (isset($parameters["parameter_main_page"])) {
+            foreach ($parameters as $key => $value) {
+                if (strpos($key, "parameter_") !== false) {
+                    $_key = substr($key, 10);
+                    $_GET[$_key] = $_REQUEST[$_key] = $value;
+                }
+            }
+        }
+        return new ZencartResponse(ZencartResponse::CONTENT_STATIC_PAGE);
     }
 }

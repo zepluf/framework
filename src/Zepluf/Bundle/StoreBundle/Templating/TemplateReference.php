@@ -51,7 +51,8 @@ class TemplateReference extends BaseTemplateReference
     public function getPath()
     {
         if("bundles" == $this->get('type')) {
-            return '@'.$this->get('plugin').'/Resources/views/'.$this->get('path');
+            $path = str_replace('\\', '/', $this->get('path'));
+            return '@'.$this->get('plugin').'/Resources/views/'. (empty($path) ? '' : $path.'/') . $this->get('name').'.'.$this->get('format').'.'.$this->get('engine');
         }
 
         return parent::getPath();

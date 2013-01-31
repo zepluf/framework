@@ -141,8 +141,6 @@ if ($zepluf_theme) {
 $content = ob_get_clean();
 $core_event->setContent($content);
 $container->get('event_dispatcher')->dispatch(Zepluf\Bundle\StoreBundle\Events::onPageEnd, $core_event);
-
-$response = new \Symfony\Component\HttpFoundation\Response();
 $response->setContent($core_event->getContent());
 
 use Symfony\Component\HttpKernel\HttpKernelInterface;
