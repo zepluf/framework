@@ -18,9 +18,9 @@ try {
 
         }
     } else {
-        $response->send();
-        $kernel->terminate($request, $response);
-        exit();
+//        $response->send();
+//        $kernel->terminate($request, $response);
+//        exit();
     }
 
     $core_event->setResponse($response);

@@ -42,7 +42,7 @@ class CoreListener implements EventSubscriberInterface
             $this->container->get('event_dispatcher')->addListener(HoldersHelperEvents::onHolderStart . '.' . $holder, array($this, 'onHolderStart'));
         }
 
-        $event->setContent($this->container->get('templating.helper.holders')->injectHolders($event->getContent()));
+        $event->getResponse()->setContent($this->container->get('templating.helper.holders')->injectHolders($event->getResponse()->getContent()));
     }
 
     /**

@@ -7,10 +7,17 @@
  */
 // bof ri: ZePLUF
 $content = ob_get_clean();
+
 if(is_object($core_event)){
-    $core_event->setContent($content);
+    $core_event->getResponse()->setContent($content);
     $container->get('event_dispatcher')->dispatch(Zepluf\Bundle\StoreBundle\Events::onPageEnd, $core_event);
-    $content = $core_event->getContent();
+    $content = $core_event->getResponse()->getContent();
 }
-if(!isset($print_content) || $print_content) echo $content;
-// eof ri: cjloader
+
+if(!isset($print_content) || $print_content) {
+    echo $content;
+
+    if(is_object($kernel)) {
+        $kernel->terminate($request, $response);
+    }
+}

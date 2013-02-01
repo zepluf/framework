@@ -1,0 +1,10 @@
+routing:
+  resource: "routing.yml"
+
+web_profiler_wdt:
+  resource: @WebProfilerBundle/Resources/config/routing/wdt.xml
+  prefix: profiler_wdt
+
+web_profiler_profiler:
+  resource: @WebProfilerBundle/Resources/config/routing/profiler.xml
+  prefix: profiler_profilier

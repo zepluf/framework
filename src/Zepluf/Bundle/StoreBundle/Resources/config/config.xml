@@ -18,7 +18,6 @@
         <parameter key="storebundle.environment.class">Zepluf\Bundle\StoreBundle\Environment</parameter>
         <parameter key="storebundle.logs.class">Zepluf\Bundle\StoreBundle\Logs</parameter>
         <parameter key="storebundle.database_patcher.class">Zepluf\Bundle\StoreBundle\DatabasePatcher</parameter>
-        <parameter key="storebundle.core_event.class">Zepluf\Bundle\StoreBundle\Event\CoreEvent</parameter>
         <parameter key="storebundle.controller_listener.class">Zepluf\Bundle\StoreBundle\EventListener\ControllerListener</parameter>
 
         <parameter key="storebundle.templating.template_loader.class">Zepluf\Bundle\StoreBundle\Templating\Loader\TemplateLoader</parameter>
@@ -41,6 +40,7 @@
         <parameter key="storebundle.logger.zencart_handler.class">Zepluf\Bundle\StoreBundle\Logger\Handler\ZencartHandler</parameter>
         <parameter key="storebundle.cache_warmer.settings.class">Zepluf\Bundle\StoreBundle\CacheWarmer\SettingsCacheWarmer</parameter>
         <parameter key="storebundle.core_listener.class">Zepluf\Bundle\StoreBundle\EventListener\CoreListener</parameter>
+
 	</parameters>
 
     <services>
@@ -72,8 +72,6 @@
         </service>
 
         <service id="database_patcher" class="%storebundle.database_patcher.class%"></service>
-
-        <service id="storebundle.core_event" class="%storebundle.core_event.class%" scope="prototype"></service>
 
         <service id="storebundle.controller_listener" class="%storebundle.controller_listener.class%">
             <tag name="kernel.event_subscriber"/>

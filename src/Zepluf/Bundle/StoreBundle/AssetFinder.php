@@ -128,7 +128,7 @@ class AssetFinder
             $path = $file;
         }
         // absolute?
-        if(!$options['inline'] && !$options['external'] && (!is_file($path = $file) || !is_readable($path))) {
+        if((!isset($options['inline']) || !$options['inline']) && !$options['external'] && (!is_file($path = $file) || !is_readable($path))) {
             // explode
             $fileParts = explode(":", $file);
 		

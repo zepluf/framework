@@ -1,30 +1,10 @@
-installed:
-    - riPlugin
-    - riCache
-    - riZCAdmin
-    - riCjLoader
-    - riResultList
-    - riBanner
-activated:
-    - riPlugin
-    - riCache
-    - riZCAdmin
-    - riCjLoader
-    - riResultList
+initialized: false
+installed: []
+activated: []
 core:
     - riPlugin
     - riCache
     - riZCAdmin
     - riCjLoader
-    - riResultList
-backend:
-    - riPlugin
-    - riCache
-    - riZCAdmin
-    - riCjLoader
-    - riResultList
-frontend:
-    - riPlugin
-    - riCache
-    - riCjLoader
-    - riResultList
+backend: []
+frontend: []

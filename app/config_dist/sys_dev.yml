@@ -1,13 +1,10 @@
 initialized: false
-installed:
-
-activated:
-
+installed: []
+activated: []
 core:
     - riPlugin
     - riCache
     - riZCAdmin
     - riCjLoader
-backend:
-
-frontend:
+backend: []
+frontend: []

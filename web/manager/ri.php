@@ -37,14 +37,6 @@ if ($_GET['setup'] == 1) {
     die(sprintf("Setup has been done! You can <a href='%s'>click here</a> to visit the ZePLUF Manager", 'ri.php/ricore/manager/'));
 }
 
-try {
-    $response = $kernel->handle($request, Symfony\Component\HttpKernel\HttpKernelInterface::MASTER_REQUEST, false);
-} catch (Exception $e) {
-    // do something?
-    echo $e->getMessage();
-    exit('something went wrong with the routing');
-}
-
 $content = $response->getContent();
 
 if(!$request->isXmlHttpRequest() && strpos($request->getPathInfo(), '/profiler_') === false) {
@@ -70,5 +62,7 @@ $print_content = false;
 require('includes/application_bottom.php');
 
 $response->setContent($content);
+
 $response->send();
 $kernel->terminate($request, $response);
+exit();

@@ -6,6 +6,9 @@ parameters:
 
 framework:
   profiler: { only_exceptions: false }
+  router:
+    resource: "%kernel.root_dir%/config/routing_dev.yml"
+    strict_requirements: %kernel.debug%
 
 web_profiler:
   toolbar: true

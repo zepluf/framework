@@ -31,6 +31,8 @@ parameters:
   web.cache_dir: "%web.dir%/cache"
   web.images_dir: "%web.dir%/images"
 
+  web_profiler.debug_toolbar.class: Zepluf\Bundle\StoreBundle\EventListener\WebDebugToolbarListener
+
   locale: en
   database_driver:   pdo_mysql
   database_host:     localhost
