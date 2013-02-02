@@ -59,17 +59,19 @@ class ZencartHandler extends AbstractProcessingHandler
     protected function add($record, $type)
     {
         global $messageStack;
-        if ($this->environment->getSubEnvironment() == "backend") {
-            if (isset($record["context"]["session"]) && $record["context"]["session"]) {
-                $messageStack->add_session($record["message"], $type);
+        if(is_object($messageStack)) {
+            if ($this->environment->getSubEnvironment() == "backend") {
+                if (isset($record["context"]["session"]) && $record["context"]["session"]) {
+                    $messageStack->add_session($record["message"], $type);
+                } else {
+                    $messageStack->add($record["message"], $type);
+                }
             } else {
-                $messageStack->add($record["message"], $type);
-            }
-        } else {
-            if (isset($record["context"]["session"]) && $record["context"]["session"]) {
-                $messageStack->add_session($record["context"]["class"], $record["message"], $type);
-            } else {
-                $messageStack->add(isset($record["context"]["class"]) ? $record["context"]["class"] : "header", $record["message"], $type);
+                if (isset($record["context"]["session"]) && $record["context"]["session"]) {
+                    $messageStack->add_session($record["context"]["class"], $record["message"], $type);
+                } else {
+                    $messageStack->add(isset($record["context"]["class"]) ? $record["context"]["class"] : "header", $record["message"], $type);
+                }
             }
         }
     }

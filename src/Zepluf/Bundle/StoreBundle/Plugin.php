@@ -87,7 +87,6 @@ class Plugin
      */
     private $pluginsDir;
 
-
     /**
      * inject dependencies
      *
@@ -97,9 +96,10 @@ class Plugin
      * @param $appDir
      * @param $pluginsDir
      */
-    public function __construct($settings, $event_dispatcher, $environment, $appDir, $pluginsDir)
+    public function __construct($settings, $sysSettings, $event_dispatcher, $environment, $appDir, $pluginsDir)
     {
         $this->settings = $settings;
+        $this->sysSettings = $sysSettings;
         $this->environment = $environment;
         $this->eventDispatcher = $event_dispatcher;
         $this->appDir = $appDir;
@@ -112,64 +112,10 @@ class Plugin
     }
 
     /**
-     * Setups ZePLUF
-     *
-     * @param $container
-     * @param bool $force
-     * @return bool
-     */
-    public function setup($container, $force = false)
-    {
-        // we should check if some folders are writtable
-        if (!$this->settings->preCheck()) {
-            die(sprintf("ZePLUF is using this folder %s to write cache files, please make it writeable!", $this->settings->getCacheRoot()));
-        }
-
-        // clean up cache folder
-        if ($force) {
-            // we should remove all files in the cache
-            $this->resetCache($container->get('utility.file'));
-        }
-
-        $this->loadPluginsSettings();
-
-        // if this is the first time ZePLUF is loaded we need to do some init
-        foreach ($this->sysSettings['core'] as $plugin) {
-            $this->uninstall($container, $plugin);
-            $this->install($container, $plugin);
-            $this->activate($container, $plugin);
-        }
-
-        $this->settings->set('sys.initialized', true);
-
-        $this->saveSysSettings();
-
-        $this->resetCache($container->get('utility.file'));
-
-        // setup missing page check to off
-        global $db;
-        $db->Execute('UPDATE ' . TABLE_CONFIGURATION . " SET configuration_value = 'Off' WHERE configuration_value = 'MISSING_PAGE_CHECK'");
-        return true;
-    }
-
-
-    /**
-     * Load system setting file
-     */
-    public function loadSysSettings()
-    {
-        if (!$this->settings->has('sys')) {
-            $this->sysSettings = $this->settings->load('sys', $this->appDir . '/config/', 'sys_' . $this->environment->getEnvironment() . '.yml');
-        }
-    }
-
-    /**
      * Loads all plugins settings from cache, if not available then try to load the setting files
      */
     public function loadPluginsSettings()
     {
-        $this->loadSysSettings();
-
         Yaml::enablePhpParsing();
 
         if (!$this->settings->has('plugins')) {
@@ -213,7 +159,7 @@ class Plugin
     {
         $this->loadPluginsSettings();
 
-        $this->loadPlugin($container, $this->sysSettings[$this->environment->getSubEnvironment()]);
+        $this->loadPlugin($container, $this->sysSettings['activated']);
 
         if ($this->environment->getSubEnvironment() == "frontend") {
             $this->settings->loadTheme('frontend');
@@ -302,35 +248,27 @@ class Plugin
     {
         $this->loadPlugin($container, $plugin);
 
-        $settings = $this->settings->get('sys');
-
         $installed = false;
 
-        if (!isset($settings['installed']) || !in_array($plugin, $settings['installed'])) {
-
-            $settings['installed'][] = $plugin;
+        if (!isset($this->sysSettings['installed']) || !in_array($plugin, $this->sysSettings['installed'])) {
 
             // we need to do this because this plugin is not installed yet so the service is not registered
             if ($container->has($plugin)) {
                 if ($container->get($plugin)->install()) {
                     // we will put into the load
 
-                    arrayInsertValue($settings['installed'], $plugin);
+                    $this->sysSettings['installed'][] = $plugin;
 
-                    $this->settings->set('sys.installed', $settings['installed'], false);
-
-                    $this->saveSysSettings();
+                    $this->saveSysSettings($container->get('utility.collection'));
 
                     $this->resetCache($container->get('utility.file'));
 
                     $installed = true;
                 }
             } else {
-                arrayInsertValue($settings['installed'], $plugin);
+                $this->sysSettings['installed'][] = $plugin;
 
-                $this->settings->set('sys.installed', $settings['installed'], false);
-
-                $this->saveSysSettings();
+                $this->saveSysSettings($container->get('utility.collection'));
 
                 $this->resetCache($container->get('utility.file'));
 
@@ -358,11 +296,9 @@ class Plugin
     {
         $this->loadPlugin($container, $plugin);
 
-        $settings = $this->settings->get('sys');
-
         $uninstalled = false;
 
-        if (isset($settings['installed']) && in_array($plugin, $settings['installed'])) {
+        if (isset($this->sysSettings['installed']) && in_array($plugin, $this->sysSettings['installed'])) {
 
             // we need to deactivate the plugin first
             if (!$this->deactivate($container, $plugin)) {
@@ -377,11 +313,9 @@ class Plugin
             }
 
             // remove from the installed list
-            arrayRemoveValue($settings['installed'], $plugin);
+            arrayRemoveValue($this->sysSettings['installed'], $plugin);
 
-            $this->settings->set('sys.installed', $settings['installed'], false);
-
-            $this->saveSysSettings();
+            $this->saveSysSettings($container->get('utility.collection'));
 
             $this->resetCache($container->get('utility.file'));
 
@@ -404,7 +338,7 @@ class Plugin
      */
     public function isInstalled($plugin)
     {
-        return in_array($plugin, $this->settings->get('sys.installed', array()));
+        return in_array($plugin, $this->sysSettings['installed']);
     }
 
     /**
@@ -415,10 +349,12 @@ class Plugin
     public function info($plugin)
     {
         if (!isset($this->info[$plugin]))
-            if (file_exists($file_path = $this->pluginsDir . '/' . $plugin . '/plugin.xml'))
+            if (file_exists($file_path = $this->pluginsDir . '/' . $plugin . '/plugin.xml')) {
                 $this->info[$plugin] = new \SimpleXMLElement(file_get_contents($file_path));
-            else
+            }
+            else {
                 $this->info[$plugin] = false;
+            }
 
         return $this->info[$plugin];
     }
@@ -433,15 +369,9 @@ class Plugin
      */
     public function activate($container, $plugin)
     {
-        $settings = $this->settings->get('sys');
-
-        if (!isset($settings['activated'])) {
-            $settings['activated'] = array();
-        }
-
-        if (!in_array($plugin, $settings['activated'])) {
+        if (!in_array($plugin, $this->sysSettings['activated'])) {
             if (!$container->has($plugin) || $container->get($plugin)->activate() !== false) {
-                $settings['activated'][] = $plugin;
+                $this->sysSettings['activated'][] = $plugin;
 
                 // we will put into the load
                 $info = $this->info($plugin);
@@ -466,29 +396,27 @@ class Plugin
                 }
 
                 if ($info->preload->frontend == 'true') {
-                    if (!isset($settings['frontend'])) $settings['frontend'] = array();
-                    arrayInsertValue($settings['frontend'], $plugin);
+                    $this->sysSettings['frontend'][] = $plugin;
                 }
+
                 if ($info->preload->backend == 'true') {
-                    if (!isset($settings['backend'])) $settings['backend'] = array();
-                    arrayInsertValue($settings['backend'], $plugin);
+                    $this->sysSettings['backend'][] = $plugin;
                 }
 
                 // set back to settings
-                $this->settings->set('sys', $settings, true);
-
-                $this->saveSysSettings();
+                $this->saveSysSettings($container->get('utility.collection'));
 
                 // add menu for ZC 1.5.0 >
                 if (function_exists('zen_register_admin_page')) {
                     $this->loadPlugin($container, $plugin);
-                    if (($menus = $this->settings->get($plugin . '.menu', null)) != null) {
-                        foreach ($menus as $menu_key => $sub_menus)
+                    if (($menus = $this->settings->get('plugins.' . strtolower($plugin) . '.menu', null)) != null) {
+                        foreach ($menus as $menu_key => $sub_menus) {
                             foreach ($sub_menus as $menu) {
                                 $id = md5($menu['link']);
                                 zen_deregister_admin_pages($id);
                                 zen_register_admin_page($id, 'ZEPLUF_NAME_' . $id, 'ZEPLUF_URL_' . $id, '', $menu_key, 'Y', 1);
                             }
+                        }
                     }
                 }
             }
@@ -507,25 +435,22 @@ class Plugin
      */
     public function deactivate($container, $plugin)
     {
-        $settings = $this->settings->get('sys');
-
-        if (in_array($plugin, $settings['activated'])) {
+        if (in_array($plugin, $this->sysSettings['activated'])) {
             if (!$container->has($plugin) || $container->get($plugin)->deactivate() !== false) {
-                arrayRemoveValue($settings['activated'], $plugin);
-                arrayRemoveValue($settings['frontend'], $plugin);
-                arrayRemoveValue($settings['backend'], $plugin);
+                arrayRemoveValue($this->sysSettings['activated'], $plugin);
+                arrayRemoveValue($this->sysSettings['frontend'], $plugin);
+                arrayRemoveValue($this->sysSettings['backend'], $plugin);
 
-                $this->settings->set('sys', $settings);
-
-                $this->saveSysSettings();
+                $this->saveSysSettings($container->get('utility.collection'));
                 // add menu for ZC 1.5.0 >
                 if (function_exists('zen_deregister_admin_pages')) {
                     if (($menus = $this->settings->get("plugins." . $plugin . ".menu", null)) != null) {
-                        foreach ($menus as $menu_key => $sub_menus)
+                        foreach ($menus as $menu_key => $sub_menus) {
                             foreach ($sub_menus as $menu) {
                                 $id = md5($menu['link']);
                                 zen_deregister_admin_pages($id);
                             }
+                        }
                     }
                 }
             }
@@ -542,7 +467,7 @@ class Plugin
      */
     public function isActivated($plugin)
     {
-        return in_array($plugin, $this->settings->get('sys.activated'));
+        return in_array($plugin, $this->sysSettings);
     }
 
     /**
@@ -569,9 +494,12 @@ class Plugin
     /**
      * Saves settings
      */
-    private function saveSysSettings()
+    public function saveSysSettings($collectionUtility, $settings = null)
     {
-        $this->settings->saveLocal($this->appDir . '/config/sys_' . $this->environment->getEnvironment() . '.yml', $this->settings->get('sys'));
+        if(!empty($settings)) {
+            $this->sysSettings = $collectionUtility->arrayMergeWithReplace($this->sysSettings, $settings);
+        }
+        $this->settings->saveLocal($this->appDir . '/config/sys_' . $this->environment->getEnvironment() . '.yml', $this->sysSettings);
     }
 
     /**

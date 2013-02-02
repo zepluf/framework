@@ -18,16 +18,17 @@ use Zepluf\Bundle\StoreBundle\PluginCore;
 /**
  * the main class of riZCAdmin
  */
-class RiZCAdmin extends PluginCore{
+class RiZCAdmin extends PluginCore
+{
 
     /**
      * inits plugin
      *
      * @inherit
      */
-    public function init(){
-
-        if(IS_ADMIN_FLAG){
+    public function init()
+    {
+        if (IS_ADMIN_FLAG) {
             global $autoLoadConfig;
             $autoLoadConfig[200][] = array('autoType' => 'require', 'loadFile' => __DIR__ . '/init_includes.php');
         }

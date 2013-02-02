@@ -10,13 +10,6 @@
  * file that was distributed with this source code or refer to the LICENSE
  * file of ZePLUF
  */
-
-if(!$container->get("settings")->get("sys.initialized")) {
-    $container->get("plugin")->setup($container);
-    header("location: ".$request->getUri());
-    exit();
-}
-
 // set locale
 $container->get('translator')->setLocale($_SESSION['languages_code']);
 

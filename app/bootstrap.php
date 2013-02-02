@@ -13,14 +13,6 @@ if(!isset($environment)) {
 
 use Symfony\Component\ClassLoader\ApcClassLoader;
 
-// copy config files from dist folder
-foreach (glob(__DIR__ . '/config_dist/*', GLOB_NOSORT) as $config_file) {
-    $config_filename = basename($config_file);
-    if (!file_exists($dest_config_file = __DIR__ . '/config/' . $config_filename)) {
-        copy($config_file, $dest_config_file);
-    }
-}
-
 $loader = require_once __DIR__ . '/bootstrap.php.cache';
 
 //$loader->add('plugins', __DIR__);

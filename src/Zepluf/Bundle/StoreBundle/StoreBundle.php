@@ -36,10 +36,19 @@ class StoreBundle extends Bundle
         $appDir = $container->getParameter("kernel.root_dir");
         $pluginsDir = $appDir . '/plugins';
 
-        if (file_exists($sys_file = $appDir . '/config/sys_' . $container->getParameter("kernel.environment") . '.yml')) {
-            $sysConfig = Yaml::parse($sys_file);
+        // copy config files from dist folder
+        foreach (glob($appDir . '/config_dist/*', GLOB_NOSORT) as $config_file) {
+            $config_filename = basename($config_file);
+            if (!file_exists($dest_config_file = $appDir . '/config/' . $config_filename)) {
+                copy($config_file, $dest_config_file);
+            }
+        }
 
-            $container->setParameter("sys_config", $sysConfig);
+        // load the sys config which store the current plugins installed etc
+        if (file_exists($sysFile = $appDir . '/config/sys_' . $container->getParameter("kernel.environment") . '.yml')) {
+            $sysConfig = Yaml::parse($sysFile);
+
+            $container->setParameter("sys", $sysConfig);
 
             if (isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
                 foreach ($sysConfig["activated"] as $plugin) {
@@ -53,6 +62,9 @@ class StoreBundle extends Bundle
                 }
             }
         }
+
+        // save the sys config
+        @file_put_contents($sysFile, Yaml::dump($sysConfig));
     }
 
     public function getParent()

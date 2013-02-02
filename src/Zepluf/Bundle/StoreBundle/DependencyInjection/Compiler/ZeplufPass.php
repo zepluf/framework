@@ -24,8 +24,8 @@ class ZeplufPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if($container->hasParameter("sys_config")) {
-            $sysConfig = $container->getParameter("sys_config");
+        if($container->hasParameter("sys")) {
+            $sysConfig = $container->getParameter("sys");
             $pluginsDir = $container->getParameter("kernel.root_dir") . '/plugins';
 
             if(isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {

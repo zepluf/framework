@@ -41,8 +41,8 @@ class StoreExtension extends Extension
         $appDir = $container->getParameter("kernel.root_dir");
         $pluginsDir = $appDir . '/plugins';
 
-        if($container->hasParameter("sys_config")) {
-            $sysConfig = $container->getParameter("sys_config");
+        if($container->hasParameter("sys")) {
+            $sysConfig = $container->getParameter("sys");
 
             // load all plugins routes
             if(isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {

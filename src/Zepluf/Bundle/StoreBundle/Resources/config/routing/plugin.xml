@@ -4,55 +4,48 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-    <route id="storebundle.contact_us" pattern="/contact-us">
-        <default key="_controller">StoreBundle:Zencart:static</default>
-        <default key="parameter_main_page">contact_us</default>
-    </route>
-
     <!-- all plugins routes -->
-    <route id="riplugin_admin_plugins" pattern="/riplugin/manager/">
+    <route id="plugins_admin" pattern="/plugins/manager/">
         <default key="_controller">StoreBundle:AdminPlugin:index</default>
     </route>
 
-    <route id="riplugin_admin_plugins_info" pattern="/riplugin/info/">
+    <route id="plugins_admin_info" pattern="/plugins/info/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsInfo</default>
     </route>
 
-    <route id="riplugin_admin_plugins_install" pattern="/riplugin/install/">
+    <route id="plugins_admin_install" pattern="/plugins/install/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsInstall</default>
     </route>
 
-    <route id="riplugin_admin_plugins_uninstall" pattern="/riplugin/uninstall/">
+    <route id="plugins_admin_uninstall" pattern="/plugins/uninstall/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsUninstall</default>
     </route>
 
-    <route id="riplugin_admin_plugins_activate" pattern="/riplugin/activate/">
+    <route id="plugins_admin_activate" pattern="/plugins/activate/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsActivate</default>
     </route>
 
-    <route id="riplugin_admin_plugins_deactivate" pattern="/riplugin/deactivate/">
+    <route id="plugins_admin_deactivate" pattern="/plugins/deactivate/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsDeactivate</default>
     </route>
 
-    <route id="riplugin_admin_plugins_reset" pattern="/riplugin/reset/">
+    <route id="plugins_admin_reset" pattern="/plugins/reset/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsReset</default>
     </route>
 
-    <route id="riplugin_admin_plugins_load_theme_settings" pattern="/riplugin/load_theme_settings/">
+    <route id="plugins_admin_load_theme_settings" pattern="/plugins/load_theme_settings/">
         <default key="_controller">StoreBundle:AdminPlugin:loadThemeSettings</default>
     </route>
 
-    <route id="riplugin_admin_plugins_configs_settings" pattern="/riplugin/configs_settings/">
+    <route id="plugins_admin_configs_settings" pattern="/plugins/configs_settings/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsConfig</default>
     </route>
 
-    <route id="riplugin_admin_plugins_show_settings" pattern="/riplugin/show_settings/">
+    <route id="plugins_admin_show_settings" pattern="/plugins/show_settings/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsShowSettings</default>
     </route>
 
-    <route id="riplugin_admin_plugins_delete" pattern="/riplugin/delete/">
+    <route id="plugins_admin_delete" pattern="/plugins/delete/">
         <default key="_controller">StoreBundle:AdminPlugin:pluginsDelete</default>
     </route>
-
-
 </routes>

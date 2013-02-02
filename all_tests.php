@@ -13,8 +13,6 @@ define('STRICT_ERROR_REPORTING', true);
 require($site_path . 'includes/application_top.php');
 require('plugins/riCore/vendor/simpletest/autorun.php');
 
-use plugins\riPlugin\Plugin;
-
 /**
  * All tests class
  */

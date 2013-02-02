@@ -49,9 +49,9 @@ class AdminPluginController extends Controller
             $plugins[$key]['info'] = $this->get("plugin")->info($plugin['code_name']);
         }
 
-        $this->get('templating.helper.holders')->add('main', $this->renderView('plugins:riZCAdmin:backend/plugin/_list.html.php', array('plugins' => $plugins, 'core' => $this->get('settings')->get('framework.core', array()))));
+        $this->get('templating.helper.holders')->add('main', $this->renderView('bundles:StoreBundle:backend/plugin/_list.html.php', array('plugins' => $plugins, 'core' => $this->get('settings')->get('framework.core', array()))));
 
-        return $this->render('plugins:riZCAdmin:backend/layout.html.php');
+        return $this->render('bundles:StoreBundle:backend/layout.html.php');
     }
 
     /**
@@ -67,7 +67,7 @@ class AdminPluginController extends Controller
         if (!empty($plugin)) {
             $info = $this->get("plugin")->info($plugin);
         }
-        return $this->render('plugins:riZCAdmin:backend/plugin/_plugins_info.html.php', array('info' => $info));
+        return $this->render('bundles:StoreBundle:backend/plugin/_plugins_info.html.php', array('info' => $info));
     }
 
     /**
