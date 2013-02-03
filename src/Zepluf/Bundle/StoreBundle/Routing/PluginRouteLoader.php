@@ -19,11 +19,14 @@ use Symfony\Component\Routing\Route;
 
 class PluginRouteLoader extends Loader
 {
+    protected $sysSettings;
+
     protected $settings;
 
-    public function __construct($settings)
+    public function __construct($sysSettings, $settings)
     {
         $this->settings = $settings;
+        $this->sysSettings = $sysSettings;
     }
 
     public function supports($resource, $type = null)
@@ -33,13 +36,13 @@ class PluginRouteLoader extends Loader
 
     public function load($resource, $type = null)
     {
-        $sysSettings = $this->settings->get('sys');
         $pluginsSettings = $this->settings->get('plugins');
 
         $collection = new RouteCollection();
 
-        if(isset($sysSettings['activated']) && is_array($sysSettings['activated'])) {
-            foreach ($sysSettings['activated'] as $plugin) {
+        if(isset($this->sysSettings['activated']) && is_array($this->sysSettings['activated'])) {
+
+            foreach ($this->sysSettings['activated'] as $plugin) {
                 $plugin_lc_name = strtolower($plugin);
                 if (isset($pluginsSettings[$plugin_lc_name]['routes'])) {
                     foreach ($pluginsSettings[$plugin_lc_name]['routes'] as $key => $route) {

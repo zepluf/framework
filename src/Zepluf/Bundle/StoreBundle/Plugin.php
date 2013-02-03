@@ -116,8 +116,6 @@ class Plugin
      */
     public function loadPluginsSettings()
     {
-        Yaml::enablePhpParsing();
-
         if (!$this->settings->has('plugins')) {
             // now try to load from all the cache files
             if (($this->plugins_settings = $this->settings->loadCache('plugins')) === false) {
@@ -157,8 +155,6 @@ class Plugin
      */
     public function loadPlugins($container)
     {
-        $this->loadPluginsSettings();
-
         $this->loadPlugin($container, $this->sysSettings['activated']);
 
         if ($this->environment->getSubEnvironment() == "frontend") {
@@ -467,7 +463,7 @@ class Plugin
      */
     public function isActivated($plugin)
     {
-        return in_array($plugin, $this->sysSettings);
+        return in_array($plugin, $this->sysSettings['activated']);
     }
 
     /**

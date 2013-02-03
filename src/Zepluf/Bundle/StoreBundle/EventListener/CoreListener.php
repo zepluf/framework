@@ -57,8 +57,8 @@ class CoreListener implements EventSubscriberInterface
             $load = true;
             // we will check to see if this is a plugin's template, and if so we need to check if it is activated
             if (strpos($content["template"]["name"], ':') !== false) {
-                $plugin = current(explode(':', $content["template"]["name"]));
-                if (!$this->container->get("plugin")->isActivated($plugin)) {
+                $template_parts = explode(':', $content["template"]["name"]);
+                if (!$this->container->get("plugin")->isActivated($template_parts[1])) {
                     $load = false;
                 }
             }

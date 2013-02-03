@@ -133,6 +133,7 @@
 
         <!-- routing -->
         <service id="plugin_route_loader" class="%storebundle.plugin_route_loader.class%" public="false">
+            <argument>%sys%</argument>
             <argument type="service" id="settings" />
             <tag name="routing.loader" />
         </service>

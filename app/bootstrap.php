@@ -43,6 +43,8 @@ if (defined('IS_ADMIN_FLAG') && IS_ADMIN_FLAG == true) {
     $container->get("environment")->setTemplate($container->getParameter('store.frontend.current_template'));
 }
 
+$container->get("plugin")->loadPluginsSettings();
+
 // path to zencart dir, edit if you place zencart elsewhere
 define("ZENCART_DIR", $container->getParameter("store.zencart_dir"));
 // zencart admin folder name

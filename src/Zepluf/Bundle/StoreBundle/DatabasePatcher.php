@@ -28,9 +28,9 @@ define('ZC_UPG_DEBUG', false);
 define('ZC_UPG_DEBUG2', false);
 define('ZC_UPG_DEBUG3', false);
 //if (isset($_GET['debug']) && $_GET['debug']=='ON') $debug=true;
-//if (!isset($_GET['debug'])  && !\zen_not_null($_POST['debug']) && $debug!=true)  define('ZC_UPG_DEBUG',false);
-//if (!isset($_GET['debug2']) && !\zen_not_null($_POST['debug2']) && $debug!=true) define('ZC_UPG_DEBUG2',false);
-//if (!isset($_GET['debug3']) && !\zen_not_null($_POST['debug3']) && $debug!=true) define('ZC_UPG_DEBUG3',false);
+//if (!isset($_GET['debug'])  && !zen_not_null($_POST['debug']) && $debug!=true)  define('ZC_UPG_DEBUG',false);
+//if (!isset($_GET['debug2']) && !zen_not_null($_POST['debug2']) && $debug!=true) define('ZC_UPG_DEBUG2',false);
+//if (!isset($_GET['debug3']) && !zen_not_null($_POST['debug3']) && $debug!=true) define('ZC_UPG_DEBUG3',false);
 //$keepslashes = (isset($_GET['keepslashes']) && ($_GET['keepslashes']=='1' || $_GET['keepslashes']=='true')) ? true : false;
 //NOTE: THIS IS INTENTIONALLY ON 2 LINES:
 $linebreak = '

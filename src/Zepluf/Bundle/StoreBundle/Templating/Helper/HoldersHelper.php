@@ -85,8 +85,9 @@ class HoldersHelper extends Helper
             });
 
 
-            foreach ($this->holders[$holder] as $c)
+            foreach ($this->holders[$holder] as $c) {
                 $content .= $c['content'];
+            }
         }
 
         $this->eventDispatcher->dispatch(HoldersHelperEvents::onHolderEnd, $event);

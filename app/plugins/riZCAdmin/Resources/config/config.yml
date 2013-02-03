@@ -1,5 +1,0 @@
-# the settings from here should not be edited or overwritten
-menu:
-  # append the Plugin Manager link into the Extras menu
-  extras:
-    - {text: Plugins Manager, link: ri.php/riplugin/manager/}
