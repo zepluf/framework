@@ -3,7 +3,7 @@
 use Doctrine\Common\Annotations\AnnotationRegistry;
 
 // load the common functions
-require_once(__DIR__ . '/../src/ZePluf/Bundle/StoreBundle/Functions/common.php');
+require_once(__DIR__ . '/../src/Zepluf/Bundle/StoreBundle/Functions/common.php');
 
 $loader = require __DIR__.'/../vendor/autoload.php';
 
