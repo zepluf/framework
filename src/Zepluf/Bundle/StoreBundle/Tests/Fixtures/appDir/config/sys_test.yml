@@ -1,13 +1,7 @@
-installed:
-    - riCjLoader
-activated:
-    - riCjLoader
+initialized: false
+installed: {  }
+activated: {  }
 core:
-    - riCache
-    - riZCAdmin
     - riCjLoader
-    - riResultList
-backend:
-    - riCjLoader
-frontend:
-    - riCjLoader
+backend: {  }
+frontend: {  }

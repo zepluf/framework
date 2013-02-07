@@ -13,54 +13,44 @@
 
 namespace Zepluf\Bundle\StoreBundle\Tests\Utility;
 
-use \Zepluf\Bundle\StoreBundle\Utility\File;
+use Zepluf\Bundle\StoreBundle\Utility\File;
 
 class FileTest extends \Zepluf\Bundle\StoreBundle\Tests\BaseTestCase
 {
     protected $object;
 
-//    public static function setUpBeforeClass()
-//    {
-//        define('DIR_WS_HTTPS_ADMIN', self::getParameter('store.root_dir') . '/expadmin');
-//        define('DIR_WS_ADMIN', self::getParameter('store.root_dir') . '/expadmin');
-//        define('DIR_WS_HTTPS_CATALOG', self::getParameter('store.root_dir'));
-//        define('DIR_WS_CATALOG', self::getParameter('store.root_dir'));
-//    }
-
-    public function setUp()
-    {
-        $this->object = $this->get('utility.file');
-    }
-
     public function testGetRelativePath()
     {
-        $path = $this->object->getRelativePath($this->getParameter('kernel.root_dir'), $this->getParameter('store.root_dir'));
-        $this->assertEquals('../..', $path);
+        $stringUtility = $this->getMock('Zepluf\Bundle\StoreBundle\Utility\String');
+        $this->object = new File($stringUtility);
 
-        $path = $this->object->getRelativePath($this->getParameter('kernel.config_dir'), $this->getParameter('web.dir'));
-        $this->assertEquals('../web', $path);
-    }
-
-    public function testGenerateUniqueName()
-    {
-        $name = ($this->object->generateUniqueName(__DIR__ . '/', 'StringTest.php'));
-        $this->assertTrue(!file_exists(__DIR__ . '/' . $name));
+        $from = __DIR__;
+        $to = __DIR__ . '/../Fixtures/Utility';
+        $path = $this->object->getRelativePath($from, $to);
+        $this->assertEquals('../Fixtures/Utility', $path);
     }
 
     public function testCalculatePath()
     {
+        $stringUtility = $this->getMock('Zepluf\Bundle\StoreBundle\Utility\String');
+        $stringUtility
+            ->expects($this->once())
+            ->method('stripNonAlphaNumeric')
+            ->with($this->equalTo(strtolower('testname')))
+            ->will($this->returnValue('testname'));
+
+        $this->object = new File($stringUtility);
+
         $path = $this->object->calculatePath('testname', __DIR__ . '/', 4);
         $this->assertEquals(__DIR__ . '/t/e/s/t', $path);
     }
 
-    public function testUploadFile()
-    {
-
-    }
-
     public function testSureRemoveDir()
     {
-        $dir = __DIR__ . '/../Fixtures/junks/utility/DirToRemove/';
+        $stringUtility = $this->getMock('Zepluf\Bundle\StoreBundle\Utility\String');
+        $this->object = new File($stringUtility);
+
+        $dir = __DIR__ . '/../Fixtures/Utility/DirToRemove/';
         if (!file_exists($dir)) {
             mkdir($dir);
         }
@@ -81,39 +71,44 @@ class FileTest extends \Zepluf\Bundle\StoreBundle\Tests\BaseTestCase
 
     public function testWrite()
     {
-        $dir = __DIR__ . '/../Fixtures/junks/utility/';
+        $stringUtility = $this->getMock('Zepluf\Bundle\StoreBundle\Utility\String');
+        $this->object = new File($stringUtility);
+
+        $dir = __DIR__ . '/../Fixtures/Utility/';
         $data = "Hello world";
-        $this->object->write($dir . "test", $data);
+        $this->object->write($dir . 'FileWrite', $data);
 
-        $file_contents = file_get_contents($dir . "test");
+        $file_contents = file_get_contents($dir . "FileWrite");
         $this->assertEquals($file_contents, $data);
-    }
-
-    public function testGetCatalogToAdminRelativePath()
-    {
     }
 
     public function testXCopy()
     {
-        $sourceHandle = opendir(__DIR__ . '/../Fixtures/junks/plugins');
-        $source = array();
+        $stringUtility = $this->getMock('Zepluf\Bundle\StoreBundle\Utility\String');
+        $this->object = new File($stringUtility);
+
+        $source = __DIR__ . '/../Fixtures/Utility/xcopySource';
+        $dest = __DIR__ . '/../Fixtures/Utility/xcopyDest';
+
+        $sourceHandle = opendir($source);
+        $sourceArray = array();
         while (false !== ($entry = readdir($sourceHandle))) {
-            $source[] = $entry;
+            $sourceArray[] = $entry;
         }
 
-        $this->object->xcopy(__DIR__ . '/../Fixtures/junks/plugins', __DIR__ . '/../Fixtures/junks/utility/xcopy');
+        $this->object->xcopy($source, $dest);
 
-        $destinationHandle = opendir(__DIR__ . '/../Fixtures/junks/utility/xcopy');
-        $destination = array();
-        while (false !== ($entry = readdir($destinationHandle))) {
-            $destination[] = $entry;
+        $destHandle = opendir($dest);
+        $destArray = array();
+        while (false !== ($entry = readdir($destHandle))) {
+            $destArray[] = $entry;
         }
 
         //Assertion: Compare two dirs
-        $this->assertEquals($source, $destination);
+        $this->assertEquals($sourceArray, $destArray);
 
         //Clear junks
-        $this->object->sureRemoveDir(__DIR__ . '/../Fixtures/junks/utility/xcopy', true);
+        $this->object->sureRemoveDir($dest, true);
     }
 
     public function tearDown()

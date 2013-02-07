@@ -21,15 +21,17 @@ class ViewTest extends BaseTestCase
 
     protected $defaultTemplateDir;
 
-    public function setUp(){
+    public function setUp()
+    {
+        $this->get('environment')->setSubEnvironment("frontend");
         $this->view = $this->get("view");
         $environment = $this->get("environment");
         $environment->setSubEnvironment("frontend");
-        $this->view->setPathPatterns("includes/templates/classic/", $environment);
         $this->defaultTemplateDir = $this->getParameter("store.frontend.templates_dir") . "/template_default";
     }
 
-    public function testSetGet(){
+    public function testSetGet()
+    {
         $this->view->set(array('key' => 'value'));
 
         $this->assertEquals($this->view->get('key'), 'value');
@@ -39,7 +41,8 @@ class ViewTest extends BaseTestCase
         $this->assertEquals($this->view->get('key'), 'value2');
     }
 
-    public function testFindRenderPathTemplate(){
+    public function testFindRenderPathTemplate()
+    {
         // put the template into the current template
         $filePath = $this->defaultTemplateDir . '/templates/tpl_test_template.html.php';
         $fp = fopen($filePath, 'w');
@@ -48,8 +51,6 @@ class ViewTest extends BaseTestCase
         fclose($fp);
 
         $filePath = realpath($filePath);
-
-        $this->view->addDefaultPathPattern('template', $this->defaultTemplateDir);
 
         $renderedPath = $this->view->findRenderPath('templates/tpl_test_template.html.php');
 
@@ -60,8 +61,9 @@ class ViewTest extends BaseTestCase
         @unlink($filePath);
     }
 
-    public function testFindRenderPathPlugin(){
-        $filePath = $this->getParameter("plugins.root_dir") . '/riSample/Resources/views/test_template.html.php';echo $filePath;
+    public function testFindRenderPathPlugin()
+    {
+        $filePath = $this->getParameter("plugins.root_dir") . '/riFooBar/Resources/views/test_template.html.php';
         $fp = fopen($filePath, 'w');
         fwrite($fp, 'sample template file');
 
@@ -69,9 +71,7 @@ class ViewTest extends BaseTestCase
 
         $filePath = realpath($filePath);
 
-        $this->view->addDefaultPathPattern('template', $this->defaultTemplateDir);
-
-        $renderedPath = $this->view->findRenderPath('riSample:test_template.php');
+        $renderedPath = $this->view->findRenderPath('riFooBar:test_template.html.php');
 
         $this->assertTrue(is_string($renderedPath));
 
@@ -80,7 +80,7 @@ class ViewTest extends BaseTestCase
         // put the template into the plugin overrride
         // now the view should load the overriding file instead
 
-        $filePath2 = $this->getParameter("plugins.root_dir") . '/riSample/Resources/views/test_template.html.php';
+        $filePath2 = $this->getParameter("plugins.root_dir") . '/riFooBar/Resources/views/test_template.html.php';
         $fp = fopen($filePath2, 'w');
         fwrite($fp, 'sample template file');
 
@@ -88,7 +88,7 @@ class ViewTest extends BaseTestCase
 
         $filePath2 = realpath($filePath2);
 
-        $renderedPath = $this->view->findRenderPath('riSample:test_template.php');
+        $renderedPath = $this->view->findRenderPath('riFooBar:test_template.html.php');
 
         $this->assertTrue(is_string($renderedPath));
 
@@ -96,23 +96,5 @@ class ViewTest extends BaseTestCase
 
         @unlink($filePath);
         @unlink($filePath2);
-
-    }
-
-    public function testRender(){
-        $filePath = $this->defaultTemplateDir . '/templates/tpl_test_template.html.php';
-        $fp = fopen($filePath, 'w');
-        fwrite($fp, 'sample <?php echo $text?> file');
-
-        fclose($fp);
-
-        $filePath = realpath($filePath);
-
-        $this->view->addDefaultPathPattern('template', $this->defaultTemplateDir);
-        $renderedContent = $this->view->render('templates/tpl_test_template.html.php', array('text' => 'template'));
-
-        $this->assertEquals($renderedContent, "\r\n <!-- bof: templates/tpl_test_template.html.php --> \r\n" . "sample template file" . "\r\n <!-- eof: templates/tpl_test_template.html.php --> \r\n");
-
-        @unlink($filePath);
     }
 }

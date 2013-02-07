@@ -11,3 +11,13 @@ monolog:
       type:  stream
       path:  %kernel.logs_dir%/%kernel.environment%.log
       level: debug
+
+parameters:
+  kernel.root_dir: "../src/Zepluf/Bundle/StoreBundle/Tests/Fixtures/appDir"
+
+  kernel.config_dir: "%kernel.root_dir%/config"
+  kernel.cache_dir: "%kernel.root_dir%/cache"
+  plugins.root_dir: "%kernel.root_dir%/plugins"
+  store.frontend.templates_dir: "%kernel.root_dir%/templates/"
+
+  web.dir: "%kernel.root_dir%/../webDir"
