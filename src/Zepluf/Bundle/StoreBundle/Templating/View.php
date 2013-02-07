@@ -40,7 +40,7 @@ class View implements \ArrayAccess
     /**
      * @var
      */
-    private $phEngine;
+    private $phpEngine;
 
     /**
      * path patterns
@@ -206,7 +206,7 @@ class View implements \ArrayAccess
      */
     public function offsetSet($name, $value)
     {
-        $this->phEngine->set($name, $value);
+        $this->phpEngine->set($name, $value);
     }
 
     /**
