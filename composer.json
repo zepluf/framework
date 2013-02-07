@@ -1,0 +1,21 @@
+{
+    "name": "zepluf/standard-edition",
+    "description": "The \"ZePLUF Standard Edition\" distribution",
+    "authors": [
+        {
+            "name": "Raine Ng",
+            "email": "vunguyen@rubikin.com",
+            "homepage": "http://rubikin.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.4-dev"
+        }
+    }
+
+}
