@@ -37,10 +37,13 @@ class TemplateReference extends BaseTemplateReference
      */
     public function getLogicalName()
     {
-        if(!empty($this->parameters['format'])) {
-            return sprintf('%s:%s:%s/%s.%s.%s', $this->parameters['type'], $this->parameters['plugin'], $this->parameters['path'], $this->parameters['name'], $this->parameters['format'], $this->parameters['engine']);
-        }
-        else {
+        if (!empty($this->parameters['format'])) {
+            if (!empty($this->parameters['path'])) {
+                return sprintf('%s:%s:%s/%s.%s.%s', $this->parameters['type'], $this->parameters['plugin'], $this->parameters['path'], $this->parameters['name'], $this->parameters['format'], $this->parameters['engine']);
+            } else {
+                return sprintf('%s:%s:%s.%s.%s', $this->parameters['type'], $this->parameters['plugin'], $this->parameters['name'], $this->parameters['format'], $this->parameters['engine']);
+            }
+        } else {
             return sprintf('%s:%s:%s/%s.%s', $this->parameters['type'], $this->parameters['plugin'], $this->parameters['path'], $this->parameters['name'], $this->parameters['engine']);
         }
     }
@@ -50,9 +53,9 @@ class TemplateReference extends BaseTemplateReference
      */
     public function getPath()
     {
-        if("bundles" == $this->get('type')) {
+        if ("bundles" == $this->get('type')) {
             $path = str_replace('\\', '/', $this->get('path'));
-            return '@'.$this->get('plugin').'/Resources/views/'. (empty($path) ? '' : $path.'/') . $this->get('name').'.'.$this->get('format').'.'.$this->get('engine');
+            return '@' . $this->get('plugin') . '/Resources/views/' . (empty($path) ? '' : $path . '/') . $this->get('name') . '.' . $this->get('format') . '.' . $this->get('engine');
         }
 
         return parent::getPath();

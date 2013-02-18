@@ -19,57 +19,48 @@ use Symfony\Component\Yaml\Yaml;
 use \Zepluf\Bundle\StoreBundle\Settings;
 use Zepluf\Bundle\StoreBundle\PluginEvents;
 use Zepluf\Bundle\StoreBundle\Event\PluginEvent;
+use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 class PluginTest extends BaseTestCase
 {
     protected $object;
-    private $configDir;
-    private $cacheDir;
-    private $pluginDir;
-    private $environment;
-    private $listenerResult = '';
-
+    protected $appDir;
+    protected $configDir;
+    protected $cacheDir;
+    protected $pluginDir;
+    protected $environment;
+    protected $listenerResult = '';
     protected $settings;
 
     public static function setUpBeforeClass()
     {
-        define('PROJECT_VERSION_MAJOR', '1');
-        define('PROJECT_VERSION_MINOR', '5.1');
+        $loader = new UniversalClassLoader();
+        $loader->registerNamespace('plugins\riFooBar', __DIR__ . '/Fixtures/appDir/');
+        $loader->register();
     }
 
     public function setUp()
     {
-        $appDir = __DIR__ . '/Fixtures/appDir';
-        $this->configDir = $appDir . '/config';
-        $this->cacheDir = $appDir . '/cache';
-        $this->pluginDir = $appDir . '/plugins';
-
-//        $settings = new Settings($this->configDir, $this->cacheDir, $this->pluginDir, $this->env = $this->getParameter('kernel.environment'));
+        $this->appDir = __DIR__ . '/Fixtures/appDir';
+        $this->configDir = $this->appDir . '/config';
+        $this->cacheDir = $this->appDir . '/cache';
+        $this->pluginDir = $this->appDir . '/plugins';
 
         //Get and set environment
-        $this->environment = $this->get('environment');
-        $this->environment->setEnvironment($this->getParameter('kernel.environment'));
-        $this->environment->setSubEnvironment('frontend');
+        $this->environment = new TestEnvironment();
 
-        $this->settings = new Settings($this->configDir, $this->cacheDir, $this->pluginDir, $this->getParameter('kernel.environment'));
+        //Get settings
+        $this->settings = new Settings($this->configDir, $this->cacheDir, $this->pluginDir, $this->environment->getEnvironment());
 
-        $this->object = new Plugin($this->settings, $this->get('event_dispatcher'), $this->environment, $appDir, $this->pluginDir);
+        //Sys Settings
+        if (file_exists($sysFile = $this->appDir . '/config/sys_' . $this->environment->getEnvironment() . '.yml')) {
+            $sysConfig = Yaml::parse($sysFile);
+        }
+
+        $this->object = new Plugin($this->settings, $sysConfig, $this->get('event_dispatcher'), $this->environment, $this->appDir, $this->pluginDir);
     }
 
-    public function testLoadSysSettings()
-    {
-        //Load system setting file
-        $this->object->loadSysSettings();
-
-        //Open system setting file
-        $local_config = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
-
-        //Assertion: Compare system setting file with system setting in Settings service
-        $this->assertEquals($local_config, $this->settings->get('sys'));
-    }
-
-
-    public function testLoadPluginSettings()
+    public function testLoadPluginSettingsNoCache()
     {
         $this->settings->resetCache();
 
@@ -82,64 +73,73 @@ class PluginTest extends BaseTestCase
 
     public function testLoadPlugins()
     {
+        $oldConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+
         $this->get('event_dispatcher')->addListener(PluginEvents::onPluginLoadEnd, array($this, 'onPluginLoad'));
+
+        $this->object->activate($this->_container, 'riFooBar');
 
         //Notice: This will init plugin in app/plugins
         $this->object->loadPlugins($this->_container);
 
         //Assertion: getLoader, test event dispatcher
-        $this->assertEquals(array('riCjLoader'), $this->object->getLoaded());
+        $this->assertEquals(array('riFooBar'), $this->object->getLoaded());
         $this->assertEquals("OK", $this->listenerResult);
+
+        //reset System setting file
+        $this->settings->saveLocal($this->configDir . '/sys_test.yml', $oldConfig);
     }
 
     public function testLoadPlugin()
     {
-        $content = 'init run successfully';
-        $this->object->loadPlugin($this->_container, array('riTest'));
+        $content = 'RiFooBar init run successfully';
 
-        $this->assertEquals($content, file_get_contents(__DIR__ . '/Fixtures/junks/plugins/test_init_file'));
+        $this->object->loadPlugin($this->_container, array('riFooBar'));
+
+        $this->assertEquals($content, file_get_contents(__DIR__ . '/Fixtures/output/test_init_file'));
     }
 
+    public function testInfo()
+    {
+        $plugin = 'riFooBar';
+        $info = $this->object->info($plugin);
+        $this->assertEquals("RiFooBar", $info->name);
+        $this->assertEquals("Sample plugin for ZePLUF unit testing", $info->summary);
+        $this->assertTrue((bool)$info->preload->frontend);
+    }
 
     public function testInstall()
     {
         //get and parse system setting file first
-        $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
-        arrayInsertValue($localConfig['installed'], 'riTest');
+        $oldConfig = $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
 
-        //Install riTest
-        $this->object->loadSysSettings();
-        $this->object->install($this->_container, 'riTest');
+        arrayInsertValue($localConfig['installed'], 'riFooBar');
+
+        //Install riFooBar
+        $this->object->install($this->_container, 'riFooBar');
 
         //get and parse new system setting file
-
         $newLocalConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
 
         //Assertion 1: Make sure riTest append to settings by compare two setting array
         $this->assertEquals($localConfig, $newLocalConfig);
 
         //Assertion 2: Make sure public files moved into web dir
-        $this->assertFileExists(($this->getParameter('web.dir') . '/plugins/riTest/test_public.css'));
+        $this->assertFileExists(($this->getParameter('web.dir') . '/plugins/riFooBar/css/foo.css'));
 
         //Assertion 3: Make sure install code executed
-        $this->assertEquals('install run successfully', file_get_contents(__DIR__ . '/Fixtures/junks/plugins/test_install_file'));
+        $this->assertEquals('RiFooBar install run successfully', file_get_contents(__DIR__ . '/Fixtures/output/test_install_file'));
 
         //Final assertion
-        $this->assertTrue($this->object->isInstalled('riTest'));
-    }
+        $this->assertTrue($this->object->isInstalled('riFooBar'));
 
-    public function testInfo()
-    {
-        $plugin = 'riTest';
-        $info = $this->object->info($plugin);
-        $this->assertEquals("RiTest", $info->name);
-        $this->assertEquals("RiTest for ZePLUF unit testing", $info->summary);
-        $this->assertTrue((bool)$info->preload->frontend);
+        //reset System setting file
+//        $this->settings->saveLocal($this->configDir . '/sys_test.yml', $oldConfig);
     }
 
     public function testActivate()
     {
-        global $messageStack;
+//        global $messageStack;
         // Call if activation fail.
 //        $messageStack = $this->getMock('messageStack', array('add_session', 'add'));
 //        $messageStack->expects($this->once())
@@ -147,30 +147,30 @@ class PluginTest extends BaseTestCase
 //            ->with('messageStackError', sprintf('Plugin %s min version %s is required', 'riTest2', '1.0'), 'error');
 
         //get and parse system setting file first
-        $this->object->loadSysSettings();
 
-        $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
+        $oldConfig = $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
 
-        $this->assertTrue(!in_array('riTest', $localConfig['activated']));
+        $this->assertTrue(!in_array('riFooBar', $localConfig['activated']));
 
         //If there are dependencies in config, this case will be fail
-        $this->object->activate($this->_container, 'riTest');
+        $this->object->activate($this->_container, 'riFooBar');
 
         $newLocalConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
-        $this->assertTrue(in_array('riTest', $newLocalConfig['activated']));
+        $this->assertTrue(in_array('riFooBar', $newLocalConfig['activated']));
+
+        //reset System setting file
+        $this->settings->saveLocal($this->configDir . '/sys_test.yml', $oldConfig);
     }
+
 
     public function testDeactivate()
     {
-        //get and parse system setting file first
-        $this->object->loadSysSettings();
-
         $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
-        arrayRemoveValue($localConfig['activated'], 'riTest');
-        arrayRemoveValue($localConfig['frontend'], 'riTest');
-        arrayRemoveValue($localConfig['backend'], 'riTest');
+        arrayRemoveValue($localConfig['activated'], 'riFooBar');
+        arrayRemoveValue($localConfig['frontend'], 'riFooBar');
+        arrayRemoveValue($localConfig['backend'], 'riFooBar');
 
-        $this->object->deactivate($this->_container, 'riTest');
+        $this->object->deactivate($this->_container, 'riFooBar');
 
         $newLocalConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
 
@@ -181,36 +181,30 @@ class PluginTest extends BaseTestCase
     {
         //get and parse system setting file first
         $localConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
-        arrayRemoveValue($localConfig['installed'], 'riTest');
-        arrayRemoveValue($localConfig['activated'], 'riTest');
-        arrayRemoveValue($localConfig['backend'], 'riTest');
-        arrayRemoveValue($localConfig['frontend'], 'riTest');
+        arrayRemoveValue($localConfig['installed'], 'riFooBar');
 
         //Uninstall riTest
-        $this->object->loadSysSettings();
-        $this->object->uninstall($this->_container, 'riTest');
+        $this->object->uninstall($this->_container, 'riFooBar');
 
         //get and parse new system setting file
-
         $newLocalConfig = Yaml::parse($this->configDir . '/sys_' . $this->environment->getEnvironment() . '.yml');
 
         //Assertion 1: Make sure riTest removed to settings by compare two setting array
         $this->assertEquals($localConfig, $newLocalConfig);
 
         //Assertion 2: Make sure public files moved into web dir
-        $this->assertFileNotExists(($this->getParameter('web.dir') . '/plugins/riTest/test_public.css'));
+        $this->assertFileNotExists(($this->getParameter('web.dir') . '/plugins/riFooBar/foo.css'));
 
         //Assertion 3: Make sure install code executed
-        $this->assertEquals('uninstall run successfully', file_get_contents(__DIR__ . '/Fixtures/junks/plugins/test_uninstall_file'));
+        $this->assertEquals('RiFooBar uninstall run successfully', file_get_contents(__DIR__ . '/Fixtures/output/test_uninstall_file'));
 
         //Final assertion
-        $this->assertFalse($this->object->isInstalled('riTest'));
+        $this->assertFalse($this->object->isInstalled('riFooBar'));
     }
-
 
     public function testGetAvailablePlugins()
     {
-        $availablePlugins = array('riCjLoader', 'riTest');
+        $availablePlugins = array('riFoo', 'riFooBar');
         $this->assertEquals($availablePlugins, $this->object->getAvailablePlugins());
     }
 
@@ -222,16 +216,5 @@ class PluginTest extends BaseTestCase
     public function tearDown()
     {
         unset($this->object);
-
-        //Remove junk files
-//        if (file_exists(__DIR__ . '/Fixtures/junks/plugins/test_init_file')) {
-//            unlink(__DIR__ . '/Fixtures/junks/plugins/test_init_file');
-//        }
-//        if (file_exists(__DIR__ . '/Fixtures/junks/plugins/test_install_file')) {
-//            unlink(__DIR__ . '/Fixtures/junks/plugins/test_init_file');
-//        }
-//        if (file_exists(__DIR__ . '/Fixtures/junks/plugins/test_uninstall_file')) {
-//            unlink(__DIR__ . '/Fixtures/junks/plugins/test_uninstall_file');
-//        }
     }
 }
