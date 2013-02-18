@@ -19,25 +19,24 @@ use Symfony\Component\Yaml\Yaml;
 
 class SettingsTest extends BaseTestCase
 {
-    private $env;
     protected $object;
-    private $configDir;
-    private $cacheDir;
-    private $pluginDir;
+    protected $environment;
+    protected $configDir;
+    protected $cacheDir;
+    protected $pluginDir;
 
     public function setUp()
     {
         $this->configDir = __DIR__ . '/Fixtures/appDir/config';
         $this->cacheDir = __DIR__ . '/Fixtures/appDir/cache';
         $this->pluginDir = __DIR__ . '/Fixtures/appDir/plugins';
+        $this->environment = 'test';
 
-        $this->object = $this->get('settings');
+        $this->object = new Settings($this->configDir, $this->cacheDir, $this->pluginDir, $this->environment);
     }
 
     public function testResetCache()
     {
-        $this->object = $this->getFixtureObject();
-
         //create some junk cache
         $this->object->saveCache('a', array());
         $this->object->saveCache('b', array());
@@ -46,7 +45,7 @@ class SettingsTest extends BaseTestCase
         //Reset specific cache
         $this->object->resetCache('a');
         //Assertion: no a cache existed
-        $this->assertTrue(!file_exists($this->cacheDir . "/ZePLUF/a_" . $this->env . "cache"));
+        $this->assertTrue(!file_exists($this->cacheDir . "/ZePLUF/a_" . $this->environment . "cache"));
 
         //Reset all cache
         $this->object->resetCache();
@@ -54,23 +53,17 @@ class SettingsTest extends BaseTestCase
         $this->assertTrue($this->dir_is_empty($this->cacheDir . "/ZePLUF"));
     }
 
-    public function testGetCacheRoot()
-    {
-        $this->assertEquals($this->getParameter('kernel.cache_dir') . "/", $this->object->getCacheRoot());
-    }
-
     public function testInitialize()
     {
         $this->assertFalse($this->object->isInitiated());
-        $setting = $this->getMock('Settings');
-        $this->object->initialize($setting);
+        $setting_array = array('foo' => 'bar', 'baz' => 'qux');
+        $this->object->initialize($setting_array);
         $this->assertTrue($this->object->isInitiated());
     }
 
     public function testLoadSettingNoCache()
     {
-        $this->object = $this->getFixtureObject();
-        $testPlugin = 'riTest';
+        $testPlugin = 'riFooBar';
 
         //Remove cache folder if existed
         if (file_exists($this->object->getCacheRoot())) {
@@ -79,87 +72,87 @@ class SettingsTest extends BaseTestCase
 
         $this->object->load($testPlugin);
 
-        $this->assertEquals('plugins\Test\Controller\TestController::indexAction', $this->object->get('riTest.routes.test.defaults._controller'));
-        $this->assertTrue($this->object->get('riTest.zencart_fallback'));
+        $this->assertEquals('plugins\Test\Controller\TestController::indexAction', $this->object->get('riFooBar.routes.test.defaults._controller'));
+        $this->assertTrue($this->object->get('riFooBar.zencart_fallback'));
 
         $arr = array(1, 2, 3, 4);
-        $this->assertEquals($arr, $this->object->get('riTest.test_arr'));
-        $this->assertEquals('test', $this->object->get('riTest.test'));
+        $this->assertEquals($arr, $this->object->get('riFooBar.test_arr'));
+        $this->assertEquals('test', $this->object->get('riFooBar.test'));
     }
 
     public function testLoadFile()
     {
-        $this->object = $this->getFixtureObject();
-        $testPlugin = 'abc';
+        $testPlugin = 'foobar';
 
-        $this->object->set($testPlugin, ($this->object->loadFile('', __DIR__ . '/Fixtures/', 'configtestload.yml')));
+        $this->object->set($testPlugin, ($this->object->loadFile('', __DIR__ . '/Fixtures/appDir/exceptions/', 'config_test_load.yml')));
 
-        $this->assertEquals('Hello World', $this->object->get('abc.test'));
+        $this->assertEquals('foo bar baz qux', $this->object->get('foobar.test'));
     }
 
     public function testLoadTheme()
     {
-        $this->object = $this->getFixtureObject();
-        $this->object->loadTheme('frontend', __DIR__ . '/Fixtures');
+        $this->object->loadTheme('frontend', __DIR__ . '/Fixtures/appDir/config');
 
         //Assertion
         $this->assertTrue((bool)$this->object->get('theme.is_zepluf_theme'));
         $this->assertEquals('two_column_left.php', $this->object->get('theme.layouts.category'));
+
+        //Reset cache
+        $this->object->resetCache();
     }
 
     public function testSaveLocal()
     {
-        $this->object = $this->getFixtureObject();
-
         //Load local setting file
-        $settings = $this->object->loadFile('plugins', $this->configDir, '/plugins_' . $this->env . '.yml');
+        $settings = $this->object->loadFile('plugins', $this->configDir, '/plugins_' . $this->environment . '.yml');
 
         //Save to local
-        $this->object->saveLocal(__DIR__ . '/Fixtures/appDir/local/local.yml', $settings);
+        $this->object->saveLocal($this->configDir . '/local.yml', $settings);
 
         //Reload local setting file
-        $this->object->set('local', ($this->object->loadFile('', __DIR__ . '/Fixtures/appDir/local/', 'local.yml')));
-
+        $this->object->set('local', ($this->object->loadFile('', $this->configDir . '/', 'local.yml')));
 
         //Assertion
         $this->assertFalse($this->object->get('local.ricjloader.settings.cache'));
     }
 
+
     public function testSaveCache()
     {
         //Load setting file first
-        $this->object = $this->getFixtureObject();
-
-        $local_config = $this->object->loadFile('plugins', $this->configDir, '/plugins_' . $this->env . '.yml');
+        $local_config = $this->object->loadFile('plugins', $this->configDir, '/plugins_' . $this->environment . '.yml');
 
         //Save cache
         $this->object->saveCache('plugins', $local_config);
 
-        $cache_content = @file_get_contents(__DIR__ . '/Fixtures/appDir/cache/ZePLUF/' . 'plugins_' . $this->env . '.cache');
+        $cache_content = @file_get_contents($this->cacheDir . '/ZePLUF/' . 'plugins_' . $this->environment . '.cache');
 
+        //Assertion
         $this->assertEquals($cache_content, serialize($local_config));
+
+        //Reset cache
+        $this->object->resetCache();
     }
 
     public function testLoadCache()
     {
-        $this->object = $this->getFixtureObject();
-
-        $local_config = Yaml::parse($this->configDir . '/plugins_' . $this->env . '.yml');
-
+        //Load setting file first
+        $local_config = $this->object->loadFile('plugins', $this->configDir, '/plugins_' . $this->environment . '.yml');
+        //Save cache...
+        $this->object->saveCache('plugins', $local_config);
+        //...then load cache
         $settings = $this->object->loadCache('plugins');
+
+        //Assertion
         $this->assertEquals($local_config, $settings);
+
+        //Reset cache
+        $this->object->resetCache();
     }
 
     public function tearDown()
     {
         unset($this->object);
-    }
-
-    private function getFixtureObject()
-    {
-        unset($this->object);
-
-        return new Settings($this->configDir, $this->cacheDir, $this->pluginDir, $this->env = $this->getParameter('kernel.environment'));
     }
 
     private function delete_directory($dir)

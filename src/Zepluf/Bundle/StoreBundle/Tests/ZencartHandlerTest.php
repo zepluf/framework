@@ -15,18 +15,18 @@
 namespace Zepluf\Bundle\StoreBundle\Tests;
 
 use Monolog\Logger;
+use Zepluf\Bundle\StoreBundle\Logger\Handler\ZencartHandler;
 
 class ZencartHandlerTest extends BaseTestCase
 {
     public $object;
 
-    public function setUp()
-    {
-        $this->object = $this->get('storebundle.logger.zencart_handler');
-    }
-
     public function testAddBackEnd()
     {
+        $environment = new Environment();
+        $environment->setSubEnvironment('backend');
+        $this->object = new ZencartHandler($environment);
+
         $add = self::getMethod('add');
 
         global $messageStack;
@@ -58,6 +58,10 @@ class ZencartHandlerTest extends BaseTestCase
 
     public function testAddFrontEnd()
     {
+        $environment = new Environment();
+        $environment->setSubEnvironment('frontend');
+        $this->object = new ZencartHandler($environment);
+
         $add = self::getMethod('add');
 
         global $messageStack;
@@ -90,6 +94,10 @@ class ZencartHandlerTest extends BaseTestCase
 
     public function testWriteBackEnd()
     {
+        $environment = new Environment();
+        $environment->setSubEnvironment('backend');
+        $this->object = new ZencartHandler($environment);
+
         $write = self::getMethod('write');
 
         $this->get('environment')->setSubEnvironment('backend');
@@ -112,6 +120,10 @@ class ZencartHandlerTest extends BaseTestCase
 
     public function testWriteFrontEnd()
     {
+        $environment = new Environment();
+        $environment->setSubEnvironment('frontend');
+        $this->object = new ZencartHandler($environment);
+
         $write = self::getMethod('write');
 
         $this->get('environment')->setSubEnvironment('frontend');

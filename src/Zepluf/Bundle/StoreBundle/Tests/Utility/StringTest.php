@@ -21,7 +21,7 @@ class StringTest extends \Zepluf\Bundle\StoreBundle\Tests\BaseTestCase
 
     public function setUp()
     {
-        $this->object = $this->get('utility.string');
+        $this->object = new String();
     }
 
     public function testFromCamelCase()

@@ -29,7 +29,7 @@ class ParameterBagTest extends \PHPUnit_Framework_TestCase
         $this->object->set('key', 'value');
         $this->assertEquals($this->object->get('key'), 'value');
 
-        // testing scallar
+        // testing scalar
         $this->object->set('key1.key2', 'value');
         $this->assertEquals($this->object->get('key1'), array('key2' => 'value'));
 
