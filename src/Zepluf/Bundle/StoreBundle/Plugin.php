@@ -255,7 +255,7 @@ class Plugin
 
                     $this->sysSettings['installed'][] = $plugin;
 
-                    $this->saveSysSettings($container->get('utility.collection'));
+                    $this->saveSysSettings($container->get('utility.file'), $container->get('utility.collection'));
 
                     $this->resetCache($container->get('utility.file'));
 
@@ -264,7 +264,7 @@ class Plugin
             } else {
                 $this->sysSettings['installed'][] = $plugin;
 
-                $this->saveSysSettings($container->get('utility.collection'));
+                $this->saveSysSettings($container->get('utility.file'), $container->get('utility.collection'));
 
                 $this->resetCache($container->get('utility.file'));
 
@@ -311,7 +311,7 @@ class Plugin
             // remove from the installed list
             arrayRemoveValue($this->sysSettings['installed'], $plugin);
 
-            $this->saveSysSettings($container->get('utility.collection'));
+            $this->saveSysSettings($container->get('utility.file'), $container->get('utility.collection'));
 
             $this->resetCache($container->get('utility.file'));
 
@@ -400,7 +400,7 @@ class Plugin
                 }
 
                 // set back to settings
-                $this->saveSysSettings($container->get('utility.collection'));
+                $this->saveSysSettings($container->get('utility.file'), $container->get('utility.collection'));
 
                 // add menu for ZC 1.5.0 >
                 if (function_exists('zen_register_admin_page')) {
@@ -437,7 +437,7 @@ class Plugin
                 arrayRemoveValue($this->sysSettings['frontend'], $plugin);
                 arrayRemoveValue($this->sysSettings['backend'], $plugin);
 
-                $this->saveSysSettings($container->get('utility.collection'));
+                $this->saveSysSettings($container->get('utility.file'), $container->get('utility.collection'));
                 // add menu for ZC 1.5.0 >
                 if (function_exists('zen_deregister_admin_pages')) {
                     if (($menus = $this->settings->get("plugins." . $plugin . ".menu", null)) != null) {
@@ -490,12 +490,15 @@ class Plugin
     /**
      * Saves settings
      */
-    public function saveSysSettings($collectionUtility, $settings = null)
+    public function saveSysSettings($utilityFile, $collectionUtility, $settings = null)
     {
         if(!empty($settings)) {
             $this->sysSettings = $collectionUtility->arrayMergeWithReplace($this->sysSettings, $settings);
         }
         $this->settings->saveLocal($this->appDir . '/config/sys_' . $this->environment->getEnvironment() . '.yml', $this->sysSettings);
+        
+        // remove the container cache
+        $utilityFile->sureRemoveDir($this->appDir . '/cache/' . $this->environment->getEnvironment());
     }
 
     /**

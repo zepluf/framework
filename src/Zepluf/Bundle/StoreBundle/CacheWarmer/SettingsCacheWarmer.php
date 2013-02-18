@@ -84,13 +84,7 @@ class SettingsCacheWarmer implements CacheWarmerInterface
      */
     public function warmUp($cacheDir)
     {
-        // loads sys settings
-        $sysSettings = $this->settings->load('sys', $this->kernelConfigDir . '/', 'sys_' . $this->kernelEnvironment . '.yml');
-        $this->settings->saveCache('sys', $sysSettings);
-
         // loads plugins settings
-        Yaml::enablePhpParsing();
-
         if (!$this->settings->has('plugins')) {
             // now try to load from all the cache files
             if (($pluginsSettings = $this->settings->loadCache('plugins')) === false) {
