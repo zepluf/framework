@@ -18,7 +18,7 @@ class SetupController extends Controller
         // initialize
 
         // save sys settings
-        $this->get('plugin')->saveSysSettings($this->get('utility.collection'), array('initialized' => true));
+        $this->get('plugin')->saveSysSettings($this->get('utility.file'), $this->get('utility.collection'), array('initialized' => true));
 
         foreach ($sysSettings['core'] as $plugin) {
             $this->get('plugin')->uninstall($this->container, $plugin);

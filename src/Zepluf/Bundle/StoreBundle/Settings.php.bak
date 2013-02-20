@@ -45,10 +45,6 @@ class Settings extends ParameterBag
      */
     private $configDir;
 
-    /**
-     * @var string
-     */
-    private $environment;
 
     /**
      * Constructor
@@ -58,7 +54,7 @@ class Settings extends ParameterBag
         $this->configDir = $configDir . '/';
         $this->pluginsDir = $pluginsDir . '/';
         $this->cache_root_folder = $cacheDir . '/';
-        $this->cache_folder = $this->cache_root_folder . $environment . '/';
+        $this->cache_folder = $this->cache_root_folder . '/' . $this->environment . '/';
     }
 
     /**
