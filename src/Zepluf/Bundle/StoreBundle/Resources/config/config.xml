@@ -159,6 +159,7 @@
         <!-- cache warmers -->
         <service id="storebundle.cache_warmer.settings" class="%storebundle.cache_warmer.settings.class%" public="false">
             <tag name="kernel.cache_warmer" priority="20" />
+            <argument>%sys%</argument>
             <argument type="service" id="settings" />
             <argument type="service" id="plugin" />
             <argument>%kernel.environment%</argument>
