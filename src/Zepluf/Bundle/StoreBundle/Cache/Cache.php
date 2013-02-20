@@ -68,7 +68,7 @@ class Cache
         $cache_folder = dirname($file);
 
         // if this dir does not exist, assuming we need to append absolute cache path
-        if (!is_dir($cache_folder)) {
+        if (!is_dir($cache_folder) && !$this->utilityFile->isAbsolutePath($cache_folder)) {
             $cache_folder = $this->cacheDir . '/' . $cache_folder;
         }
 
@@ -101,18 +101,22 @@ class Cache
     public function read($file, $use_subfolder = false)
     {
 
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
 
         $cache_folder = dirname($file);
 
         // if this dir does not exist, assuming we need to append absolute cache path
-        if (!is_dir($cache_folder))
+        if (!is_dir($cache_folder)) {
             $cache_folder = $this->cacheDir . '/' . $cache_folder;
+        }
 
         $name = basename($file);
 
-        if (isset($this->cache[$cache_folder][$name]))
+        if (isset($this->cache[$cache_folder][$name])) {
             return $this->cache[$cache_folder][$name];
+        }
 
         $cache_folder = $this->calculatePath($name, $cache_folder, $use_subfolder);
 
