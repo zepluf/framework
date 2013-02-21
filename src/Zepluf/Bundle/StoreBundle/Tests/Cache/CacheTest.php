@@ -50,7 +50,7 @@ class CacheTest extends BaseTestCase
     public function testReadSubFolder()
     {
         $content = file_get_contents($this->getParameter('kernel.cache_dir') . "/a/b/c/d/abcdefghijklmnop");
-        $file = $this->object->read($this->getParameter('kernel.cache_dir') . '/abcdefghijklmnop', true);
+        $file = $this->object->read($this->getParameter('kernel.cache_dir') . '/abcdefghijklmnop', 0, true);
         $this->assertEquals($content, $file);
     }
 

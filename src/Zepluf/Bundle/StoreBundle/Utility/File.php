@@ -5,7 +5,7 @@ namespace Zepluf\Bundle\StoreBundle\Utility;
 /**
  * File Utilities offers convenience methods to handle files and directories
  */
-class File
+class File extends \Symfony\Component\Filesystem\Filesystem
 {
     protected $path = array();
 

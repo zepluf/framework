@@ -64,7 +64,7 @@ class AssetFinder
         $this->webDir = $kernel->getContainer()->getParameter('web.dir');
         $this->appDir = $kernel->getContainer()->getParameter('kernel.root_dir');
 
-        $this->templatesDir = $kernel->getContainer()->getParameter('store.'.$this->subEnvironment.'.templates_dir');
+        $this->templatesDir = $kernel->getContainer()->getParameter('store.' . $this->subEnvironment . '.templates_dir');
         $this->currentTemplate = $kernel->getContainer()->get('environment')->getTemplate();
     }
 
@@ -112,39 +112,35 @@ class AssetFinder
         // inline is a very special case
         if (!empty($options['inline'])) {
             $path = $file;
-        }
-        // is this an external file?
-        elseif(!isset($options['external'])) {
+        } // is this an external file?
+        elseif (!isset($options['external'])) {
             $options['external'] = false;
-            foreach($this->supportedExternals as $supportedExternal) {
-                if(strpos($file, $supportedExternal) === 0) {
+            foreach ($this->supportedExternals as $supportedExternal) {
+                if (strpos($file, $supportedExternal) === 0) {
                     $path = $file;
                     $options['external'] = true;
                     break;
                 }
             }
-        }
-        elseif($options['external']) {
+        } elseif ($options['external']) {
             $path = $file;
         }
         // absolute?
-        if((!isset($options['inline']) || !$options['inline']) && !$options['external'] && (!is_file($path = $file) || !is_readable($path))) {
-            // explode
+        if ((!isset($options['inline']) || !$options['inline']) && !$options['external'] && (!is_file($path = $file) || !is_readable($path))) {
+            //  explode
             $fileParts = explode(":", $file);
-		
-	        // supports for path with missing elements
-            switch(count($fileParts)) {
+            // supports for path with missing elements
+            switch (count($fileParts)) {
                 case 3:
                     // good
                     break;
                 case 2:
                     // assumes bundle
-                    if("Bundle" == substr($fileParts[0], -6)) {
+                    if ("Bundle" == substr($fileParts[0], -6)) {
                         array_unshift($fileParts, "bundles");
-                    }
-                    // assume plugin
+                    } // assume plugin
                     else {
-                        if($fileParts[0] != "images") {
+                        if ($fileParts[0] != "images") {
                             array_unshift($fileParts, "plugins");
                         }
                     }
@@ -155,20 +151,25 @@ class AssetFinder
                     array_unshift($fileParts, "templates", "current");
             }
 
-            switch($fileParts[0]) {
+            /*
+             * $fileParts[0]: type of asset
+             * $fileParts[1]: bundle/plugin name or path to image
+             * $fileParts[2]: path to file
+             */
+
+            switch ($fileParts[0]) {
                 case "templates":
                     // look into the current template first
                     $template = "current" == $fileParts[1] ? $this->currentTemplate : $fileParts[1];
                     // in prod env we look in the web templates folders
-                    if($this->environment == "prod") {
+                    if ($this->environment == "prod") {
                         if (!file_exists($path = sprintf($this->webDir . '/' . $this->subEnvironment . '/templates/%s/%s', $template, $fileParts[2]))) {
                             // look into the default template
                             if (!file_exists($path = sprintf($this->webDir . '/' . $this->subEnvironment . '/templates/template_default/%s', $fileParts[2]))) {
                                 $error = true;
                             }
                         }
-                    }
-                    // in dev env we look in the app templates folders
+                    } // in dev env we look in the app templates folders
                     else {
                         if (!file_exists($path = sprintf($this->templatesDir . '/%s/%s', $template, $fileParts[2]))) {
                             // look into the default template
@@ -180,15 +181,14 @@ class AssetFinder
                     break;
                 case "plugins":
                     // in prod env we look in the web plugins folders
-                    if($this->environment == "prod") {
+                    if ($this->environment == "prod") {
                         // check to see if there is template override
                         if (!file_exists($path = sprintf($this->webDir . '/' . $this->subEnvironment . '/templates/' . $this->currentTemplate . "/plugins/%s/%s", $fileParts[1], $fileParts[2]))) {
                             if (!file_exists($path = sprintf($this->webDir . "/plugins/%s/%s", $fileParts[1], $fileParts[2]))) {
                                 $error = true;
                             }
                         }
-                    }
-                    // in dev env we look in the plugins folders
+                    } // in dev env we look in the plugins folders
                     else {
                         if (!file_exists($path = sprintf($this->kernel->getContainer()->getParameter('plugins.root_dir') . "/%s/Resources/public/%s", $fileParts[1], $fileParts[2]))) {
                             $error = true;
@@ -197,14 +197,14 @@ class AssetFinder
                     break;
                 case "bundles":
                     // in prod env we look in the web bundles folders
-                    if($this->environment == "prod") {
-                        if (!file_exists($path = sprintf($this->webDir .'/' . $this->subEnvironment .  '/templates/' . $this->currentTemplate . "/bundles/%s/%s", $fileParts[1], $fileParts[2]))) {
+                    if ($this->environment == "prod") {
+                        $fileParts[1] = strtolower(substr($fileParts[1], 0, strrpos($fileParts[1], 'Bundle')));
+                        if (!file_exists($path = sprintf($this->webDir . '/' . $this->subEnvironment . '/templates/' . $this->currentTemplate . "/bundles/%s/%s", $fileParts[1], $fileParts[2]))) {
                             if (!file_exists($path = sprintf($this->webDir . "/bundles/%s/%s", $fileParts[1], $fileParts[2]))) {
                                 $error = true;
                             }
                         }
-                    }
-                    // in dev env we look in the bundles folders
+                    } // in dev env we look in the bundles folders
                     else {
                         if (!file_exists($path = sprintf($this->kernel->getBundle($fileParts[1])->getPath() . "/Resources/public/%s", $fileParts[2]))) {
                             $error = true;

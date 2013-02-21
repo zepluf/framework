@@ -58,10 +58,7 @@ class Settings extends ParameterBag
         $this->configDir = $configDir . '/';
         $this->pluginsDir = $pluginsDir . '/';
         $this->cache_root_folder = $cacheDir . '/';
-        $this->cache_folder = $this->cache_root_folder . 'ZePLUF/';
-        $this->environment = $environment;
-
-        Yaml::enablePhpParsing();
+        $this->cache_folder = $this->cache_root_folder . $environment . '/';
     }
 
     /**
@@ -224,7 +221,7 @@ class Settings extends ParameterBag
      */
     public function loadCache($root)
     {
-        if (file_exists($cache_file = $this->cache_folder . $root . '_' . $this->environment . '.cache')) {
+        if (file_exists($cache_file = $this->cache_folder . $root . '.cache')) {
             $settings = unserialize(@file_get_contents($cache_file));
             return $settings;
         }
@@ -240,7 +237,7 @@ class Settings extends ParameterBag
     public function saveCache($root, $settings = null)
     {
         riMkDir($this->cache_folder);
-        return @file_put_contents($this->cache_folder . $root . '_' . $this->environment . '.cache', serialize($settings));
+        return @file_put_contents($this->cache_folder . $root . '.cache', serialize($settings));
     }
 
     /**
@@ -251,7 +248,7 @@ class Settings extends ParameterBag
     public function resetCache($root = '')
     {
         if (!empty($root)) {
-            @unlink($this->cache_folder . $root . '_' . $this->environment . '.cache');
+            @unlink($this->cache_folder . $root . '.cache');
         } else {
             $cache_files = glob($this->cache_folder . "*.cache");
 

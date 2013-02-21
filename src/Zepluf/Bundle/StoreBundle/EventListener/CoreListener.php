@@ -63,32 +63,51 @@ class CoreListener implements EventSubscriberInterface
                 }
             }
             if ($load) {
-                // run calls
-                $data = (array)$content["template"]["parameters"];
+                $view = $cache = false;
 
-                if(isset($content["calls"]) && is_array($content["calls"])) {
-                    foreach($content["calls"] as $call) {
-                        // is this a public function or a class method
-                        if(strpos($call[0], "::") !== false) {
-                            list($class, $method) = explode("::", $call[0]);
-                            // is this a service?
-                            if(strpos($class, "@") !== false) {
-                                $service = substr($class, 1);
-                                $object = $this->container->get($service);
+                // cache?
+                if(isset($content["cache"]) && $content["cache"]) {
+                    // try to load cache
+                    $cache_file = $this->container->getParameter('kernel.cache_dir') . '/' . $this->container->get('kernel')->getEnvironment() . '/holders/' . md5($content["template"]["name"]);
+                    $cache = true;
+                    $view = $this->container->get("storebundle.cache")->read($cache_file, $content["cache"], true);
+                }
+
+                if(!$view) {
+                    // run calls
+                    $data = (array)$content["template"]["parameters"];
+
+                    if(isset($content["calls"]) && is_array($content["calls"])) {
+                        foreach($content["calls"] as $call) {
+                            // is this a public function or a class method
+                            if(strpos($call[0], "::") !== false) {
+                                list($class, $method) = explode("::", $call[0]);
+                                // is this a service?
+                                if(strpos($class, "@") !== false) {
+                                    $service = substr($class, 1);
+                                    $object = $this->container->get($service);
+                                }
+                                else {
+                                    $object = new $class;
+                                }
+
+                                $data = array_merge($data, call_user_func_array(array($object, $method), $call[1]));
                             }
                             else {
-                                $object = new $class;
+                                $data = array_merge($data, $call[0]($call[1]));
                             }
+                        }
+                    }
 
-                            $data = array_merge($data, call_user_func_array(array($object, $method), $call[1]));
-                        }
-                        else {
-                            $data = array_merge($data, $call[0]($call[1]));
-                        }
+                    $view = $this->container->get('view')->render($content["template"]["name"], $data);
+
+                    // save to cache
+                    if($cache) {
+                        $this->container->get("storebundle.cache")->write($cache_file, $view, true);
                     }
                 }
 
-                $this->container->get('templating.helper.holders')->add($event->getHolder(), $this->container->get('view')->render($content["template"]["name"], $data));
+                $this->container->get('templating.helper.holders')->add($event->getHolder(), $view);
             }
         }
     }

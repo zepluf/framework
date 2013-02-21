@@ -68,13 +68,16 @@ class Cache
         $cache_folder = dirname($file);
 
         // if this dir does not exist, assuming we need to append absolute cache path
-        if (!is_dir($cache_folder)) {
+        if (!is_dir($cache_folder) && !$this->utilityFile->isAbsolutePath($cache_folder)) {
             $cache_folder = $this->cacheDir . '/' . $cache_folder;
         }
 
         $name = basename($file);
 
-        $this->cache[$cache_folder][$name] = $content;
+        $this->cache[$cache_folder][$name] = array(
+            'time' => time(),
+            'content' => $content
+        );
 
         $cache_folder = $this->calculatePath($name, $cache_folder, $use_subfolder);
 
@@ -98,29 +101,50 @@ class Cache
         return $written !== false && $written > 0 ? $cache_file : false;
     }
 
-    public function read($file, $use_subfolder = false)
+    public function read($file, $time = 0, $use_subfolder = false)
     {
 
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
 
         $cache_folder = dirname($file);
 
         // if this dir does not exist, assuming we need to append absolute cache path
-        if (!is_dir($cache_folder))
+        if (!is_dir($cache_folder) && !$this->utilityFile->isAbsolutePath($cache_folder)) {
             $cache_folder = $this->cacheDir . '/' . $cache_folder;
+        }
 
         $name = basename($file);
 
-        if (isset($this->cache[$cache_folder][$name]))
-            return $this->cache[$cache_folder][$name];
+        // TODO: we may want to check time here
+        if (isset($this->cache[$cache_folder][$name])) {
+            return $this->cache[$cache_folder][$name]['content'];
+        }
 
         $cache_folder = $this->calculatePath($name, $cache_folder, $use_subfolder);
 
         $cache_file = "$cache_folder/$name";
 
-        $read = @file_get_contents($cache_file);
+        if (is_file($cache_file) && is_readable($cache_file)) {
+            $mtime = filemtime($cache_file);
+            if ($time > 0) {
+                if (time() - $mtime > $time) {
+                    return false;
+                }
+            }
 
-        return $read ? $read : false;
+            $read = @file_get_contents($cache_file);
+
+            $this->cache[$cache_folder][$name] = array(
+                'time' => $mtime,
+                'content' => $read
+            );
+
+            return $read ? $read : false;
+        }
+
+        return false;
     }
 
     public function remove($name = '', $cache_folder, $DeleteMe = false)
@@ -135,58 +159,6 @@ class Cache
         } else {
             return @unlink($cache_folder . $name);
         }
-    }
-
-    public function startBlock($id, $change_on_page = false, $depend_on = "", $post_safe = true)
-    {
-        if (!$this->status || (!$post_safe && $_SERVER["REQUEST_METHOD"] == 'POST') || isset($_GET[zen_session_id()]))
-            return false;
-
-        if ($change_on_page) $id .= getenv('REQUEST_URI');
-
-        $id = md5($id . $depend_on);
-
-        if (($content = $this->read($this->cacheDir . '/' . $id, 'content')) !== false) {
-            echo $content;
-            return true;
-        }
-
-        $this->blocks[] = $id;
-
-        ob_start();
-        return false;
-    }
-
-    public function startPage($depend_on = "", $post_safe = false)
-    {
-        if (!$this->status || ($post_safe && $_SERVER["REQUEST_METHOD"] == 'POST') || isset($_GET[zen_session_id()]))
-            return false;
-
-        global $current_page_base;
-
-        $id = md5($current_page_base . getenv('REQUEST_URI') . $depend_on);
-
-        if (($content = $this->read($this->cacheDir . '/' . $id)) !== false) {
-            echo $content;
-            return true;
-        }
-
-        $this->blocks[] = $id;
-
-        ob_start();
-        return false;
-    }
-
-    public function end()
-    {
-        if (!$this->status)
-            return false;
-
-        $id = array_pop($this->blocks);
-        $content = ob_get_clean();
-        $this->write($this->cacheDir . '/' . $id, $content);
-
-        echo $content;
     }
 
     public function exists($file, $use_subfolder = false)
