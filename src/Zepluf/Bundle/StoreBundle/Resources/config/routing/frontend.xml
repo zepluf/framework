@@ -10,7 +10,7 @@
     </route>
 
     <route id="storebundle.page_not_found" pattern="/page-not-found">
-        <default key="_controller">StoreBundle:Zencart:static</default>
+        <default key="_controller">StoreBundle:Zencart:pageNotFound</default>
         <default key="parameter_main_page">page_not_found</default>
     </route>
 

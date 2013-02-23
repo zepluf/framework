@@ -10,7 +10,7 @@ parameters:
   store.frontend.languages_dir: "%kernel.root_dir%/frontend/languages"
   # path to the frontend templates folder
   store.frontend.templates_dir: "%kernel.root_dir%/frontend/templates"
-  store.frontend.current_template: "classic"
+  store.frontend.current_template: "0007"
   # path to the backend languages folder
   store.backend.languages_dir: "%kernel.root_dir%/backend/languages"
   # path to the backend templates folder

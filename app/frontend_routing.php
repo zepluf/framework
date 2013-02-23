@@ -2,13 +2,15 @@
 
 use Zepluf\Bundle\StoreBundle\ZencartResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Zepluf\Bundle\StoreBundle\Events;
 
 try {
     $response = $kernel->handle($request);
 
     if ($response instanceof ZencartResponse) {
         if ($response->getContent() == ZencartResponse::CONTENT_NOT_FOUND) {
-            if (!is_dir(DIR_WS_MODULES . 'pages/' . $current_page)) {
+            $page = $container->get('utility.file')->sanitizeFilename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '');
+            if (!empty($page) && !is_dir(DIR_WS_MODULES . 'pages/' . $page)) {
                 // page not found code should be here
                 $response =  new RedirectResponse($view['router']->generate('storebundle.page_not_found'));
                 $response->send();
@@ -23,7 +25,7 @@ try {
         }
     } else {
         $core_event->setResponse($response);
-        $container->get('event_dispatcher')->dispatch(Zepluf\Bundle\StoreBundle\Events::onPageEnd, $core_event);
+        $container->get('event_dispatcher')->dispatch(Events::onPageEnd, $core_event);
         $response->send();
         $kernel->terminate($request, $response);
         exit();

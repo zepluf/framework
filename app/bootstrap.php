@@ -15,8 +15,6 @@ use Symfony\Component\ClassLoader\ApcClassLoader;
 
 $loader = require_once __DIR__ . '/bootstrap.php.cache';
 
-//$loader->add('plugins', __DIR__);
-
 // Use APC for autoloading to improve performance
 // Change 'sf2' by the prefix you want in order to prevent key conflict with another application
 /*
