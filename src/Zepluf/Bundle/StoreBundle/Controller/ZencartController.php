@@ -12,11 +12,24 @@ namespace Zepluf\Bundle\StoreBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Zepluf\Bundle\StoreBundle\ZencartResponse;
 
 class ZencartController extends Controller
 {
     public function staticAction(Request $request)
+    {
+        $this->convertParameters($request);
+        return new ZencartResponse(ZencartResponse::CONTENT_STATIC_PAGE);
+    }
+
+    public function pageNotFoundAction(Request $request)
+    {
+        $this->convertParameters($request);
+        return new ZencartResponse('', 404);
+    }
+
+    private function convertParameters($request)
     {
         $parameters = $request->attributes->all();
         // if this is a zencart page, we do need to set the params
@@ -28,6 +41,5 @@ class ZencartController extends Controller
                 }
             }
         }
-        return new ZencartResponse(ZencartResponse::CONTENT_STATIC_PAGE);
     }
 }

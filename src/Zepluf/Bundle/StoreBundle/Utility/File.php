@@ -262,4 +262,44 @@ class File extends \Symfony\Component\Filesystem\Filesystem
             return false;
         }
     }
+
+    /**
+     * Make a filename safe to use in any function. (Accents, spaces, special chars...)
+     * The iconv function must be activated.
+     *
+     * @param string  $fileName       The filename to sanitize (with or without extension)
+     * @param string  $defaultIfEmpty The default string returned for a non valid filename (only special chars or separators)
+     * @param string  $separator      The default separator
+     * @param boolean $lowerCase      Tells if the string must converted to lower case
+     *
+     * @author COil <https://github.com/COil>
+     * @see    http://stackoverflow.com/questions/2668854/sanitizing-strings-to-make-them-url-and-filename-safe
+     *
+     * @return string
+     */
+    public function sanitizeFilename($fileName, $defaultIfEmpty = 'default', $separator = '_', $lowerCase = true)
+    {
+        // Gather file informations and store its extension
+        $fileInfos = pathinfo($fileName);
+        $fileExt   = array_key_exists('extension', $fileInfos) ? '.'. strtolower($fileInfos['extension']) : '';
+
+        // Removes accents
+        $fileName = @iconv('UTF-8', 'us-ascii//TRANSLIT', $fileInfos['filename']);
+
+        // Removes all characters that are not separators, letters, numbers, dots or whitespaces
+        $fileName = preg_replace("/[^ a-zA-Z". preg_quote($separator). "\d\.\s]/", '', $lowerCase ? strtolower($fileName) : $fileName);
+
+        // Replaces all successive separators into a single one
+        $fileName = preg_replace('!['. preg_quote($separator).'\s]+!u', $separator, $fileName);
+
+        // Trim beginning and ending seperators
+        $fileName = trim($fileName, $separator);
+
+        // If empty use the default string
+        if (empty($fileName)) {
+            $fileName = $defaultIfEmpty;
+        }
+
+        return $fileName. $fileExt;
+    }
 }
