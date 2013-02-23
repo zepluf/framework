@@ -15,8 +15,6 @@ use Symfony\Component\ClassLoader\ApcClassLoader;
 
 $loader = require_once __DIR__ . '/bootstrap.php.cache';
 
-//$loader->add('plugins', __DIR__);
-
 // Use APC for autoloading to improve performance
 // Change 'sf2' by the prefix you want in order to prevent key conflict with another application
 /*
@@ -49,3 +47,8 @@ $container->get("plugin")->loadPluginsSettings();
 define("ZENCART_DIR", $container->getParameter("store.zencart_dir"));
 // zencart admin folder name
 define("ZENCART_ADMIN_DIR", $container->getParameter("store.zencart_backend_dir"));
+
+// check database connection
+if(!$container->get('database_connection')->isConnected()) {
+    header('location: ' . 'nddbc.html' );
+}
