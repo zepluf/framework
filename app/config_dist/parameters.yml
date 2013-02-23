@@ -4,6 +4,12 @@ parameters:
 
   plugins.root_dir: "%kernel.root_dir%/plugins"
 
+  store.http_server: "http://demo.local"
+  store.https_server: "https://demo.local"
+  store.enable_ssl: false
+  # relative path from the site root to the store folder
+  store.relative_dir: ""
+
   store.zencart_dir: "%kernel.root_dir%/../vendor/zencart"
   store.zencart_backend_dir: "%kernel.root_dir%/../vendor/zencart/manager"
   # path to the frontend languages folder
@@ -16,8 +22,7 @@ parameters:
   # path to the backend templates folder
   store.backend.templates_dir: "%kernel.root_dir%/backend/templates"
   store.backend.current_template: "template_default"
-  # relative path from the site root to the store folder
-  store.relative_dir: ""
+
   # relative path from the site root to the store folder in case the site uses ssl
   # this should be the same with the relative_dir unless the site is using shared ssl
   store.ssl_relative_dir: ""

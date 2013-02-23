@@ -47,8 +47,3 @@ $container->get("plugin")->loadPluginsSettings();
 define("ZENCART_DIR", $container->getParameter("store.zencart_dir"));
 // zencart admin folder name
 define("ZENCART_ADMIN_DIR", $container->getParameter("store.zencart_backend_dir"));
-
-// check database connection
-if(!$container->get('database_connection')->isConnected()) {
-    header('location: ' . 'nddbc.html' );
-}
