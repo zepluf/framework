@@ -20,3 +20,8 @@ This framework is meant to be used with Zencart version 1.3.9h and above
 **Documentation**
 
 http://rubikin.com/wiki/zencart/plugin_framework/about
+
+**Core Developers**
+- Raine Nguyen (yellow1912)
+- Tuan Nguyen
+- Vinh Trinh
