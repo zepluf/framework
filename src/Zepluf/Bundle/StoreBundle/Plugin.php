@@ -123,7 +123,7 @@ class Plugin
                 // load local plugins settings
                 $local_config = Yaml::parse($this->appDir . '/config/plugins_' . $this->environment->getEnvironment() . '.yml');
 
-                if(isset($this->sysSettings['activated']) && is_array($this->sysSettings['activated'])) {
+                if (!empty($this->sysSettings['activated']) && is_array($this->sysSettings['activated'])) {
                     foreach ($this->sysSettings['activated'] as $plugin) {
                         if (file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml')) {
                             $config = Yaml::parse($file);
@@ -139,10 +139,9 @@ class Plugin
 
                         }
                     }
+                    $this->settings->saveCache('plugins', $this->settings->get('plugins'));
+                    $this->plugins_settings = $this->settings->get('plugins');
                 }
-
-                $this->settings->saveCache('plugins', $this->settings->get('plugins'));
-                $this->plugins_settings = $this->settings->get('plugins');
             } else {
                 $this->settings->set('plugins', $this->plugins_settings);
             }
@@ -175,7 +174,7 @@ class Plugin
 
                 $plugin_path = $this->pluginsDir . '/' . $plugin . '/';
 
-                if(file_exists($autoload_file = $plugin_path . "vendor/autoload.php")) {
+                if (file_exists($autoload_file = $plugin_path . "vendor/autoload.php")) {
                     require($autoload_file);
                 }
 
@@ -347,8 +346,7 @@ class Plugin
         if (!isset($this->info[$plugin]))
             if (file_exists($file_path = $this->pluginsDir . '/' . $plugin . '/plugin.xml')) {
                 $this->info[$plugin] = new \SimpleXMLElement(file_get_contents($file_path));
-            }
-            else {
+            } else {
                 $this->info[$plugin] = false;
             }
 
@@ -492,11 +490,11 @@ class Plugin
      */
     public function saveSysSettings($utilityFile, $collectionUtility, $settings = null)
     {
-        if(!empty($settings)) {
+        if (!empty($settings)) {
             $this->sysSettings = $collectionUtility->arrayMergeWithReplace($this->sysSettings, $settings);
         }
         $this->settings->saveLocal($this->appDir . '/config/sys_' . $this->environment->getEnvironment() . '.yml', $this->sysSettings);
-        
+
         // remove the container cache
         $utilityFile->sureRemoveDir($this->appDir . '/cache/' . $this->environment->getEnvironment());
     }
