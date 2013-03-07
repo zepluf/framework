@@ -10,6 +10,8 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Cart;
 
+use Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\StorageHandlerInterface;
+
 class Cart
 {
     protected $storageHandler;
@@ -19,15 +21,16 @@ class Cart
      *
      * @var array|null
      */
-    protected $productList;
+    protected $productCollection;
 
-    public function __construct()
+    /**
+     * sets storage handler
+     *
+     * @param StorageHandlerInterface $storageHandler
+     */
+    public function setStorageHandler(StorageHandlerInterface $storageHandler)
     {
-    }
-
-    public function addProduct($productId, $quantity = 1, $features = array())
-    {
-        return $this;
+        $this->storageHandler = $storageHandler;
     }
 
     /**
@@ -35,61 +38,75 @@ class Cart
      *
      * @return ProductCollection
      */
-    public function getProductList()
+    public function getProductCollection()
     {
         return $this->productCollection;
     }
 
-    protected function getProduct()
-    {
-
-    }
-
-    public function update($productId, $productId, $features = array())
-    {
-    }
-
     /**
-     * Remove item from cart
+     * adds item into cart
      *
-     * @param   int $productId
-     * @return  Cart
+     * @param $productId
+     * @param int $quantity
+     * @param array $features
+     * @return Cart
      */
-    public function remove($productId)
+    public function add($productId, $quantity = 1, $features = array())
     {
-//        $this->getSessionCart()
+        // TODO: check for conditions
+
+        $this->productCollection->add($productId, $quantity, $features);
         return $this;
     }
 
     /**
-     * Save cart
+     * updates item in cart
+     *
+     * @param $key
+     * @param $quantity
+     * @return Cart
+     */
+    public function update($key, $quantity)
+    {
+        $this->productCollection->update($key, $quantity);
+        return $this;
+    }
+
+    /**
+     * Removes item from cart
+     *
+     * @param   string $key
+     * @return  Cart
+     */
+    public function remove($key)
+    {
+        $this->productCollection->remove($key);
+        return $this;
+    }
+
+    /**
+     * Empties shopping cart
+     *
+     * @return Cart
+     */
+    public function reset()
+    {
+        $this->productCollection->reset();
+        return $this;
+    }
+
+    /**
+     * Saves cart
      *
      * @return Cart
      */
     public function save()
     {
-
+        $this->storageHandler->save($this->productCollection);
     }
 
-    /**
-     * Empty shopping cart
-     *
-     * @return Cart
-     */
-    public function truncate()
+    public function setProductCollection(\Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection $productCollection)
     {
-        $this->getSessionCart()->removeAll();
-        return $this;
-    }
-
-    protected function getSessionCart()
-    {
-        //TODO: get session cart object
-        return $_SESSION['cart'];
-    }
-
-    public function setStorageHandler(StorageHandler\StorageHandlerInterface $storageHandler)
-    {
-        $this->storageHandler = $storageHandler;
+        $this->productCollection = $productCollection;
     }
 }

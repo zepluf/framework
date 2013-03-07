@@ -10,12 +10,14 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Cart;
 
+use Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\ArrayStorageHandler;
+
 class CartFactory
 {
     /**
      *  Logic code to get the suitable storage handler
      */
-    public function getHandler(ArrayStorageHandler $arrayStorageHandler)
+    public function get(ArrayStorageHandler $arrayStorageHandler)
     {
         $cart = new Cart();
 

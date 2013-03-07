@@ -179,7 +179,7 @@
         </service>
 
         <!-- cart -->
-        <service id="storebundle.storage_handler_factory" class="%storebundle.storage_handler_factory.class%"/>
+        <service id="storebundle.array_storage_handler" class="%storebundle.array_storage_handler.class%"/>
         <service id="storebundle.cart_factory" class="%storebundle.cart_factory.class%"/>
         <service id="storebundle.cart" class="%storebundle.cart.class%"
                  factory-service="storebundle.cart_factory"
