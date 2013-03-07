@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="PriceComponent" table="price_component">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fromDate" type="datetime" column="from_date" nullable="true"/>
+    <field name="throughDate" type="datetime" column="through_date" nullable="true"/>
+    <field name="price" type="decimal" column="price" nullable="false"/>
+    <field name="percent" type="decimal" column="percent" nullable="false"/>
+    <field name="comment" type="string" column="comment" length="255" nullable="true"/>
+  </entity>
+</doctrine-mapping>
