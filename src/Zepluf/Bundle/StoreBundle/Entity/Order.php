@@ -42,15 +42,7 @@ class Order
      */
     private $entryDate;
 
-    /**
-     * @var \Order
-     *
-     * @ORM\ManyToOne(targetEntity="Order")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
-     * })
-     */
-    private $order;
+
 
     /**
      * Get id

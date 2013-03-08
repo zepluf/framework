@@ -83,16 +83,6 @@ class Product
      */
     private $unitOfMeasurement;
 
-    /**
-     * @var \PriceComponent
-     *
-     * @ORM\ManyToOne(targetEntity="PriceComponent")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="price_component_id", referencedColumnName="id")
-     * })
-     */
-    private $priceComponent;
-
 
 
     /**
@@ -287,28 +277,5 @@ class Product
     public function getUnitOfMeasurement()
     {
         return $this->unitOfMeasurement;
-    }
-
-    /**
-     * Set priceComponent
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent
-     * @return Product
-     */
-    public function setPriceComponent(\Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent = null)
-    {
-        $this->priceComponent = $priceComponent;
-    
-        return $this;
-    }
-
-    /**
-     * Get priceComponent
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\PriceComponent 
-     */
-    public function getPriceComponent()
-    {
-        return $this->priceComponent;
     }
 }

@@ -24,6 +24,20 @@ class OrderItem
     /**
      * @var integer
      *
+     * @ORM\Column(name="product_id", type="integer", nullable=false)
+     */
+    private $productId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="order_id", type="integer", nullable=false)
+     */
+    private $orderId;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="sequence_id", type="integer", nullable=true)
      */
     private $sequenceId;
@@ -77,16 +91,6 @@ class OrderItem
      */
     private $orderItemId;
 
-    /**
-     * @var \Order
-     *
-     * @ORM\ManyToOne(targetEntity="Order")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
-     * })
-     */
-    private $order;
-
 
 
     /**
@@ -97,6 +101,52 @@ class OrderItem
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set productId
+     *
+     * @param integer $productId
+     * @return OrderItem
+     */
+    public function setProductId($productId)
+    {
+        $this->productId = $productId;
+    
+        return $this;
+    }
+
+    /**
+     * Get productId
+     *
+     * @return integer 
+     */
+    public function getProductId()
+    {
+        return $this->productId;
+    }
+
+    /**
+     * Set orderId
+     *
+     * @param integer $orderId
+     * @return OrderItem
+     */
+    public function setOrderId($orderId)
+    {
+        $this->orderId = $orderId;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderId
+     *
+     * @return integer 
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
     }
 
     /**
@@ -281,28 +331,5 @@ class OrderItem
     public function getOrderItemId()
     {
         return $this->orderItemId;
-    }
-
-    /**
-     * Set order
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Order $order
-     * @return OrderItem
-     */
-    public function setOrder(\Zepluf\Bundle\StoreBundle\Entity\Order $order = null)
-    {
-        $this->order = $order;
-    
-        return $this;
-    }
-
-    /**
-     * Get order
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Order 
-     */
-    public function getOrder()
-    {
-        return $this->order;
     }
 }

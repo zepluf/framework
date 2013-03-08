@@ -7,8 +7,5 @@
     <field name="type" type="smallint" column="type" nullable="false"/>
     <field name="orderDate" type="datetime" column="order_date" nullable="false"/>
     <field name="entryDate" type="datetime" column="entry_date" nullable="false"/>
-
-    <one-to-many field="items" target-entity="OrderItem" mapped-by="orderId" />
-
   </entity>
 </doctrine-mapping>
