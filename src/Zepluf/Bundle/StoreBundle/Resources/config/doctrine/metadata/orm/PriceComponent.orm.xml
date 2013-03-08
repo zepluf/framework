@@ -6,8 +6,9 @@
     </id>
     <field name="fromDate" type="datetime" column="from_date" nullable="true"/>
     <field name="throughDate" type="datetime" column="through_date" nullable="true"/>
-    <field name="price" type="decimal" column="price" nullable="false"/>
-    <field name="percent" type="decimal" column="percent" nullable="false"/>
+    <field name="name" type="string" column="name" length="255" nullable="false"/>
+    <field name="value" type="decimal" column="value" nullable="false"/>
+    <field name="tag" type="string" column="tag" length="255" nullable="false"/>
     <field name="comment" type="string" column="comment" length="255" nullable="true"/>
   </entity>
 </doctrine-mapping>

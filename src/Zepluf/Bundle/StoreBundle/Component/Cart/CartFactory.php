@@ -11,20 +11,20 @@
 namespace Zepluf\Bundle\StoreBundle\Component\Cart;
 
 use Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\ArrayStorageHandler;
+use Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\SessionStorageHandler;
 
 class CartFactory
 {
     /**
      *  Logic code to get the suitable storage handler
      */
-    public function get(ArrayStorageHandler $arrayStorageHandler)
+    public function get(ArrayStorageHandler $arrayStorageHandler, SessionStorageHandler $sessionStorageHandler)
     {
         $cart = new Cart();
-
         //Logical code to select storage handler
 
         //TODO: Change default array storage handler
-        $cart->setStorageHandler($arrayStorageHandler);
+        $cart->setStorageHandler($sessionStorageHandler);
         return $cart;
     }
 }

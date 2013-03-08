@@ -36,18 +36,25 @@ class PriceComponent
     private $throughDate;
 
     /**
-     * @var float
+     * @var string
      *
-     * @ORM\Column(name="price", type="decimal", nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    private $price;
+    private $name;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="percent", type="decimal", nullable=false)
+     * @ORM\Column(name="value", type="decimal", nullable=false)
      */
-    private $percent;
+    private $value;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tag", type="string", length=255, nullable=false)
+     */
+    private $tag;
 
     /**
      * @var string
@@ -115,49 +122,72 @@ class PriceComponent
     }
 
     /**
-     * Set price
+     * Set name
      *
-     * @param float $price
+     * @param string $name
      * @return PriceComponent
      */
-    public function setPrice($price)
+    public function setName($name)
     {
-        $this->price = $price;
+        $this->name = $name;
     
         return $this;
     }
 
     /**
-     * Get price
+     * Get name
      *
-     * @return float 
+     * @return string 
      */
-    public function getPrice()
+    public function getName()
     {
-        return $this->price;
+        return $this->name;
     }
 
     /**
-     * Set percent
+     * Set value
      *
-     * @param float $percent
+     * @param float $value
      * @return PriceComponent
      */
-    public function setPercent($percent)
+    public function setValue($value)
     {
-        $this->percent = $percent;
+        $this->value = $value;
     
         return $this;
     }
 
     /**
-     * Get percent
+     * Get value
      *
      * @return float 
      */
-    public function getPercent()
+    public function getValue()
     {
-        return $this->percent;
+        return $this->value;
+    }
+
+    /**
+     * Set tag
+     *
+     * @param string $tag
+     * @return PriceComponent
+     */
+    public function setTag($tag)
+    {
+        $this->tag = $tag;
+    
+        return $this;
+    }
+
+    /**
+     * Get tag
+     *
+     * @return string 
+     */
+    public function getTag()
+    {
+        return $this->tag;
     }
 
     /**
