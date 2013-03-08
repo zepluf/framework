@@ -7,11 +7,6 @@
     <field name="name" type="string" column="name" length="255" nullable="false"/>
     <field name="description" type="string" column="description" length="255" nullable="true"/>
     <field name="order" type="integer" column="order" nullable="false"/>
-    <many-to-one field="priceComponent" target-entity="PriceComponent">
-      <join-columns>
-        <join-column name="price_component_id" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="productFeatureCategory" target-entity="ProductFeatureCategory">
       <join-columns>
         <join-column name="product_feature_category_id" referenced-column-name="id"/>

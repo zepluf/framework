@@ -394,4 +394,14 @@ class Address
      */
     public function setCompanyName($name) { $this->companyName = $name; }
 
+
+    /**
+     * Get addressId
+     *
+     * @return integer 
+     */
+    public function getAddressId()
+    {
+        return $this->addressId;
+    }
 }

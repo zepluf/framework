@@ -10,11 +10,6 @@
     <field name="introductionDate" type="datetime" column="introduction_date" nullable="false"/>
     <field name="salesDiscontinuationDate" type="datetime" column="sales_discontinuation_date" nullable="true"/>
     <field name="availableDate" type="datetime" column="available_date" nullable="true"/>
-    <many-to-one field="priceComponent" target-entity="PriceComponent">
-      <join-columns>
-        <join-column name="price_component_id" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
     <many-to-one field="unitOfMeasurement" target-entity="UnitOfMeasurement">
       <join-columns>
         <join-column name="unit_of_measurement_id" referenced-column-name="id"/>
