@@ -11,6 +11,7 @@
 namespace Zepluf\Bundle\StoreBundle\Component\Cart;
 
 use Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\StorageHandlerInterface;
+use Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection;
 
 class Cart
 {
@@ -105,7 +106,7 @@ class Cart
         $this->storageHandler->save($this->productCollection);
     }
 
-    public function setProductCollection(\Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection $productCollection)
+    public function setProductCollection(ProductCollection $productCollection)
     {
         $this->productCollection = $productCollection;
     }

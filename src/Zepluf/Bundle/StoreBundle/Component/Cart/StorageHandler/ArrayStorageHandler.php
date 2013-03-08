@@ -1,24 +1,28 @@
 <?php
 /**
  * Created by Rubikin Team.
- * Date: 3/4/13
- * Time: 5:41 PM
+ * Date: 3/5/13
+ * Time: 3:25 PM
  * Question? Come to our website at http://rubikin.com
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler;
+
+use Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection;
 
 class ArrayStorageHandler implements StorageHandlerInterface
 {
-    public function get()
+    protected $data;
+
+    public function save(ProductCollection $productCollection)
     {
-        // TODO: Implement get() method.
+        $this->data = $productCollection;
     }
 
-    public function set()
+    public function retrieve()
     {
-        // TODO: Implement set() method.
+        return $this->data;
     }
-
 }

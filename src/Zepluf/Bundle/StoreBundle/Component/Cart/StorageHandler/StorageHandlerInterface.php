@@ -10,9 +10,22 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler;
 
+use Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection;
+
 interface StorageHandlerInterface
 {
-    public function get();
+    /**
+     * saves the collection
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection $productCollection
+     * @return mixed
+     */
+    public function save(ProductCollection $productCollection);
 
-    public function set();
+    /**
+     * gets the collection
+     *
+     * @return Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection $productCollection
+     */
+    public function retrieve();
 }
