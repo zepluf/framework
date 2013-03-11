@@ -24,20 +24,6 @@ class OrderItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="product_id", type="integer", nullable=false)
-     */
-    private $productId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="order_id", type="integer", nullable=false)
-     */
-    private $orderId;
-
-    /**
-     * @var integer
-     *
      * @ORM\Column(name="sequence_id", type="integer", nullable=true)
      */
     private $sequenceId;
@@ -85,11 +71,34 @@ class OrderItem
     private $type;
 
     /**
-     * @var integer
+     * @var \Product
      *
-     * @ORM\Column(name="order_item_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * })
      */
-    private $orderItemId;
+    private $product;
+
+    /**
+     * @var \Order
+     *
+     * @ORM\ManyToOne(targetEntity="Order")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     * })
+     */
+    private $order;
+
+    /**
+     * @var \OrderItem
+     *
+     * @ORM\ManyToOne(targetEntity="OrderItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_item_id", referencedColumnName="id")
+     * })
+     */
+    private $orderItem;
 
 
 
@@ -101,52 +110,6 @@ class OrderItem
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set productId
-     *
-     * @param integer $productId
-     * @return OrderItem
-     */
-    public function setProductId($productId)
-    {
-        $this->productId = $productId;
-    
-        return $this;
-    }
-
-    /**
-     * Get productId
-     *
-     * @return integer 
-     */
-    public function getProductId()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * Set orderId
-     *
-     * @param integer $orderId
-     * @return OrderItem
-     */
-    public function setOrderId($orderId)
-    {
-        $this->orderId = $orderId;
-    
-        return $this;
-    }
-
-    /**
-     * Get orderId
-     *
-     * @return integer 
-     */
-    public function getOrderId()
-    {
-        return $this->orderId;
     }
 
     /**
@@ -311,25 +274,71 @@ class OrderItem
     }
 
     /**
-     * Set orderItemId
+     * Set product
      *
-     * @param integer $orderItemId
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
      * @return OrderItem
      */
-    public function setOrderItemId($orderItemId)
+    public function setProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product = null)
     {
-        $this->orderItemId = $orderItemId;
+        $this->product = $product;
     
         return $this;
     }
 
     /**
-     * Get orderItemId
+     * Get product
      *
-     * @return integer 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Product 
      */
-    public function getOrderItemId()
+    public function getProduct()
     {
-        return $this->orderItemId;
+        return $this->product;
+    }
+
+    /**
+     * Set order
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Order $order
+     * @return OrderItem
+     */
+    public function setOrder(\Zepluf\Bundle\StoreBundle\Entity\Order $order = null)
+    {
+        $this->order = $order;
+    
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Order 
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set orderItem
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
+     * @return OrderItem
+     */
+    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem = null)
+    {
+        $this->orderItem = $orderItem;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderItem
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderItem 
+     */
+    public function getOrderItem()
+    {
+        return $this->orderItem;
     }
 }
