@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <!-- all plugins routes -->
+    <route id="plugins_admin" pattern="/plugins/manager/">
+        <default key="_controller">StoreBundle:AdminPlugin:index</default>
+    </route>
+
+    <route id="plugins_admin_info" pattern="/plugins/info/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsInfo</default>
+    </route>
+
+    <route id="plugins_admin_install" pattern="/plugins/install/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsInstall</default>
+    </route>
+
+    <route id="plugins_admin_uninstall" pattern="/plugins/uninstall/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsUninstall</default>
+    </route>
+
+    <route id="plugins_admin_activate" pattern="/plugins/activate/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsActivate</default>
+    </route>
+
+    <route id="plugins_admin_deactivate" pattern="/plugins/deactivate/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsDeactivate</default>
+    </route>
+
+    <route id="plugins_admin_reset" pattern="/plugins/reset/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsReset</default>
+    </route>
+
+    <route id="plugins_admin_load_theme_settings" pattern="/plugins/load_theme_settings/">
+        <default key="_controller">StoreBundle:AdminPlugin:loadThemeSettings</default>
+    </route>
+
+    <route id="plugins_admin_configs_settings" pattern="/plugins/configs_settings/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsConfig</default>
+    </route>
+
+    <route id="plugins_admin_show_settings" pattern="/plugins/show_settings/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsShowSettings</default>
+    </route>
+
+    <route id="plugins_admin_delete" pattern="/plugins/delete/">
+        <default key="_controller">StoreBundle:AdminPlugin:pluginsDelete</default>
+    </route>
+</routes>

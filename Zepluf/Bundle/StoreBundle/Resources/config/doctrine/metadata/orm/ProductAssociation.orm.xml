@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="ProductAssociation" table="product_association">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fromDate" type="datetime" column="from_date" nullable="false"/>
+    <field name="throughDate" type="datetime" column="through_date" nullable="true"/>
+    <field name="reason" type="string" column="reason" length="255" nullable="true"/>
+    <many-to-one field="productAssociationType" target-entity="ProductAssociationType">
+      <join-columns>
+        <join-column name="product_association_type_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="toProduct" target-entity="Product">
+      <join-columns>
+        <join-column name="to_product_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="fromProduct" target-entity="Product">
+      <join-columns>
+        <join-column name="from_product_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

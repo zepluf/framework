@@ -1,0 +1,97 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * PriceComponent
+ *
+ * @ORM\Table(name="price_component")
+ * @ORM\Entity
+ */
+class PriceComponent
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="from_date", type="datetime", nullable=true)
+     */
+    private $fromDate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="through_date", type="datetime", nullable=true)
+     */
+    private $throughDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     */
+    private $name;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="value", type="decimal", nullable=false)
+     */
+    private $value;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tag", type="string", length=255, nullable=false)
+     */
+    private $tag;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="comment", type="string", length=255, nullable=true)
+     */
+    private $comment;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="ProductFeature", inversedBy="priceComponent")
+     * @ORM\JoinTable(name="product_feature_price_component",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="price_component_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="feature_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $feature;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Product", mappedBy="priceComponent")
+     */
+    private $product;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->feature = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->product = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+}

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Order" table="order">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="type" type="smallint" column="type" nullable="false"/>
+    <field name="orderDate" type="datetime" column="order_date" nullable="false"/>
+    <field name="entryDate" type="datetime" column="entry_date" nullable="false"/>
+  </entity>
+</doctrine-mapping>
