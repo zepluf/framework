@@ -59,7 +59,7 @@ class ShipmentItem
     /**
      * @var \Shipment
      *
-     * @ORM\ManyToOne(targetEntity="Shipment")
+     * @ORM\ManyToOne(targetEntity="Shipment", inversedBy="shipmentItems")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id")
      * })

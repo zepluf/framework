@@ -10,5 +10,16 @@
     <field name="value" type="decimal" column="value" nullable="false"/>
     <field name="tag" type="string" column="tag" length="255" nullable="false"/>
     <field name="comment" type="string" column="comment" length="255" nullable="true"/>
+    <many-to-many field="product" target-entity="Product" mapped-by="priceComponent"/>
+    <many-to-many field="feature" target-entity="ProductFeature" inversed-by="priceComponent">
+      <join-table name="product_feature_price_component">
+        <join-columns>
+          <join-column name="price_component_id" referenced-column-name="id"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="feature_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
   </entity>
 </doctrine-mapping>

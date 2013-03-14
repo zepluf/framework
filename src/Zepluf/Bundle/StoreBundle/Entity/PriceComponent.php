@@ -63,7 +63,37 @@ class PriceComponent
      */
     private $comment;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="ProductFeature", inversedBy="priceComponent")
+     * @ORM\JoinTable(name="product_feature_price_component",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="price_component_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="feature_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $feature;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Product", mappedBy="priceComponent")
+     */
+    private $product;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->feature = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->product = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
 
     /**
      * Get id
@@ -211,5 +241,71 @@ class PriceComponent
     public function getComment()
     {
         return $this->comment;
+    }
+
+    /**
+     * Add feature
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $feature
+     * @return PriceComponent
+     */
+    public function addFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $feature)
+    {
+        $this->feature[] = $feature;
+    
+        return $this;
+    }
+
+    /**
+     * Remove feature
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $feature
+     */
+    public function removeFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $feature)
+    {
+        $this->feature->removeElement($feature);
+    }
+
+    /**
+     * Get feature
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFeature()
+    {
+        return $this->feature;
+    }
+
+    /**
+     * Add product
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     * @return PriceComponent
+     */
+    public function addProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product)
+    {
+        $this->product[] = $product;
+    
+        return $this;
+    }
+
+    /**
+     * Remove product
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     */
+    public function removeProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product)
+    {
+        $this->product->removeElement($product);
+    }
+
+    /**
+     * Get product
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProduct()
+    {
+        return $this->product;
     }
 }

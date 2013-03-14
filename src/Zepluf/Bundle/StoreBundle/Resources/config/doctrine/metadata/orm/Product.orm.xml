@@ -20,5 +20,25 @@
         <join-column name="manufacturer_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
+    <many-to-many field="termType" target-entity="TermType" inversed-by="product">
+      <join-table name="product_term">
+        <join-columns>
+          <join-column name="product_id" referenced-column-name="id"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="term_type_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+    <many-to-many field="priceComponent" target-entity="PriceComponent" inversed-by="product">
+      <join-table name="product_price_component">
+        <join-columns>
+          <join-column name="product_id" referenced-column-name="id"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="price_component_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
   </entity>
 </doctrine-mapping>

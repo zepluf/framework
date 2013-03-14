@@ -13,18 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 class OrderItemRole
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
      * @var \OrderItem
      *
-     * @ORM\ManyToOne(targetEntity="OrderItem")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="OrderItem")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="order_item_id", referencedColumnName="id")
      * })
@@ -34,7 +27,9 @@ class OrderItemRole
     /**
      * @var \OrderItemRoleType
      *
-     * @ORM\ManyToOne(targetEntity="OrderItemRoleType")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="OrderItemRoleType")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="order_item_role_type_id", referencedColumnName="id")
      * })
@@ -44,7 +39,9 @@ class OrderItemRole
     /**
      * @var \Party
      *
-     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Party")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
      * })
@@ -54,22 +51,12 @@ class OrderItemRole
 
 
     /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Set orderItem
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
      * @return OrderItemRole
      */
-    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem = null)
+    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem)
     {
         $this->orderItem = $orderItem;
     
@@ -92,7 +79,7 @@ class OrderItemRole
      * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItemRoleType $orderItemRoleType
      * @return OrderItemRole
      */
-    public function setOrderItemRoleType(\Zepluf\Bundle\StoreBundle\Entity\OrderItemRoleType $orderItemRoleType = null)
+    public function setOrderItemRoleType(\Zepluf\Bundle\StoreBundle\Entity\OrderItemRoleType $orderItemRoleType)
     {
         $this->orderItemRoleType = $orderItemRoleType;
     
@@ -115,7 +102,7 @@ class OrderItemRole
      * @param \Zepluf\Bundle\StoreBundle\Entity\Party $party
      * @return OrderItemRole
      */
-    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party = null)
+    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party)
     {
         $this->party = $party;
     

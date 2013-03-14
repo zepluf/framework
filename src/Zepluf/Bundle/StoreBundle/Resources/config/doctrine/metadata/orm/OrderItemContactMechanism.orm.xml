@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="OrderItemContactMechanism" table="order_item_contact_mechanism">
-    <id name="id" type="integer" column="id">
-      <generator strategy="IDENTITY"/>
-    </id>
-    <many-to-one field="orderItem" target-entity="OrderItem">
+    <one-to-one field="orderItem" target-entity="OrderItem">
       <join-columns>
         <join-column name="order_item_id" referenced-column-name="id"/>
       </join-columns>
-    </many-to-one>
-    <many-to-one field="contactMechanismPurposeType" target-entity="ContactMechanismPurposeType">
+    </one-to-one>
+    <one-to-one field="contactMechanismPurposeType" target-entity="ContactMechanismPurposeType">
       <join-columns>
         <join-column name="contact_mechanism_purpose_type_id" referenced-column-name="id"/>
       </join-columns>
-    </many-to-one>
-    <many-to-one field="contactMechanism" target-entity="ContactMechanism">
+    </one-to-one>
+    <one-to-one field="contactMechanism" target-entity="ContactMechanism">
       <join-columns>
         <join-column name="contact_mechanism_id" referenced-column-name="id"/>
       </join-columns>
-    </many-to-one>
+    </one-to-one>
   </entity>
 </doctrine-mapping>

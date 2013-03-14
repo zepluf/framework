@@ -64,6 +64,36 @@ class Product
     private $availableDate;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="PriceComponent", inversedBy="product")
+     * @ORM\JoinTable(name="product_price_component",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="price_component_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $priceComponent;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="TermType", inversedBy="product")
+     * @ORM\JoinTable(name="product_term",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="term_type_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $termType;
+
+    /**
      * @var \Organization
      *
      * @ORM\ManyToOne(targetEntity="Organization")
@@ -83,7 +113,15 @@ class Product
      */
     private $unitOfMeasurement;
 
-
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->priceComponent = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->termType = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
 
     /**
      * Get id
@@ -231,6 +269,72 @@ class Product
     public function getAvailableDate()
     {
         return $this->availableDate;
+    }
+
+    /**
+     * Add priceComponent
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent
+     * @return Product
+     */
+    public function addPriceComponent(\Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent)
+    {
+        $this->priceComponent[] = $priceComponent;
+    
+        return $this;
+    }
+
+    /**
+     * Remove priceComponent
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent
+     */
+    public function removePriceComponent(\Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent)
+    {
+        $this->priceComponent->removeElement($priceComponent);
+    }
+
+    /**
+     * Get priceComponent
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPriceComponent()
+    {
+        return $this->priceComponent;
+    }
+
+    /**
+     * Add termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     * @return Product
+     */
+    public function addTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType)
+    {
+        $this->termType[] = $termType;
+    
+        return $this;
+    }
+
+    /**
+     * Remove termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     */
+    public function removeTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType)
+    {
+        $this->termType->removeElement($termType);
+    }
+
+    /**
+     * Get termType
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTermType()
+    {
+        return $this->termType;
     }
 
     /**

@@ -35,7 +35,21 @@ class ProductFeatureValue
      */
     private $description;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="ProductFeature", mappedBy="productFeatureValue")
+     */
+    private $productFeature;
 
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->productFeature = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
 
     /**
      * Get id
@@ -91,5 +105,38 @@ class ProductFeatureValue
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Add productFeature
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature
+     * @return ProductFeatureValue
+     */
+    public function addProductFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature)
+    {
+        $this->productFeature[] = $productFeature;
+    
+        return $this;
+    }
+
+    /**
+     * Remove productFeature
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature
+     */
+    public function removeProductFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature)
+    {
+        $this->productFeature->removeElement($productFeature);
+    }
+
+    /**
+     * Get productFeature
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProductFeature()
+    {
+        return $this->productFeature;
     }
 }
