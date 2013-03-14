@@ -22,6 +22,13 @@ class Invoice
     private $id;
 
     /**
+     * @var InvoiceItem|array
+     *
+     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice")
+     */
+    private $invoiceItems;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="entry_date", type="datetime", nullable=false)
@@ -41,6 +48,21 @@ class Invoice
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="TermType", inversedBy="invoice")
+     * @ORM\JoinTable(name="invoice_term",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="term_type_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $termType;
 
     /**
      * @var \Party
@@ -82,7 +104,14 @@ class Invoice
      */
     private $sentTo;
 
-
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->termType = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
 
     /**
      * Get id
@@ -161,6 +190,72 @@ class Invoice
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Add invoiceItems
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItems
+     * @return Invoice
+     */
+    public function addInvoiceItem(\Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItems)
+    {
+        $this->invoiceItems[] = $invoiceItems;
+    
+        return $this;
+    }
+
+    /**
+     * Remove invoiceItems
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItems
+     */
+    public function removeInvoiceItem(\Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItems)
+    {
+        $this->invoiceItems->removeElement($invoiceItems);
+    }
+
+    /**
+     * Get invoiceItems
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getInvoiceItems()
+    {
+        return $this->invoiceItems;
+    }
+
+    /**
+     * Add termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     * @return Invoice
+     */
+    public function addTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType)
+    {
+        $this->termType[] = $termType;
+    
+        return $this;
+    }
+
+    /**
+     * Remove termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     */
+    public function removeTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType)
+    {
+        $this->termType->removeElement($termType);
+    }
+
+    /**
+     * Get termType
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTermType()
+    {
+        return $this->termType;
     }
 
     /**

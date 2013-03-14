@@ -1,0 +1,115 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Invoice
+ *
+ * @ORM\Table(name="invoice")
+ * @ORM\Entity
+ */
+class Invoice
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var InvoiceItem|array
+     *
+     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice")
+     */
+    private $invoiceItems;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="entry_date", type="datetime", nullable=false)
+     */
+    private $entryDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="message", type="string", length=255, nullable=true)
+     */
+    private $message;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="TermType", inversedBy="invoice")
+     * @ORM\JoinTable(name="invoice_term",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="term_type_id", referencedColumnName="id")
+     *   }
+     * )
+     */
+    private $termType;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="billed_to", referencedColumnName="id")
+     * })
+     */
+    private $billedTo;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="billed_from", referencedColumnName="id")
+     * })
+     */
+    private $billedFrom;
+
+    /**
+     * @var \ContactMechanism
+     *
+     * @ORM\ManyToOne(targetEntity="ContactMechanism")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="addressed_to", referencedColumnName="id")
+     * })
+     */
+    private $addressedTo;
+
+    /**
+     * @var \ContactMechanism
+     *
+     * @ORM\ManyToOne(targetEntity="ContactMechanism")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sent_to", referencedColumnName="id")
+     * })
+     */
+    private $sentTo;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->termType = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+}

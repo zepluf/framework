@@ -1,0 +1,52 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InvoiceRole
+ *
+ * @ORM\Table(name="invoice_role")
+ * @ORM\Entity
+ */
+class InvoiceRole
+{
+    /**
+     * @var \Invoice
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Invoice")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
+     * })
+     */
+    private $invoice;
+
+    /**
+     * @var \InvoiceRoleType
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="InvoiceRoleType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="invoice_role_type_id", referencedColumnName="id")
+     * })
+     */
+    private $invoiceRoleType;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
+     * })
+     */
+    private $party;
+
+
+}

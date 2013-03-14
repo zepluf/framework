@@ -35,7 +35,29 @@ class TermType
      */
     private $content;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Invoice", mappedBy="termType")
+     */
+    private $invoice;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Product", mappedBy="termType")
+     */
+    private $product;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->invoice = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->product = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
 
     /**
      * Get id
@@ -91,5 +113,71 @@ class TermType
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Add invoice
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice
+     * @return TermType
+     */
+    public function addInvoice(\Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice)
+    {
+        $this->invoice[] = $invoice;
+    
+        return $this;
+    }
+
+    /**
+     * Remove invoice
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice
+     */
+    public function removeInvoice(\Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice)
+    {
+        $this->invoice->removeElement($invoice);
+    }
+
+    /**
+     * Get invoice
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getInvoice()
+    {
+        return $this->invoice;
+    }
+
+    /**
+     * Add product
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     * @return TermType
+     */
+    public function addProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product)
+    {
+        $this->product[] = $product;
+    
+        return $this;
+    }
+
+    /**
+     * Remove product
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     */
+    public function removeProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product)
+    {
+        $this->product->removeElement($product);
+    }
+
+    /**
+     * Get product
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProduct()
+    {
+        return $this->product;
     }
 }

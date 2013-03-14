@@ -13,18 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 class InvoiceRole
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
      * @var \Invoice
      *
-     * @ORM\ManyToOne(targetEntity="Invoice")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Invoice")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
      * })
@@ -34,7 +27,9 @@ class InvoiceRole
     /**
      * @var \InvoiceRoleType
      *
-     * @ORM\ManyToOne(targetEntity="InvoiceRoleType")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="InvoiceRoleType")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="invoice_role_type_id", referencedColumnName="id")
      * })
@@ -44,7 +39,9 @@ class InvoiceRole
     /**
      * @var \Party
      *
-     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Party")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
      * })
@@ -54,22 +51,12 @@ class InvoiceRole
 
 
     /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Set invoice
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice
      * @return InvoiceRole
      */
-    public function setInvoice(\Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice = null)
+    public function setInvoice(\Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice)
     {
         $this->invoice = $invoice;
     
@@ -92,7 +79,7 @@ class InvoiceRole
      * @param \Zepluf\Bundle\StoreBundle\Entity\InvoiceRoleType $invoiceRoleType
      * @return InvoiceRole
      */
-    public function setInvoiceRoleType(\Zepluf\Bundle\StoreBundle\Entity\InvoiceRoleType $invoiceRoleType = null)
+    public function setInvoiceRoleType(\Zepluf\Bundle\StoreBundle\Entity\InvoiceRoleType $invoiceRoleType)
     {
         $this->invoiceRoleType = $invoiceRoleType;
     
@@ -115,7 +102,7 @@ class InvoiceRole
      * @param \Zepluf\Bundle\StoreBundle\Entity\Party $party
      * @return InvoiceRole
      */
-    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party = null)
+    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party)
     {
         $this->party = $party;
     

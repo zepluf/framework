@@ -1,0 +1,59 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * OrderItemFeature
+ *
+ * @ORM\Table(name="order_item_feature")
+ * @ORM\Entity
+ */
+class OrderItemFeature
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="value", type="string", length=255, nullable=true)
+     */
+    private $value;
+
+    /**
+     * @var \OrderItem
+     *
+     * @ORM\ManyToOne(targetEntity="OrderItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_item_id", referencedColumnName="id")
+     * })
+     */
+    private $orderItem;
+
+    /**
+     * @var \ProductFeature
+     *
+     * @ORM\ManyToOne(targetEntity="ProductFeature")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_feature_id", referencedColumnName="id")
+     * })
+     */
+    private $productFeature;
+
+
+}

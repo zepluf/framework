@@ -6,5 +6,6 @@
     </id>
     <field name="value" type="string" column="value" length="255" nullable="false"/>
     <field name="description" type="string" column="description" length="255" nullable="true"/>
+    <many-to-many field="productFeature" target-entity="ProductFeature" mapped-by="productFeatureValue"/>
   </entity>
 </doctrine-mapping>

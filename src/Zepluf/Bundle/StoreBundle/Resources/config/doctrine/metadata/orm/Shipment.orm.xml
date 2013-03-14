@@ -5,10 +5,7 @@
       <generator strategy="IDENTITY"/>
     </id>
     <field name="incrementId" type="string" column="increment_id" length="45" nullable="false"/>
-    <field name="estimatedShipDate" type="datetime" column="estimated_ship_date" nullable="true"/>
-    <field name="estimatedReadyDate" type="datetime" column="estimated_ready_date" nullable="true"/>
-    <field name="estimatedShipCost" type="decimal" column="estimated_ship_cost" nullable="true"/>
-    <field name="actualShipCost" type="decimal" column="actual_ship_cost" nullable="true"/>
+    <field name="shipCost" type="decimal" column="ship_cost" nullable="true"/>
     <field name="totalWeight" type="decimal" column="total_weight" nullable="true"/>
     <field name="handlingInstructions" type="string" column="handling_instructions" length="255" nullable="true"/>
     <field name="createdAt" type="datetime" column="created_at" nullable="true"/>

@@ -1,7 +1,0 @@
-initialized: false
-installed: {  }
-activated: {  }
-core:
-    - riCjLoader
-backend: {  }
-frontend: {  }

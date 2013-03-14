@@ -13,18 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 class OrderItemContactMechanism
 {
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
      * @var \ContactMechanism
      *
-     * @ORM\ManyToOne(targetEntity="ContactMechanism")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="ContactMechanism")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="contact_mechanism_id", referencedColumnName="id")
      * })
@@ -34,7 +27,9 @@ class OrderItemContactMechanism
     /**
      * @var \ContactMechanismPurposeType
      *
-     * @ORM\ManyToOne(targetEntity="ContactMechanismPurposeType")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="ContactMechanismPurposeType")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="contact_mechanism_purpose_type_id", referencedColumnName="id")
      * })
@@ -44,7 +39,9 @@ class OrderItemContactMechanism
     /**
      * @var \OrderItem
      *
-     * @ORM\ManyToOne(targetEntity="OrderItem")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="OrderItem")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="order_item_id", referencedColumnName="id")
      * })
@@ -54,22 +51,12 @@ class OrderItemContactMechanism
 
 
     /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * Set contactMechanism
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $contactMechanism
      * @return OrderItemContactMechanism
      */
-    public function setContactMechanism(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $contactMechanism = null)
+    public function setContactMechanism(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $contactMechanism)
     {
         $this->contactMechanism = $contactMechanism;
     
@@ -92,7 +79,7 @@ class OrderItemContactMechanism
      * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanismPurposeType $contactMechanismPurposeType
      * @return OrderItemContactMechanism
      */
-    public function setContactMechanismPurposeType(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanismPurposeType $contactMechanismPurposeType = null)
+    public function setContactMechanismPurposeType(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanismPurposeType $contactMechanismPurposeType)
     {
         $this->contactMechanismPurposeType = $contactMechanismPurposeType;
     
@@ -115,7 +102,7 @@ class OrderItemContactMechanism
      * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
      * @return OrderItemContactMechanism
      */
-    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem = null)
+    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem)
     {
         $this->orderItem = $orderItem;
     

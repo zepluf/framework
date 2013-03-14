@@ -6,5 +6,7 @@
     </id>
     <field name="description" type="string" column="description" length="255" nullable="false"/>
     <field name="content" type="text" column="content" nullable="true"/>
+    <many-to-many field="product" target-entity="Product" mapped-by="termType"/>
+    <many-to-many field="invoice" target-entity="Invoice" mapped-by="termType"/>
   </entity>
 </doctrine-mapping>

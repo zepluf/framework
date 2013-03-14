@@ -20,6 +20,9 @@ class SimpleCheckoutTest extends \PHPUnit_Framework_TestCase
         $this->cart = new \Zepluf\Bundle\StoreBundle\Component\Cart\Cart();
     }
 
+    public function testProductCollection()
+    {
+    }
 
     public function testSimpleCheckout()
     {
@@ -28,8 +31,21 @@ class SimpleCheckoutTest extends \PHPUnit_Framework_TestCase
         $productCollection->expects($this->once())
             ->method('add');
 
-        $this->cart->setProductCollection($productCollection);
-        $this->cart->add(1, 1, array(1, 2, 3));
+        // save cart
+
+        // create order
+
+        // shipping
+
+        // payment
+
+//        $productCollection = new \Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection();
+//        $this->cart->setProductCollection($productCollection);
+//        $this->cart->add(1, 1, array(1, 2, 3));
+//        $this->cart->setStorageHandler(new \Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\SessionStorageHandler());
+//        $this->cart->save();
+
+        var_dump($_SESSION, "TUan");
 
         // create order
 

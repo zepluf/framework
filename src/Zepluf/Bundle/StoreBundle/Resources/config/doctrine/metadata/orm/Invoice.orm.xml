@@ -27,5 +27,15 @@
         <join-column name="billed_to" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
+    <many-to-many field="termType" target-entity="TermType" inversed-by="invoice">
+      <join-table name="invoice_term">
+        <join-columns>
+          <join-column name="invoice_id" referenced-column-name="id"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="term_type_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
   </entity>
 </doctrine-mapping>

@@ -71,16 +71,6 @@ class ShipmentRouteSegment
     private $updatedAt;
 
     /**
-     * @var \ShipmentMethodType
-     *
-     * @ORM\ManyToOne(targetEntity="ShipmentMethodType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_method_type_id", referencedColumnName="id")
-     * })
-     */
-    private $shipmentMethodType;
-
-    /**
      * @var \Carrier
      *
      * @ORM\ManyToOne(targetEntity="Carrier")
@@ -271,29 +261,6 @@ class ShipmentRouteSegment
     public function getUpdatedAt()
     {
         return $this->updatedAt;
-    }
-
-    /**
-     * Set shipmentMethodType
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentMethodType $shipmentMethodType
-     * @return ShipmentRouteSegment
-     */
-    public function setShipmentMethodType(\Zepluf\Bundle\StoreBundle\Entity\ShipmentMethodType $shipmentMethodType = null)
-    {
-        $this->shipmentMethodType = $shipmentMethodType;
-    
-        return $this;
-    }
-
-    /**
-     * Get shipmentMethodType
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentMethodType 
-     */
-    public function getShipmentMethodType()
-    {
-        return $this->shipmentMethodType;
     }
 
     /**

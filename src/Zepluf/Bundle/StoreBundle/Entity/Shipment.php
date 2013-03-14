@@ -29,32 +29,18 @@ class Shipment
     private $incrementId;
 
     /**
-     * @var \DateTime
+     * @var ShipmentItem|array
      *
-     * @ORM\Column(name="estimated_ship_date", type="datetime", nullable=true)
+     * @ORM\OneToMany(targetEntity="ShipmentItem", mappedBy="shipment")
      */
-    private $estimatedShipDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="estimated_ready_date", type="datetime", nullable=true)
-     */
-    private $estimatedReadyDate;
+    private $shipmentItems;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="estimated_ship_cost", type="decimal", nullable=true)
+     * @ORM\Column(name="ship_cost", type="decimal", nullable=true)
      */
-    private $estimatedShipCost;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="actual_ship_cost", type="decimal", nullable=true)
-     */
-    private $actualShipCost;
+    private $shipCost;
 
     /**
      * @var float
@@ -135,7 +121,14 @@ class Shipment
     private $shippedToContactMechanism;
 
 
-
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->shipmentItems = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
     /**
      * Get id
      *
@@ -170,95 +163,26 @@ class Shipment
     }
 
     /**
-     * Set estimatedShipDate
+     * Set shipCost
      *
-     * @param \DateTime $estimatedShipDate
+     * @param float $shipCost
      * @return Shipment
      */
-    public function setEstimatedShipDate($estimatedShipDate)
+    public function setShipCost($shipCost)
     {
-        $this->estimatedShipDate = $estimatedShipDate;
+        $this->shipCost = $shipCost;
     
         return $this;
     }
 
     /**
-     * Get estimatedShipDate
-     *
-     * @return \DateTime 
-     */
-    public function getEstimatedShipDate()
-    {
-        return $this->estimatedShipDate;
-    }
-
-    /**
-     * Set estimatedReadyDate
-     *
-     * @param \DateTime $estimatedReadyDate
-     * @return Shipment
-     */
-    public function setEstimatedReadyDate($estimatedReadyDate)
-    {
-        $this->estimatedReadyDate = $estimatedReadyDate;
-    
-        return $this;
-    }
-
-    /**
-     * Get estimatedReadyDate
-     *
-     * @return \DateTime 
-     */
-    public function getEstimatedReadyDate()
-    {
-        return $this->estimatedReadyDate;
-    }
-
-    /**
-     * Set estimatedShipCost
-     *
-     * @param float $estimatedShipCost
-     * @return Shipment
-     */
-    public function setEstimatedShipCost($estimatedShipCost)
-    {
-        $this->estimatedShipCost = $estimatedShipCost;
-    
-        return $this;
-    }
-
-    /**
-     * Get estimatedShipCost
+     * Get shipCost
      *
      * @return float 
      */
-    public function getEstimatedShipCost()
+    public function getShipCost()
     {
-        return $this->estimatedShipCost;
-    }
-
-    /**
-     * Set actualShipCost
-     *
-     * @param float $actualShipCost
-     * @return Shipment
-     */
-    public function setActualShipCost($actualShipCost)
-    {
-        $this->actualShipCost = $actualShipCost;
-    
-        return $this;
-    }
-
-    /**
-     * Get actualShipCost
-     *
-     * @return float 
-     */
-    public function getActualShipCost()
-    {
-        return $this->actualShipCost;
+        return $this->shipCost;
     }
 
     /**
@@ -351,6 +275,39 @@ class Shipment
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Add shipmentItems
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItems
+     * @return Shipment
+     */
+    public function addShipmentItem(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItems)
+    {
+        $this->shipmentItems[] = $shipmentItems;
+    
+        return $this;
+    }
+
+    /**
+     * Remove shipmentItems
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItems
+     */
+    public function removeShipmentItem(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItems)
+    {
+        $this->shipmentItems->removeElement($shipmentItems);
+    }
+
+    /**
+     * Get shipmentItems
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getShipmentItems()
+    {
+        return $this->shipmentItems;
     }
 
     /**
