@@ -57,27 +57,6 @@ class InvoiceItem
     private $isTaxable;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="inventory_item_id", type="integer", nullable=true)
-     */
-    private $inventoryItemId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="product_id", type="integer", nullable=true)
-     */
-    private $productId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="product_feature_id", type="integer", nullable=true)
-     */
-    private $productFeatureId;
-
-    /**
      * @var \Invoice
      *
      * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceItems")
@@ -106,6 +85,16 @@ class InvoiceItem
      * })
      */
     private $invoiceItemType;
+
+    /**
+     * @var \InventoryItem
+     *
+     * @ORM\ManyToOne(targetEntity="InventoryItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="inventory_item_id", referencedColumnName="id")
+     * })
+     */
+    private $inventoryItem;
 
 
 
@@ -235,75 +224,6 @@ class InvoiceItem
     }
 
     /**
-     * Set inventoryItemId
-     *
-     * @param integer $inventoryItemId
-     * @return InvoiceItem
-     */
-    public function setInventoryItemId($inventoryItemId)
-    {
-        $this->inventoryItemId = $inventoryItemId;
-    
-        return $this;
-    }
-
-    /**
-     * Get inventoryItemId
-     *
-     * @return integer 
-     */
-    public function getInventoryItemId()
-    {
-        return $this->inventoryItemId;
-    }
-
-    /**
-     * Set productId
-     *
-     * @param integer $productId
-     * @return InvoiceItem
-     */
-    public function setProductId($productId)
-    {
-        $this->productId = $productId;
-    
-        return $this;
-    }
-
-    /**
-     * Get productId
-     *
-     * @return integer 
-     */
-    public function getProductId()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * Set productFeatureId
-     *
-     * @param integer $productFeatureId
-     * @return InvoiceItem
-     */
-    public function setProductFeatureId($productFeatureId)
-    {
-        $this->productFeatureId = $productFeatureId;
-    
-        return $this;
-    }
-
-    /**
-     * Get productFeatureId
-     *
-     * @return integer 
-     */
-    public function getProductFeatureId()
-    {
-        return $this->productFeatureId;
-    }
-
-    /**
      * Set invoice
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice
@@ -370,5 +290,28 @@ class InvoiceItem
     public function getInvoiceItemType()
     {
         return $this->invoiceItemType;
+    }
+
+    /**
+     * Set inventoryItem
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\InventoryItem $inventoryItem
+     * @return InvoiceItem
+     */
+    public function setInventoryItem(\Zepluf\Bundle\StoreBundle\Entity\InventoryItem $inventoryItem = null)
+    {
+        $this->inventoryItem = $inventoryItem;
+    
+        return $this;
+    }
+
+    /**
+     * Get inventoryItem
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\InventoryItem 
+     */
+    public function getInventoryItem()
+    {
+        return $this->inventoryItem;
     }
 }

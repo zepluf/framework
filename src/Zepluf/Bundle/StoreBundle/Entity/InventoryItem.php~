@@ -24,6 +24,20 @@ class InventoryItem
     /**
      * @var string
      *
+     * @ORM\Column(name="feature_value_ids", type="string", length=255, nullable=true)
+     */
+    private $featureValueIds;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="key", type="string", length=255, nullable=true)
+     */
+    private $key;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="serial", type="string", length=255, nullable=true)
      */
     private $serial;

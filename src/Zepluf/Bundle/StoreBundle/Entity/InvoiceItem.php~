@@ -57,30 +57,9 @@ class InvoiceItem
     private $isTaxable;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="inventory_item_id", type="integer", nullable=true)
-     */
-    private $inventoryItemId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="product_id", type="integer", nullable=true)
-     */
-    private $productId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="product_feature_id", type="integer", nullable=true)
-     */
-    private $productFeatureId;
-
-    /**
      * @var \Invoice
      *
-     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceItems")
+     * @ORM\ManyToOne(targetEntity="Invoice")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
      * })
@@ -106,6 +85,16 @@ class InvoiceItem
      * })
      */
     private $invoiceItemType;
+
+    /**
+     * @var \InventoryItem
+     *
+     * @ORM\ManyToOne(targetEntity="InventoryItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="inventory_item_id", referencedColumnName="id")
+     * })
+     */
+    private $inventoryItem;
 
 
 }

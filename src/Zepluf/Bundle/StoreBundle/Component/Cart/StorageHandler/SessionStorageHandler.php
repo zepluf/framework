@@ -9,6 +9,8 @@
  */
 namespace Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler;
 
+use Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection;
+
 class SessionStorageHandler implements StorageHandlerInterface
 {
     protected $storage;
@@ -25,10 +27,10 @@ class SessionStorageHandler implements StorageHandlerInterface
         // TODO: Implement get() method.
     }
 
-    public function save(\Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection $productCollection)
+    public function save(ProductCollection $productCollection)
     {
 
         //TODO: remove session start
-        $this->session->set('productCollection', $productCollection->get());
+        $this->session->set('productCollection', $productCollection);
     }
 }

@@ -29,27 +29,6 @@ class ShipmentItem
     private $quantity;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="price", type="decimal", nullable=true)
-     */
-    private $price;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="weight", type="decimal", nullable=true)
-     */
-    private $weight;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
-     */
-    private $name;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
@@ -109,75 +88,6 @@ class ShipmentItem
     public function getQuantity()
     {
         return $this->quantity;
-    }
-
-    /**
-     * Set price
-     *
-     * @param float $price
-     * @return ShipmentItem
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-    
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return float 
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set weight
-     *
-     * @param float $weight
-     * @return ShipmentItem
-     */
-    public function setWeight($weight)
-    {
-        $this->weight = $weight;
-    
-        return $this;
-    }
-
-    /**
-     * Get weight
-     *
-     * @return float 
-     */
-    public function getWeight()
-    {
-        return $this->weight;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return ShipmentItem
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**

@@ -62,8 +62,6 @@ class ProductFeatureApplicability
      */
     private $productFeature;
 
-
-
     /**
      * Get id
      *

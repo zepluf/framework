@@ -4,6 +4,8 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="featureValueIds" type="string" column="feature_value_ids" length="255" nullable="true"/>
+    <field name="key" type="string" column="key" length="255" nullable="true"/>
     <field name="serial" type="string" column="serial" length="255" nullable="true"/>
     <field name="quantityOnhand" type="integer" column="quantity_onhand" nullable="false"/>
     <many-to-one field="facility" target-entity="Facility">

@@ -38,16 +38,23 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @ORM\Column(name="left", type="integer", nullable=true)
+     * @ORM\Column(name="left", type="integer", nullable=false)
      */
     private $left;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="right", type="integer", nullable=true)
+     * @ORM\Column(name="right", type="integer", nullable=false)
      */
     private $right;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="level", type="integer", nullable=false)
+     */
+    private $level;
 
     /**
      * @var integer
@@ -165,6 +172,29 @@ class ProductCategory
     public function getRight()
     {
         return $this->right;
+    }
+
+    /**
+     * Set level
+     *
+     * @param integer $level
+     * @return ProductCategory
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return integer 
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 
     /**

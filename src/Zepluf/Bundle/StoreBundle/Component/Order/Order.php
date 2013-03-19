@@ -14,6 +14,7 @@ use Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection;
 use Zepluf\Bundle\StoreBundle\Entity\Order as OrderEntity;
 use Doctrine\ORM\EntityManager;
 use Zepluf\Bundle\StoreBundle\Entity\OrderItem;
+use Zepluf\Bundle\StoreBundle\Component\Price\Pricing;
 
 class Order
 {
@@ -21,12 +22,15 @@ class Order
 
     protected $order;
 
+    protected $pricing;
+
     /**
      * @param \Doctrine\ORM\EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, Pricing $pricing)
     {
         $this->entityManager = $entityManager;
+        $this->pricing = $pricing;
     }
 
     public function retrieve()
@@ -47,6 +51,9 @@ class Order
         // set the entry timestamp
         $this->order->setEntryDate(new \DateTime());
 
+        // insert new order item
+        $this->addItems($productCollection);
+
         // persists the order
         $this->entityManager->persist($this->order);
         $this->entityManager->flush();
@@ -55,8 +62,7 @@ class Order
 
         // add order role
 
-        // insert new order item
-        $this->addItems($productCollection);
+
     }
 
     public function addItems(ProductCollection $productCollection)
@@ -68,7 +74,7 @@ class Order
                 $productEntity = $this->entityManager->find('Product', $product['id']);
 
                 // set price
-                $orderItem->setUnitPrice($productEntity->getPrice($product['features']));
+                $orderItem->setUnitPrice($this->pricing->getProductPrice($productEntity, $product['features']));
 
                 // set quantity
                 $orderItem->setQuantity($product['quantity']);

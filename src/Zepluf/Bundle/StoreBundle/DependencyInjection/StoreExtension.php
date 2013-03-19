@@ -77,6 +77,9 @@ class StoreExtension extends Extension
                 ));
             }
         }
+
+        // register payment configurations
+        $this->registerPaymentConfiguration(array(), $container, $loader);
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container)
@@ -100,5 +103,16 @@ class StoreExtension extends Extension
     public function getAlias()
     {
         return 'store';
+    }
+
+    /**
+     * Loads the payment configuration.
+     *
+     * @param array         $config A proxy configuration array
+     * @param XmlFileLoader $loader An XmlFileLoader instance
+     */
+    private function registerPaymentConfiguration(array $config, ContainerBuilder $container, XmlFileLoader $loader)
+    {
+        $loader->load('payment.xml');
     }
 }

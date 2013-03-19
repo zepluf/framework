@@ -24,6 +24,20 @@ class InventoryItem
     /**
      * @var string
      *
+     * @ORM\Column(name="feature_value_ids", type="string", length=255, nullable=true)
+     */
+    private $featureValueIds;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="key", type="string", length=255, nullable=true)
+     */
+    private $key;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="serial", type="string", length=255, nullable=true)
      */
     private $serial;
@@ -95,6 +109,52 @@ class InventoryItem
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set featureValueIds
+     *
+     * @param string $featureValueIds
+     * @return InventoryItem
+     */
+    public function setFeatureValueIds($featureValueIds)
+    {
+        $this->featureValueIds = $featureValueIds;
+    
+        return $this;
+    }
+
+    /**
+     * Get featureValueIds
+     *
+     * @return string 
+     */
+    public function getFeatureValueIds()
+    {
+        return $this->featureValueIds;
+    }
+
+    /**
+     * Set key
+     *
+     * @param string $key
+     * @return InventoryItem
+     */
+    public function setKey($key)
+    {
+        $this->key = $key;
+    
+        return $this;
+    }
+
+    /**
+     * Get key
+     *
+     * @return string 
+     */
+    public function getKey()
+    {
+        return $this->key;
     }
 
     /**

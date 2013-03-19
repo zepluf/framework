@@ -9,9 +9,11 @@
     <field name="itemDescription" type="string" column="item_description" length="255" nullable="true"/>
     <field name="type" type="boolean" column="type" nullable="true"/>
     <field name="isTaxable" type="boolean" column="is_taxable" nullable="false"/>
-    <field name="inventoryItemId" type="integer" column="inventory_item_id" nullable="true"/>
-    <field name="productId" type="integer" column="product_id" nullable="true"/>
-    <field name="productFeatureId" type="integer" column="product_feature_id" nullable="true"/>
+    <many-to-one field="inventoryItem" target-entity="InventoryItem">
+      <join-columns>
+        <join-column name="inventory_item_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
     <many-to-one field="invoiceItemType" target-entity="InvoiceItemType">
       <join-columns>
         <join-column name="invoice_item_type_id" referenced-column-name="id"/>

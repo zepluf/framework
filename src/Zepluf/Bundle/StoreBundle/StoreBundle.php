@@ -31,6 +31,7 @@ class StoreBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new ZeplufPass());
+        $container->addCompilerPass(new StorePass());
         $container->addCompilerPass(new TemplatingPass());
         $container->addCompilerPass(new StorePass());
 

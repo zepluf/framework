@@ -20,14 +20,4 @@ class Product
     {
         $this->product = $product;
     }
-
-    public function getPrice($features = array())
-    {
-        // loop through the base price component
-        $this->product->getPriceComponent();
-
-        // get the total of features price
-
-        // loop through the additional price component
-    }
 }

@@ -10,6 +10,7 @@
     <field name="value" type="decimal" column="value" nullable="false"/>
     <field name="tag" type="string" column="tag" length="255" nullable="false"/>
     <field name="comment" type="string" column="comment" length="255" nullable="true"/>
+    <field name="handler" type="string" column="handler" length="255" nullable="false"/>
     <many-to-many field="product" target-entity="Product" mapped-by="priceComponent"/>
     <many-to-many field="feature" target-entity="ProductFeature" inversed-by="priceComponent">
       <join-table name="product_feature_price_component">

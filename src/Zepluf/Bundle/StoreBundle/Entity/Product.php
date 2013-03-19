@@ -114,12 +114,20 @@ class Product
     private $unitOfMeasurement;
 
     /**
+     * @var \ProductFeatureApplication
+     *
+     * @ORM\OneToMany(targetEntity="ProductFeatureApplication", mappedBy="product")
+     */
+    private $productFeatureApplication;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->priceComponent = new \Doctrine\Common\Collections\ArrayCollection();
         $this->termType = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->productFeatureApplication = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
 
@@ -381,5 +389,15 @@ class Product
     public function getUnitOfMeasurement()
     {
         return $this->unitOfMeasurement;
+    }
+
+    /**
+     * Get productFeatureApplication
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProductFeatureApplication()
+    {
+        return $this->productFeatureApplication;
     }
 }

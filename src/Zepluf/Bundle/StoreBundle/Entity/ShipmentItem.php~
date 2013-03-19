@@ -29,27 +29,6 @@ class ShipmentItem
     private $quantity;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="price", type="decimal", nullable=true)
-     */
-    private $price;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="weight", type="decimal", nullable=true)
-     */
-    private $weight;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
-     */
-    private $name;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="description", type="string", length=255, nullable=true)
@@ -59,7 +38,7 @@ class ShipmentItem
     /**
      * @var \Shipment
      *
-     * @ORM\ManyToOne(targetEntity="Shipment", inversedBy="shipmentItems")
+     * @ORM\ManyToOne(targetEntity="Shipment")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id")
      * })

@@ -10,6 +10,18 @@ class StorePass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        if (false !== ($definition = $container->getDefinition('storebundle.payment_methods'))) {
+            if (false !== ($taggedServices = $container->findTaggedServiceIds('storebundle.payment_methods.method'))) {
+                foreach ($taggedServices as $id => $tagAttributes) {
+                    foreach ($tagAttributes as $attributes) {
+                        $definition->addMethodCall('addMethod',
+                            array(new Reference($id), $attributes["alias"])
+                        );
+                    }
+                }
+            }
+        }
+
         if (!$container->hasDefinition('storebundle.shipment')) {
             return;
         }
@@ -21,6 +33,7 @@ class StorePass implements CompilerPassInterface
         $taggedServices = $container->findTaggedServiceIds(
             'storebundle.shipment.carrier'
         );
+
         foreach ($taggedServices as $id => $tagAttributes) {
             foreach ($tagAttributes as $attributes) {
                 $definition->addMethodCall(

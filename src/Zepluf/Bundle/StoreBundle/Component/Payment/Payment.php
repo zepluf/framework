@@ -7,69 +7,76 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace Zepluf\Bundle\StoreBundle\Component\Payment;
 
-use Zepluf\Bundle\StoreBundle\Component\Payment\StorageHandler\PaymentStorageHandlerInterface;
+use \Doctrine\ORM\EntityManager;
+use Zepluf\Bundle\StoreBundle\Entity\Payment as PaymentEntity;
 
 /**
- *
- */
-class Payment implements PaymentInterface
+*
+*/
+class Payment
 {
-    /**
-     * @var [type]
-     */
-    protected $paymentMethod;
-    protected $storageHandler;
+    protected $entityManager;
 
     /**
-     * set payment storate handler
-     *
-     * @param PaymentStorageHandlerInterface $storateHandler
+     * payment entity
+     * @var PaymentEntity
      */
-    public function setStorageHandler(PaymentStorageHandlerInterface $storageHandler)
+    protected $payment = false;
+
+    /**
+     * constructor
+     * @param EntityManager $entityManager
+     */
+    public function __construct($entityManager)
     {
-        $this->storageHandler = $storageHandler;
+        $this->entityManager = $entityManager;
     }
 
     /**
-     * check payment is available
-     *
-     * @return boolean
+     * @param array $data ('payment_method' => array(), 'invoice_items' => array(). ...)
+     * @throws \Exception
      */
-    public function isAvailable()
+    public function create($data)
     {
-        // return $this->arrayStorageHandler->isAvailable();
-    }
+        $this->payment = new PaymentEntity();
 
-    public function checkCondition()
-    {
-        // return $this->arrayStorageHandler->checkCondition();
-    }
+        // set payment effective date
+        $this->payment->setEffectiveDate(new \DateTime());
 
-    public function renderSelection()
-    {
-        // TODO: Implement renderSelection() method.
-    }
+        //If ship from address is empty, it's shopkeeper contact by default
+        if (isset($data['ShippedFromContactMechanism'])) {
+            $payment->setShippedFromContactMechanism($data['ship_from']);
+        }
+        if (isset($data['ship_from'])) {
+            $payment->setShippedToContactMechanism($data['ship_to']);
+        }
 
-    public function renderForm()
-    {
-        // TODO: Implement renderForm() method.
-    }
 
-    public function renderSubmit()
-    {
-        // TODO: Implement renderSubmit() method.
-    }
+        //set payment Item
+        foreach ($data['items'] as $item) {
+            $paymentItem = new paymentItem();
 
-    public function validation()
-    {
-        // TODO: Implement validation() method.
-    }
+            //logical code to set info for paymentItem
 
-    public function process()
-    {
-        // TODO: Implement process() method.
-    }
+            $paymentItem->setpayment($payment);
+            $payment->addpaymentItem($paymentItem);
+        }
 
+        if (!$error) {
+            $this->payment = $payment;
+        }
+
+        if ($this->payment) {
+            // persists the payment
+            $this->entityManager->persist($this->payment);
+            try {
+                $this->entityManager->flush();
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
+    }
 }

@@ -22,13 +22,6 @@ class Invoice
     private $id;
 
     /**
-     * @var InvoiceItem|array
-     *
-     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice")
-     */
-    private $invoiceItems;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="entry_date", type="datetime", nullable=false)

@@ -36,18 +36,14 @@ class ProductFeatureValue
     private $description;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \ProductFeature
      *
-     * @ORM\ManyToMany(targetEntity="ProductFeature", mappedBy="productFeatureValue")
+     * @ORM\ManyToOne(targetEntity="ProductFeature")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_feature_id", referencedColumnName="id")
+     * })
      */
     private $productFeature;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->productFeature = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
+
 }

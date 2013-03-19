@@ -50,8 +50,9 @@
 
         <!-- shipment -->
         <parameter key="storebundle.shipment.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Shipment</parameter>
-        <!-- carrier -->
-        <parameter key="storebundle.shipment.freeshipping.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\FreeShipping</parameter>
+        <parameter key="storebundle.shipping_methods.class">Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingMethods</parameter>
+        <!-- shipping method -->
+        <parameter key="storebundle.shipping_methods.freeshipping.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Method\FreeShipping</parameter>
 
         <!-- payment -->
         <parameter key="storebundle.payment.class">Zepluf\Bundle\StoreBundle\Component\Payment\Payment</parameter>
@@ -206,12 +207,13 @@
 
         <!-- shipment -->
         <service id="storebundle.shipment" class="%storebundle.shipment.class%">
-            <argument type="service" id="doctrine"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
+        <service id="storebundle.shipping_methods" class="%storebundle.shipping_methods.class%"/>
 
-        <!-- carrier -->
-        <service id="storebundle.shipment.freeshipping" class="%storebundle.shipment.freeshipping.class%">
-            <tag name="storebundle.shipment.carrier" alias="freeshipping" />
+        <!-- shipping methods -->
+        <service id="storebundle.shipping_methods.freeshipping" class="%storebundle.shipping_methods.freeshipping.class%">
+            <tag name="storebundle.shipping_methods.methods" alias="freeshipping" />
         </service>
 
         <!-- payment -->

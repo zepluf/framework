@@ -45,21 +45,6 @@ class ProductFeature
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="ProductFeatureValue", inversedBy="productFeature")
-     * @ORM\JoinTable(name="product_feature_comprise",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="product_feature_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="product_feature_value_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $productFeatureValue;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
      * @ORM\ManyToMany(targetEntity="PriceComponent", mappedBy="feature")
      */
     private $priceComponent;
@@ -89,7 +74,6 @@ class ProductFeature
      */
     public function __construct()
     {
-        $this->productFeatureValue = new \Doctrine\Common\Collections\ArrayCollection();
         $this->priceComponent = new \Doctrine\Common\Collections\ArrayCollection();
     }
     

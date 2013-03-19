@@ -22,13 +22,6 @@ class Order
     private $id;
 
     /**
-     * @var OrderItem|array
-     *
-     * @ORM\OneToMany(targetEntity="OrderItem", mappedBy="order")
-     */
-    private $orderItems;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="type", type="smallint", nullable=false)
