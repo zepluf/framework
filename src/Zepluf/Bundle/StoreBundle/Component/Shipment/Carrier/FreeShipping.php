@@ -52,23 +52,6 @@ class FreeShipping
 
     public function getRates($data)
     {
-        //TODO: replace $result array by an object
-        $result = null;
-        if (!$this->isAvailable()) {
-            return false;
-        }
 
-        if ($this->getConfig('type') == 'O') { // per order
-            $shippingPrice = $this->getConfig('price');
-        } elseif ($this->getConfig('type') == 'I') { // per item
-            $shippingPrice = ($data['totalQuantity'] * $this->getConfig('price')) - ($this->getFreeBoxes() * $this->getConfig('price'));
-        } else {
-            $shippingPrice = false;
-        }
-
-        if (false !== $shippingPrice) {
-            $result = $shippingPrice;
-        }
-        return $result;
     }
 }

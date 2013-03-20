@@ -118,10 +118,4 @@ class Shipment
         }
     }
 
-    public function testFunction($id)
-    {
-        if (is_int($id)) {
-            return $this->entityManager->find('StoreBundle:Shipment', $id);
-        }
-    }
 }

@@ -11,9 +11,20 @@ namespace Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier;
 
 class USPS
     extends ShippingCarrierAbstract
+    implements ShippingCarrierInterface
 {
+    public function getCode()
+    {
+        // TODO: Implement getCode() method.
+    }
+
+    public function getInfo()
+    {
+        // TODO: Implement getInfo() method.
+    }
+
     protected $code = 'usps';
-    protected $gateway = 'http://production.shippingapis.com/ShippingAPI.dll';
+    protected $gatewayUrl = 'http://production.shippingapis.com/ShippingAPI.dll';
 
     /**
      * Build RateV4 request
@@ -77,17 +88,17 @@ class USPS
         try {
             $url = $this->getConfig('gateway');
             if (!$url) {
-                $url = $this->defaultGateway;
+                $url = $this->gatewayUrl;
             }
             $api = 'RateV4';
-            $APIRequest = urlencode("$this->defaultGateway?API=$api&XML=$xmlRequest");
-            $responseXML = new \SimpleXMLElement($APIRequest, NULL, TRUE);
+            $APIRequest = urlencode("$url?API=$api&XML=$xmlRequest");
+            $xmlResponse = new \SimpleXMLElement($APIRequest, NULL, TRUE);
 
         } catch (\Exception $e) {
 
         }
 
-        return $this->parseXMLResponse($responseXML);
+        return $this->parseXMLResponse($xmlResponse);
     }
 
     protected function parseXMLResponse($response)

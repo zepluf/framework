@@ -18,12 +18,6 @@ interface ShippingCarrierInterface
 
     public function getInfo();
 
-    public function checkCondition();
-
-    public function renderSelection();
-
-    public function renderForm();
-
     public function getAllowMethods();
 
     public function getRates($data);
