@@ -31,37 +31,51 @@ class ProductCategory
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="left", type="integer", nullable=false)
+     * @ORM\Column(name="lft", type="integer", nullable=true)
      */
-    private $left;
+    private $lft;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="right", type="integer", nullable=false)
+     * @ORM\Column(name="rgt", type="integer", nullable=true)
      */
-    private $right;
+    private $rgt;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="level", type="integer", nullable=false)
+     * @ORM\Column(name="level", type="integer", nullable=true)
      */
     private $level;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="order", type="integer", nullable=false)
+     * @ORM\Column(name="root", type="integer", nullable=true)
      */
-    private $order;
+    private $root;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="children", type="integer", nullable=true)
+     */
+    private $children;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="sort", type="integer", nullable=false)
+     */
+    private $sort;
 
     /**
      * @var boolean
@@ -69,6 +83,16 @@ class ProductCategory
      * @ORM\Column(name="status", type="boolean", nullable=false)
      */
     private $status;
+
+    /**
+     * @var \ProductCategory
+     *
+     * @ORM\ManyToOne(targetEntity="ProductCategory")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent", referencedColumnName="id")
+     * })
+     */
+    private $parent;
 
 
 
@@ -129,49 +153,49 @@ class ProductCategory
     }
 
     /**
-     * Set left
+     * Set lft
      *
-     * @param integer $left
+     * @param integer $lft
      * @return ProductCategory
      */
-    public function setLeft($left)
+    public function setLft($lft)
     {
-        $this->left = $left;
+        $this->lft = $lft;
     
         return $this;
     }
 
     /**
-     * Get left
+     * Get lft
      *
      * @return integer 
      */
-    public function getLeft()
+    public function getLft()
     {
-        return $this->left;
+        return $this->lft;
     }
 
     /**
-     * Set right
+     * Set rgt
      *
-     * @param integer $right
+     * @param integer $rgt
      * @return ProductCategory
      */
-    public function setRight($right)
+    public function setRgt($rgt)
     {
-        $this->right = $right;
+        $this->rgt = $rgt;
     
         return $this;
     }
 
     /**
-     * Get right
+     * Get rgt
      *
      * @return integer 
      */
-    public function getRight()
+    public function getRgt()
     {
-        return $this->right;
+        return $this->rgt;
     }
 
     /**
@@ -198,26 +222,72 @@ class ProductCategory
     }
 
     /**
-     * Set order
+     * Set root
      *
-     * @param integer $order
+     * @param integer $root
      * @return ProductCategory
      */
-    public function setOrder($order)
+    public function setRoot($root)
     {
-        $this->order = $order;
+        $this->root = $root;
     
         return $this;
     }
 
     /**
-     * Get order
+     * Get root
      *
      * @return integer 
      */
-    public function getOrder()
+    public function getRoot()
     {
-        return $this->order;
+        return $this->root;
+    }
+
+    /**
+     * Set children
+     *
+     * @param integer $children
+     * @return ProductCategory
+     */
+    public function setChildren($children)
+    {
+        $this->children = $children;
+    
+        return $this;
+    }
+
+    /**
+     * Get children
+     *
+     * @return integer 
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * Set sort
+     *
+     * @param integer $sort
+     * @return ProductCategory
+     */
+    public function setSort($sort)
+    {
+        $this->sort = $sort;
+    
+        return $this;
+    }
+
+    /**
+     * Get sort
+     *
+     * @return integer 
+     */
+    public function getSort()
+    {
+        return $this->sort;
     }
 
     /**
@@ -241,5 +311,28 @@ class ProductCategory
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductCategory $parent
+     * @return ProductCategory
+     */
+    public function setParent(\Zepluf\Bundle\StoreBundle\Entity\ProductCategory $parent = null)
+    {
+        $this->parent = $parent;
+    
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ProductCategory 
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 }

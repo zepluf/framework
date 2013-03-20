@@ -29,16 +29,6 @@ class PicklistItem
     private $quantity;
 
     /**
-     * @var \ItemIssuance
-     *
-     * @ORM\ManyToOne(targetEntity="ItemIssuance")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_issuance_id", referencedColumnName="id")
-     * })
-     */
-    private $shipmentIssuance;
-
-    /**
      * @var \InventoryItem
      *
      * @ORM\ManyToOne(targetEntity="InventoryItem")
@@ -91,29 +81,6 @@ class PicklistItem
     public function getQuantity()
     {
         return $this->quantity;
-    }
-
-    /**
-     * Set shipmentIssuance
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ItemIssuance $shipmentIssuance
-     * @return PicklistItem
-     */
-    public function setShipmentIssuance(\Zepluf\Bundle\StoreBundle\Entity\ItemIssuance $shipmentIssuance = null)
-    {
-        $this->shipmentIssuance = $shipmentIssuance;
-    
-        return $this;
-    }
-
-    /**
-     * Get shipmentIssuance
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ItemIssuance 
-     */
-    public function getShipmentIssuance()
-    {
-        return $this->shipmentIssuance;
     }
 
     /**

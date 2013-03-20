@@ -98,20 +98,13 @@ class Invoice
     private $sentTo;
 
     /**
-     * @var InvoiceItem|array
-     *
-     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice")
-     */
-    private $invoiceItems;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->termType = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
 
     /**
      * Get id
@@ -315,38 +308,5 @@ class Invoice
     public function getSentTo()
     {
         return $this->sentTo;
-    }
-
-    /**
-     * Add invoiceItems
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItems
-     * @return Invoice
-     */
-    public function addInvoiceItem(\Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItems)
-    {
-        $this->invoiceItems[] = $invoiceItems;
-    
-        return $this;
-    }
-
-    /**
-     * Remove invoiceItems
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItems
-     */
-    public function removeInvoiceItem(\Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItems)
-    {
-        $this->invoiceItems->removeElement($invoiceItems);
-    }
-
-    /**
-     * Get invoiceItems
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getInvoiceItems()
-    {
-        return $this->invoiceItems;
     }
 }

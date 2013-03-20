@@ -83,7 +83,7 @@ class OrderItem
     /**
      * @var \Order
      *
-     * @ORM\ManyToOne(targetEntity="Order", inversedBy="orderItems")
+     * @ORM\ManyToOne(targetEntity="Order")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
      * })

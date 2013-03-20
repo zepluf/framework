@@ -43,13 +43,6 @@ class ProductFeature
     private $order;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="PriceComponent", mappedBy="feature")
-     */
-    private $priceComponent;
-
-    /**
      * @var \UnitOfMeasurement
      *
      * @ORM\ManyToOne(targetEntity="UnitOfMeasurement")
@@ -69,12 +62,130 @@ class ProductFeature
      */
     private $productFeatureCategory;
 
+
+
     /**
-     * Constructor
+     * Get id
+     *
+     * @return integer 
      */
-    public function __construct()
+    public function getId()
     {
-        $this->priceComponent = new \Doctrine\Common\Collections\ArrayCollection();
+        return $this->id;
     }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return ProductFeature
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return ProductFeature
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set order
+     *
+     * @param integer $order
+     * @return ProductFeature
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return integer 
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set unitOfMeasurement
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement
+     * @return ProductFeature
+     */
+    public function setUnitOfMeasurement(\Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement = null)
+    {
+        $this->unitOfMeasurement = $unitOfMeasurement;
+    
+        return $this;
+    }
+
+    /**
+     * Get unitOfMeasurement
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement 
+     */
+    public function getUnitOfMeasurement()
+    {
+        return $this->unitOfMeasurement;
+    }
+
+    /**
+     * Set productFeatureCategory
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureCategory $productFeatureCategory
+     * @return ProductFeature
+     */
+    public function setProductFeatureCategory(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureCategory $productFeatureCategory = null)
+    {
+        $this->productFeatureCategory = $productFeatureCategory;
+    
+        return $this;
+    }
+
+    /**
+     * Get productFeatureCategory
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureCategory 
+     */
+    public function getProductFeatureCategory()
+    {
+        return $this->productFeatureCategory;
+    }
 }

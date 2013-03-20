@@ -105,4 +105,208 @@ class Invoice
         $this->termType = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set entryDate
+     *
+     * @param \DateTime $entryDate
+     * @return Invoice
+     */
+    public function setEntryDate($entryDate)
+    {
+        $this->entryDate = $entryDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get entryDate
+     *
+     * @return \DateTime 
+     */
+    public function getEntryDate()
+    {
+        return $this->entryDate;
+    }
+
+    /**
+     * Set message
+     *
+     * @param string $message
+     * @return Invoice
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    
+        return $this;
+    }
+
+    /**
+     * Get message
+     *
+     * @return string 
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Invoice
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Add termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     * @return Invoice
+     */
+    public function addTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType)
+    {
+        $this->termType[] = $termType;
+    
+        return $this;
+    }
+
+    /**
+     * Remove termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     */
+    public function removeTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType)
+    {
+        $this->termType->removeElement($termType);
+    }
+
+    /**
+     * Get termType
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTermType()
+    {
+        return $this->termType;
+    }
+
+    /**
+     * Set billedTo
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $billedTo
+     * @return Invoice
+     */
+    public function setBilledTo(\Zepluf\Bundle\StoreBundle\Entity\Party $billedTo = null)
+    {
+        $this->billedTo = $billedTo;
+    
+        return $this;
+    }
+
+    /**
+     * Get billedTo
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     */
+    public function getBilledTo()
+    {
+        return $this->billedTo;
+    }
+
+    /**
+     * Set billedFrom
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $billedFrom
+     * @return Invoice
+     */
+    public function setBilledFrom(\Zepluf\Bundle\StoreBundle\Entity\Party $billedFrom = null)
+    {
+        $this->billedFrom = $billedFrom;
+    
+        return $this;
+    }
+
+    /**
+     * Get billedFrom
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     */
+    public function getBilledFrom()
+    {
+        return $this->billedFrom;
+    }
+
+    /**
+     * Set addressedTo
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $addressedTo
+     * @return Invoice
+     */
+    public function setAddressedTo(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $addressedTo = null)
+    {
+        $this->addressedTo = $addressedTo;
+    
+        return $this;
+    }
+
+    /**
+     * Get addressedTo
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism 
+     */
+    public function getAddressedTo()
+    {
+        return $this->addressedTo;
+    }
+
+    /**
+     * Set sentTo
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $sentTo
+     * @return Invoice
+     */
+    public function setSentTo(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $sentTo = null)
+    {
+        $this->sentTo = $sentTo;
+    
+        return $this;
+    }
+
+    /**
+     * Get sentTo
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism 
+     */
+    public function getSentTo()
+    {
+        return $this->sentTo;
+    }
 }

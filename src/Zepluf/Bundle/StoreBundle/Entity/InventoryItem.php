@@ -24,16 +24,9 @@ class InventoryItem
     /**
      * @var string
      *
-     * @ORM\Column(name="feature_value_ids", type="string", length=255, nullable=true)
+     * @ORM\Column(name="feature_value_ids", type="text", nullable=true)
      */
     private $featureValueIds;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="key", type="string", length=255, nullable=true)
-     */
-    private $key;
 
     /**
      * @var string
@@ -70,34 +63,14 @@ class InventoryItem
     private $inventoryItemStatusType;
 
     /**
-     * @var \Container
+     * @var \Location
      *
-     * @ORM\ManyToOne(targetEntity="Container")
+     * @ORM\ManyToOne(targetEntity="Location")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="container_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="location_id", referencedColumnName="id")
      * })
      */
-    private $container;
-
-    /**
-     * @var \Lot
-     *
-     * @ORM\ManyToOne(targetEntity="Lot")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="lot_id", referencedColumnName="id")
-     * })
-     */
-    private $lot;
-
-    /**
-     * @var \Facility
-     *
-     * @ORM\ManyToOne(targetEntity="Facility")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="facility_id", referencedColumnName="id")
-     * })
-     */
-    private $facility;
+    private $location;
 
 
 
@@ -132,29 +105,6 @@ class InventoryItem
     public function getFeatureValueIds()
     {
         return $this->featureValueIds;
-    }
-
-    /**
-     * Set key
-     *
-     * @param string $key
-     * @return InventoryItem
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-    
-        return $this;
-    }
-
-    /**
-     * Get key
-     *
-     * @return string 
-     */
-    public function getKey()
-    {
-        return $this->key;
     }
 
     /**
@@ -250,71 +200,25 @@ class InventoryItem
     }
 
     /**
-     * Set container
+     * Set location
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Container $container
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Location $location
      * @return InventoryItem
      */
-    public function setContainer(\Zepluf\Bundle\StoreBundle\Entity\Container $container = null)
+    public function setLocation(\Zepluf\Bundle\StoreBundle\Entity\Location $location = null)
     {
-        $this->container = $container;
+        $this->location = $location;
     
         return $this;
     }
 
     /**
-     * Get container
+     * Get location
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Container 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Location 
      */
-    public function getContainer()
+    public function getLocation()
     {
-        return $this->container;
-    }
-
-    /**
-     * Set lot
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Lot $lot
-     * @return InventoryItem
-     */
-    public function setLot(\Zepluf\Bundle\StoreBundle\Entity\Lot $lot = null)
-    {
-        $this->lot = $lot;
-    
-        return $this;
-    }
-
-    /**
-     * Get lot
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Lot 
-     */
-    public function getLot()
-    {
-        return $this->lot;
-    }
-
-    /**
-     * Set facility
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Facility $facility
-     * @return InventoryItem
-     */
-    public function setFacility(\Zepluf\Bundle\StoreBundle\Entity\Facility $facility = null)
-    {
-        $this->facility = $facility;
-    
-        return $this;
-    }
-
-    /**
-     * Get facility
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Facility 
-     */
-    public function getFacility()
-    {
-        return $this->facility;
+        return $this->location;
     }
 }

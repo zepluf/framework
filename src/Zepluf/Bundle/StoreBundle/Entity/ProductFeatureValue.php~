@@ -46,4 +46,83 @@ class ProductFeatureValue
     private $productFeature;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     * @return ProductFeatureValue
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return ProductFeatureValue
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set productFeature
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature
+     * @return ProductFeatureValue
+     */
+    public function setProductFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature = null)
+    {
+        $this->productFeature = $productFeature;
+    
+        return $this;
+    }
+
+    /**
+     * Get productFeature
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ProductFeature 
+     */
+    public function getProductFeature()
+    {
+        return $this->productFeature;
+    }
 }

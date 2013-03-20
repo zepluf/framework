@@ -29,4 +29,37 @@ class Picklist
     private $dateCreated;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set dateCreated
+     *
+     * @param \DateTime $dateCreated
+     * @return Picklist
+     */
+    public function setDateCreated($dateCreated)
+    {
+        $this->dateCreated = $dateCreated;
+    
+        return $this;
+    }
+
+    /**
+     * Get dateCreated
+     *
+     * @return \DateTime 
+     */
+    public function getDateCreated()
+    {
+        return $this->dateCreated;
+    }
 }

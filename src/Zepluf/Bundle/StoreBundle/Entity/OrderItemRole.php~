@@ -49,4 +49,73 @@ class OrderItemRole
     private $party;
 
 
+
+    /**
+     * Set orderItem
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
+     * @return OrderItemRole
+     */
+    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem)
+    {
+        $this->orderItem = $orderItem;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderItem
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderItem 
+     */
+    public function getOrderItem()
+    {
+        return $this->orderItem;
+    }
+
+    /**
+     * Set orderItemRoleType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItemRoleType $orderItemRoleType
+     * @return OrderItemRole
+     */
+    public function setOrderItemRoleType(\Zepluf\Bundle\StoreBundle\Entity\OrderItemRoleType $orderItemRoleType)
+    {
+        $this->orderItemRoleType = $orderItemRoleType;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderItemRoleType
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderItemRoleType 
+     */
+    public function getOrderItemRoleType()
+    {
+        return $this->orderItemRoleType;
+    }
+
+    /**
+     * Set party
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $party
+     * @return OrderItemRole
+     */
+    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party)
+    {
+        $this->party = $party;
+    
+        return $this;
+    }
+
+    /**
+     * Get party
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     */
+    public function getParty()
+    {
+        return $this->party;
+    }
 }

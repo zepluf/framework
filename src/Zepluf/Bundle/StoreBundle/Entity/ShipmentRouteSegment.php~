@@ -91,4 +91,221 @@ class ShipmentRouteSegment
     private $shipment;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set estimatedStartDate
+     *
+     * @param \DateTime $estimatedStartDate
+     * @return ShipmentRouteSegment
+     */
+    public function setEstimatedStartDate($estimatedStartDate)
+    {
+        $this->estimatedStartDate = $estimatedStartDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get estimatedStartDate
+     *
+     * @return \DateTime 
+     */
+    public function getEstimatedStartDate()
+    {
+        return $this->estimatedStartDate;
+    }
+
+    /**
+     * Set estimatedArrivalDate
+     *
+     * @param \DateTime $estimatedArrivalDate
+     * @return ShipmentRouteSegment
+     */
+    public function setEstimatedArrivalDate($estimatedArrivalDate)
+    {
+        $this->estimatedArrivalDate = $estimatedArrivalDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get estimatedArrivalDate
+     *
+     * @return \DateTime 
+     */
+    public function getEstimatedArrivalDate()
+    {
+        return $this->estimatedArrivalDate;
+    }
+
+    /**
+     * Set actualStartDate
+     *
+     * @param \DateTime $actualStartDate
+     * @return ShipmentRouteSegment
+     */
+    public function setActualStartDate($actualStartDate)
+    {
+        $this->actualStartDate = $actualStartDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get actualStartDate
+     *
+     * @return \DateTime 
+     */
+    public function getActualStartDate()
+    {
+        return $this->actualStartDate;
+    }
+
+    /**
+     * Set actualArrivalDate
+     *
+     * @param \DateTime $actualArrivalDate
+     * @return ShipmentRouteSegment
+     */
+    public function setActualArrivalDate($actualArrivalDate)
+    {
+        $this->actualArrivalDate = $actualArrivalDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get actualArrivalDate
+     *
+     * @return \DateTime 
+     */
+    public function getActualArrivalDate()
+    {
+        return $this->actualArrivalDate;
+    }
+
+    /**
+     * Set trackId
+     *
+     * @param string $trackId
+     * @return ShipmentRouteSegment
+     */
+    public function setTrackId($trackId)
+    {
+        $this->trackId = $trackId;
+    
+        return $this;
+    }
+
+    /**
+     * Get trackId
+     *
+     * @return string 
+     */
+    public function getTrackId()
+    {
+        return $this->trackId;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return ShipmentRouteSegment
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return ShipmentRouteSegment
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set carrier
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Carrier $carrier
+     * @return ShipmentRouteSegment
+     */
+    public function setCarrier(\Zepluf\Bundle\StoreBundle\Entity\Carrier $carrier = null)
+    {
+        $this->carrier = $carrier;
+    
+        return $this;
+    }
+
+    /**
+     * Get carrier
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Carrier 
+     */
+    public function getCarrier()
+    {
+        return $this->carrier;
+    }
+
+    /**
+     * Set shipment
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Shipment $shipment
+     * @return ShipmentRouteSegment
+     */
+    public function setShipment(\Zepluf\Bundle\StoreBundle\Entity\Shipment $shipment = null)
+    {
+        $this->shipment = $shipment;
+    
+        return $this;
+    }
+
+    /**
+     * Get shipment
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Shipment 
+     */
+    public function getShipment()
+    {
+        return $this->shipment;
+    }
 }

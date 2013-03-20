@@ -59,4 +59,106 @@ class OrderTerm
     private $termType;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set value
+     *
+     * @param float $value
+     * @return OrderTerm
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+    
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return float 
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Set order
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Order $order
+     * @return OrderTerm
+     */
+    public function setOrder(\Zepluf\Bundle\StoreBundle\Entity\Order $order = null)
+    {
+        $this->order = $order;
+    
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Order 
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set orderItem
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
+     * @return OrderTerm
+     */
+    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem = null)
+    {
+        $this->orderItem = $orderItem;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderItem
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderItem 
+     */
+    public function getOrderItem()
+    {
+        return $this->orderItem;
+    }
+
+    /**
+     * Set termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     * @return OrderTerm
+     */
+    public function setTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType = null)
+    {
+        $this->termType = $termType;
+    
+        return $this;
+    }
+
+    /**
+     * Get termType
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\TermType 
+     */
+    public function getTermType()
+    {
+        return $this->termType;
+    }
 }

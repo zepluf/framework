@@ -59,7 +59,7 @@ class InvoiceItem
     /**
      * @var \Invoice
      *
-     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceItems")
+     * @ORM\ManyToOne(targetEntity="Invoice")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
      * })

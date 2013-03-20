@@ -49,4 +49,73 @@ class OrderItemContactMechanism
     private $orderItem;
 
 
+
+    /**
+     * Set contactMechanism
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $contactMechanism
+     * @return OrderItemContactMechanism
+     */
+    public function setContactMechanism(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $contactMechanism)
+    {
+        $this->contactMechanism = $contactMechanism;
+    
+        return $this;
+    }
+
+    /**
+     * Get contactMechanism
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism 
+     */
+    public function getContactMechanism()
+    {
+        return $this->contactMechanism;
+    }
+
+    /**
+     * Set contactMechanismPurposeType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanismPurposeType $contactMechanismPurposeType
+     * @return OrderItemContactMechanism
+     */
+    public function setContactMechanismPurposeType(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanismPurposeType $contactMechanismPurposeType)
+    {
+        $this->contactMechanismPurposeType = $contactMechanismPurposeType;
+    
+        return $this;
+    }
+
+    /**
+     * Get contactMechanismPurposeType
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanismPurposeType 
+     */
+    public function getContactMechanismPurposeType()
+    {
+        return $this->contactMechanismPurposeType;
+    }
+
+    /**
+     * Set orderItem
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
+     * @return OrderItemContactMechanism
+     */
+    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem)
+    {
+        $this->orderItem = $orderItem;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderItem
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderItem 
+     */
+    public function getOrderItem()
+    {
+        return $this->orderItem;
+    }
 }

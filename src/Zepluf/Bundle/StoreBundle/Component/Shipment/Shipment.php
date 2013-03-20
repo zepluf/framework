@@ -10,10 +10,15 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment;
 
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
+use Zepluf\Bundle\StoreBundle\ComponentEvents;
 use Zepluf\Bundle\StoreBundle\Entity\Shipment as ShipmentEntity;
 use Zepluf\Bundle\StoreBundle\Entity\ShipmentItem;
 use Zepluf\Bundle\StoreBundle\Entity\OrderShipment;
-use Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\ShippingCarrierInterface;
+use Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature;
+use Zepluf\Bundle\StoreBundle\Event\InventoryAdjustmentEvent;
 
 /**
  *
@@ -21,6 +26,7 @@ use Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\ShippingCarrierInterfac
 class Shipment
 {
     protected $entityManager;
+    protected $dispatcher;
 
     /**
      * Shipment model
@@ -28,19 +34,25 @@ class Shipment
      */
     protected $shipment = false;
 
-    public function __construct(\Doctrine\ORM\EntityManager $entityManager)
+    /**
+     * Constructor
+     * @param EntityManager $entityManager
+     * @param EventDispatcherInterface $dispatcher
+     */
+    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
+        $this->dispatcher = $dispatcher;
     }
 
     protected function initShipment($data)
     {
         $shipment = new ShipmentEntity();
 
-        $shippedFromContactMechanism = $this->entityManager->find('StoreBundle:ContactMechanism', (int)$data['shippedFromContactMechanism']);
-        $shippedToContactMechanism = $this->entityManager->find('StoreBundle:ContactMechanism', (int)$data['shippedToContactMechanism']);
-        $shippedFromParty = $this->entityManager->find('StoreBundle:Party', (int)$data['shippedFromParty']);
-        $shippedToParty = $this->entityManager->find('StoreBundle:Party', (int)$data['shippedToParty']);
+        $shippedFromContactMechanism = $this->entityManager->getReference('StoreBundle:ContactMechanism', (int)$data['shippedFromContactMechanism']);
+        $shippedToContactMechanism = $this->entityManager->getReference('StoreBundle:ContactMechanism', (int)$data['shippedToContactMechanism']);
+        $shippedFromParty = $this->entityManager->getReference('StoreBundle:Party', (int)$data['shippedFromParty']);
+        $shippedToParty = $this->entityManager->getReference('StoreBundle:Party', (int)$data['shippedToParty']);
 
         $shipment->setShippedFromContactMechanism($shippedFromContactMechanism)
             ->setShippedToContactMechanism($shippedToContactMechanism)
@@ -66,6 +78,7 @@ class Shipment
     }
 
     /**
+     * Create shipment
      * @param array $data ('shipment' => array(), 'shipment_item' => array(). ...)
      * @throws \Exception
      */
@@ -76,34 +89,48 @@ class Shipment
         //Init logic code
         $shipment = $this->initShipment($data);
 
-        //set Shipment Item
+        //  Record items to shipment_item table
         foreach ($data['order_items'] as $item) {
             $shipmentItem = new ShipmentItem();
-//            foreach ($item as $property => $value) {
-//                // create a setter
-//                $method = sprintf('set%s', ucwords($property)); // or you can cheat and omit ucwords() because PHP method calls are case insensitive
-//                // use the method as a variable variable to set your value
-//                $shipmentItem->$method($value);
-//            }
-            $product = $this->entityManager->find('StoreBundle:Product', (int)$item['productId']);
 
-            $shipmentItem->setQuantity($item['quantity'])
+            $shipmentItem
+                ->setQuantity($item['quantity'])
                 ->setDescription($item['description'])
-                ->setProduct($product)
+                ->setProduct($this->entityManager->getReference('StoreBundle:Product', (int)$item['productId']))
                 ->setShipment($shipment);
-
             $this->entityManager->persist($shipmentItem);
 
-            //Create reference relation with order item
-            $shipmentOrder = new OrderShipment();
-            $orderItem = $this->entityManager->find('StoreBundle:OrderItem', (int)$item['id']);
+            /**
+             * Record features to shipment_item_feature table
+             */
+            foreach ($item['features'] as $feature) {
+                $shipmentItemFeature = new ShipmentItemFeature();
 
-            $shipmentOrder->setOrderItem($orderItem)
+                $shipmentItemFeature
+                    ->setShipmentItem($shipmentItem)
+                    ->setProductFeatureApplication($this->entityManager->getReference('StoreBundle:ProductFeatureApplicability', (int)$feature['productFeatureApplicabilityId']))
+                    ->setName($feature['name'])
+                    ->setValue($feature['value']);
+
+                $this->entityManager->persist($shipmentItemFeature);
+
+                //Add to Features list of Shipment item
+                $shipmentItem->addFeature($shipmentItemFeature);
+            }
+
+            /**
+             * Create reference relation with order item
+             */
+            $shipmentOrder = new OrderShipment();
+
+            $shipmentOrder->setOrderItem($this->entityManager->getReference('StoreBundle:OrderItem', (int)$item['id']))
                 ->setShipmentItem($shipmentItem)
                 ->setShippedQuantity($item['shipped']);
-
             $this->entityManager->persist($shipmentOrder);
 
+            /**
+             * Add to Shipment Item list of Shipment
+             */
             $shipment->addShipmentItem($shipmentItem);
         }
 
@@ -112,10 +139,22 @@ class Shipment
             $this->entityManager->persist($shipment);
             try {
                 $this->entityManager->flush();
+
+                // Create picklist
+                $this->createPickList();
+                //  Adjust inventory item only (older version: item issuance)
+                //TODO: Create adjustment
+                $inventoryAdjustmentEvent = new InventoryAdjustmentEvent();
+
+                $this->dispatcher->dispatch(ComponentEvents::inventoryAdjust, $inventoryAdjustmentEvent);
             } catch (\Exception $e) {
                 throw $e;
             }
         }
     }
 
+    public function createPickList()
+    {
+        //TODO: Create Pick List
+    }
 }

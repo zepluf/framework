@@ -122,4 +122,264 @@ class Product
         $this->termType = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set type
+     *
+     * @param boolean $type
+     * @return Product
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return boolean 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Product
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Product
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set introductionDate
+     *
+     * @param \DateTime $introductionDate
+     * @return Product
+     */
+    public function setIntroductionDate($introductionDate)
+    {
+        $this->introductionDate = $introductionDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get introductionDate
+     *
+     * @return \DateTime 
+     */
+    public function getIntroductionDate()
+    {
+        return $this->introductionDate;
+    }
+
+    /**
+     * Set salesDiscontinuationDate
+     *
+     * @param \DateTime $salesDiscontinuationDate
+     * @return Product
+     */
+    public function setSalesDiscontinuationDate($salesDiscontinuationDate)
+    {
+        $this->salesDiscontinuationDate = $salesDiscontinuationDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get salesDiscontinuationDate
+     *
+     * @return \DateTime 
+     */
+    public function getSalesDiscontinuationDate()
+    {
+        return $this->salesDiscontinuationDate;
+    }
+
+    /**
+     * Set availableDate
+     *
+     * @param \DateTime $availableDate
+     * @return Product
+     */
+    public function setAvailableDate($availableDate)
+    {
+        $this->availableDate = $availableDate;
+    
+        return $this;
+    }
+
+    /**
+     * Get availableDate
+     *
+     * @return \DateTime 
+     */
+    public function getAvailableDate()
+    {
+        return $this->availableDate;
+    }
+
+    /**
+     * Add priceComponent
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent
+     * @return Product
+     */
+    public function addPriceComponent(\Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent)
+    {
+        $this->priceComponent[] = $priceComponent;
+    
+        return $this;
+    }
+
+    /**
+     * Remove priceComponent
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent
+     */
+    public function removePriceComponent(\Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent)
+    {
+        $this->priceComponent->removeElement($priceComponent);
+    }
+
+    /**
+     * Get priceComponent
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPriceComponent()
+    {
+        return $this->priceComponent;
+    }
+
+    /**
+     * Add termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     * @return Product
+     */
+    public function addTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType)
+    {
+        $this->termType[] = $termType;
+    
+        return $this;
+    }
+
+    /**
+     * Remove termType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\TermType $termType
+     */
+    public function removeTermType(\Zepluf\Bundle\StoreBundle\Entity\TermType $termType)
+    {
+        $this->termType->removeElement($termType);
+    }
+
+    /**
+     * Get termType
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTermType()
+    {
+        return $this->termType;
+    }
+
+    /**
+     * Set manufacturer
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Organization $manufacturer
+     * @return Product
+     */
+    public function setManufacturer(\Zepluf\Bundle\StoreBundle\Entity\Organization $manufacturer = null)
+    {
+        $this->manufacturer = $manufacturer;
+    
+        return $this;
+    }
+
+    /**
+     * Get manufacturer
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Organization 
+     */
+    public function getManufacturer()
+    {
+        return $this->manufacturer;
+    }
+
+    /**
+     * Set unitOfMeasurement
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement
+     * @return Product
+     */
+    public function setUnitOfMeasurement(\Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement = null)
+    {
+        $this->unitOfMeasurement = $unitOfMeasurement;
+    
+        return $this;
+    }
+
+    /**
+     * Get unitOfMeasurement
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement 
+     */
+    public function getUnitOfMeasurement()
+    {
+        return $this->unitOfMeasurement;
+    }
 }

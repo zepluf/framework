@@ -46,14 +46,14 @@ class OrderItemFeature
     private $orderItem;
 
     /**
-     * @var \ProductFeature
+     * @var \ProductFeatureApplication
      *
-     * @ORM\ManyToOne(targetEntity="ProductFeature")
+     * @ORM\ManyToOne(targetEntity="ProductFeatureApplication")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_feature_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="product_feature_application_id", referencedColumnName="id")
      * })
      */
-    private $productFeature;
+    private $productFeatureApplication;
 
 
 
@@ -137,25 +137,25 @@ class OrderItemFeature
     }
 
     /**
-     * Set productFeature
+     * Set productFeatureApplication
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication
      * @return OrderItemFeature
      */
-    public function setProductFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature = null)
+    public function setProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication = null)
     {
-        $this->productFeature = $productFeature;
+        $this->productFeatureApplication = $productFeatureApplication;
     
         return $this;
     }
 
     /**
-     * Get productFeature
+     * Get productFeatureApplication
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ProductFeature 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication 
      */
-    public function getProductFeature()
+    public function getProductFeatureApplication()
     {
-        return $this->productFeature;
+        return $this->productFeatureApplication;
     }
 }

@@ -36,4 +36,60 @@ class OrderStatusType
     private $sequenceId;
 
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return OrderStatusType
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set sequenceId
+     *
+     * @param integer $sequenceId
+     * @return OrderStatusType
+     */
+    public function setSequenceId($sequenceId)
+    {
+        $this->sequenceId = $sequenceId;
+    
+        return $this;
+    }
+
+    /**
+     * Get sequenceId
+     *
+     * @return integer 
+     */
+    public function getSequenceId()
+    {
+        return $this->sequenceId;
+    }
 }
