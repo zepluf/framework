@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 use Zepluf\Bundle\StoreBundle\ComponentEvents;
+use Zepluf\Bundle\StoreBundle\Entity\Picklist;
 use Zepluf\Bundle\StoreBundle\Entity\Shipment as ShipmentEntity;
 use Zepluf\Bundle\StoreBundle\Entity\ShipmentItem;
 use Zepluf\Bundle\StoreBundle\Entity\OrderShipment;
@@ -140,21 +141,12 @@ class Shipment
             try {
                 $this->entityManager->flush();
 
-                // Create picklist
-                $this->createPickList();
-                //  Adjust inventory item only (older version: item issuance)
                 //TODO: Create adjustment
-                $inventoryAdjustmentEvent = new InventoryAdjustmentEvent();
-
-                $this->dispatcher->dispatch(ComponentEvents::inventoryAdjust, $inventoryAdjustmentEvent);
+                $inventoryAdjustmentEvent = new InventoryAdjustmentEvent($shipment->getId());
+                $this->dispatcher->dispatch(ComponentEvents::onInventoryAdjust, $inventoryAdjustmentEvent);
             } catch (\Exception $e) {
                 throw $e;
             }
         }
-    }
-
-    public function createPickList()
-    {
-        //TODO: Create Pick List
     }
 }

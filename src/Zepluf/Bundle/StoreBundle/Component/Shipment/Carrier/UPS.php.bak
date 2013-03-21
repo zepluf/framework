@@ -9,9 +9,6 @@
  */
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier;
 
-use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingQuote;
-use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingRateRequest;
-
 class UPS
     extends ShippingCarrierAbstract
     implements ShippingCarrierInterface
@@ -20,43 +17,6 @@ class UPS
 
     protected $xmlGatewayUrl = 'https://www.ups.com/ups.app/xml/Rate';
     protected $cgiGatewayUrl = 'http://www.ups.com:80/using/services/rave/qcostcgi.cgi';
-
-    public function convertValue($type, $code)
-    {
-        $repo = array(
-            'service' => array('14' => 'Next Day Air Early AM',
-                '01' => 'Next Day Air',
-                '13' => 'Next Day Air Saver',
-                '59' => '2nd Day Air AM',
-                '02' => '2nd Day Air',
-                '12' => '3 Day Select',
-                '03' => 'Ground',
-                '11' => 'Standard',
-                '07' => 'Worldwide Express',
-                '54' => 'Worldwide Express Plus',
-                '08' => 'Worldwide Expedited',
-                '65' => 'Saver',
-                '82' => 'UPS Today Standard',
-                '83' => 'UPS Today Dedicated Courier',
-                '84' => 'UPS Today Intercity',
-                '85' => 'UPS Today Express',
-                '86' => 'UPS Today Express Saver',
-                '96' => 'UPS WorldWide Express Freight',
-            )
-        );
-        if (!isset($repo[$type])) {
-            return false;
-        } elseif ('' === $code) {
-            return $repo[$type];
-        }
-
-        if (!isset($repo[$type][$code])) {
-            return false;
-        } else {
-            return $repo[$type][$code];
-        }
-    }
-
 
     public function getCode()
     {
@@ -73,10 +33,9 @@ class UPS
         // TODO: Implement getAllowMethods() method.
     }
 
-    public function getRates(ShippingRateRequest $request)
+    public function getRates($request)
     {
-        $canonRequest = $this->convertRequest($request);
-        $result = $this->getQuotes($canonRequest);
+        $result = $this->getQuotes($request);
 
         return $result;
     }
@@ -88,12 +47,7 @@ class UPS
 //        } else {
 //            $this->getXMLQuotes($request);
 //        }
-        return $this->getXMLQuotes($request);
-    }
-
-    protected function convertRequest(ShippingRateRequest $request)
-    {
-
+        $this->getXMLQuotes($request);
     }
 
     /**
@@ -155,17 +109,19 @@ _XMLAuth_;
                 <Shipper>
 
 _XMLRequest_;
-//        if ($this->getConfig('negotiated') && ($shipperNumber = $this->getConfig('shipper_number'))) {
-//            $xmlRequest .= "<ShipperNumber>{$shipperNumber}</ShipperNumber>";
-//        }
-        $xmlRequest .= "<ShipperNumber>{$shipperNumber}</ShipperNumber>";
+        if ($this->getConfig('negotiated') && ($shipperNumber = $this->getConfig('shipper_number'))) {
+            $xmlRequest .= "<ShipperNumber>{$shipperNumber}</ShipperNumber>";
+        }
+
         //TODO: Condition for Shipper address
 
         $xmlRequest .=
             <<<_XMLRequest_
                     <Address>
-                      <PostalCode>90002</PostalCode>
-                      <CountryCode>US</CountryCode>
+                      <City>{$request['origCity']}</City>
+                      <StateProvinceCode>{$request['origProvince']}</StateProvinceCode>
+                      <PostalCode>{$request['origZip']}</PostalCode>
+                      <CountryCode>{$request['origCountry']}</CountryCode>
                     </Address>
                 </Shipper>
                 <ShipTo>
@@ -232,40 +188,15 @@ _XMLRequest_;
             $xmlResponse = '';
         }
         $objResult = new \SimpleXMLElement($xmlResponse);
-
+        var_dump($objResult);
+        die("TEE");
         return $this->parseXMLResponse($objResult);
     }
 
-    protected function parseXMLResponse(\SimpleXMLElement $response)
+    protected function parseXMLResponse($response)
     {
         //TODO: Parse data
-        $costArr = array();
-
-        $negotiatedArr = $response->xpath("//RatingServiceSelectionResponse/RatedShipment/NegotiatedRates");
-        $negotiatedActive = $this->getConfig('negotiated')
-            && $this->getConfig('shipper_number')
-            && !empty($negotiatedArr);
-
-        foreach ($response->RatedShipment as $rate) {
-            $code = (string)$rate->Service->Code;
-            $code = $this->convertValue('service', $code);
-            if ($code === false) {
-                continue;
-            }
-            if ($negotiatedActive) {
-                $cost = $rate->NegotiatedRates->NetSummaryCharges->GrandTotal->MonetaryValue;
-                $currency = $rate->NegotiatedRates->NetSummaryCharges->GrandTotal->CurrencyCode;
-            } else {
-                $cost = $rate->TotalCharges->MonetaryValue;
-                $currency = $rate->TotalCharges->CurrencyCode;
-            }
-            $cost = (float)$cost;
-            $currency = (string)$currency;
-
-            $costArr[$code] = array('currencyCode' => $currency, 'cost' => $cost);
-        }
-
-        return $costArr;
+        return $response;
     }
 
     /**
@@ -275,5 +206,4 @@ _XMLRequest_;
     protected function getCgiQuotes($request)
     {
     }
-
 }

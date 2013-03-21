@@ -41,7 +41,7 @@ class ShippingMethods
         return $this->carriers[$code];
     }
 
-    public function getRates($request)
+    public function getRates(ShippingRateRequest $request)
     {
         $resultList = array();
         foreach ($this->carriers as $carrier) {

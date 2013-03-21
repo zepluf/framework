@@ -20,5 +20,5 @@ final class ComponentEvents
     /**
      * this event is triggered at the start of a page
      */
-    const inventoryAdjust = 'inventory.adjust';
+    const onInventoryAdjust = 'inventory.adjust';
 }

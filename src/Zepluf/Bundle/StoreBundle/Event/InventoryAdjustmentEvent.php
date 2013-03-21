@@ -12,55 +12,32 @@ namespace Zepluf\Bundle\StoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class InventoryAdjustmentEvent
+ * @package Zepluf\Bundle\StoreBundle\Event
+ */
 class InventoryAdjustmentEvent extends Event
 {
-    private $productId;
-    private $features = array();
-    private $quantity;
-    private $shipmentItemId = 0;
-    private $picklistItemId = 0;
+    private $shipmentId = 0;
 
-    public function __construct($productId, $features = array(), $quantity, $shipmentItemId = 0, $picklistItemId = 0)
+    /**
+     * Constructor
+     * @param int $shipmentId
+     */
+    public function __construct($shipmentId = 0)
     {
-        $this->productId = $productId;
-        $this->features = $features;
-        $this->quantity = $quantity;
-        $this->shipmentItemId = $shipmentItemId;
-        $this->picklistItemId = $picklistItemId;
+        $this->shipmentId = $shipmentId;
     }
 
-    public function setFeatures($features)
+    /**
+     * @param $shipmentId
+     * @return InventoryAdjustmentEvent
+     */
+    public function setShipmentId($shipmentId)
     {
-        $this->features = $features;
+        $this->shipmentId = $shipmentId;
 
         return $this;
     }
 
-    public function setProductId($productId)
-    {
-        $this->productId = $productId;
-
-        return $this;
-    }
-
-    public function setQuantity($quantity)
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
-    public function setShipmentItemId($shipmentItemId)
-    {
-        $this->shipmentItemId = $shipmentItemId;
-
-        return $this;
-    }
-
-    public function setPicklistItemId($picklistItemId)
-    {
-        $this->picklistItemId = $picklistItemId;
-
-        return $this;
-    }
 }

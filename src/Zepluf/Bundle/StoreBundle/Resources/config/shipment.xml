@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <!-- shipment -->
+        <parameter key="storebundle.shipment.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Shipment</parameter>
+        <parameter key="storebundle.shipping_methods.class">Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingMethods</parameter>
+        <!-- carrier -->
+        <parameter key="storebundle.carrier.ups.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\UPS</parameter>
+    </parameters>
+
+    <services>
+        <!-- shipment -->
+        <service id="storebundle.shipment" class="%storebundle.shipment.class%">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="event_dispatcher"/>
+        </service>
+        <service id="storebundle.shipping_methods" class="%storebundle.shipping_methods.class%"/>
+
+        <!-- shipping methods -->
+        <service id="storebundle.carrier.ups"
+                 class="%storebundle.carrier.ups.class%">
+            <tag name="storebundle.carrier" alias="ups"/>
+        </service>
+    </services>
+</container>

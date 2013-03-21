@@ -1,0 +1,19 @@
+service:
+    14 : Next Day Air Early AM
+    01 : Next Day Air
+    13 : Next Day Air Saver
+    59 : 2nd Day Air AM
+    02 : 2nd Day Air
+    12 : 3 Day Select
+    03 : Ground
+    11 : Standard
+    07 : Worldwide Express
+    54 : Worldwide Express Plus
+    08 : Worldwide Expedited
+    65 : Saver
+    82 : UPS Today Standard
+    83 : UPS Today Dedicated Courier
+    84 : UPS Today Intercity
+    85 : UPS Today Express
+    86 : UPS Today Express Saver
+    96 : UPS WorldWide Express Freight

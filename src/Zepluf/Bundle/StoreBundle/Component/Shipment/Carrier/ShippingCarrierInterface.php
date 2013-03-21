@@ -12,6 +12,8 @@
  */
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier;
 
+use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingRateRequest;
+
 interface ShippingCarrierInterface
 {
     public function getCode();
@@ -20,5 +22,5 @@ interface ShippingCarrierInterface
 
     public function getAllowMethods();
 
-    public function getRates($data);
+    public function getRates(ShippingRateRequest $request);
 }
