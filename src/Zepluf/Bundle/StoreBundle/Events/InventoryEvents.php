@@ -10,12 +10,13 @@
  * file that was distributed with this source code or refer to the LICENSE
  * file of ZePLUF
  */
-namespace Zepluf\Bundle\StoreBundle;
+
+namespace Zepluf\Bundle\StoreBundle\Events;
 
 /**
  * Events Class
  */
-final class ComponentEvents
+final class InventoryEvents
 {
     /**
      * this event is triggered at the start of a page

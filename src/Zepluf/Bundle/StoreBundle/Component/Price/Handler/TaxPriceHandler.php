@@ -10,6 +10,8 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Price\Handler;
 
+use Zepluf\Bundle\StoreBundle\Entity\PriceComponent as PriceComponentEntity;
+
 class TaxPriceHandler implements PriceHandlerInterface
 {
     public function getCode()
@@ -22,8 +24,8 @@ class TaxPriceHandler implements PriceHandlerInterface
         return 'Tax';
     }
 
-    public function getPrice($currentPrice, \Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent)
+    public function getPrice($currentPrice, PriceComponentEntity $priceComponent)
     {
-        return $currentPrice + ($currentPrice * $priceComponent->getValue() / 100);
+        return $currentPrice * $priceComponent->getValue() / 100;
     }
 }

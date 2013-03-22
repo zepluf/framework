@@ -35,7 +35,7 @@ class ProductDiscountPriceHandlerTest extends BaseTestCase{
             ->method('getValue')
             ->will($this->returnValue(10));
 
-        $productComponent = $this->getMockBuilder('Zepluf\Bundle\StoreBundle\Component\Product\ProductComponent')
+        $productComponent = $this->getMockBuilder('Zepluf\Bundle\StoreBundle\Component\Product\Product')
             ->disableOriginalConstructor()
             ->getMock();
 

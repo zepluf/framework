@@ -11,20 +11,19 @@
  * file of ZePLUF
  */
 
-namespace Zepluf\Bundle\StoreBundle;
+namespace Zepluf\Bundle\StoreBundle\Events;
 
 /**
- * class contains helper events constants
+ * pluginEvents constants
  */
-final class HoldersHelperEvents
+final class PluginEvents
 {
     /**
-     * this event is triggered when a holder starts
+     * The plugin.load.end event is thrown each time a plugin is loaded (1st time)
+     * in the system.
+     *
+     * @var string
      */
-    const onHolderStart = 'view.helper.holder.get.start';
-
-    /**
-     * this event is triggered when a holder ends
-     */
-    const onHolderEnd = 'view.helper.holder.get.end';
+    const onPluginLoadEnd = 'plugin.load.end';
+    const onInitEnd = 'init.end';
 }

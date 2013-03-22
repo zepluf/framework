@@ -20,6 +20,9 @@ class Order
 {
     protected $entityManager;
 
+    /**
+     * @var \Zepluf\Bundle\StoreBundle\Entity\Order
+     */
     protected $order;
 
     protected $pricing;
@@ -38,6 +41,21 @@ class Order
 
     }
 
+    /**
+     * Set order
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Order $order
+     */
+
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    /**
+     * @param ProductCollection $productCollection
+     * @param $type
+     */
     public function create(ProductCollection $productCollection, $type = \OrderType::ORDER_TYPE)
     {
         $this->order = new OrderEntity();
@@ -52,7 +70,7 @@ class Order
         $this->order->setEntryDate(new \DateTime());
 
         // insert new order item
-        $this->addItems($productCollection);
+        $this->addOrderItems($productCollection);
 
         // persists the order
         $this->entityManager->persist($this->order);
@@ -65,7 +83,12 @@ class Order
 
     }
 
-    public function addItems(ProductCollection $productCollection)
+    /**
+     * Add items into order
+     *
+     * @param ProductCollection $productCollection
+     */
+    public function addOrderItems(ProductCollection $productCollection)
     {
         if (false !== ($products = $productCollection->get())) {
             foreach ($products as $key => $product) {

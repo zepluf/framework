@@ -12,7 +12,7 @@ namespace Zepluf\Bundle\StoreBundle\Component\Product;
 
 use Zepluf\Bundle\StoreBundle\Entity\Product as ProductEntity;
 
-class ProductComponent
+class Product
 {
     /**
      * @var \Zepluf\Bundle\StoreBundle\Entity\Product

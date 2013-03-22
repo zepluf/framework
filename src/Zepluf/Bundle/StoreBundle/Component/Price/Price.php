@@ -16,6 +16,14 @@ class Price
 
     protected $total = 0;
 
+    /**
+     * set a price component
+     *
+     * @param string $code
+     * @param string $tag
+     * @param string $name
+     * @param float $value
+     */
     public function addComponent($code, $tag, $name, $value)
     {
         $this->components[] = array(
@@ -34,5 +42,23 @@ class Price
     public function getTotal()
     {
         return $this->total;
+    }
+
+    /**
+     * Return an array of component with specific tag
+     *
+     * @param string $tag
+     * @return array
+     */
+    public function findTaggedComponents($tag)
+    {
+        $tags = array();
+        foreach ($this->components as $component) {
+            if ($component['tag'] == $tag) {
+                $tags[] = $component;
+            }
+        }
+
+        return $tags;
     }
 }

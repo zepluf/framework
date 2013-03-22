@@ -38,7 +38,7 @@ class ShipmentItemFeature
     /**
      * @var \ShipmentItem
      *
-     * @ORM\ManyToOne(targetEntity="ShipmentItem", inversedBy="features")
+     * @ORM\ManyToOne(targetEntity="ShipmentItem")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
      * })

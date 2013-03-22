@@ -55,12 +55,6 @@ class ShipmentItem
      */
     private $product;
 
-    /**
-     * @var ShipmentItemFeature|array
-     *
-     * @ORM\OneToMany(targetEntity="ShipmentItemFeature", mappedBy="shipmentItem")
-     */
-    private $features;
 
 
     /**
@@ -163,45 +157,5 @@ class ShipmentItem
     public function getProduct()
     {
         return $this->product;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->features = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Add features
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature $features
-     * @return ShipmentItem
-     */
-    public function addFeature(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature $features)
-    {
-        $this->features[] = $features;
-    
-        return $this;
-    }
-
-    /**
-     * Remove features
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature $features
-     */
-    public function removeFeature(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature $features)
-    {
-        $this->features->removeElement($features);
-    }
-
-    /**
-     * Get features
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getFeatures()
-    {
-        return $this->features;
     }
 }

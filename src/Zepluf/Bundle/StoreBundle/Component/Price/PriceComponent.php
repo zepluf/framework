@@ -13,7 +13,7 @@ namespace Zepluf\Bundle\StoreBundle\Component\Price;
 /**
  * This class is responsible for calculating price for anything that uses priceComponent
  */
-class PriceComponent
+class Price
 {
     /**
      * an array of handlers
@@ -84,7 +84,7 @@ class PriceComponent
     /**
      * Return an array of handler with specific tag
      *
-     * @param $tag
+     * @param string $tag
      * @return array
      */
     public function findTaggedHandlers($tag)

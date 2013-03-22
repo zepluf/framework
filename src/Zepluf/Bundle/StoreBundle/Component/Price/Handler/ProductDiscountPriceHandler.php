@@ -10,9 +10,9 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Price\Handler;
 
-use Zepluf\Bundle\StoreBundle\Component\Product\ProductComponent;
-use Zepluf\Bundle\StoreBundle\Entity\PriceComponent;
-use Zepluf\Bundle\StoreBundle\Entity\Product;
+use Zepluf\Bundle\StoreBundle\Component\Product\Product;
+use Zepluf\Bundle\StoreBundle\Entity\PriceComponent as PriceComponentEntity;
+use Zepluf\Bundle\StoreBundle\Entity\Product as ProductEntity;
 /**
  * Basic discount schemes to be implemented here
  */
@@ -20,7 +20,7 @@ class ProductDiscountPriceHandler implements PriceHandlerInterface, ProductPrice
 {
     protected $productComponent;
 
-    public function __construct(ProductComponent $productComponent)
+    public function __construct(Product $productComponent)
     {
         $this->productComponent = $productComponent;
     }
@@ -35,7 +35,7 @@ class ProductDiscountPriceHandler implements PriceHandlerInterface, ProductPrice
         return 'product_global';
     }
 
-    public function getPrice($currentPrice, PriceComponent $priceComponent, Product $product)
+    public function getPrice($currentPrice, PriceComponentEntity $priceComponent, ProductEntity $product)
     {
         // discount by category
         if(is_array($categorySettings = $priceComponent->getSetting('category'))) {
