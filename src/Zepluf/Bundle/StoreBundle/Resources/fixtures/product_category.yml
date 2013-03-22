@@ -1,0 +1,22 @@
+model: Zepluf\Bundle\StoreBundle\Entity\ProductCategory
+tags: [ test, dev ] # optional parameter
+fixtures:
+  food:
+    name: Food
+    sort: 0
+    status: 1
+  fruits:
+    name: Fruits
+    parent: food
+    sort: 0
+    status: 1
+  vegetables:
+    name: Vegetables
+    parent: fruits
+    sort: 0
+    status: 1
+  carrots:
+    name: Carrots
+    parent: vegetables
+    sort: 0
+    status: 1

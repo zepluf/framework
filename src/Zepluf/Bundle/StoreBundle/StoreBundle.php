@@ -17,8 +17,9 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Compiler\TemplatingPass;
 use Symfony\Component\Yaml\Yaml;
+use Zepluf\Bundle\StoreBundle\DependencyInjection\Compiler\PaymentPass;
 use Zepluf\Bundle\StoreBundle\DependencyInjection\Compiler\ZeplufPass;
-use Zepluf\Bundle\StoreBundle\DependencyInjection\Compiler\StorePass;
+use Zepluf\Bundle\StoreBundle\DependencyInjection\Compiler\ShipmentPass;
 
 /**
  * Bundle.
@@ -31,9 +32,9 @@ class StoreBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new ZeplufPass());
-        $container->addCompilerPass(new StorePass());
+        $container->addCompilerPass(new ShipmentPass());
+        $container->addCompilerPass(new PaymentPass());
         $container->addCompilerPass(new TemplatingPass());
-        $container->addCompilerPass(new StorePass());
 
         // allow plugins to have their own compiler passes
         $appDir = $container->getParameter("kernel.root_dir");

@@ -1,0 +1,6 @@
+model: Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement
+tags: [ test, dev ] # optional parameter
+fixtures:
+  default_unit:
+    description: unit
+    abbreviation: unit

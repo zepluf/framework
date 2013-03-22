@@ -9,6 +9,7 @@
  */
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment;
 
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\ShippingCarrierInterface;
 
 class ShippingMethods
@@ -27,7 +28,7 @@ class ShippingMethods
      */
     public function getCarriers()
     {
-        return $this->methods;
+        return $this->carriers;
     }
 
     /**
@@ -41,13 +42,25 @@ class ShippingMethods
         return $this->carriers[$code];
     }
 
-    public function getRates(ShippingRateRequest $request)
-    {
-        $resultList = array();
-        foreach ($this->carriers as $carrier) {
-            $resultList[$carrier->getCode()] = $carrier->getRates($request);
-        }
-
-        return $resultList;
-    }
+    // OPTIONAL
+//    public function getRates(ShippingRateRequest $request)
+//    {
+//        $result = array();
+//        $carrierCode = $request->getCarrier();
+//
+//        //  Limit carrier
+//        if ($carrierCode) {
+//            // Valid carrier
+//            if ($carrier = $this->carriers[$carrierCode]) {
+//                $result = $carrier->getRates($request);
+//            } else {
+//                throw new \Exception('Invalid carrier');
+//            }
+//        } //  All carrier
+//        else {
+//            foreach ($this->carriers as $carrier) {
+//                $result[$carrier->getCode()] = $carrier->getRates($request);
+//            }
+//        }
+//    }
 }

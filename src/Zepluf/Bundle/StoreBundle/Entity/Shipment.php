@@ -30,6 +30,13 @@ class Shipment
     private $incrementId;
 
     /**
+     * @var ShipmentStatus|array
+     *
+     * @ORM\OneToMany(targetEntity="ShipmentStatus", mappedBy="shipment")
+     */
+    private $shipmentStatuses;
+
+    /**
      * @var ShipmentItem|array
      *
      * @ORM\OneToMany(targetEntity="ShipmentItem", mappedBy="shipment")
@@ -418,14 +425,6 @@ class Shipment
     }
 
     /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->shipmentItems = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
      * @ORM\PrePersist
      */
     public function setCreatedValue()
@@ -442,4 +441,45 @@ class Shipment
         $this->updatedAt = new \DateTime();
     }
 
+    /**
+     * Add shipmentStatuses
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus $shipmentStatuses
+     * @return Shipment
+     */
+    public function addShipmentStatus(\Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus $shipmentStatuses)
+    {
+        $this->shipmentStatuses[] = $shipmentStatuses;
+
+        return $this;
+    }
+
+    /**
+     * Remove shipmentStatuses
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus $shipmentStatuses
+     */
+    public function removeShipmentStatus(\Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus $shipmentStatuses)
+    {
+        $this->shipmentStatuses->removeElement($shipmentStatuses);
+    }
+
+    /**
+     * Get shipmentStatuses
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getShipmentStatuses()
+    {
+        return $this->shipmentStatuses;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->shipmentStatuses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->shipmentItems = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 }

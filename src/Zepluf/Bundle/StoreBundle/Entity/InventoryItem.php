@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * InventoryItem
  *
  * @ORM\Table(name="inventory_item")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Zepluf\Bundle\StoreBundle\Entity\InventoryItemRepository")
  */
 class InventoryItem
 {

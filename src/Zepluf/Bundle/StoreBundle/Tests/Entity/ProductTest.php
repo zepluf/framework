@@ -21,12 +21,15 @@ class ProductTest extends BaseTestCase
 
     public function testGetPrice()
     {
-        $em = $this->_container->get('doctrine.orm.entity_manager');
-        $product = $em->find('Zepluf\Bundle\StoreBundle\Entity\Product', 1);
-
-        $pricing = new \Zepluf\Bundle\StoreBundle\Component\Price\Pricing();
-        $pricing->addHandler(new \Zepluf\Bundle\StoreBundle\Component\Price\DefaultPriceHandler());
-        var_dump($pricing->getProductPrice($product));
-        die();
+//        $product = $this->_container->get('doctrine')->getRepository('StoreBundle:Product')->find(1);
+//
+//        $productComponent = new \Zepluf\Bundle\StoreBundle\Component\Product\ProductComponent($this->_container->get('doctrine')->getEntityManager());
+//
+//        var_dump($productComponent->setProduct($product)->isChildOf(2));die();
+//        $pricing = new \Zepluf\Bundle\StoreBundle\Component\Price\Pricing();
+//        $pricing->addHandler(new \Zepluf\Bundle\StoreBundle\Component\Price\DefaultPriceHandler());
+//        $pricing->addHandler(new \Zepluf\Bundle\StoreBundle\Component\Price\ProductDiscountPriceHandler());
+//        var_dump($pricing->getProductPrice($product));
+//        die();
     }
 }

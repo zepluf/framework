@@ -13,6 +13,7 @@ namespace Zepluf\Bundle\StoreBundle\Component\Shipment;
 
 class ShippingRateRequest
 {
+    protected $carrier;
     protected $method;
 
     protected $originationCity;
@@ -30,6 +31,31 @@ class ShippingRateRequest
     protected $packageHeight;
     protected $packageWidth;
     protected $packageLength;
+
+    public function setCarrier($carrier)
+    {
+        $this->carrier = $carrier;
+
+        return $this;
+    }
+
+    public function getCarrier()
+    {
+        return $this->carrier;
+    }
+
+    public function setMethod($method)
+    {
+        $this->method = $method;
+
+        return $this;
+    }
+
+    public function getMethod()
+    {
+        return $this->method;
+    }
+
 
     public function setDestinationCity($destinationCity)
     {
@@ -79,17 +105,7 @@ class ShippingRateRequest
         return $this->destinationZip;
     }
 
-    public function setMethod($method)
-    {
-        $this->method = $method;
 
-        return $this;
-    }
-
-    public function getMethod()
-    {
-        return $this->method;
-    }
 
     public function setOriginationCity($originationCity)
     {

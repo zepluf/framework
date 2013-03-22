@@ -76,9 +76,9 @@ class UPS
     public function getRates(ShippingRateRequest $request)
     {
         $canonRequest = $this->convertRequest($request);
-        $result = $this->getQuotes($canonRequest);
+        $quote = $this->getQuotes($canonRequest);
 
-        return $result;
+        return $quote;
     }
 
     public function getQuotes($request)
@@ -265,7 +265,10 @@ _XMLRequest_;
             $costArr[$code] = array('currencyCode' => $currency, 'cost' => $cost);
         }
 
-        return $costArr;
+        $quote = new ShippingQuote($this->getCode());
+        $quote->setQuotes($costArr);
+
+        return $quote;
     }
 
     /**

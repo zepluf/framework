@@ -1,0 +1,15 @@
+model: Zepluf\Bundle\StoreBundle\Entity\Product
+tags: [ test, dev ] # optional parameter
+fixtures:
+  sampple_good_product:
+    type: 1
+    name: sample good product name 1
+    description: sample good product description 1
+    introductionDate: "2013-11-11"
+    unitOfMeasurement: default_unit
+  sample_service_product:
+    type: 1
+    name: sample service product name 1
+    description: sample service product description 1
+    introductionDate: "2013-11-11"
+    unitOfMeasurement: default_unit

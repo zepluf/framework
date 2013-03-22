@@ -9,6 +9,7 @@
         <parameter key="storebundle.shipping_methods.class">Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingMethods</parameter>
         <!-- carrier -->
         <parameter key="storebundle.carrier.ups.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\UPS</parameter>
+        <parameter key="storebundle.carrier.freeshipping.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\FreeShipping</parameter>
     </parameters>
 
     <services>
@@ -19,10 +20,15 @@
         </service>
         <service id="storebundle.shipping_methods" class="%storebundle.shipping_methods.class%"/>
 
-        <!-- shipping methods -->
+        <!-- shipping carriers -->
         <service id="storebundle.carrier.ups"
                  class="%storebundle.carrier.ups.class%">
             <tag name="storebundle.carrier" alias="ups"/>
+        </service>
+
+        <service id="storebundle.carrier.freeshipping"
+                 class="%storebundle.carrier.freeshipping.class%">
+            <tag name="storebundle.carrier" alias="freeshipping"/>
         </service>
     </services>
 </container>

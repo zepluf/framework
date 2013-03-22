@@ -2,13 +2,16 @@
 
 namespace Zepluf\Bundle\StoreBundle\Entity;
 
+use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ProductCategory
+ * use repository for handy tree functions
  *
+ * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="product_category")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  */
 class ProductCategory
 {
@@ -38,6 +41,7 @@ class ProductCategory
     /**
      * @var integer
      *
+     * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer", nullable=true)
      */
     private $lft;
@@ -45,6 +49,7 @@ class ProductCategory
     /**
      * @var integer
      *
+     * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer", nullable=true)
      */
     private $rgt;
@@ -52,6 +57,7 @@ class ProductCategory
     /**
      * @var integer
      *
+     * @Gedmo\TreeLevel
      * @ORM\Column(name="level", type="integer", nullable=true)
      */
     private $level;
@@ -59,6 +65,7 @@ class ProductCategory
     /**
      * @var integer
      *
+     * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
     private $root;
@@ -66,7 +73,18 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @ORM\Column(name="children", type="integer", nullable=true)
+     * @Gedmo\TreeParent
+     *
+     * @ORM\ManyToOne(targetEntity="productCategory", inversedBy="children")
+     * @ORM\JoinColumn(name="parent", referencedColumnName="id", onDelete="SET NULL")
+     */
+    private $parent;
+
+    /**
+     * @var integer
+     *
+     * @ORM\OneToMany(targetEntity="productCategory", mappedBy="parent")
+     * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
 
@@ -85,21 +103,9 @@ class ProductCategory
     private $status;
 
     /**
-     * @var \ProductCategory
-     *
-     * @ORM\ManyToOne(targetEntity="ProductCategory")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="parent", referencedColumnName="id")
-     * })
-     */
-    private $parent;
-
-
-
-    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -115,14 +121,14 @@ class ProductCategory
     public function setName($name)
     {
         $this->name = $name;
-    
+
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -138,14 +144,14 @@ class ProductCategory
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -161,14 +167,14 @@ class ProductCategory
     public function setLft($lft)
     {
         $this->lft = $lft;
-    
+
         return $this;
     }
 
     /**
      * Get lft
      *
-     * @return integer 
+     * @return integer
      */
     public function getLft()
     {
@@ -184,14 +190,14 @@ class ProductCategory
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
-    
+
         return $this;
     }
 
     /**
      * Get rgt
      *
-     * @return integer 
+     * @return integer
      */
     public function getRgt()
     {

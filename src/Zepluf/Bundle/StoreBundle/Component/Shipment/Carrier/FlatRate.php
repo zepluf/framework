@@ -9,6 +9,8 @@
  */
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier;
 
+use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingRateRequest;
+
 class FlatRate
     extends ShippingCarrierAbstract
     implements ShippingCarrierInterface
@@ -55,7 +57,7 @@ class FlatRate
         // TODO: Implement renderForm() method.
     }
 
-    public function getRates($data)
+    public function getRates(ShippingRateRequest $request)
     {
         //TODO: replace $result array by an object
         $result = null;

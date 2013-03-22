@@ -1,0 +1,5 @@
+model: Zepluf\Bundle\StoreBundle\Entity\InvetoryItemStatusType
+tags: [ test, dev ] # optional parameter
+fixtures:
+  invetory_item_status_type_available:
+    name: available

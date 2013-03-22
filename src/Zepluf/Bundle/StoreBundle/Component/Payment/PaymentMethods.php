@@ -21,7 +21,6 @@ class PaymentMethods
      * @var list of available payment methods
      */
     protected $paymentMethods = array();
-    // protected $storageHandlers;
 
     public function __construct()
     {
@@ -33,26 +32,27 @@ class PaymentMethods
      *
      * @param PaymentMethodInterface $method [description]
      */
-    public function addMethod(PaymentMethodInterface $method)
+    public function add(PaymentMethodInterface $method)
     {
         if (true === $method->isAvailable()) {
             $this->methods[$method->getCode()] = $method;
         }
     }
 
-    public function getMethod($code = null)
+    /**
+     * get available payment methods by code or all
+     *
+     * @param  null|string $code
+     * @return PaymentMethodInterface
+     */
+    public function get($code = null)
     {
         if (null === $code) {
-            return $this->getMethods();
-        } else if (isset($this->methods[$code])) {
+            return $this->methods;
+        } else if (true === isset($this->methods[$code])) {
             return $this->methods[$code];
         } else {
             return false;
         }
-    }
-
-    public function getMethods()
-    {
-        return $this->methods;
     }
 }

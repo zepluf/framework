@@ -9,6 +9,9 @@
  */
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier;
 
+use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingQuote;
+use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingRateRequest;
+
 class FreeShipping
     extends ShippingCarrierAbstract
     implements ShippingCarrierInterface
@@ -32,7 +35,7 @@ class FreeShipping
 
     public function getAllowMethods()
     {
-        return array('freeshipping' => $this->getConfig('name'));
+
     }
 
     public function processData()
@@ -50,8 +53,20 @@ class FreeShipping
         // TODO: Implement renderForm() method.
     }
 
-    public function getRates($data)
+    /**
+     * @param ShippingRateRequest $request
+     * @return ShippingQuote
+     */
+    public function getRates(ShippingRateRequest $request)
     {
+        $quote = new ShippingQuote($this->getCode());
+        $costArray = array();
 
+        //  TODO: CurrencyCode???
+        // $costArray['method'] => ( 'currencyCode' => 'USD', 'cost' => 10)
+        // Freeshipping has onely 1 method
+        $costArray[$this->getCode()] = array('currencyCode' => 'USD', 'cost' => 0);
+        $quote->setQuotes($costArray);
+        return $quote;
     }
 }

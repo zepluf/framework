@@ -1,5 +1,5 @@
 <?php
- /**
+/**
  * Created by Rubikin Team.
  * Date: 3/21/13
  * Time: 9:32 AM
@@ -11,6 +11,37 @@
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment;
 
 
-class ShippingQuote {
+class ShippingQuote
+{
+    protected $carrier;
+    protected $quotes = array();
+
+    function __construct($carrier)
+    {
+        $this->carrier = $carrier;
+    }
+
+    public function setCarrier($carrier)
+    {
+        $this->carrier = $carrier;
+        return $this;
+    }
+
+    public function getCarrier()
+    {
+        return $this->carrier;
+    }
+
+    public function setQuotes($quotes)
+    {
+        $this->quotes = $quotes;
+        return $this;
+    }
+
+    public function getQuotes()
+    {
+        return $this->quotes;
+    }
+
 
 }

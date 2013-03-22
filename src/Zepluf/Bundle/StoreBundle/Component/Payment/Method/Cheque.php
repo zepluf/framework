@@ -36,7 +36,7 @@ class Cheque extends PaymentMethodAbstract implements PaymentMethodInterface
     public function getSettings()
     {
         /**
-         * @todo get current payment method settings from this storage handler
+         * @todo get current payment method settings from storage handler
          */
         return array(
             'code' => 'cheque',

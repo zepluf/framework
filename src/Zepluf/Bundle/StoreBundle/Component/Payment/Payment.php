@@ -10,8 +10,16 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Payment;
 
-use \Doctrine\ORM\EntityManager;
+use Zepluf\Bundle\StoreBundle\Component\Payment\PaymentMethodInterface;
+use Zepluf\Bundle\StoreBundle\Component\Payment\Method\Cheque;
+
+use Zepluf\Bundle\StoreBundle\Component\Invoice\Invoice;
+
 use Zepluf\Bundle\StoreBundle\Entity\Payment as PaymentEntity;
+use Zepluf\Bundle\StoreBundle\Entity\PaymentMethodType as PaymentMethodTypeEntity;
+use Zepluf\Bundle\StoreBundle\Entity\PaymentApplication as PaymentApplicationEntity;
+use Zepluf\Bundle\StoreBundle\Entity\Invoice as InvoiceEntity;
+use Zepluf\Bundle\StoreBundle\Entity\InvoiceItem as InvoiceItemEntity;
 
 /**
 *
@@ -30,53 +38,53 @@ class Payment
      * constructor
      * @param EntityManager $entityManager
      */
-    public function __construct($entityManager)
+    public function __construct($doctrine)
     {
-        $this->entityManager = $entityManager;
+        $this->entityManager = $doctrine->getEntityManager();
+
+        // $this->create(new Cheque(),
+        //     $this->entityManager->find('Zepluf\Bundle\StoreBundle\Component\Invoice\Invoice', 1)
+        // );
     }
 
     /**
      * @param array $data ('payment_method' => array(), 'invoice_items' => array(). ...)
      * @throws \Exception
      */
-    public function create($data)
+    public function create(PaymentMethodInterface $paymentMethod, InvoiceEntity $invoice)
     {
         $this->payment = new PaymentEntity();
 
-        // set payment effective date
+        /**
+         * @todo set payment method type for current payment
+         * @var Zepluf\Bundle\StoreBundle\Entity\PaymentMethodType
+         */
+        $paymentMethodType = $this->entityManager->find('Zepluf\Bundle\StoreBundle\Entity\PaymentMethodType', mt_rand(1, 5));
+        $this->payment->setPaymentMethodType($paymentMethodType);
+
+        // set effective date
         $this->payment->setEffectiveDate(new \DateTime());
 
-        //If ship from address is empty, it's shopkeeper contact by default
-        if (isset($data['ShippedFromContactMechanism'])) {
-            $payment->setShippedFromContactMechanism($data['ship_from']);
-        }
-        if (isset($data['ship_from'])) {
-            $payment->setShippedToContactMechanism($data['ship_to']);
-        }
+        // set payment type: receipt, disbursement
+        $this->payment->setType(1);
 
+        // persist payment and new payment method type
+        $this->entityManager->persist($this->payment);
+        $this->entityManager->persist($paymentMethodType);
 
-        //set payment Item
-        foreach ($data['items'] as $item) {
-            $paymentItem = new paymentItem();
+        // get all invoice items
+        $invoiceItems = $invoice->getInvoiceItems();
 
-            //logical code to set info for paymentItem
+        foreach ($invoiceItems as $invoiceItem) {
+            $paymentApplication = new PaymentApplicationEntity();
 
-            $paymentItem->setpayment($payment);
-            $payment->addpaymentItem($paymentItem);
-        }
+            $paymentApplication->setPayment($this->payment);
+            $paymentApplication->setInvoiceItem($invoiceItem);
+            $paymentApplication->setAmountApplied(mt_rand(1, 5));
 
-        if (!$error) {
-            $this->payment = $payment;
+            $this->entityManager->persist($paymentApplication);
         }
 
-        if ($this->payment) {
-            // persists the payment
-            $this->entityManager->persist($this->payment);
-            try {
-                $this->entityManager->flush();
-            } catch (\Exception $e) {
-                throw $e;
-            }
-        }
+        $this->entityManager->flush();
     }
 }
