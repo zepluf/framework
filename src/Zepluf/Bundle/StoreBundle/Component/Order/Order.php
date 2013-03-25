@@ -56,7 +56,7 @@ class Order
      * @param ProductCollection $productCollection
      * @param $type
      */
-    public function create(ProductCollection $productCollection, $type = \OrderType::ORDER_TYPE)
+    public function create(ProductCollection $productCollection, $type = OrderType::ORDER_TYPE)
     {
         $this->order = new OrderEntity();
 

@@ -20,6 +20,7 @@ class UPS
 
     protected $xmlGatewayUrl = 'https://www.ups.com/ups.app/xml/Rate';
     protected $cgiGatewayUrl = 'http://www.ups.com:80/using/services/rave/qcostcgi.cgi';
+    protected $request;
 
     public function convertValue($type, $code)
     {
@@ -41,7 +42,21 @@ class UPS
                 '84' => 'UPS Today Intercity',
                 '85' => 'UPS Today Express',
                 '86' => 'UPS Today Express Saver',
-                '96' => 'UPS WorldWide Express Freight',
+                '96' => 'UPS WorldWide Express Freight'
+            ),
+            'container' => array(
+                'CP' => '00', // Customer Packaging
+                'ULE' => '01', // UPS Letter Envelope
+                'CSP' => '02', // Customer Supplied Package
+                'UT' => '03', // UPS Tube
+                'PAK' => '04', // PAK
+                'UEB' => '21', // UPS Express Box
+                'UW25' => '24', // UPS Worldwide 25 kilo
+                'UW10' => '25', // UPS Worldwide 10 kilo
+                'PLT' => '30', // Pallet
+                'SEB' => '2a', // Small Express Box
+                'MEB' => '2b', // Medium Express Box
+                'LEB' => '2c', // Large Express Box
             )
         );
         if (!isset($repo[$type])) {
@@ -55,12 +70,6 @@ class UPS
         } else {
             return $repo[$type][$code];
         }
-    }
-
-
-    public function getCode()
-    {
-        return $this->code;
     }
 
     public function getInfo()
@@ -93,7 +102,38 @@ class UPS
 
     protected function convertRequest(ShippingRateRequest $request)
     {
+        $r = array();
+        if ($request->getMethod()) {
+            $r['requestOption'] = 'Rate';
+            $r['service']['code'] = $request->getMethod();
+            $r['service']['description'] = '';
+        } else {
+            $r['requestOption'] = 'Shop';
+        }
 
+        if ($request->getOriginationCountry()) {
+            $r['origCountry'] = $request->getOriginationCountry();
+        }
+        if ($request->getOriginationPostal()) {
+            $r['origPostal'] = $request->getOriginationPostal();
+        }
+        if ($request->getOriginationPostal()) {
+            $r['destPostal'] = $request->getDestinationCountry();
+        }
+        if ($request->getOriginationPostal()) {
+            $r['destPostal'] = $request->getDestinationPostal();
+        }
+        if ($request->getPackageContainer()) {
+            $r['packageType'] = $this->convertValue('container', $request->getPackageContainer());
+        }
+        if ($request->getPackageWeight()) {
+            $r['packageWeight'] = $request->getPackageWeight();
+        }
+        if ($request->getPackageUOM()) {
+            $r['packageUnitOfMeasurement'] = $request->getPackageUOM();
+        }
+
+        return $r;
     }
 
     /**
@@ -108,16 +148,11 @@ class UPS
          * Parse info
          */
         // Authentication
-//        $accessLicenseNumber = $this->getConfig('access_key');
-//        $userId = $this->getConfig('user_id');
-//        $password = $this->getConfig('password');
+        $accessLicenseNumber = $this->getConfig('access_license_number');
+        $userId = $this->getConfig('user_id');
+        $password = $this->getConfig('password');
 
-        $shipperNumber = '06V2A1';
-        $accessLicenseNumber = '9CB176ED636EF975';
-        $userId = 'vu nguyen';
-        $password = '635Doxuanhop';
-
-        if ($request['requestOption'] = 'Shop') {
+        if ($request['requestOption'] === 'Shop') {
             // Service code is not relevant when we're asking ALL possible services' rates
             $serviceCode = null;
         } else {
@@ -170,14 +205,14 @@ _XMLRequest_;
                 </Shipper>
                 <ShipTo>
                     <Address>
-                        <PostalCode>{$request['destZip']}</PostalCode>
+                        <PostalCode>{$request['destPostal']}</PostalCode>
                         <CountryCode>{$request['destCountry']}</CountryCode>
                     </Address>
                 </ShipTo>
 
                 <ShipFrom>
                     <Address>
-                        <PostalCode>{$request['origZip']}</PostalCode>
+                        <PostalCode>{$request['origPostal']}</PostalCode>
                         <CountryCode>{$request['origCountry']}</CountryCode>
     			    </Address>
                 </ShipFrom>
@@ -194,13 +229,13 @@ _XMLRequest_;
             <<<_XMLRequest_
                 <Package>
                     <PackagingType>
-                        <Code>{$request['container']}</Code>
+                        <Code>{$request['packageType']}</Code>
                     </PackagingType>
                     <PackageWeight>
                         <UnitOfMeasurement>
-                            <Code>{$request['unitOfMeasurement']}</Code>
+                            <Code>{$request['packageUnitOfMeasurement']}</Code>
                         </UnitOfMeasurement>
-                        <Weight>{$request['weight']}</Weight>
+                        <Weight>{$request['packageWeight']}</Weight>
                     </PackageWeight>
                 </Package>
 _XMLRequest_;
@@ -225,13 +260,13 @@ _XMLRequest_;
             curl_setopt($rsrcCurl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($rsrcCurl, CURLOPT_POSTFIELDS, $xmlRequest);
 
-            $xmlResponse = curl_exec($rsrcCurl);
-            $debugData['result'] = $xmlResponse;
+            $response = curl_exec($rsrcCurl);
+            $debugData['result'] = $response;
         } catch (\Exception $e) {
             $debugData['result'] = array('error' => $e->getMessage(), 'code' => $e->getCode());
-            $xmlResponse = '';
+            $response = '';
         }
-        $objResult = new \SimpleXMLElement($xmlResponse);
+        $objResult = new \SimpleXMLElement($response);
 
         return $this->parseXMLResponse($objResult);
     }
@@ -275,8 +310,44 @@ _XMLRequest_;
      * Hit the UPS web service and return some
      * rate information.
      **/
-    protected function getCgiQuotes($request)
-    {
-    }
-
+//    protected function getCgiQuotes($request)
+//    {
+//        try {
+//            $mode = array
+//            (
+//                'soap_version' => 'SOAP_1_1', // use soap 1.1 client
+//                'trace' => 1
+//            );
+//
+//            // initialize soap client
+//            $client = new SoapClient($wsdl, $mode);
+//
+//            //set endpoint url
+//            $client->__setLocation($endpointurl);
+//
+//            //create soap header
+//            $usernameToken['Username'] = $userid;
+//            $usernameToken['Password'] = $passwd;
+//            $serviceAccessLicense['AccessLicenseNumber'] = $access;
+//            $upss['UsernameToken'] = $usernameToken;
+//            $upss['ServiceAccessToken'] = $serviceAccessLicense;
+//
+//            $header = new SoapHeader('http://www.ups.com/XMLSchema/XOLTWS/UPSS/v1.0', 'UPSSecurity', $upss);
+//            $client->__setSoapHeaders($header);
+//
+//            //get response
+//            $response = $client->__soapCall($operation, array(processFreightRate()));
+//
+//            //get status
+//            echo "Response Status: " . $response->Response->ResponseStatus->Description . "\n";
+//
+//            //save soap request and response to file
+//            $fw = fopen($outputFileName, 'w');
+//            fwrite($fw, "Request: \n" . $client->__getLastRequest() . "\n");
+//            fwrite($fw, "Response: \n" . $client->__getLastResponse() . "\n");
+//            fclose($fw);
+//        } catch (Exception $ex) {
+//            print_r($ex);
+//        }
+//    }
 }

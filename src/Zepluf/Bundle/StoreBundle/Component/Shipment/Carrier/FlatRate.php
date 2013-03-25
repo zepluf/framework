@@ -17,11 +17,6 @@ class FlatRate
 {
     protected $code = 'flatrate';
 
-    public function getCode()
-    {
-        return $this->code;
-    }
-
     public function getInfo()
     {
         // TODO: Implement getInfo() method.

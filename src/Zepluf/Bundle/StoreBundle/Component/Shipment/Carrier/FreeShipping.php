@@ -18,11 +18,6 @@ class FreeShipping
 {
     protected $code = 'freeshipping';
 
-    public function getCode()
-    {
-        return $this->code;
-    }
-
     public function getInfo()
     {
         // TODO: Implement getInfo() method.

@@ -27,10 +27,10 @@ class Price
     public function addComponent($code, $tag, $name, $value)
     {
         $this->components[] = array(
-            'name' => $name,
-            'code' => $code,
-            'tag' => $tag,
-            'value' => $value);
+        'name' => $name,
+        'code' => $code,
+        'tag' => $tag,
+        'value' => $value);
         $this->total += $value;
     }
 

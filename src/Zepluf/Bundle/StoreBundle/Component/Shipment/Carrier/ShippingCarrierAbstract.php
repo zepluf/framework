@@ -10,11 +10,16 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier;
 
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Parser;
 
 abstract class ShippingCarrierAbstract
 {
     protected $code;
+
+    public function getCode()
+    {
+        return $this->code;
+    }
 
     public function isAvailable()
     {
@@ -23,6 +28,13 @@ abstract class ShippingCarrierAbstract
 
     public function getConfig($param)
     {
+        $yaml = new Parser();
+        $value = $yaml->parse(file_get_contents(__DIR__ . '/config/' . $this->getCode() . '.yml'));
 
+        if (isset($value[$param])) {
+            return $value[$param];
+        } else {
+            return false;
+        }
     }
 }

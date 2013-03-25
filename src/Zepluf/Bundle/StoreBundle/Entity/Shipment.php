@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Shipment
  *
  * @ORM\Table(name="shipment")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Zepluf\Bundle\StoreBundle\Repository\ShipmentRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class Shipment
@@ -32,14 +32,14 @@ class Shipment
     /**
      * @var ShipmentStatus|array
      *
-     * @ORM\OneToMany(targetEntity="ShipmentStatus", mappedBy="shipment")
+     * @ORM\OneToMany(targetEntity="ShipmentStatus", mappedBy="shipment", cascade={"persist", "remove"})
      */
     private $shipmentStatuses;
 
     /**
      * @var ShipmentItem|array
      *
-     * @ORM\OneToMany(targetEntity="ShipmentItem", mappedBy="shipment")
+     * @ORM\OneToMany(targetEntity="ShipmentItem", mappedBy="shipment", cascade={"persist", "remove"})
      */
     private $shipmentItems;
 
@@ -79,12 +79,9 @@ class Shipment
     private $updatedAt;
 
     /**
-     * @var \ShipmentType
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="ShipmentType")
-     * @ORM\JoinColumns({
-     * @ORM\JoinColumn(name="shipment_type_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="shipment_type_id", type="integer", nullable=false)
      */
     private $shipmentType;
 
@@ -310,29 +307,6 @@ class Shipment
     }
 
     /**
-     * Set shipmentType
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentType $shipmentType
-     * @return Shipment
-     */
-    public function setShipmentType(\Zepluf\Bundle\StoreBundle\Entity\ShipmentType $shipmentType = null)
-    {
-        $this->shipmentType = $shipmentType;
-
-        return $this;
-    }
-
-    /**
-     * Get shipmentType
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentType
-     */
-    public function getShipmentType()
-    {
-        return $this->shipmentType;
-    }
-
-    /**
      * Set shippedFromParty
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Party $shippedFromParty
@@ -481,5 +455,28 @@ class Shipment
     {
         $this->shipmentStatuses = new \Doctrine\Common\Collections\ArrayCollection();
         $this->shipmentItems = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set shipmentType
+     *
+     * @param integer $shipmentType
+     * @return Shipment
+     */
+    public function setShipmentType( $shipmentType)
+    {
+        $this->shipmentType = $shipmentType;
+
+        return $this;
+    }
+
+    /**
+     * Get shipmentType
+     *
+     * @return integer
+     */
+    public function getShipmentType()
+    {
+        return $this->shipmentType;
     }
 }

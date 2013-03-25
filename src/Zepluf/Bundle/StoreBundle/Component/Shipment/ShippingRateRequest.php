@@ -18,19 +18,34 @@ class ShippingRateRequest
 
     protected $originationCity;
     protected $originationStateProvince;
-    protected $originationZip;
+    protected $originationPostal;
     protected $originationCountry;
 
     protected $destinationCity;
     protected $destinationStateProvince;
-    protected $destinationZip;
+
+
+    protected $destinationPostal;
     protected $destinationCountry;
 
+    protected $packageContainer;
     protected $packageValue;
     protected $packageWeight;
     protected $packageHeight;
     protected $packageWidth;
     protected $packageLength;
+    protected $packageUOM;
+
+    public function setPackageUOM($packageUOM)
+    {
+        $this->packageUOM = $packageUOM;
+        return $this;
+    }
+
+    public function getPackageUOM()
+    {
+        return $this->packageUOM;
+    }
 
     public function setCarrier($carrier)
     {
@@ -93,16 +108,16 @@ class ShippingRateRequest
         return $this->destinationStateProvince;
     }
 
-    public function setDestinationZip($destinationZip)
+    public function setDestinationPostal($destinationPostal)
     {
-        $this->destinationZip = $destinationZip;
+        $this->destinationPostal = $destinationPostal;
 
         return $this;
     }
 
-    public function getDestinationZip()
+    public function getDestinationPostal()
     {
-        return $this->destinationZip;
+        return $this->destinationPostal;
     }
 
 
@@ -143,16 +158,27 @@ class ShippingRateRequest
         return $this->originationStateProvince;
     }
 
-    public function setOriginationZip($originationZip)
+    public function setOriginationPostal($originationPostal)
     {
-        $this->originationZip = $originationZip;
+        $this->originationPostal = $originationPostal;
 
         return $this;
     }
 
-    public function getOriginationZip()
+    public function getOriginationPostal()
     {
-        return $this->originationZip;
+        return $this->originationPostal;
+    }
+
+    public function setPackageContainer($packageContainer)
+    {
+        $this->packageContainer = $packageContainer;
+        return $this;
+    }
+
+    public function getPackageContainer()
+    {
+        return $this->packageContainer;
     }
 
     public function setPackageHeight($packageHeight)

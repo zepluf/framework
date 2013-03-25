@@ -9,22 +9,19 @@
  */
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier;
 
+use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingRateRequest;
+
 class USPS
     extends ShippingCarrierAbstract
     implements ShippingCarrierInterface
 {
-    public function getCode()
-    {
-        // TODO: Implement getCode() method.
-    }
+    protected $code = 'usps';
+    protected $gatewayUrl = 'http://production.shippingapis.com/ShippingAPI.dll';
 
     public function getInfo()
     {
         // TODO: Implement getInfo() method.
     }
-
-    protected $code = 'usps';
-    protected $gatewayUrl = 'http://production.shippingapis.com/ShippingAPI.dll';
 
     /**
      * Build RateV4 request
@@ -111,15 +108,17 @@ class USPS
         // TODO: Implement getAllowMethods() method.
     }
 
-    public function getRates($request)
+    public function getRates(ShippingRateRequest $request)
     {
         $result = $this->getQuotes($request);
 
         return $result;
     }
 
-    public function setGateway($gateway = 'http://production.shippingapis.com/ShippingAPI.dll')
+    public function setGateway($gateway)
     {
         $this->gateway = $gateway;
+
+        return $this;
     }
 }

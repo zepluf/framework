@@ -19,6 +19,8 @@ use Zepluf\Bundle\StoreBundle\Entity\Shipment as ShipmentEntity;
 use Zepluf\Bundle\StoreBundle\Entity\ShipmentItem;
 use Zepluf\Bundle\StoreBundle\Entity\OrderShipment;
 use Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature;
+use Zepluf\Bundle\StoreBundle\Entity\ShipmentRouteSegment;
+use Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus;
 use Zepluf\Bundle\StoreBundle\Event\InventoryAdjustmentEvent;
 
 /**
@@ -28,12 +30,7 @@ class Shipment
 {
     protected $entityManager;
     protected $dispatcher;
-
-    /**
-     * Shipment model
-     * @var \Zepluf\Bundle\StoreBundle\Entity\Shipment
-     */
-    protected $shipment = false;
+    protected $shipment;
 
     /**
      * Constructor
@@ -44,62 +41,116 @@ class Shipment
     {
         $this->entityManager = $entityManager;
         $this->dispatcher = $dispatcher;
-    }
-
-    protected function initShipment($data)
-    {
-        $shipment = new ShipmentEntity();
-
-        $shippedFromContactMechanism = $this->entityManager->getReference('StoreBundle:ContactMechanism', (int)$data['shippedFromContactMechanism']);
-        $shippedToContactMechanism = $this->entityManager->getReference('StoreBundle:ContactMechanism', (int)$data['shippedToContactMechanism']);
-        $shippedFromParty = $this->entityManager->getReference('StoreBundle:Party', (int)$data['shippedFromParty']);
-        $shippedToParty = $this->entityManager->getReference('StoreBundle:Party', (int)$data['shippedToParty']);
-
-        $shipment->setShippedFromContactMechanism($shippedFromContactMechanism)
-            ->setShippedToContactMechanism($shippedToContactMechanism)
-            ->setShippedFromParty($shippedFromParty)
-            ->setShippedToParty($shippedToParty);
-
-        $shipment->setIncrementId($this->generateRandomString());
-
-        $handlingInstruction = $data['handlingInstruction'];
-        $shipment->setHandlingInstructions($handlingInstruction);
-
-        return $shipment;
-    }
-
-    private function generateRandomString($length = 10)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, strlen($characters) - 1)];
-        }
-        return $randomString;
+        $this->shipment = new ShipmentEntity();
     }
 
     /**
      * Create shipment
-     * @param array $data ('shipment' => array(), 'shipment_item' => array(). ...)
+     * @param $shipmentInfo
+     * @param $items
      * @throws \Exception
      */
-    public function create($data)
+    public function create($shipmentInfo, $items)
     {
         $error = false;
 
-        //Init logic code
-        $shipment = $this->initShipment($data);
+        $this->initShipment($shipmentInfo);
+        $this->initItems($items);
 
+        /**
+         * Create Shipment Status
+         */
+        $shipmentStatus = new ShipmentStatus();
+        $shipmentStatus->setShipment($this->shipment)
+            ->setShipmentStatusType($this->entityManager->getReference('StoreBundle:ShipmentStatusType', 1));
+        $this->shipment->addShipmentStatus($shipmentStatus);
+
+        if (!$error) {
+            // save the shipment
+            $this->entityManager->persist($this->shipment);
+            $this->entityManager->getConnection()->beginTransaction(); // suspend auto-commit
+            try {
+                $this->entityManager->flush();
+                $this->entityManager->getConnection()->commit();
+            } catch (\Exception $e) {
+                $this->entityManager->getConnection()->rollback();
+                $this->entityManager->close();
+                throw $e;
+            }
+            //TODO: Create adjustment
+//            $inventoryAdjustmentEvent = new InventoryAdjustmentEvent($this->shipment->getId());
+//            $this->dispatcher->dispatch(ComponentEvents::onInventoryAdjust, $inventoryAdjustmentEvent);
+        }
+    }
+
+    /**
+     * @param mixed $shipment
+     */
+    public function createRouteSegment($shipment)
+    {
+        //  Received Id
+        if (is_int($shipment)) {
+            $shipmentEntity = $this->entityManager->getReference('StoreBundle:Shipment', $shipment);
+        } elseif ($shipment instanceof ShipmentEntity) {
+            $shipmentEntity = $shipment;
+        }
+        $routeSegment = new ShipmentRouteSegment();
+        $routeSegment->setShipment($shipmentEntity);
+
+        $this->entityManager->persist($routeSegment);
+    }
+
+    public function createShipmentStatus()
+    {
+
+    }
+
+    /**
+     * Initialize shipment info
+     * @param array $info
+     */
+    protected function initShipment($info)
+    {
+        $shippedFromContactMechanism = $this->entityManager->getReference('StoreBundle:ContactMechanism', (int)$info['shippedFromContactMechanism']);
+        $shippedToContactMechanism = $this->entityManager->getReference('StoreBundle:ContactMechanism', (int)$info['shippedToContactMechanism']);
+        $shippedFromParty = $this->entityManager->getReference('StoreBundle:Party', (int)$info['shippedFromParty']);
+        $shippedToParty = $this->entityManager->getReference('StoreBundle:Party', (int)$info['shippedToParty']);
+
+//        $shipment->setShippedFromContactMechanism($shippedFromContactMechanism)
+//            ->setShippedToContactMechanism($shippedToContactMechanism)
+//            ->setShippedFromParty($shippedFromParty)
+//            ->setShippedToParty($shippedToParty);
+
+        $this->shipment->setIncrementId($this->generateRandomString());
+        $this->shipment->setShipCost($info['shipCost']);
+        $this->shipment->setTotalWeight($info['totalWeight']);
+
+        //  Set shipment type, outgoing shipment is default
+        if (isset($info['shipmentType']) || !empty($info['shipmentType'])) {
+            $this->shipment->setShipmentType($info['shipmentType']);
+        } else {
+            $this->shipment->setShipmentType((int)ShipmentType::CUSTOMER_SHIPMENT);
+        }
+
+        $handlingInstruction = $info['handlingInstruction'];
+        $this->shipment->setHandlingInstructions($handlingInstruction);
+    }
+
+    /**
+     *  Initialize shipment items
+     * @param array $items
+     */
+    protected function initItems($items)
+    {
         //  Record items to shipment_item table
-        foreach ($data['order_items'] as $item) {
+        foreach ($items as $item) {
             $shipmentItem = new ShipmentItem();
 
             $shipmentItem
                 ->setQuantity($item['quantity'])
                 ->setDescription($item['description'])
                 ->setProduct($this->entityManager->getReference('StoreBundle:Product', (int)$item['productId']))
-                ->setShipment($shipment);
-            $this->entityManager->persist($shipmentItem);
+                ->setShipment($this->shipment);
 
             /**
              * Record features to shipment_item_feature table
@@ -109,7 +160,7 @@ class Shipment
 
                 $shipmentItemFeature
                     ->setShipmentItem($shipmentItem)
-                    ->setProductFeatureApplication($this->entityManager->getReference('StoreBundle:ProductFeatureApplicability', (int)$feature['productFeatureApplicabilityId']))
+                    ->setProductFeatureApplication($this->entityManager->getReference('StoreBundle:ProductFeatureApplication', (int)$feature['productFeatureApplicationId']))
                     ->setName($feature['name'])
                     ->setValue($feature['value']);
 
@@ -123,7 +174,6 @@ class Shipment
              * Create reference relation with order item
              */
             $shipmentOrder = new OrderShipment();
-
             $shipmentOrder->setOrderItem($this->entityManager->getReference('StoreBundle:OrderItem', (int)$item['id']))
                 ->setShipmentItem($shipmentItem)
                 ->setShippedQuantity($item['shipped']);
@@ -132,21 +182,17 @@ class Shipment
             /**
              * Add to Shipment Item list of Shipment
              */
-            $shipment->addShipmentItem($shipmentItem);
+            $this->shipment->addShipmentItem($shipmentItem);
         }
+    }
 
-        if (!$error) {
-            // save the shipment
-            $this->entityManager->persist($shipment);
-            try {
-                $this->entityManager->flush();
-
-                //TODO: Create adjustment
-                $inventoryAdjustmentEvent = new InventoryAdjustmentEvent($shipment->getId());
-                $this->dispatcher->dispatch(ComponentEvents::onInventoryAdjust, $inventoryAdjustmentEvent);
-            } catch (\Exception $e) {
-                throw $e;
-            }
+    private function generateRandomString($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
         }
+        return $randomString;
     }
 }

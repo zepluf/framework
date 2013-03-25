@@ -17,3 +17,9 @@ service:
     85 : UPS Today Express
     86 : UPS Today Express Saver
     96 : UPS WorldWide Express Freight
+
+# Access License
+access_license_number:  9CB176ED636EF975
+user_id:  vu nguyen
+password: 635Doxuanhop
+shipper_number: 06V2A1

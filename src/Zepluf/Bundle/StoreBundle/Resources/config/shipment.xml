@@ -17,6 +17,7 @@
         <!-- shipment -->
         <service id="storebundle.shipment" class="%storebundle.shipment.class%">
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="event_dispatcher"/>
         </service>
         <service id="storebundle.shipping_methods" class="%storebundle.shipping_methods.class%"/>
 
