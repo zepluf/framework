@@ -1,0 +1,73 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * CartItem
+ *
+ * @ORM\Table(name="cart_item")
+ * @ORM\Entity
+ */
+class CartItem
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     */
+    private $quantity;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="unit_price", type="decimal", nullable=false)
+     */
+    private $unitPrice;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="item_description", type="string", length=255, nullable=false)
+     */
+    private $itemDescription;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="product_uid", type="string", length=255, nullable=false)
+     */
+    private $productUid;
+
+    /**
+     * @var \Product
+     *
+     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * })
+     */
+    private $product;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
+     * })
+     */
+    private $party;
+
+
+}

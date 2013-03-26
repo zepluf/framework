@@ -2,16 +2,13 @@
 
 namespace Zepluf\Bundle\StoreBundle\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ProductCategory
- * use repository for handy tree functions
  *
- * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="product_category")
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @ORM\Entity
  */
 class ProductCategory
 {
@@ -41,7 +38,6 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer", nullable=true)
      */
     private $lft;
@@ -49,7 +45,6 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer", nullable=true)
      */
     private $rgt;
@@ -57,7 +52,6 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @Gedmo\TreeLevel
      * @ORM\Column(name="level", type="integer", nullable=true)
      */
     private $level;
@@ -65,7 +59,6 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
     private $root;
@@ -73,18 +66,7 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @Gedmo\TreeParent
-     *
-     * @ORM\ManyToOne(targetEntity="productCategory", inversedBy="children")
-     * @ORM\JoinColumn(name="parent", referencedColumnName="id", onDelete="SET NULL")
-     */
-    private $parent;
-
-    /**
-     * @var integer
-     *
-     * @ORM\OneToMany(targetEntity="productCategory", mappedBy="parent")
-     * @ORM\OrderBy({"lft" = "ASC"})
+     * @ORM\Column(name="children", type="integer", nullable=true)
      */
     private $children;
 
@@ -103,9 +85,21 @@ class ProductCategory
     private $status;
 
     /**
+     * @var \ProductCategory
+     *
+     * @ORM\ManyToOne(targetEntity="ProductCategory")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent", referencedColumnName="id")
+     * })
+     */
+    private $parent;
+
+
+
+    /**
      * Get id
      *
-     * @return integer
+     * @return integer 
      */
     public function getId()
     {
@@ -121,14 +115,14 @@ class ProductCategory
     public function setName($name)
     {
         $this->name = $name;
-
+    
         return $this;
     }
 
     /**
      * Get name
      *
-     * @return string
+     * @return string 
      */
     public function getName()
     {
@@ -144,14 +138,14 @@ class ProductCategory
     public function setDescription($description)
     {
         $this->description = $description;
-
+    
         return $this;
     }
 
     /**
      * Get description
      *
-     * @return string
+     * @return string 
      */
     public function getDescription()
     {
@@ -167,14 +161,14 @@ class ProductCategory
     public function setLft($lft)
     {
         $this->lft = $lft;
-
+    
         return $this;
     }
 
     /**
      * Get lft
      *
-     * @return integer
+     * @return integer 
      */
     public function getLft()
     {
@@ -190,14 +184,14 @@ class ProductCategory
     public function setRgt($rgt)
     {
         $this->rgt = $rgt;
-
+    
         return $this;
     }
 
     /**
      * Get rgt
      *
-     * @return integer
+     * @return integer 
      */
     public function getRgt()
     {
@@ -340,35 +334,5 @@ class ProductCategory
     public function getParent()
     {
         return $this->parent;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
-    /**
-     * Add children
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\productCategory $children
-     * @return ProductCategory
-     */
-    public function addChildren(\Zepluf\Bundle\StoreBundle\Entity\productCategory $children)
-    {
-        $this->children[] = $children;
-    
-        return $this;
-    }
-
-    /**
-     * Remove children
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\productCategory $children
-     */
-    public function removeChildren(\Zepluf\Bundle\StoreBundle\Entity\productCategory $children)
-    {
-        $this->children->removeElement($children);
     }
 }

@@ -63,16 +63,6 @@ class Payment
      */
     private $type;
 
-    /**
-     * @var \PaymentMethodType
-     *
-     * @ORM\ManyToOne(targetEntity="PaymentMethodType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="payment_method_type_id", referencedColumnName="id")
-     * })
-     */
-    private $paymentMethodType;
-
 
 
     /**
@@ -221,28 +211,5 @@ class Payment
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set paymentMethodType
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\PaymentMethodType $paymentMethodType
-     * @return Payment
-     */
-    public function setPaymentMethodType(\Zepluf\Bundle\StoreBundle\Entity\PaymentMethodType $paymentMethodType = null)
-    {
-        $this->paymentMethodType = $paymentMethodType;
-    
-        return $this;
-    }
-
-    /**
-     * Get paymentMethodType
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\PaymentMethodType 
-     */
-    public function getPaymentMethodType()
-    {
-        return $this->paymentMethodType;
     }
 }

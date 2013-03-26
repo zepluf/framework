@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Shipment
  *
  * @ORM\Table(name="shipment")
- * @ORM\Entity(repositoryClass="Zepluf\Bundle\StoreBundle\Repository\ShipmentRepository")
+ * @ORM\Entity(repositoryClass="Zepluf\Bundle\StoreBundle\Entity\ShipmentRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class Shipment

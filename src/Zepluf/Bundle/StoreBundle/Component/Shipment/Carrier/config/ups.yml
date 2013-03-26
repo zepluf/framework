@@ -1,25 +1,52 @@
-service:
-    14 : Next Day Air Early AM
-    01 : Next Day Air
-    13 : Next Day Air Saver
-    59 : 2nd Day Air AM
-    02 : 2nd Day Air
-    12 : 3 Day Select
-    03 : Ground
-    11 : Standard
-    07 : Worldwide Express
-    54 : Worldwide Express Plus
-    08 : Worldwide Expedited
-    65 : Saver
-    82 : UPS Today Standard
-    83 : UPS Today Dedicated Courier
-    84 : UPS Today Intercity
-    85 : UPS Today Express
-    86 : UPS Today Express Saver
-    96 : UPS WorldWide Express Freight
+info: 'ABC'
 
 # Access License
 access_license_number:  9CB176ED636EF975
 user_id:  vu nguyen
 password: 635Doxuanhop
 shipper_number: 06V2A1
+
+# Configuration
+negotiated: true
+container:  CP
+UOM:  LBS
+allowed_methods:
+
+data:
+    service:
+        '14' : 'Next Day Air Early AM'
+        '01' : 'Next Day Air'
+        '13' : 'Next Day Air Saver'
+        '59' : '2nd Day Air AM'
+        '02' : '2nd Day Air'
+        '12' : '3 Day Select'
+        '03' : 'Ground'
+        '11' : 'Standard'
+        '07' : 'Worldwide Express'
+        '54' : 'Worldwide Express Plus'
+        '08' : 'Worldwide Expedited'
+        '65' : 'Saver'
+        '82' : 'UPS Today Standard'
+        '83' : 'UPS Today Dedicated Courier'
+        '84' : 'UPS Today Intercity'
+        '85' : 'UPS Today Express'
+        '86' : 'UPS Today Express Saver'
+        '96' : 'UPS WorldWide Express Freight'
+    container:
+        CP  : '00' # Customer Packaging
+        UL  : '01' # UPS Letter
+        PKG : '02' # Package
+        T   : '03' # Tube
+        PAK : '04' # PAK
+        EB  : '21' # Express Box
+        25B : '24' # 25KG Box
+        10B : '25' # 10KG Box
+        PLT : '30' # Pallet
+        SEB : '2a' # Small Express Box
+        MEB : '2b' # Medium Express Box
+        LEB : '2c' # Large Express Box
+
+
+
+
+

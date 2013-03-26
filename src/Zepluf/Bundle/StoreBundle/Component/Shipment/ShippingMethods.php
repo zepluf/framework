@@ -52,14 +52,16 @@ class ShippingMethods
         if ($carrierCode) {
             // Valid carrier
             if ($carrier = $this->carriers[$carrierCode]) {
-                $result = $carrier->getRates($request);
+                $result[] = $carrier->getRates($request);
             } else {
                 throw new \Exception('Invalid carrier');
             }
         } //  All carrier
         else {
             foreach ($this->carriers as $carrier) {
-                $result[$carrier->getCode()] = $carrier->getRates($request);
+                if ($carrier->getRates($request)) {
+                    $result[$carrier->getCode()] = $carrier->getRates($request);
+                }
             }
         }
 

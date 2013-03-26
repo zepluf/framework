@@ -83,10 +83,12 @@ class Shipment
         }
     }
 
+
     /**
-     * @param mixed $shipment
+     * @param $shipment
+     * @param null $trackId
      */
-    public function createRouteSegment($shipment)
+    public function createRouteSegment($shipment, $trackId = null)
     {
         //  Received Id
         if (is_int($shipment)) {
@@ -95,7 +97,8 @@ class Shipment
             $shipmentEntity = $shipment;
         }
         $routeSegment = new ShipmentRouteSegment();
-        $routeSegment->setShipment($shipmentEntity);
+        $routeSegment->setShipment($shipmentEntity)
+            ->setTrackId($trackId);
 
         $this->entityManager->persist($routeSegment);
     }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="InventoryItem" table="inventory_item">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="featureValueIds" type="text" column="feature_value_ids" nullable="true"/>
+    <field name="serial" type="string" column="serial" length="255" nullable="true"/>
+    <field name="quantityOnhand" type="integer" column="quantity_onhand" nullable="false"/>
+    <many-to-one field="location" target-entity="Location">
+      <join-columns>
+        <join-column name="location_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="inventoryItemStatusType" target-entity="InventoryItemStatusType">
+      <join-columns>
+        <join-column name="inventory_item_status_type_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="product" target-entity="Product">
+      <join-columns>
+        <join-column name="product_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

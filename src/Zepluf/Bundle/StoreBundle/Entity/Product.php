@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Product
  *
  * @ORM\Table(name="product")
- * @ORM\Entity(repositoryClass="Zepluf\Bundle\StoreBundle\Entity\ProductRepository")
+ * @ORM\Entity
  */
 class Product
 {
@@ -114,36 +114,12 @@ class Product
     private $unitOfMeasurement;
 
     /**
-     * @var \ProductFeatureApplication
-     *
-     * @ORM\OneToMany(targetEntity="ProductFeatureApplication", mappedBy="product")
-     */
-    private $productFeatureApplication;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="ProductCategory", inversedBy="product")
-     * @ORM\JoinTable(name="product_category_classification",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="product_category_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $productCategory;
-
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->priceComponent = new \Doctrine\Common\Collections\ArrayCollection();
         $this->termType = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->productFeatureApplication = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->productCategory = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
 
@@ -405,71 +381,5 @@ class Product
     public function getUnitOfMeasurement()
     {
         return $this->unitOfMeasurement;
-    }
-
-    /**
-     * Get productFeatureApplication
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProductFeatureApplication()
-    {
-        return $this->productFeatureApplication;
-    }
-
-    /**
-     * Get productCategory
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProductCategory()
-    {
-        return $this->productCategory;
-    }
-
-    /**
-     * Add productFeatureApplication
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication
-     * @return Product
-     */
-    public function addProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication)
-    {
-        $this->productFeatureApplication[] = $productFeatureApplication;
-    
-        return $this;
-    }
-
-    /**
-     * Remove productFeatureApplication
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication
-     */
-    public function removeProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication)
-    {
-        $this->productFeatureApplication->removeElement($productFeatureApplication);
-    }
-
-    /**
-     * Add productCategory
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory
-     * @return Product
-     */
-    public function addProductCategory(\Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory)
-    {
-        $this->productCategory[] = $productCategory;
-    
-        return $this;
-    }
-
-    /**
-     * Remove productCategory
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory
-     */
-    public function removeProductCategory(\Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory)
-    {
-        $this->productCategory->removeElement($productCategory);
     }
 }

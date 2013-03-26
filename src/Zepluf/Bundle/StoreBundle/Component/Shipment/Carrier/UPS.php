@@ -22,60 +22,71 @@ class UPS
     protected $cgiGatewayUrl = 'http://www.ups.com:80/using/services/rave/qcostcgi.cgi';
     protected $request;
 
+//    public function convertValue($type, $code)
+//    {
+//        $repo = array(
+//            'service' => array('14' => 'Next Day Air Early AM',
+//                '01' => 'Next Day Air',
+//                '13' => 'Next Day Air Saver',
+//                '59' => '2nd Day Air AM',
+//                '02' => '2nd Day Air',
+//                '12' => '3 Day Select',
+//                '03' => 'Ground',
+//                '11' => 'Standard',
+//                '07' => 'Worldwide Express',
+//                '54' => 'Worldwide Express Plus',
+//                '08' => 'Worldwide Expedited',
+//                '65' => 'Saver',
+//                '82' => 'UPS Today Standard',
+//                '83' => 'UPS Today Dedicated Courier',
+//                '84' => 'UPS Today Intercity',
+//                '85' => 'UPS Today Express',
+//                '86' => 'UPS Today Express Saver',
+//                '96' => 'UPS WorldWide Express Freight'
+//            ),
+//            'container' => array(
+//                'CP' => '00', // Customer Packaging
+//                'UL' => '01', // UPS Letter
+//                'PKG' => '02', // Package
+//                'T' => '03', // Tube
+//                'PAK' => '04', // PAK
+//                'EB' => '21', // Express Box
+//                '25B' => '24', // 25KG Box
+//                '10B' => '25', // 10KG Box
+//                'PLT' => '30', // Pallet
+//                'SEB' => '2a', // Small Express Box
+//                'MEB' => '2b', // Medium Express Box
+//                'LEB' => '2c', // Large Express Box
+//            )
+//        );
+//        if (!isset($repo[$type])) {
+//            return false;
+//        } elseif ('' === $code) {
+//            return $repo[$type];
+//        }
+//
+//        if (!isset($repo[$type][$code])) {
+//            return false;
+//        } else {
+//            return $repo[$type][$code];
+//        }
+//    }
     public function convertValue($type, $code)
     {
-        $repo = array(
-            'service' => array('14' => 'Next Day Air Early AM',
-                '01' => 'Next Day Air',
-                '13' => 'Next Day Air Saver',
-                '59' => '2nd Day Air AM',
-                '02' => '2nd Day Air',
-                '12' => '3 Day Select',
-                '03' => 'Ground',
-                '11' => 'Standard',
-                '07' => 'Worldwide Express',
-                '54' => 'Worldwide Express Plus',
-                '08' => 'Worldwide Expedited',
-                '65' => 'Saver',
-                '82' => 'UPS Today Standard',
-                '83' => 'UPS Today Dedicated Courier',
-                '84' => 'UPS Today Intercity',
-                '85' => 'UPS Today Express',
-                '86' => 'UPS Today Express Saver',
-                '96' => 'UPS WorldWide Express Freight'
-            ),
-            'container' => array(
-                'CP' => '00', // Customer Packaging
-                'ULE' => '01', // UPS Letter Envelope
-                'CSP' => '02', // Customer Supplied Package
-                'UT' => '03', // UPS Tube
-                'PAK' => '04', // PAK
-                'UEB' => '21', // UPS Express Box
-                'UW25' => '24', // UPS Worldwide 25 kilo
-                'UW10' => '25', // UPS Worldwide 10 kilo
-                'PLT' => '30', // Pallet
-                'SEB' => '2a', // Small Express Box
-                'MEB' => '2b', // Medium Express Box
-                'LEB' => '2c', // Large Express Box
-            )
-        );
-        if (!isset($repo[$type])) {
+        $data = $this->getConfig('data');
+        if (!isset($data[$type])) {
             return false;
         } elseif ('' === $code) {
-            return $repo[$type];
+            return $data[$type];
         }
 
-        if (!isset($repo[$type][$code])) {
+        if (!isset($data[$type][$code])) {
             return false;
         } else {
-            return $repo[$type][$code];
+            return $data[$type][$code];
         }
     }
 
-    public function getInfo()
-    {
-        // TODO: Implement getInfo() method.
-    }
 
     public function getAllowMethods()
     {
@@ -117,21 +128,33 @@ class UPS
         if ($request->getOriginationPostal()) {
             $r['origPostal'] = $request->getOriginationPostal();
         }
-        if ($request->getOriginationPostal()) {
-            $r['destPostal'] = $request->getDestinationCountry();
+        if ($request->getDestinationCountry()) {
+            $r['destCountry'] = $request->getDestinationCountry();
         }
-        if ($request->getOriginationPostal()) {
+        if ($request->getDestinationPostal()) {
             $r['destPostal'] = $request->getDestinationPostal();
         }
+        if ($request->getDestinationCity()) {
+            $r['destCity'] = $request->getDestinationCity();
+        }
+        if ($request->getDestinationStateProvince()) {
+            $r['destRegion'] = $request->getDestinationStateProvince();
+        }
+
         if ($request->getPackageContainer()) {
             $r['packageType'] = $this->convertValue('container', $request->getPackageContainer());
+        } else {
+            $r['packageType'] = $this->convertValue('container', $this->getConfig('container'));
         }
         if ($request->getPackageWeight()) {
             $r['packageWeight'] = $request->getPackageWeight();
         }
         if ($request->getPackageUOM()) {
             $r['packageUnitOfMeasurement'] = $request->getPackageUOM();
+        } else {
+            $r['packageUnitOfMeasurement'] = $this->getConfig('UOM');
         }
+
 
         return $r;
     }
@@ -190,10 +213,10 @@ _XMLAuth_;
                 <Shipper>
 
 _XMLRequest_;
-//        if ($this->getConfig('negotiated') && ($shipperNumber = $this->getConfig('shipper_number'))) {
-//            $xmlRequest .= "<ShipperNumber>{$shipperNumber}</ShipperNumber>";
-//        }
-        $xmlRequest .= "<ShipperNumber>{$shipperNumber}</ShipperNumber>";
+
+        if ($this->getConfig('negotiated') && ($shipperNumber = $this->getConfig('shipper_number'))) {
+            $xmlRequest .= "<ShipperNumber>{$shipperNumber}</ShipperNumber>";
+        }
         //TODO: Condition for Shipper address
 
         $xmlRequest .=
@@ -207,6 +230,8 @@ _XMLRequest_;
                     <Address>
                         <PostalCode>{$request['destPostal']}</PostalCode>
                         <CountryCode>{$request['destCountry']}</CountryCode>
+                        <StateProvinceCode>{$request['destRegion']}</StateProvinceCode>
+                        <City>{$request['destCity']}</City>
                     </Address>
                 </ShipTo>
 
@@ -261,6 +286,7 @@ _XMLRequest_;
             curl_setopt($rsrcCurl, CURLOPT_POSTFIELDS, $xmlRequest);
 
             $response = curl_exec($rsrcCurl);
+
             $debugData['result'] = $response;
         } catch (\Exception $e) {
             $debugData['result'] = array('error' => $e->getMessage(), 'code' => $e->getCode());
@@ -274,36 +300,45 @@ _XMLRequest_;
     protected function parseXMLResponse(\SimpleXMLElement $response)
     {
         //TODO: Parse data
-        $costArr = array();
 
-        $negotiatedArr = $response->xpath("//RatingServiceSelectionResponse/RatedShipment/NegotiatedRates");
-        $negotiatedActive = $this->getConfig('negotiated')
-            && $this->getConfig('shipper_number')
-            && !empty($negotiatedArr);
+        $arr = $response->Response->ResponseStatusCode;
+        $success = (int)$arr[0];
 
-        foreach ($response->RatedShipment as $rate) {
-            $code = (string)$rate->Service->Code;
-            $code = $this->convertValue('service', $code);
-            if ($code === false) {
-                continue;
+        if (1 === $success) {
+            $costArr = array();
+
+            $negotiatedArr = $response->RatedShipment->NegotiatedRates;
+            $negotiatedActive = $this->getConfig('negotiated')
+                && $this->getConfig('shipper_number')
+                && !empty($negotiatedArr);
+
+            foreach ($response->RatedShipment as $rate) {
+                $code = (string)$rate->Service->Code;
+                $code = $this->convertValue('service', $code);
+
+                if ($code === false) {
+                    continue;
+                }
+                if ($negotiatedActive) {
+                    $cost = $rate->NegotiatedRates->NetSummaryCharges->GrandTotal->MonetaryValue;
+                    $currency = $rate->NegotiatedRates->NetSummaryCharges->GrandTotal->CurrencyCode;
+                } else {
+                    $cost = $rate->TotalCharges->MonetaryValue;
+                    $currency = $rate->TotalCharges->CurrencyCode;
+                }
+                $cost = (float)$cost;
+                $currency = (string)$currency;
+
+                $costArr[$code] = array('currencyCode' => $currency, 'cost' => $cost);
             }
-            if ($negotiatedActive) {
-                $cost = $rate->NegotiatedRates->NetSummaryCharges->GrandTotal->MonetaryValue;
-                $currency = $rate->NegotiatedRates->NetSummaryCharges->GrandTotal->CurrencyCode;
-            } else {
-                $cost = $rate->TotalCharges->MonetaryValue;
-                $currency = $rate->TotalCharges->CurrencyCode;
-            }
-            $cost = (float)$cost;
-            $currency = (string)$currency;
 
-            $costArr[$code] = array('currencyCode' => $currency, 'cost' => $cost);
+            $quote = new ShippingQuote($this->getCode());
+            $quote->setQuotes($costArr);
+
+            return $quote;
+        } else {
+            return false;
         }
-
-        $quote = new ShippingQuote($this->getCode());
-        $quote->setQuotes($costArr);
-
-        return $quote;
     }
 
     /**

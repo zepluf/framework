@@ -46,14 +46,14 @@ class PaymentApplication
     private $payment;
 
     /**
-     * @var \InvoiceItem
+     * @var \Invoice
      *
-     * @ORM\ManyToOne(targetEntity="InvoiceItem")
+     * @ORM\ManyToOne(targetEntity="Invoice")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="invoice_item_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
      * })
      */
-    private $invoiceItem;
+    private $invoice;
 
 
 
@@ -137,25 +137,25 @@ class PaymentApplication
     }
 
     /**
-     * Set invoiceItem
+     * Set invoice
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItem
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice
      * @return PaymentApplication
      */
-    public function setInvoiceItem(\Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItem = null)
+    public function setInvoice(\Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice = null)
     {
-        $this->invoiceItem = $invoiceItem;
+        $this->invoice = $invoice;
     
         return $this;
     }
 
     /**
-     * Get invoiceItem
+     * Get invoice
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\InvoiceItem 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Invoice 
      */
-    public function getInvoiceItem()
+    public function getInvoice()
     {
-        return $this->invoiceItem;
+        return $this->invoice;
     }
 }

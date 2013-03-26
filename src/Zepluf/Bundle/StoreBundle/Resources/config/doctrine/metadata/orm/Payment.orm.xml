@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Payment" table="payment">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="sequenceId" type="string" column="sequence_id" length="255" nullable="true"/>
+    <field name="effectiveDate" type="datetime" column="effective_date" nullable="false"/>
+    <field name="referenceNumber" type="string" column="reference_number" length="255" nullable="true"/>
+    <field name="amount" type="decimal" column="amount" nullable="true"/>
+    <field name="comment" type="string" column="comment" length="255" nullable="true"/>
+    <field name="type" type="boolean" column="type" nullable="false"/>
+  </entity>
+</doctrine-mapping>

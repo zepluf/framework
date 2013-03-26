@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="ShipmentRouteSegment" table="shipment_route_segment">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="estimatedStartDate" type="datetime" column="estimated_start_date" nullable="true"/>
+    <field name="estimatedArrivalDate" type="datetime" column="estimated_arrival_date" nullable="true"/>
+    <field name="actualStartDate" type="datetime" column="actual_start_date" nullable="true"/>
+    <field name="actualArrivalDate" type="datetime" column="actual_arrival_date" nullable="true"/>
+    <field name="trackId" type="string" column="track_id" length="255" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <many-to-one field="shipment" target-entity="Shipment">
+      <join-columns>
+        <join-column name="shipment_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="carrier" target-entity="Carrier">
+      <join-columns>
+        <join-column name="carrier_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

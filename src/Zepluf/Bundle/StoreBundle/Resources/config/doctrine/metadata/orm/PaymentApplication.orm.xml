@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="PaymentApplication" table="payment_application">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="sequenceId" type="string" column="sequence_id" length="255" nullable="true"/>
+    <field name="amountApplied" type="decimal" column="amount_applied" nullable="false"/>
+    <many-to-one field="invoice" target-entity="Invoice">
+      <join-columns>
+        <join-column name="invoice_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="payment" target-entity="Payment">
+      <join-columns>
+        <join-column name="payment_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

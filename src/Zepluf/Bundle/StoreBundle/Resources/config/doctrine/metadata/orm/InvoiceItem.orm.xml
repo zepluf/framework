@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="InvoiceItem" table="invoice_item">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="quantity" type="integer" column="quantity" nullable="false"/>
+    <field name="amount" type="decimal" column="amount" nullable="false"/>
+    <field name="itemDescription" type="string" column="item_description" length="255" nullable="true"/>
+    <field name="type" type="boolean" column="type" nullable="true"/>
+    <field name="isTaxable" type="boolean" column="is_taxable" nullable="false"/>
+    <many-to-one field="inventoryItem" target-entity="InventoryItem">
+      <join-columns>
+        <join-column name="inventory_item_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="invoiceItemType" target-entity="InvoiceItemType">
+      <join-columns>
+        <join-column name="invoice_item_type_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="adjustmentType" target-entity="AdjustmentType">
+      <join-columns>
+        <join-column name="adjustment_type_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="invoice" target-entity="Invoice">
+      <join-columns>
+        <join-column name="invoice_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

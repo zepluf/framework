@@ -21,6 +21,11 @@ abstract class ShippingCarrierAbstract
         return $this->code;
     }
 
+    public function getInfo()
+    {
+        return $this->getConfig('info');
+    }
+
     public function isAvailable()
     {
         return true;
@@ -28,8 +33,8 @@ abstract class ShippingCarrierAbstract
 
     public function getConfig($param)
     {
-        $yaml = new Parser();
-        $value = $yaml->parse(file_get_contents(__DIR__ . '/config/' . $this->getCode() . '.yml'));
+        $parser = new Parser();
+        $value = $parser->parse(file_get_contents(__DIR__ . '/config/' . $this->getCode() . '.yml'));
 
         if (isset($value[$param])) {
             return $value[$param];

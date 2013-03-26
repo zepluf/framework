@@ -70,8 +70,12 @@ class PriceComponent
      */
     private $handler;
 
-    /** @ORM\Column(type="array") */
-    private $settings = array();
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="settings", type="text", nullable=true)
+     */
+    private $settings;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -287,6 +291,29 @@ class PriceComponent
     }
 
     /**
+     * Set settings
+     *
+     * @param string $settings
+     * @return PriceComponent
+     */
+    public function setSettings($settings)
+    {
+        $this->settings = $settings;
+    
+        return $this;
+    }
+
+    /**
+     * Get settings
+     *
+     * @return string 
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
      * Add productFeatureApplication
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication
@@ -361,62 +388,17 @@ class PriceComponent
     public function setUnitOfMeasurement(\Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement = null)
     {
         $this->unitOfMeasurement = $unitOfMeasurement;
-
+    
         return $this;
     }
 
     /**
      * Get unitOfMeasurement
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement
+     * @return \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement 
      */
     public function getUnitOfMeasurement()
     {
         return $this->unitOfMeasurement;
-    }
-
-    /**
-     * Set setting
-     *
-     * @param $name
-     * @param $value
-     */
-    public function setSetting($name, $value)
-    {
-        $this->settings[$name] = $value;
-    }
-
-    /**
-     * Get setting
-     *
-     * @param $name
-     * @return mixed
-     */
-    public function getSetting($name)
-    {
-        return $this->settings[$name];
-    }
-
-    /**
-     * Get settings
-     *
-     * @return array
-     */
-    public function getSettings()
-    {
-        return $this->settings;
-    }
-
-    /**
-     * Set settings
-     *
-     * @param array $settings
-     * @return PriceComponent
-     */
-    public function setSettings($settings)
-    {
-        $this->settings = $settings;
-    
-        return $this;
     }
 }

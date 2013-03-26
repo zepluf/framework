@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="ProductFeatureApplication" table="product_feature_application">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="type" type="integer" column="type" nullable="true"/>
+    <field name="fromDate" type="datetime" column="from_date" nullable="true"/>
+    <field name="throughDate" type="datetime" column="through_date" nullable="true"/>
+    <many-to-one field="productFeatureValue" target-entity="ProductFeatureValue">
+      <join-columns>
+        <join-column name="product_feature_value_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="product" target-entity="Product">
+      <join-columns>
+        <join-column name="product_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="priceComponent" target-entity="PriceComponent" mapped-by="productFeatureApplication"/>
+  </entity>
+</doctrine-mapping>

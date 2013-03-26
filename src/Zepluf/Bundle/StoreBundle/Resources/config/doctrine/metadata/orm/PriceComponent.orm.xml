@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="PriceComponent" table="price_component">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fromDate" type="datetime" column="from_date" nullable="true"/>
+    <field name="throughDate" type="datetime" column="through_date" nullable="true"/>
+    <field name="name" type="string" column="name" length="255" nullable="false"/>
+    <field name="value" type="decimal" column="value" nullable="false"/>
+    <field name="tag" type="string" column="tag" length="255" nullable="false"/>
+    <field name="comment" type="string" column="comment" length="255" nullable="true"/>
+    <field name="handler" type="string" column="handler" length="255" nullable="false"/>
+    <field name="settings" type="text" column="settings" nullable="true"/>
+    <many-to-one field="unitOfMeasurement" target-entity="UnitOfMeasurement">
+      <join-columns>
+        <join-column name="unit_of_measurement_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="product" target-entity="Product" mapped-by="priceComponent"/>
+    <many-to-many field="productFeatureApplication" target-entity="ProductFeatureApplication" inversed-by="priceComponent">
+      <join-table name="product_feature_application_price_component">
+        <join-columns>
+          <join-column name="price_component_id" referenced-column-name="id"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="product_feature_application_id" referenced-column-name="id"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+  </entity>
+</doctrine-mapping>
