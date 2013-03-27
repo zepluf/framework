@@ -26,4 +26,9 @@ class ShipmentController extends Controller
     {
         $shipment = $this->get('storebundle.shipment');
     }
+
+    public function abcAction(Request $request)
+    {
+        return $this->render('StoreBundle::a.html.php');
+    }
 }

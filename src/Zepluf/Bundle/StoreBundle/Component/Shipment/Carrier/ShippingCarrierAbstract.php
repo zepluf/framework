@@ -15,10 +15,21 @@ use Symfony\Component\Yaml\Parser;
 abstract class ShippingCarrierAbstract
 {
     protected $code;
+    protected $config;
 
     public function getCode()
     {
         return $this->code;
+    }
+
+    function __construct()
+    {
+        $yamlFile = __DIR__ . '/config/' . $this->getCode() . '.yml';
+
+        if (file_exists($yamlFile)) {
+            $yaml = new Parser();
+            $this->config = $yaml->parse(file_get_contents($yamlFile));
+        }
     }
 
     public function getInfo()
@@ -33,11 +44,10 @@ abstract class ShippingCarrierAbstract
 
     public function getConfig($param)
     {
-        $parser = new Parser();
-        $value = $parser->parse(file_get_contents(__DIR__ . '/config/' . $this->getCode() . '.yml'));
-
-        if (isset($value[$param])) {
-            return $value[$param];
+        if (null === $param) {
+            return $this->config;
+        } else if (isset($this->config[$param])) {
+            return $this->config[$param];
         } else {
             return false;
         }

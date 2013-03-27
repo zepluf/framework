@@ -38,6 +38,7 @@
         <parameter key="storebundle.cache.class">Zepluf\Bundle\StoreBundle\Cache\Cache</parameter>
         <parameter key="storebundle.cache_warmer.settings.class">Zepluf\Bundle\StoreBundle\CacheWarmer\SettingsCacheWarmer</parameter>
         <parameter key="storebundle.core_listener.class">Zepluf\Bundle\StoreBundle\EventListener\CoreListener</parameter>
+        <parameter key="storebundle.request_listener.class">Zepluf\Bundle\StoreBundle\EventListener\RequestListener</parameter>
 
         <!-- zencart -->
         <parameter key="storebundle.zencart.admin.class">Zepluf\Bundle\StoreBundle\Zencart\Admin</parameter>
@@ -51,6 +52,9 @@
     </parameters>
 
     <services>
+        <service id="storebundle.request_listener" class="%storebundle.request_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.request"/>
+        </service>
 
         <service id="storebundle.asset_finder" class="%storebundle.asset_finder.class%">
             <argument type="service" id="kernel" />

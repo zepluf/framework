@@ -23,10 +23,9 @@ class ShippingRateRequest
 
     protected $destinationCity;
     protected $destinationStateProvince;
-
-
     protected $destinationPostal;
     protected $destinationCountry;
+
 
     protected $packageContainer;
     protected $packageValue;

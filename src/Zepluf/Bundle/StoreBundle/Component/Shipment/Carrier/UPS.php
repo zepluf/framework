@@ -12,6 +12,7 @@ namespace Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier;
 use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingQuote;
 use Zepluf\Bundle\StoreBundle\Component\Shipment\ShippingRateRequest;
 
+
 class UPS
     extends ShippingCarrierAbstract
     implements ShippingCarrierInterface
@@ -128,6 +129,12 @@ class UPS
         if ($request->getOriginationPostal()) {
             $r['origPostal'] = $request->getOriginationPostal();
         }
+        if ($request->getOriginationCity()) {
+            $r['origCity'] = $request->getOriginationCity();
+        }
+        if ($request->getOriginationStateProvince()) {
+            $r['origRegion'] = $request->getOriginationStateProvince();
+        }
         if ($request->getDestinationCountry()) {
             $r['destCountry'] = $request->getDestinationCountry();
         }
@@ -222,8 +229,10 @@ _XMLRequest_;
         $xmlRequest .=
             <<<_XMLRequest_
                     <Address>
-                      <PostalCode>90002</PostalCode>
-                      <CountryCode>US</CountryCode>
+                      <PostalCode>{$request['origPostal']}</PostalCode>
+                        <CountryCode>{$request['origCountry']}</CountryCode>
+                        <StateProvinceCode>{$request['origRegion']}</StateProvinceCode>
+                        <City>{$request['origCity']}</City>
                     </Address>
                 </Shipper>
                 <ShipTo>
@@ -239,6 +248,8 @@ _XMLRequest_;
                     <Address>
                         <PostalCode>{$request['origPostal']}</PostalCode>
                         <CountryCode>{$request['origCountry']}</CountryCode>
+                        <StateProvinceCode>{$request['origRegion']}</StateProvinceCode>
+                        <City>{$request['origCity']}</City>
     			    </Address>
                 </ShipFrom>
 _XMLRequest_;
