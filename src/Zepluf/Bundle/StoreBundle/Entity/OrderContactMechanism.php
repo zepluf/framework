@@ -25,18 +25,6 @@ class OrderContactMechanism
     private $contactMechanism;
 
     /**
-     * @var \Order
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Order")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
-     * })
-     */
-    private $order;
-
-    /**
      * @var \ContactMechanismPurposeType
      *
      * @ORM\Id
@@ -47,6 +35,18 @@ class OrderContactMechanism
      * })
      */
     private $contactMechanismPurposeType;
+
+    /**
+     * @var \Order
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Order")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     * })
+     */
+    private $order;
 
 
 
@@ -74,29 +74,6 @@ class OrderContactMechanism
     }
 
     /**
-     * Set order
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Order $order
-     * @return OrderContactMechanism
-     */
-    public function setOrder(\Zepluf\Bundle\StoreBundle\Entity\Order $order)
-    {
-        $this->order = $order;
-    
-        return $this;
-    }
-
-    /**
-     * Get order
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Order 
-     */
-    public function getOrder()
-    {
-        return $this->order;
-    }
-
-    /**
      * Set contactMechanismPurposeType
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanismPurposeType $contactMechanismPurposeType
@@ -117,5 +94,28 @@ class OrderContactMechanism
     public function getContactMechanismPurposeType()
     {
         return $this->contactMechanismPurposeType;
+    }
+
+    /**
+     * Set order
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Order $order
+     * @return OrderContactMechanism
+     */
+    public function setOrder(\Zepluf\Bundle\StoreBundle\Entity\Order $order)
+    {
+        $this->order = $order;
+    
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Order 
+     */
+    public function getOrder()
+    {
+        return $this->order;
     }
 }

@@ -10,118 +10,281 @@
 
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\ConnectionException;
+use Doctrine\ORM\ORMException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+
+use Zepluf\Bundle\StoreBundle\ComponentEvents;
 use Zepluf\Bundle\StoreBundle\Entity\Shipment as ShipmentEntity;
 use Zepluf\Bundle\StoreBundle\Entity\ShipmentItem;
-use Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\ShippingMethodInterface;
+use Zepluf\Bundle\StoreBundle\Entity\OrderShipment;
+use Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature;
+use Zepluf\Bundle\StoreBundle\Entity\ShipmentRouteSegment;
+use Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus;
+use Zepluf\Bundle\StoreBundle\Entity\ShipmentStatusType;
+
+use Zepluf\Bundle\StoreBundle\Event\InventoryAdjustmentEvent;
+use Zepluf\Bundle\StoreBundle\Events\InventoryEvents;
+
 
 /**
- *
+ *  Shipment Component Class
  */
 class Shipment
 {
     protected $entityManager;
-
-
-    /**
-     * Shipment model
-     * @var \Zepluf\Bundle\StoreBundle\Entity\Shipment
-     */
-    protected $shipment = false;
+    protected $dispatcher;
+    protected $shipment;
 
     /**
      * Constructor
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param EntityManager $entityManager
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function __construct($entityManager)
+    public function __construct(EntityManager $entityManager, EventDispatcherInterface $dispatcher)
     {
         $this->entityManager = $entityManager;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
-     * @param array $data ('shipment' => array(), 'shipment_item' => array(). ...)
+     * Set Shipment
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Shipment $shipment
+     * @return $this
+     */
+    public function setShipment($shipment)
+    {
+        $this->shipment = $shipment;
+
+        return $this;
+    }
+
+    /**
+     * Get Shipment
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Shipment
+     */
+    public function getShipment()
+    {
+        return $this->shipment;
+    }
+
+    /**
+     * Creates shipment
+     * @param $shipmentInfo
+     * @param $items
+     * @return bool|string
      * @throws \Exception
      */
-    public function create($data)
+    public function create($shipmentInfo, $items)
     {
         $error = false;
+        $this->shipment = new ShipmentEntity();
 
-        //Init logic code
-        $shipment = new ShipmentEntity();
-        // set the shipment timestamp
-        $shipment->setCreatedAt(new \DateTime());
-        $shipment->setUpdatedAt(new \DateTime());
+        $this->initShipment($shipmentInfo);
+        $this->initItems($items);
 
-        //If ship from address is empty, it's shopkeeper contact by default
-        if (isset($data['ShippedFromContactMechanism'])) {
-            $shipment->setShippedFromContactMechanism($data['ship_from']);
-        }
-        if (isset($data['ship_from'])) {
-            $shipment->setShippedToContactMechanism($data['ship_to']);
-        }
-
-
-        //set Shipment Item
-        foreach ($data['items'] as $item) {
-            $shipmentItem = new ShipmentItem();
-
-            //logical code to set info for ShipmentItem
-
-            $shipmentItem->setShipment($shipment);
-            $shipment->addShipmentItem($shipmentItem);
-        }
-
+        /**
+         * Create Shipment Status
+         */
         if (!$error) {
-            $this->shipment = $shipment;
-        }
-
-        if ($this->shipment) {
-            // persists the shipment
+            // save the shipment
             $this->entityManager->persist($this->shipment);
+            $this->entityManager->getConnection()->beginTransaction(); // suspend auto-commit
             try {
                 $this->entityManager->flush();
+                $this->entityManager->getConnection()->commit();
             } catch (\Exception $e) {
+                $this->entityManager->getConnection()->rollback();
+                $this->entityManager->close();
                 throw $e;
             }
+            //TODO: Create adjustment
+            $inventoryAdjustmentEvent = new InventoryAdjustmentEvent($this->shipment->getId());
+            $this->dispatcher->dispatch(InventoryEvents::onInventoryAdjust, $inventoryAdjustmentEvent);
+
+            return $this->shipment->getIncrementId();
+        } else {
+            return false;
         }
-
-
     }
 
     /**
-     * Initialize shipment model
-     * @param $data
+     * Creates a shipment route segment
+     * @param $shipment
+     * @param null $trackId
+     * @param bool $flush
+     * @return ShipmentRouteSegment
+     * @throws \Doctrine\DBAL\ConnectionException|\Exception
+     * @throws \Doctrine\ORM\ORMException|\Exception
      */
-    protected function initShipment($data)
+    public function createRouteSegment($shipment, $trackId = null, $flush = true)
     {
-        $error = false;
+        //  Received Id
+        try {
+            if (is_int($shipment)) {
+                $shipmentEntity = $this->entityManager->getReference('StoreBundle:Shipment', $shipment);
+            } elseif ($shipment instanceof ShipmentEntity) {
+                $shipmentEntity = $shipment;
+            }
+            $routeSegment = new ShipmentRouteSegment();
+            $routeSegment->setShipment($shipmentEntity)
+                ->setTrackId($trackId);
 
-        //Init logic code
-        $shipment = new ShipmentEntity();
-        // set the shipment timestamp
-        $shipment->setCreatedAt(new \DateTime());
-        $shipment->setUpdatedAt(new \DateTime());
-
-        //If ship from address is empty, it's shopkeeper contact by default
-        if (isset($data['ShippedFromContactMechanism'])) {
-            $shipment->setShippedFromContactMechanism($data['ship_from']);
+            if ($flush) {
+                $this->entityManager->persist($this->$routeSegment);
+                $this->entityManager->getConnection()->beginTransaction(); // suspend auto-commit
+                $this->entityManager->flush();
+                $this->entityManager->getConnection()->commit();
+            } else {
+                return $routeSegment;
+            }
+        } catch (ORMException $e) {
+            throw $e;
         }
-        if (isset($data['ship_from'])) {
-            $shipment->setShippedToContactMechanism($data['ship_to']);
+        catch (ConnectionException $e) {
+            $this->entityManager->getConnection()->rollback();
+            $this->entityManager->close();
+            throw $e;
+        }
+    }
+
+    /**
+     * Creates a shipment status
+     * @param $shipment
+     * @param int $statusType
+     * @param bool $flush
+     * @return ShipmentStatus
+     * @throws \Doctrine\DBAL\ConnectionException|\Exception
+     * @throws \Doctrine\ORM\ORMException|\Exception
+     */
+    public function createShipmentStatus($shipment, $statusType = 1, $flush = true)
+    {
+        try {
+            if (is_int($shipment)) {
+                $shipmentEntity = $this->entityManager->getReference('StoreBundle:Shipment', $shipment);
+            } elseif ($shipment instanceof ShipmentEntity) {
+                $shipmentEntity = $shipment;
+            }
+
+            if (is_int($statusType)) {
+                $shipmentEntity = $this->entityManager->getReference('StoreBundle:Shipment', $statusType);
+            } elseif ($statusType instanceof ShipmentStatusType) {
+                $shipmentStatusType = $statusType;
+            }
+
+            $shipmentStatus = new ShipmentStatus();
+            $shipmentStatus->setShipment($shipmentEntity)
+                ->setShipmentStatusType($shipmentStatusType);
+
+            if ($flush) {
+                $this->entityManager->persist($this->$shipmentStatus);
+                $this->entityManager->getConnection()->beginTransaction(); // suspend auto-commit
+                $this->entityManager->flush();
+                $this->entityManager->getConnection()->commit();
+            } else {
+                return $shipmentStatus;
+            }
+        } catch (ORMException $e) {
+            throw $e;
+        }
+        catch (ConnectionException $e) {
+            $this->entityManager->getConnection()->rollback();
+            $this->entityManager->close();
+            throw $e;
+        }
+    }
+
+    /**
+     * Initialize shipment info
+     * @param array $info
+     */
+    protected function initShipment($info)
+    {
+        $shippedFromContactMechanism = $this->entityManager->getReference('StoreBundle:ContactMechanism', (int)$info['shippedFromContactMechanism']);
+        $shippedToContactMechanism = $this->entityManager->getReference('StoreBundle:ContactMechanism', (int)$info['shippedToContactMechanism']);
+        $shippedFromParty = $this->entityManager->getReference('StoreBundle:Party', (int)$info['shippedFromParty']);
+        $shippedToParty = $this->entityManager->getReference('StoreBundle:Party', (int)$info['shippedToParty']);
+
+//        $this->shipment->setShippedFromContactMechanism($shippedFromContactMechanism)
+//            ->setShippedToContactMechanism($shippedToContactMechanism)
+//            ->setShippedFromParty($shippedFromParty)
+//            ->setShippedToParty($shippedToParty);
+
+        $this->shipment->setIncrementId($this->generateRandomString());
+        $this->shipment->setShipCost($info['shipCost']);
+        $this->shipment->setTotalWeight($info['totalWeight']);
+
+        //  Set shipment type, outgoing shipment is default
+        if (isset($info['shipmentType']) || !empty($info['shipmentType'])) {
+            $this->shipment->setShipmentType($info['shipmentType']);
+        } else {
+            $this->shipment->setShipmentType((int)ShipmentType::CUSTOMER_SHIPMENT);
         }
 
+        $handlingInstruction = $info['handlingInstruction'];
+        $this->shipment->setHandlingInstructions($handlingInstruction);
 
-        //set Shipment Item
-        foreach ($data['items'] as $item) {
+//        $shipmentStatus = $this->createShipmentStatus($this->shipment, null, false);
+    }
+
+    /**
+     *  Initialize shipment items
+     * @param array $items
+     */
+    protected function initItems($items)
+    {
+        //  Record items to shipment_item table
+        foreach ($items as $item) {
             $shipmentItem = new ShipmentItem();
 
-            //logical code to set info for ShipmentItem
+            $shipmentItem
+                ->setQuantity($item['quantity'])
+                ->setDescription($item['description'])
+                ->setProduct($this->entityManager->getReference('StoreBundle:Product', (int)$item['productId']))
+                ->setShipment($this->shipment);
 
-            $shipmentItem->setShipment($shipment);
-            $shipment->addShipmentItem($shipmentItem);
-        }
+            /**
+             * Record features to shipment_item_feature table
+             */
+            foreach ($item['features'] as $feature) {
+                $shipmentItemFeature = new ShipmentItemFeature();
 
-        if (!$error) {
-            $this->shipment = $shipment;
+                $shipmentItemFeature
+                    ->setShipmentItem($shipmentItem)
+                    ->setProductFeatureApplication($this->entityManager->getReference('StoreBundle:ProductFeatureApplication', (int)$feature['productFeatureApplicationId']))
+                    ->setName($feature['name'])
+                    ->setValue($feature['value']);
+
+                $this->entityManager->persist($shipmentItemFeature);
+
+                //Add to Features list of Shipment item
+                $shipmentItem->addFeature($shipmentItemFeature);
+            }
+
+            /**
+             * Create reference relation with order item
+             */
+            $shipmentOrder = new OrderShipment();
+            $shipmentOrder->setOrderItem($this->entityManager->getReference('StoreBundle:OrderItem', (int)$item['id']))
+                ->setShipmentItem($shipmentItem)
+                ->setShippedQuantity($item['shipped']);
+            $this->entityManager->persist($shipmentOrder);
+
+            /**
+             * Add to Shipment Item list of Shipment
+             */
+            $this->shipment->addShipmentItem($shipmentItem);
         }
+    }
+
+    private function generateRandomString($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $randomString;
     }
 }

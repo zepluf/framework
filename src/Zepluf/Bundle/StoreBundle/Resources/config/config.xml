@@ -7,6 +7,8 @@
     <parameters>
 
         <!-- configs -->
+        <parameter key="storebundle.config.class">Zepluf\Bundle\StoreBundle\Utility\Config</parameter>
+        <parameter key="store_config.redirectRouteAfterModify">store_config_settings_modify</parameter>
         <parameter key="storebundle.cache.status">true</parameter>
         <parameter key="http_kernel.class">Zepluf\Bundle\StoreBundle\HttpKernel</parameter>
         <parameter key="storebundle.asset_finder.class">Zepluf\Bundle\StoreBundle\AssetFinder</parameter>
@@ -38,6 +40,7 @@
         <parameter key="storebundle.cache.class">Zepluf\Bundle\StoreBundle\Cache\Cache</parameter>
         <parameter key="storebundle.cache_warmer.settings.class">Zepluf\Bundle\StoreBundle\CacheWarmer\SettingsCacheWarmer</parameter>
         <parameter key="storebundle.core_listener.class">Zepluf\Bundle\StoreBundle\EventListener\CoreListener</parameter>
+        <parameter key="storebundle.request_listener.class">Zepluf\Bundle\StoreBundle\EventListener\RequestListener</parameter>
 
         <!-- zencart -->
         <parameter key="storebundle.zencart.admin.class">Zepluf\Bundle\StoreBundle\Zencart\Admin</parameter>
@@ -48,22 +51,15 @@
         <parameter key="storebundle.array_storage_handler.class">Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\ArrayStorageHandler</parameter>
         <parameter key="storebundle.session_storage_handler.class">Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\SessionStorageHandler</parameter>
 
-        <!-- shipment -->
-        <parameter key="storebundle.shipment.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Shipment</parameter>
-        <!-- carrier -->
-        <parameter key="storebundle.shipment.freeshipping.class">Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\FreeShipping</parameter>
-
-        <!-- payment -->
-        <parameter key="storebundle.payment.class">Zepluf\Bundle\StoreBundle\Component\Payment\Payment</parameter>
-        <parameter key="storebundle.payment_factory.class">Zepluf\Bundle\StoreBundle\Component\Payment\PaymentFactory</parameter>
-        <parameter key="storebundle.payment_array_storage_handler.class">Zepluf\Bundle\StoreBundle\Component\Payment\StorageHandler\PaymentArrayStorageHandler</parameter>
-
     </parameters>
 
     <services>
+        <service id="storebundle.request_listener" class="%storebundle.request_listener.class%">
+            <tag name="kernel.event_listener" event="kernel.request"/>
+        </service>
 
         <service id="storebundle.asset_finder" class="%storebundle.asset_finder.class%">
-            <argument type="service" id="kernel"/>
+            <argument type="service" id="kernel" />
         </service>
         <!-- settings -->
         <service id="settings" class="%storebundle.settings.class%">
@@ -74,10 +70,10 @@
         </service>
 
         <service id="plugin" class="%storebundle.plugin.class%">
-            <argument type="service" id="settings"/>
+            <argument type="service" id="settings" />
             <argument>%sys%</argument>
-            <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="environment"/>
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="environment" />
             <argument>%kernel.root_dir%</argument>
             <argument>%plugins.root_dir%</argument>
         </service>
@@ -85,93 +81,98 @@
         <service id="environment" class="%storebundle.environment.class%"></service>
 
         <service id="logs" class="%storebundle.logs.class%">
-            <argument type="service" id="logger"/>
-            <argument type="service" id="environment"/>
+            <argument type="service" id="logger" />
+            <argument type="service" id="environment" />
         </service>
 
         <service id="database_patcher" class="%storebundle.database_patcher.class%"></service>
 
         <service id="storebundle.controller_listener" class="%storebundle.controller_listener.class%">
-            <tag name="kernel.event_subscriber"/>
+            <tag name="kernel.event_subscriber" />
         </service>
 
         <!-- templating -->
         <service id="storebundle.templating.template_loader" class="%storebundle.templating.template_loader.class%">
-            <argument type="service" id="kernel"/>
+            <argument type="service" id="kernel" />
         </service>
 
         <service id="storebundle.templating.bundle_loader" class="%storebundle.templating.bundle_loader.class%">
-            <argument type="service" id="kernel"/>
+            <argument type="service" id="kernel" />
         </service>
 
         <service id="storebundle.templating.plugin_loader" class="%storebundle.templating.plugin_loader.class%">
-            <argument type="service" id="kernel"/>
+            <argument type="service" id="kernel" />
         </service>
         <!--
    <service id="storebundle.templating.twig_bundle_loader" class="%storebundle.templating.twig_bundle_loader.class%">
        <argument type="service" id="templating.name_parser" />
-       <tag name="twig.loader" alias="twig_bundle_loader"/>
+       <tag name="twig.loader" alias="twig_bundle_loader" />
    </service>   -->
 
         <service id="view" class="%storebundle.view.class%">
-            <argument type="service" id="templating"/>
-            <argument type="service" id="templating.engine.php"/>
-            <argument type="service" id="templating.name_parser"/>
-            <argument type="service" id="templating.loader"/>
+            <argument type="service" id="templating" />
+            <argument type="service" id="templating.engine.php" />
+            <argument type="service" id="templating.name_parser" />
+            <argument type="service" id="templating.loader" />
         </service>
 
         <!-- templating helpers -->
         <service id="templating.helper.holders" class="%storebundle.holders_helper%">
-            <argument type="service" id="event_dispatcher"/>
-            <tag name="templating.helper" alias="holders"/>
+            <argument type="service" id="event_dispatcher" />
+            <tag name="templating.helper" alias="holders" />
         </service>
 
         <service id="templating.helper.settings" class="%storebundle.settings_helper%">
-            <argument type="service" id="settings"/>
-            <tag name="templating.helper" alias="settings"/>
+            <argument type="service" id="settings" />
+            <tag name="templating.helper" alias="settings" />
         </service>
 
         <!-- utility services -->
         <service id="utility.collection" class="%storebundle.utility.collection.class%"></service>
         <service id="utility.database_result" class="%storebundle.utility.database_result.class%"></service>
         <service id="utility.file" class="%storebundle.utility.file.class%">
-            <argument type="service" id="utility.string"/>
+            <argument type="service" id="utility.string" />
         </service>
         <service id="utility.string" class="%storebundle.utility.string.class%"></service>
         <service id="utility.uri" class="%storebundle.utility.uri.class%"></service>
+        <service id="store_config" class="%storebundle.config.class.class%">
+            <call method="setEntityManager">
+                <argument type="service" id="doctrine.orm.default_entity_manager" />
+            </call>
+        </service>
 
         <!-- routing -->
         <service id="plugin_route_loader" class="%storebundle.plugin_route_loader.class%" public="false">
             <argument>%sys%</argument>
-            <argument type="service" id="settings"/>
-            <tag name="routing.loader"/>
+            <argument type="service" id="settings" />
+            <tag name="routing.loader" />
         </service>
 
         <!-- doctrine listener -->
-        <service id="storebundle.tblprefix_subscriber" class="%storebundle.table_prefix_subscriber.class%">
+        <!-- <service id="storebundle.tblprefix_subscriber" class="%storebundle.table_prefix_subscriber.class%">
             <argument>%table_prefix%</argument>
-            <tag name="doctrine.event_subscriber"/>
-        </service>
+            <tag name="doctrine.event_subscriber" />
+        </service> -->
 
         <!-- loggers -->
         <service id="storebundle.logger.zencart_handler" class="%storebundle.logger.zencart_handler.class%">
-            <argument type="service" id="environment"/>
+            <argument type="service" id="environment" />
         </service>
 
         <!-- cache -->
         <service id="storebundle.cache" class="%storebundle.cache.class%">
             <argument>%storebundle.cache.status%</argument>
-            <argument type="service" id="utility.file"/>
+            <argument type="service" id="utility.file" />
             <argument>%kernel.cache_dir%</argument>
         </service>
 
         <!-- cache warmers -->
         <service id="storebundle.cache_warmer.settings" class="%storebundle.cache_warmer.settings.class%"
                  public="false">
-            <tag name="kernel.cache_warmer" priority="20"/>
+            <tag name="kernel.cache_warmer" priority="20" />
             <argument>%sys%</argument>
-            <argument type="service" id="settings"/>
-            <argument type="service" id="plugin"/>
+            <argument type="service" id="settings" />
+            <argument type="service" id="plugin" />
             <argument>%kernel.environment%</argument>
             <argument>%kernel.config_dir%</argument>
             <argument>%plugins.root_dir%</argument>
@@ -181,13 +182,13 @@
 
         <!-- listeners -->
         <service id="storebundle.core_listener" class="%storebundle.core_listener.class%">
-            <argument type="service" id="service_container"/>
-            <tag name="kernel.event_subscriber"/>
+            <argument type="service" id="service_container" />
+            <tag name="kernel.event_subscriber" />
         </service>
 
         <!-- zencart -->
         <service id="storebundle.zencart.admin" class="%storebundle.zencart.admin.class%">
-            <argument type="service" id="settings"/>
+            <argument type="service" id="settings" />
         </service>
 
         <!-- cart -->
@@ -196,6 +197,7 @@
             <argument type="service" id="session"/>
         </service>
         <service id="storebundle.cart_factory" class="%storebundle.cart_factory.class%"/>
+
         <service id="storebundle.cart" class="%storebundle.cart.class%"
                  factory-service="storebundle.cart_factory"
                  factory-method="get"
@@ -204,25 +206,5 @@
             <argument type="service" id="storebundle.session_storage_handler"/>
         </service>
 
-        <!-- shipment -->
-        <service id="storebundle.shipment" class="%storebundle.shipment.class%">
-            <argument type="service" id="doctrine"/>
-        </service>
-
-        <!-- carrier -->
-        <service id="storebundle.shipment.freeshipping" class="%storebundle.shipment.freeshipping.class%">
-            <tag name="storebundle.shipment.carrier" alias="freeshipping" />
-        </service>
-
-        <!-- payment -->
-        <service id="storebundle.payment_array_storage_handler" class="%storebundle.payment_array_storage_handler.class%"/>
-        <service id="storebundle.payment_factory" class="%storebundle.payment_factory.class%"/>
-        <service id="storebundle.payment" class="%storebundle.payment.class%"
-                 factory-service="storebundle.payment_factory"
-                 factory-method="get"
-                >
-            <argument type="service" id="storebundle.payment_array_storage_handler"/>
-        </service>
     </services>
-
 </container>

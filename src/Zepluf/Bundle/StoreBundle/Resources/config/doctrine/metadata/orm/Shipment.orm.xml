@@ -4,6 +4,7 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
+    <field name="shipmentTypeId" type="integer" column="shipment_type_id" nullable="false"/>
     <field name="incrementId" type="string" column="increment_id" length="45" nullable="false"/>
     <field name="shipCost" type="decimal" column="ship_cost" nullable="true"/>
     <field name="totalWeight" type="decimal" column="total_weight" nullable="true"/>
@@ -28,11 +29,6 @@
     <many-to-one field="shippedFromParty" target-entity="Party">
       <join-columns>
         <join-column name="shipped_from_party_id" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
-    <many-to-one field="shipmentType" target-entity="ShipmentType">
-      <join-columns>
-        <join-column name="shipment_type_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
   </entity>

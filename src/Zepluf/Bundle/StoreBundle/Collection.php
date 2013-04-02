@@ -56,6 +56,7 @@ class Collection extends \Symfony\Component\DependencyInjection\ContainerAware
 
     /**
      * sets mock object in case no model service is available
+     *
      * @param $mock_object
      * @return Collection
      */

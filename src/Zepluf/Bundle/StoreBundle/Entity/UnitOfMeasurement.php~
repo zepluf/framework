@@ -35,15 +35,5 @@ class UnitOfMeasurement
      */
     private $abbreviation;
 
-    /**
-     * @var \PriceComponent
-     *
-     * @ORM\ManyToOne(targetEntity="PriceComponent")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="price_component_id", referencedColumnName="id")
-     * })
-     */
-    private $priceComponent;
-
 
 }

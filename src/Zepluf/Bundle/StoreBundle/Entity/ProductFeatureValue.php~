@@ -24,9 +24,9 @@ class ProductFeatureValue
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    private $value;
+    private $name;
 
     /**
      * @var string
@@ -36,18 +36,14 @@ class ProductFeatureValue
     private $description;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \ProductFeature
      *
-     * @ORM\ManyToMany(targetEntity="ProductFeature", mappedBy="productFeatureValue")
+     * @ORM\ManyToOne(targetEntity="ProductFeature")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_feature_id", referencedColumnName="id")
+     * })
      */
     private $productFeature;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->productFeature = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
+
 }

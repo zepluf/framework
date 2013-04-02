@@ -63,15 +63,5 @@ class Payment
      */
     private $type;
 
-    /**
-     * @var \PaymentMethodType
-     *
-     * @ORM\ManyToOne(targetEntity="PaymentMethodType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="payment_method_type_id", referencedColumnName="id")
-     * })
-     */
-    private $paymentMethodType;
-
 
 }

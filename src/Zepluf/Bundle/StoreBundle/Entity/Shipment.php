@@ -8,14 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
  * Shipment
  *
  * @ORM\Table(name="shipment")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Zepluf\Bundle\StoreBundle\Entity\ShipmentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Shipment
 {
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -29,9 +30,16 @@ class Shipment
     private $incrementId;
 
     /**
+     * @var ShipmentStatus|array
+     *
+     * @ORM\OneToMany(targetEntity="ShipmentStatus", mappedBy="shipment", cascade={"persist", "remove"})
+     */
+    private $shipmentStatuses;
+
+    /**
      * @var ShipmentItem|array
      *
-     * @ORM\OneToMany(targetEntity="ShipmentItem", mappedBy="shipment")
+     * @ORM\OneToMany(targetEntity="ShipmentItem", mappedBy="shipment", cascade={"persist", "remove"})
      */
     private $shipmentItems;
 
@@ -71,12 +79,9 @@ class Shipment
     private $updatedAt;
 
     /**
-     * @var \ShipmentType
+     * @var int
      *
-     * @ORM\ManyToOne(targetEntity="ShipmentType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_type_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="shipment_type_id", type="integer", nullable=false)
      */
     private $shipmentType;
 
@@ -85,7 +90,7 @@ class Shipment
      *
      * @ORM\ManyToOne(targetEntity="Party")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipped_from_party_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="shipped_from_party_id", referencedColumnName="id")
      * })
      */
     private $shippedFromParty;
@@ -95,7 +100,7 @@ class Shipment
      *
      * @ORM\ManyToOne(targetEntity="Party")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipped_to_party_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="shipped_to_party_id", referencedColumnName="id")
      * })
      */
     private $shippedToParty;
@@ -105,7 +110,7 @@ class Shipment
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanism")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipped_from_contact_mechanism_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="shipped_from_contact_mechanism_id", referencedColumnName="id")
      * })
      */
     private $shippedFromContactMechanism;
@@ -115,24 +120,15 @@ class Shipment
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanism")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipped_to_contact_mechanism_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="shipped_to_contact_mechanism_id", referencedColumnName="id")
      * })
      */
     private $shippedToContactMechanism;
 
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->shipmentItems = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -148,14 +144,14 @@ class Shipment
     public function setIncrementId($incrementId)
     {
         $this->incrementId = $incrementId;
-    
+
         return $this;
     }
 
     /**
      * Get incrementId
      *
-     * @return string 
+     * @return string
      */
     public function getIncrementId()
     {
@@ -171,14 +167,14 @@ class Shipment
     public function setShipCost($shipCost)
     {
         $this->shipCost = $shipCost;
-    
+
         return $this;
     }
 
     /**
      * Get shipCost
      *
-     * @return float 
+     * @return float
      */
     public function getShipCost()
     {
@@ -194,14 +190,14 @@ class Shipment
     public function setTotalWeight($totalWeight)
     {
         $this->totalWeight = $totalWeight;
-    
+
         return $this;
     }
 
     /**
      * Get totalWeight
      *
-     * @return float 
+     * @return float
      */
     public function getTotalWeight()
     {
@@ -217,14 +213,14 @@ class Shipment
     public function setHandlingInstructions($handlingInstructions)
     {
         $this->handlingInstructions = $handlingInstructions;
-    
+
         return $this;
     }
 
     /**
      * Get handlingInstructions
      *
-     * @return string 
+     * @return string
      */
     public function getHandlingInstructions()
     {
@@ -240,14 +236,14 @@ class Shipment
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
-    
+
         return $this;
     }
 
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -263,14 +259,14 @@ class Shipment
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
-    
+
         return $this;
     }
 
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -286,7 +282,7 @@ class Shipment
     public function addShipmentItem(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItems)
     {
         $this->shipmentItems[] = $shipmentItems;
-    
+
         return $this;
     }
 
@@ -303,34 +299,11 @@ class Shipment
     /**
      * Get shipmentItems
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getShipmentItems()
     {
         return $this->shipmentItems;
-    }
-
-    /**
-     * Set shipmentType
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentType $shipmentType
-     * @return Shipment
-     */
-    public function setShipmentType(\Zepluf\Bundle\StoreBundle\Entity\ShipmentType $shipmentType = null)
-    {
-        $this->shipmentType = $shipmentType;
-    
-        return $this;
-    }
-
-    /**
-     * Get shipmentType
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentType 
-     */
-    public function getShipmentType()
-    {
-        return $this->shipmentType;
     }
 
     /**
@@ -342,14 +315,14 @@ class Shipment
     public function setShippedFromParty(\Zepluf\Bundle\StoreBundle\Entity\Party $shippedFromParty = null)
     {
         $this->shippedFromParty = $shippedFromParty;
-    
+
         return $this;
     }
 
     /**
      * Get shippedFromParty
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party
      */
     public function getShippedFromParty()
     {
@@ -365,14 +338,14 @@ class Shipment
     public function setShippedToParty(\Zepluf\Bundle\StoreBundle\Entity\Party $shippedToParty = null)
     {
         $this->shippedToParty = $shippedToParty;
-    
+
         return $this;
     }
 
     /**
      * Get shippedToParty
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party
      */
     public function getShippedToParty()
     {
@@ -388,14 +361,14 @@ class Shipment
     public function setShippedFromContactMechanism(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $shippedFromContactMechanism = null)
     {
         $this->shippedFromContactMechanism = $shippedFromContactMechanism;
-    
+
         return $this;
     }
 
     /**
      * Get shippedFromContactMechanism
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism
      */
     public function getShippedFromContactMechanism()
     {
@@ -411,17 +384,99 @@ class Shipment
     public function setShippedToContactMechanism(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $shippedToContactMechanism = null)
     {
         $this->shippedToContactMechanism = $shippedToContactMechanism;
-    
+
         return $this;
     }
 
     /**
      * Get shippedToContactMechanism
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism
      */
     public function getShippedToContactMechanism()
     {
         return $this->shippedToContactMechanism;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * @ORM\preUpdate
+     */
+    public function setUpdatedValue()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Add shipmentStatuses
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus $shipmentStatuses
+     * @return Shipment
+     */
+    public function addShipmentStatus(\Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus $shipmentStatuses)
+    {
+        $this->shipmentStatuses[] = $shipmentStatuses;
+
+        return $this;
+    }
+
+    /**
+     * Remove shipmentStatuses
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus $shipmentStatuses
+     */
+    public function removeShipmentStatus(\Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus $shipmentStatuses)
+    {
+        $this->shipmentStatuses->removeElement($shipmentStatuses);
+    }
+
+    /**
+     * Get shipmentStatuses
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getShipmentStatuses()
+    {
+        return $this->shipmentStatuses;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->shipmentStatuses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->shipmentItems = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set shipmentType
+     *
+     * @param integer $shipmentType
+     * @return Shipment
+     */
+    public function setShipmentType($shipmentType)
+    {
+        $this->shipmentType = $shipmentType;
+
+        return $this;
+    }
+
+    /**
+     * Get shipmentType
+     *
+     * @return integer
+     */
+    public function getShipmentType()
+    {
+        return $this->shipmentType;
     }
 }

@@ -10,10 +10,5 @@
     <field name="amount" type="decimal" column="amount" nullable="true"/>
     <field name="comment" type="string" column="comment" length="255" nullable="true"/>
     <field name="type" type="boolean" column="type" nullable="false"/>
-    <many-to-one field="paymentMethodType" target-entity="PaymentMethodType">
-      <join-columns>
-        <join-column name="payment_method_type_id" referenced-column-name="id"/>
-      </join-columns>
-    </many-to-one>
   </entity>
 </doctrine-mapping>

@@ -15,7 +15,7 @@ class ProductCategoryClassification
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -50,16 +50,6 @@ class ProductCategoryClassification
     private $comment;
 
     /**
-     * @var \ProductCategory
-     *
-     * @ORM\ManyToOne(targetEntity="ProductCategory")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_category_id", referencedColumnName="id")
-     * })
-     */
-    private $productCategory;
-
-    /**
      * @var \Product
      *
      * @ORM\ManyToOne(targetEntity="Product")
@@ -68,6 +58,16 @@ class ProductCategoryClassification
      * })
      */
     private $product;
+
+    /**
+     * @var \ProductCategory
+     *
+     * @ORM\ManyToOne(targetEntity="ProductCategory")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_category_id", referencedColumnName="id")
+     * })
+     */
+    private $productCategory;
 
 
 
@@ -174,29 +174,6 @@ class ProductCategoryClassification
     }
 
     /**
-     * Set productCategory
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory
-     * @return ProductCategoryClassification
-     */
-    public function setProductCategory(\Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory = null)
-    {
-        $this->productCategory = $productCategory;
-    
-        return $this;
-    }
-
-    /**
-     * Get productCategory
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ProductCategory 
-     */
-    public function getProductCategory()
-    {
-        return $this->productCategory;
-    }
-
-    /**
      * Set product
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
@@ -217,5 +194,28 @@ class ProductCategoryClassification
     public function getProduct()
     {
         return $this->product;
+    }
+
+    /**
+     * Set productCategory
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory
+     * @return ProductCategoryClassification
+     */
+    public function setProductCategory(\Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory = null)
+    {
+        $this->productCategory = $productCategory;
+    
+        return $this;
+    }
+
+    /**
+     * Get productCategory
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ProductCategory 
+     */
+    public function getProductCategory()
+    {
+        return $this->productCategory;
     }
 }

@@ -14,19 +14,26 @@ use Zepluf\Bundle\StoreBundle\Component\Product\ProductCollection;
 use Zepluf\Bundle\StoreBundle\Entity\Order as OrderEntity;
 use Doctrine\ORM\EntityManager;
 use Zepluf\Bundle\StoreBundle\Entity\OrderItem;
+use Zepluf\Bundle\StoreBundle\Component\Price\Pricing;
 
 class Order
 {
     protected $entityManager;
 
+    /**
+     * @var \Zepluf\Bundle\StoreBundle\Entity\Order
+     */
     protected $order;
+
+    protected $pricing;
 
     /**
      * @param \Doctrine\ORM\EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager, Pricing $pricing)
     {
         $this->entityManager = $entityManager;
+        $this->pricing = $pricing;
     }
 
     public function retrieve()
@@ -34,7 +41,22 @@ class Order
 
     }
 
-    public function create(ProductCollection $productCollection, $type = \OrderType::ORDER_TYPE)
+    /**
+     * Set order
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Order $order
+     */
+
+    public function setOrder($order)
+    {
+        $this->order = $order;
+    }
+
+    /**
+     * @param ProductCollection $productCollection
+     * @param $type
+     */
+    public function create(ProductCollection $productCollection, $type = OrderType::ORDER_TYPE)
     {
         $this->order = new OrderEntity();
 
@@ -47,6 +69,9 @@ class Order
         // set the entry timestamp
         $this->order->setEntryDate(new \DateTime());
 
+        // insert new order item
+        $this->addOrderItems($productCollection);
+
         // persists the order
         $this->entityManager->persist($this->order);
         $this->entityManager->flush();
@@ -55,11 +80,15 @@ class Order
 
         // add order role
 
-        // insert new order item
-        $this->addItems($productCollection);
+
     }
 
-    public function addItems(ProductCollection $productCollection)
+    /**
+     * Add items into order
+     *
+     * @param ProductCollection $productCollection
+     */
+    public function addOrderItems(ProductCollection $productCollection)
     {
         if (false !== ($products = $productCollection->get())) {
             foreach ($products as $key => $product) {
@@ -68,7 +97,7 @@ class Order
                 $productEntity = $this->entityManager->find('Product', $product['id']);
 
                 // set price
-                $orderItem->setUnitPrice($productEntity->getPrice($product['features']));
+                $orderItem->setUnitPrice($this->pricing->getProductPrice($productEntity, $product['features']));
 
                 // set quantity
                 $orderItem->setQuantity($product['quantity']);

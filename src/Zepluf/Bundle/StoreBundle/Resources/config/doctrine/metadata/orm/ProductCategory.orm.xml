@@ -5,10 +5,18 @@
       <generator strategy="IDENTITY"/>
     </id>
     <field name="name" type="string" column="name" length="255" nullable="false"/>
-    <field name="description" type="string" column="description" length="255" nullable="true"/>
-    <field name="left" type="integer" column="left" nullable="true"/>
-    <field name="right" type="integer" column="right" nullable="true"/>
-    <field name="order" type="integer" column="order" nullable="false"/>
+    <field name="description" type="text" column="description" nullable="true"/>
+    <field name="lft" type="integer" column="lft" nullable="true"/>
+    <field name="rgt" type="integer" column="rgt" nullable="true"/>
+    <field name="level" type="integer" column="level" nullable="true"/>
+    <field name="root" type="integer" column="root" nullable="true"/>
+    <field name="children" type="integer" column="children" nullable="true"/>
+    <field name="sort" type="integer" column="sort" nullable="false"/>
     <field name="status" type="boolean" column="status" nullable="false"/>
+    <many-to-one field="parent" target-entity="ProductCategory">
+      <join-columns>
+        <join-column name="parent" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
   </entity>
 </doctrine-mapping>

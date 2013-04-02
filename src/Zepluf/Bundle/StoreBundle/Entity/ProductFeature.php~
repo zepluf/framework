@@ -38,41 +38,9 @@ class ProductFeature
     /**
      * @var integer
      *
-     * @ORM\Column(name="order", type="integer", nullable=false)
+     * @ORM\Column(name="sort", type="integer", nullable=false)
      */
-    private $order;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="ProductFeatureValue", inversedBy="productFeature")
-     * @ORM\JoinTable(name="product_feature_comprise",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="product_feature_id", referencedColumnName="id")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="product_feature_value_id", referencedColumnName="id")
-     *   }
-     * )
-     */
-    private $productFeatureValue;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="PriceComponent", mappedBy="feature")
-     */
-    private $priceComponent;
-
-    /**
-     * @var \UnitOfMeasurement
-     *
-     * @ORM\ManyToOne(targetEntity="UnitOfMeasurement")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="unit_of_measurement_id", referencedColumnName="id")
-     * })
-     */
-    private $unitOfMeasurement;
+    private $sort;
 
     /**
      * @var \ProductFeatureCategory
@@ -85,12 +53,14 @@ class ProductFeature
     private $productFeatureCategory;
 
     /**
-     * Constructor
+     * @var \UnitOfMeasurement
+     *
+     * @ORM\ManyToOne(targetEntity="UnitOfMeasurement")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="unit_of_measurement_id", referencedColumnName="id")
+     * })
      */
-    public function __construct()
-    {
-        $this->productFeatureValue = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->priceComponent = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
+    private $unitOfMeasurement;
+
+
 }

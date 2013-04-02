@@ -29,16 +29,6 @@ class PicklistItem
     private $quantity;
 
     /**
-     * @var \ItemIssuance
-     *
-     * @ORM\ManyToOne(targetEntity="ItemIssuance")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_issuance_id", referencedColumnName="id")
-     * })
-     */
-    private $shipmentIssuance;
-
-    /**
      * @var \InventoryItem
      *
      * @ORM\ManyToOne(targetEntity="InventoryItem")

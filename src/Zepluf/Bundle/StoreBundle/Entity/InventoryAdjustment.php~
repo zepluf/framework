@@ -1,0 +1,76 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * InventoryAdjustment
+ *
+ * @ORM\Table(name="inventory_adjustment")
+ * @ORM\Entity
+ */
+class InventoryAdjustment
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="increment_id", type="integer", nullable=false)
+     */
+    private $incrementId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="quantity", type="integer", nullable=true)
+     */
+    private $quantity;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    private $date;
+
+    /**
+     * @var \PicklistItem
+     *
+     * @ORM\ManyToOne(targetEntity="PicklistItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="picklist_item_id", referencedColumnName="id")
+     * })
+     */
+    private $picklistItem;
+
+    /**
+     * @var \InventoryItem
+     *
+     * @ORM\ManyToOne(targetEntity="InventoryItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="inventory_item_id", referencedColumnName="id")
+     * })
+     */
+    private $inventoryItem;
+
+    /**
+     * @var \ShipmentItem
+     *
+     * @ORM\ManyToOne(targetEntity="ShipmentItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
+     * })
+     */
+    private $shipmentItem;
+
+
+}

@@ -15,7 +15,7 @@ class InvoiceItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,7 +24,7 @@ class InvoiceItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", options={"unsigned"=true}, nullable=false)
      */
     private $quantity;
 
@@ -57,45 +57,24 @@ class InvoiceItem
     private $isTaxable;
 
     /**
-     * @var integer
+     * @var \InventoryItem
      *
-     * @ORM\Column(name="inventory_item_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="InventoryItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="inventory_item_id", referencedColumnName="id")
+     * })
      */
-    private $inventoryItemId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="product_id", type="integer", nullable=true)
-     */
-    private $productId;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="product_feature_id", type="integer", nullable=true)
-     */
-    private $productFeatureId;
+    private $inventoryItem;
 
     /**
      * @var \Invoice
      *
-     * @ORM\ManyToOne(targetEntity="Invoice", inversedBy="invoiceItems")
+     * @ORM\ManyToOne(targetEntity="Invoice")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
      * })
      */
     private $invoice;
-
-    /**
-     * @var \AdjustmentType
-     *
-     * @ORM\ManyToOne(targetEntity="AdjustmentType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="adjustment_type_id", referencedColumnName="id")
-     * })
-     */
-    private $adjustmentType;
 
     /**
      * @var \InvoiceItemType
@@ -235,72 +214,26 @@ class InvoiceItem
     }
 
     /**
-     * Set inventoryItemId
+     * Set inventoryItem
      *
-     * @param integer $inventoryItemId
+     * @param \Zepluf\Bundle\StoreBundle\Entity\InventoryItem $inventoryItem
      * @return InvoiceItem
      */
-    public function setInventoryItemId($inventoryItemId)
+    public function setInventoryItem(\Zepluf\Bundle\StoreBundle\Entity\InventoryItem $inventoryItem = null)
     {
-        $this->inventoryItemId = $inventoryItemId;
+        $this->inventoryItem = $inventoryItem;
     
         return $this;
     }
 
     /**
-     * Get inventoryItemId
+     * Get inventoryItem
      *
-     * @return integer 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\InventoryItem 
      */
-    public function getInventoryItemId()
+    public function getInventoryItem()
     {
-        return $this->inventoryItemId;
-    }
-
-    /**
-     * Set productId
-     *
-     * @param integer $productId
-     * @return InvoiceItem
-     */
-    public function setProductId($productId)
-    {
-        $this->productId = $productId;
-    
-        return $this;
-    }
-
-    /**
-     * Get productId
-     *
-     * @return integer 
-     */
-    public function getProductId()
-    {
-        return $this->productId;
-    }
-
-    /**
-     * Set productFeatureId
-     *
-     * @param integer $productFeatureId
-     * @return InvoiceItem
-     */
-    public function setProductFeatureId($productFeatureId)
-    {
-        $this->productFeatureId = $productFeatureId;
-    
-        return $this;
-    }
-
-    /**
-     * Get productFeatureId
-     *
-     * @return integer 
-     */
-    public function getProductFeatureId()
-    {
-        return $this->productFeatureId;
+        return $this->inventoryItem;
     }
 
     /**
@@ -324,29 +257,6 @@ class InvoiceItem
     public function getInvoice()
     {
         return $this->invoice;
-    }
-
-    /**
-     * Set adjustmentType
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\AdjustmentType $adjustmentType
-     * @return InvoiceItem
-     */
-    public function setAdjustmentType(\Zepluf\Bundle\StoreBundle\Entity\AdjustmentType $adjustmentType = null)
-    {
-        $this->adjustmentType = $adjustmentType;
-    
-        return $this;
-    }
-
-    /**
-     * Get adjustmentType
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\AdjustmentType 
-     */
-    public function getAdjustmentType()
-    {
-        return $this->adjustmentType;
     }
 
     /**

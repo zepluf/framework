@@ -14,20 +14,58 @@ use Zepluf\Bundle\StoreBundle\Entity\Product as ProductEntity;
 
 class Product
 {
-    private $product;
+    /**
+     * @var \Zepluf\Bundle\StoreBundle\Entity\Product
+     */
+    protected $product;
 
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+
+    public function __construct(\Doctrine\ORM\EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * Set product
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     */
     public function setProduct(ProductEntity $product)
     {
         $this->product = $product;
+        return $this;
     }
 
-    public function getPrice($features = array())
+    /**
+     * Check if the product belongs to certain category
+     *
+     * This method will loop through each product's category then check if
+     * that category belongs to the given category and will return false if
+     * it doesn't find any result
+     *
+     * @param $categoryId
+     * @return bool
+     */
+    public function isChildOf($categoryId)
     {
-        // loop through the base price component
-        $this->product->getPriceComponent();
+        foreach($this->product->getProductCategory() as $productCategory)
+        {
 
-        // get the total of features price
+            if(1 == $this->entityManager->createQuery("
+              SELECT COUNT(child.id) FROM Zepluf\Bundle\StoreBundle\Entity\ProductCategory child
+              JOIN Zepluf\Bundle\StoreBundle\Entity\ProductCategory ancestor
+              WITH child.lft BETWEEN ancestor.lft AND ancestor.rgt
+              WHERE child.id = :categoryId AND ancestor.id = :parentCategoryId")
+                ->setParameters(array('categoryId' => $productCategory->getId(), 'parentCategoryId' => $categoryId))
+                ->getSingleScalarResult()) {
+              return true;
+            }
+        }
 
-        // loop through the additional price component
+        return false;
     }
 }

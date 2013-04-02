@@ -1,0 +1,5 @@
+{% block field_label %}
+{% spaceless %}
+	<label for="{{ id }}">{{ label | trans({}, 'StoreBundle') }}</label>
+{% endspaceless %}
+{% endblock %}

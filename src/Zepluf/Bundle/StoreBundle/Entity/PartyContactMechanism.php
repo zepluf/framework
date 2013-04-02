@@ -15,7 +15,7 @@ class PartyContactMechanism
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -43,16 +43,6 @@ class PartyContactMechanism
     private $comment;
 
     /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
-     * })
-     */
-    private $party;
-
-    /**
      * @var \ContactMechanism
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanism")
@@ -61,6 +51,16 @@ class PartyContactMechanism
      * })
      */
     private $contactMechanism;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
+     * })
+     */
+    private $party;
 
     /**
      * @var \PartyRoleType
@@ -154,29 +154,6 @@ class PartyContactMechanism
     }
 
     /**
-     * Set party
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $party
-     * @return PartyContactMechanism
-     */
-    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party = null)
-    {
-        $this->party = $party;
-    
-        return $this;
-    }
-
-    /**
-     * Get party
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
-     */
-    public function getParty()
-    {
-        return $this->party;
-    }
-
-    /**
      * Set contactMechanism
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $contactMechanism
@@ -197,6 +174,29 @@ class PartyContactMechanism
     public function getContactMechanism()
     {
         return $this->contactMechanism;
+    }
+
+    /**
+     * Set party
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $party
+     * @return PartyContactMechanism
+     */
+    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party = null)
+    {
+        $this->party = $party;
+    
+        return $this;
+    }
+
+    /**
+     * Get party
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     */
+    public function getParty()
+    {
+        return $this->party;
     }
 
     /**

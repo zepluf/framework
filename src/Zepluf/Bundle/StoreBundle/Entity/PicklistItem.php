@@ -15,7 +15,7 @@ class PicklistItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,19 +24,9 @@ class PicklistItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=true)
+     * @ORM\Column(name="quantity", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $quantity;
-
-    /**
-     * @var \ItemIssuance
-     *
-     * @ORM\ManyToOne(targetEntity="ItemIssuance")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_issuance_id", referencedColumnName="id")
-     * })
-     */
-    private $shipmentIssuance;
 
     /**
      * @var \InventoryItem
@@ -91,29 +81,6 @@ class PicklistItem
     public function getQuantity()
     {
         return $this->quantity;
-    }
-
-    /**
-     * Set shipmentIssuance
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ItemIssuance $shipmentIssuance
-     * @return PicklistItem
-     */
-    public function setShipmentIssuance(\Zepluf\Bundle\StoreBundle\Entity\ItemIssuance $shipmentIssuance = null)
-    {
-        $this->shipmentIssuance = $shipmentIssuance;
-    
-        return $this;
-    }
-
-    /**
-     * Get shipmentIssuance
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ItemIssuance 
-     */
-    public function getShipmentIssuance()
-    {
-        return $this->shipmentIssuance;
     }
 
     /**

@@ -1,0 +1,59 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * CartItemFeature
+ *
+ * @ORM\Table(name="cart_item_feature")
+ * @ORM\Entity
+ */
+class CartItemFeature
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="value", type="string", length=255, nullable=true)
+     */
+    private $value;
+
+    /**
+     * @var \CartItem
+     *
+     * @ORM\ManyToOne(targetEntity="CartItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="cart_item_id", referencedColumnName="id")
+     * })
+     */
+    private $cartItem;
+
+    /**
+     * @var \ProductFeatureApplication
+     *
+     * @ORM\ManyToOne(targetEntity="ProductFeatureApplication")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_feature_application_id", referencedColumnName="id")
+     * })
+     */
+    private $productFeatureApplication;
+
+
+}

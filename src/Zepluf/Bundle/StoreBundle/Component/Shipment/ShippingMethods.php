@@ -9,33 +9,62 @@
  */
 namespace Zepluf\Bundle\StoreBundle\Component\Shipment;
 
-use Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\ShippingMethodInterface;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Zepluf\Bundle\StoreBundle\Component\Shipment\Carrier\ShippingCarrierInterface;
 
 class ShippingMethods
 {
-    protected $methods = array();
+    protected $carriers = array();
 
-    public function addMethod(ShippingMethodInterface $method)
+    public function addCarrier(ShippingCarrierInterface $carrier)
     {
-        $this->methods[$method->getCode()] = $method;
+        $this->carriers[$carrier->getCode()] = $carrier;
+
+        return $this;
     }
 
     /**
      * Retrieve all methods for supplied shipping data
      */
-    public function getMethods()
+    public function getCarriers()
     {
-        return $this->methods;
+        return $this->carriers;
     }
 
     /**
      * Get carrier by its code
      */
-    public function getMethod($code)
+    public function getCarrier($code)
     {
-        if (!array_key_exists($code, $this->methods)) {
+        if (!array_key_exists($code, $this->carriers)) {
             return false;
         }
-        return $this->methods[$code];
+        return $this->carriers[$code];
+    }
+
+    // OPTIONAL
+    public function getRates(ShippingRateRequest $request)
+    {
+        $result = array();
+        $carrierCode = $request->getCarrier();
+
+        //  Limit carrier
+        if ($carrierCode) {
+            // Valid carrier
+            if ($carrier = $this->carriers[$carrierCode]) {
+                $result[] = $carrier->getRates($request);
+            } else {
+                throw new \Exception('Invalid carrier');
+            }
+        } //  All carrier
+        else {
+            foreach ($this->carriers as $carrier) {
+                if ($carrier->getRates($request)) {
+                    $result[$carrier->getCode()] = $carrier->getRates($request);
+                }
+            }
+        }
+
+        return $result;
     }
 }

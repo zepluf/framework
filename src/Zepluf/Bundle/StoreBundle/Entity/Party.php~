@@ -36,16 +36,6 @@ class Party
     private $type;
 
     /**
-     * @var \Person
-     *
-     * @ORM\ManyToOne(targetEntity="Person")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="person_id", referencedColumnName="id")
-     * })
-     */
-    private $person;
-
-    /**
      * @var \Organization
      *
      * @ORM\ManyToOne(targetEntity="Organization")
@@ -54,6 +44,16 @@ class Party
      * })
      */
     private $organization;
+
+    /**
+     * @var \Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="person_id", referencedColumnName="id")
+     * })
+     */
+    private $person;
 
 
 }

@@ -15,7 +15,7 @@ class OrderRole
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -39,16 +39,6 @@ class OrderRole
     private $order;
 
     /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
-     * })
-     */
-    private $party;
-
-    /**
      * @var \OrderRoleType
      *
      * @ORM\ManyToOne(targetEntity="OrderRoleType")
@@ -57,6 +47,16 @@ class OrderRole
      * })
      */
     private $orderRoleType;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
+     * })
+     */
+    private $party;
 
 
 
@@ -117,29 +117,6 @@ class OrderRole
     }
 
     /**
-     * Set party
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $party
-     * @return OrderRole
-     */
-    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party = null)
-    {
-        $this->party = $party;
-    
-        return $this;
-    }
-
-    /**
-     * Get party
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
-     */
-    public function getParty()
-    {
-        return $this->party;
-    }
-
-    /**
      * Set orderRoleType
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\OrderRoleType $orderRoleType
@@ -160,5 +137,28 @@ class OrderRole
     public function getOrderRoleType()
     {
         return $this->orderRoleType;
+    }
+
+    /**
+     * Set party
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $party
+     * @return OrderRole
+     */
+    public function setParty(\Zepluf\Bundle\StoreBundle\Entity\Party $party = null)
+    {
+        $this->party = $party;
+    
+        return $this;
+    }
+
+    /**
+     * Get party
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     */
+    public function getParty()
+    {
+        return $this->party;
     }
 }
