@@ -15,7 +15,7 @@ class ShipmentItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,7 +24,7 @@ class ShipmentItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=true)
+     * @ORM\Column(name="quantity", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $quantity;
 
@@ -40,7 +40,7 @@ class ShipmentItem
      *
      * @ORM\ManyToOne(targetEntity="Shipment", inversedBy="shipmentItems")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id", onDelete="SET NULL")
      * })
      */
     private $shipment;

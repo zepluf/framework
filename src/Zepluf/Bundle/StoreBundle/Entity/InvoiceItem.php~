@@ -57,6 +57,16 @@ class InvoiceItem
     private $isTaxable;
 
     /**
+     * @var \InventoryItem
+     *
+     * @ORM\ManyToOne(targetEntity="InventoryItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="inventory_item_id", referencedColumnName="id")
+     * })
+     */
+    private $inventoryItem;
+
+    /**
      * @var \Invoice
      *
      * @ORM\ManyToOne(targetEntity="Invoice")
@@ -67,16 +77,6 @@ class InvoiceItem
     private $invoice;
 
     /**
-     * @var \AdjustmentType
-     *
-     * @ORM\ManyToOne(targetEntity="AdjustmentType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="adjustment_type_id", referencedColumnName="id")
-     * })
-     */
-    private $adjustmentType;
-
-    /**
      * @var \InvoiceItemType
      *
      * @ORM\ManyToOne(targetEntity="InvoiceItemType")
@@ -85,16 +85,6 @@ class InvoiceItem
      * })
      */
     private $invoiceItemType;
-
-    /**
-     * @var \InventoryItem
-     *
-     * @ORM\ManyToOne(targetEntity="InventoryItem")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="inventory_item_id", referencedColumnName="id")
-     * })
-     */
-    private $inventoryItem;
 
 
 }

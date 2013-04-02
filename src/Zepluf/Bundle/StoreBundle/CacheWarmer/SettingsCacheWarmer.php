@@ -87,37 +87,37 @@ class SettingsCacheWarmer implements CacheWarmerInterface
     public function warmUp($cacheDir)
     {
         // loads plugins settings
-        if (!$this->settings->has('plugins')) {
-            // now try to load from all the cache files
-            if (($pluginsSettings = $this->settings->loadCache('plugins')) === false) {
-                $configs = array();
-                // load local plugins settings
-                $local_config = Yaml::parse($this->kernelConfigDir . '/plugins_' . $this->kernelEnvironment . '.yml');
-                if (!empty($this->sysSettings['activated']) && is_array($this->sysSettings['activated'])) {
-                    foreach ($this->sysSettings['activated'] as $plugin) {
-                        if (file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml')) {
-                            $config = Yaml::parse($file);
-
-                            $plugin_lc_name = strtolower($plugin);
-                            // $plugin_uc_name = ucfirst($plugin);
-
-                            if (isset($local_config[$plugin_lc_name])) {
-                                $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
-                            } else {
-                                $this->settings->set('plugins.' . $plugin_lc_name, $config);
-                            }
-
-                        }
-                    }
-                    $this->settings->saveCache('plugins', $this->settings->get('plugins'));
-                    $pluginsSettings = $this->settings->get('plugins');
-                }
-            } else {
-                $this->settings->set('plugins', $pluginsSettings);
-            }
-        }
-
-        $this->settings->loadTheme("frontend", $this->frontendTemplateDir);
+//        if (!$this->settings->has('plugins')) {
+//            // now try to load from all the cache files
+//            if (($pluginsSettings = $this->settings->loadCache('plugins')) === false) {
+//                $configs = array();
+//                // load local plugins settings
+//                $local_config = Yaml::parse($this->kernelConfigDir . '/plugins_' . $this->kernelEnvironment . '.yml');
+//                if (!empty($this->sysSettings['activated']) && is_array($this->sysSettings['activated'])) {
+//                    foreach ($this->sysSettings['activated'] as $plugin) {
+//                        if (file_exists($file = $this->pluginsDir . '/' . $plugin . '/Resources/config/config.yml')) {
+//                            $config = Yaml::parse($file);
+//
+//                            $plugin_lc_name = strtolower($plugin);
+//                            // $plugin_uc_name = ucfirst($plugin);
+//
+//                            if (isset($local_config[$plugin_lc_name])) {
+//                                $this->settings->set('plugins.' . $plugin_lc_name, arrayMergeWithReplace($config, $local_config[$plugin_lc_name]));
+//                            } else {
+//                                $this->settings->set('plugins.' . $plugin_lc_name, $config);
+//                            }
+//
+//                        }
+//                    }
+//                    $this->settings->saveCache('plugins', $this->settings->get('plugins'));
+//                    $pluginsSettings = $this->settings->get('plugins');
+//                }
+//            } else {
+//                $this->settings->set('plugins', $pluginsSettings);
+//            }
+//        }
+//
+//        $this->settings->loadTheme("frontend", $this->frontendTemplateDir);
         // TODO: warmup backend theme's cache as well, if any?
     }
 

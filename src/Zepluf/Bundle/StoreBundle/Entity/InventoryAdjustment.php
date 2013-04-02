@@ -15,7 +15,7 @@ class InventoryAdjustment
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -31,7 +31,7 @@ class InventoryAdjustment
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=true)
+     * @ORM\Column(name="quantity", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $quantity;
 
@@ -43,14 +43,14 @@ class InventoryAdjustment
     private $date;
 
     /**
-     * @var \ShipmentItem
+     * @var \PicklistItem
      *
-     * @ORM\ManyToOne(targetEntity="ShipmentItem")
+     * @ORM\ManyToOne(targetEntity="PicklistItem")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="picklist_item_id", referencedColumnName="id")
      * })
      */
-    private $shipmentItem;
+    private $picklistItem;
 
     /**
      * @var \InventoryItem
@@ -63,14 +63,14 @@ class InventoryAdjustment
     private $inventoryItem;
 
     /**
-     * @var \PicklistItem
+     * @var \ShipmentItem
      *
-     * @ORM\ManyToOne(targetEntity="PicklistItem")
+     * @ORM\ManyToOne(targetEntity="ShipmentItem")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="picklist_item_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
      * })
      */
-    private $picklistItem;
+    private $shipmentItem;
 
 
 
@@ -154,26 +154,26 @@ class InventoryAdjustment
     }
 
     /**
-     * Set shipmentItem
+     * Set picklistItem
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItem
+     * @param \Zepluf\Bundle\StoreBundle\Entity\PicklistItem $picklistItem
      * @return InventoryAdjustment
      */
-    public function setShipmentItem(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItem = null)
+    public function setPicklistItem(\Zepluf\Bundle\StoreBundle\Entity\PicklistItem $picklistItem = null)
     {
-        $this->shipmentItem = $shipmentItem;
+        $this->picklistItem = $picklistItem;
     
         return $this;
     }
 
     /**
-     * Get shipmentItem
+     * Get picklistItem
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\PicklistItem 
      */
-    public function getShipmentItem()
+    public function getPicklistItem()
     {
-        return $this->shipmentItem;
+        return $this->picklistItem;
     }
 
     /**
@@ -200,25 +200,25 @@ class InventoryAdjustment
     }
 
     /**
-     * Set picklistItem
+     * Set shipmentItem
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\PicklistItem $picklistItem
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItem
      * @return InventoryAdjustment
      */
-    public function setPicklistItem(\Zepluf\Bundle\StoreBundle\Entity\PicklistItem $picklistItem = null)
+    public function setShipmentItem(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItem = null)
     {
-        $this->picklistItem = $picklistItem;
+        $this->shipmentItem = $shipmentItem;
     
         return $this;
     }
 
     /**
-     * Get picklistItem
+     * Get shipmentItem
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\PicklistItem 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem 
      */
-    public function getPicklistItem()
+    public function getShipmentItem()
     {
-        return $this->picklistItem;
+        return $this->shipmentItem;
     }
 }

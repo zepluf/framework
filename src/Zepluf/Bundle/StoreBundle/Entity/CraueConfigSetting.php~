@@ -1,0 +1,39 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * CraueConfigSetting
+ *
+ * @ORM\Table(name="craue_config_setting")
+ * @ORM\Entity
+ */
+class CraueConfigSetting
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="value", type="string", length=255, nullable=true)
+     */
+    private $value;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="section", type="string", length=255, nullable=true)
+     */
+    private $section;
+
+
+}

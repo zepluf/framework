@@ -15,7 +15,7 @@ class OrderShipment
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -29,16 +29,6 @@ class OrderShipment
     private $shippedQuantity;
 
     /**
-     * @var \ShipmentItem
-     *
-     * @ORM\ManyToOne(targetEntity="ShipmentItem")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
-     * })
-     */
-    private $shipmentItem;
-
-    /**
      * @var \OrderItem
      *
      * @ORM\ManyToOne(targetEntity="OrderItem")
@@ -47,6 +37,16 @@ class OrderShipment
      * })
      */
     private $orderItem;
+
+    /**
+     * @var \ShipmentItem
+     *
+     * @ORM\ManyToOne(targetEntity="ShipmentItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
+     * })
+     */
+    private $shipmentItem;
 
 
 
@@ -84,29 +84,6 @@ class OrderShipment
     }
 
     /**
-     * Set shipmentItem
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItem
-     * @return OrderShipment
-     */
-    public function setShipmentItem(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItem = null)
-    {
-        $this->shipmentItem = $shipmentItem;
-    
-        return $this;
-    }
-
-    /**
-     * Get shipmentItem
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem 
-     */
-    public function getShipmentItem()
-    {
-        return $this->shipmentItem;
-    }
-
-    /**
      * Set orderItem
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
@@ -127,5 +104,28 @@ class OrderShipment
     public function getOrderItem()
     {
         return $this->orderItem;
+    }
+
+    /**
+     * Set shipmentItem
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItem
+     * @return OrderShipment
+     */
+    public function setShipmentItem(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItem $shipmentItem = null)
+    {
+        $this->shipmentItem = $shipmentItem;
+    
+        return $this;
+    }
+
+    /**
+     * Get shipmentItem
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentItem 
+     */
+    public function getShipmentItem()
+    {
+        return $this->shipmentItem;
     }
 }

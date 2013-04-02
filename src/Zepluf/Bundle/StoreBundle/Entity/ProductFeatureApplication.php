@@ -15,7 +15,7 @@ class ProductFeatureApplication
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,7 +24,7 @@ class ProductFeatureApplication
     /**
      * @var integer
      *
-     * @ORM\Column(name="type", type="integer", nullable=true)
+     * @ORM\Column(name="type", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $type;
 

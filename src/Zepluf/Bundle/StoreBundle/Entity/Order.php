@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Order
  *
- * @ORM\Table(name="order")
+ * @ORM\Table(name="` order`")
  * @ORM\Entity
  */
 class Order
@@ -15,18 +15,25 @@ class Order
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="type", type="smallint", nullable=false)
+     * @ORM\Column(name="`type`", type="boolean", nullable=false)
      */
     private $type;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="pricing_type", type="boolean", nullable=false)
+     */
+    private $pricingType;
 
     /**
      * @var \DateTime
@@ -57,7 +64,7 @@ class Order
     /**
      * Set type
      *
-     * @param integer $type
+     * @param boolean $type
      * @return Order
      */
     public function setType($type)
@@ -70,11 +77,34 @@ class Order
     /**
      * Get type
      *
-     * @return integer 
+     * @return boolean 
      */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set pricingType
+     *
+     * @param boolean $pricingType
+     * @return Order
+     */
+    public function setPricingType($pricingType)
+    {
+        $this->pricingType = $pricingType;
+    
+        return $this;
+    }
+
+    /**
+     * Get pricingType
+     *
+     * @return boolean 
+     */
+    public function getPricingType()
+    {
+        return $this->pricingType;
     }
 
     /**

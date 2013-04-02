@@ -15,7 +15,7 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -38,42 +38,42 @@ class ProductCategory
     /**
      * @var integer
      *
-     * @ORM\Column(name="lft", type="integer", nullable=true)
+     * @ORM\Column(name="lft", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $lft;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="rgt", type="integer", nullable=true)
+     * @ORM\Column(name="rgt", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $rgt;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="level", type="integer", nullable=true)
+     * @ORM\Column(name="level", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $level;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="root", type="integer", nullable=true)
+     * @ORM\Column(name="root", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $root;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="children", type="integer", nullable=true)
+     * @ORM\Column(name="children", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $children;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="sort", type="integer", nullable=false)
+     * @ORM\Column(name="sort", type="integer", options={"unsigned"=true}, nullable=false)
      */
     private $sort;
 

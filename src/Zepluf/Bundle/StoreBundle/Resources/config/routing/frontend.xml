@@ -14,4 +14,12 @@
         <default key="parameter_main_page">page_not_found</default>
     </route>
 
+    <route id="form_test" pattern="/form">
+        <default key="_controller">StoreBundle:Shipment:getShipRates</default>
+    </route>
+
+    <route id="get_shipping_method" pattern="/get_shipping_method">
+        <default key="_controller">StoreBundle:Shipment:process</default>
+    </route>
+
 </routes>

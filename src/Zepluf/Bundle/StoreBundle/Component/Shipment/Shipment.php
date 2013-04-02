@@ -23,7 +23,9 @@ use Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature;
 use Zepluf\Bundle\StoreBundle\Entity\ShipmentRouteSegment;
 use Zepluf\Bundle\StoreBundle\Entity\ShipmentStatus;
 use Zepluf\Bundle\StoreBundle\Entity\ShipmentStatusType;
+
 use Zepluf\Bundle\StoreBundle\Event\InventoryAdjustmentEvent;
+use Zepluf\Bundle\StoreBundle\Events\InventoryEvents;
 
 
 /**
@@ -99,7 +101,7 @@ class Shipment
             }
             //TODO: Create adjustment
             $inventoryAdjustmentEvent = new InventoryAdjustmentEvent($this->shipment->getId());
-            $this->dispatcher->dispatch(ComponentEvents::onInventoryAdjust, $inventoryAdjustmentEvent);
+            $this->dispatcher->dispatch(InventoryEvents::onInventoryAdjust, $inventoryAdjustmentEvent);
 
             return $this->shipment->getIncrementId();
         } else {
@@ -204,10 +206,10 @@ class Shipment
         $shippedFromParty = $this->entityManager->getReference('StoreBundle:Party', (int)$info['shippedFromParty']);
         $shippedToParty = $this->entityManager->getReference('StoreBundle:Party', (int)$info['shippedToParty']);
 
-        $this->shipment->setShippedFromContactMechanism($shippedFromContactMechanism)
-            ->setShippedToContactMechanism($shippedToContactMechanism)
-            ->setShippedFromParty($shippedFromParty)
-            ->setShippedToParty($shippedToParty);
+//        $this->shipment->setShippedFromContactMechanism($shippedFromContactMechanism)
+//            ->setShippedToContactMechanism($shippedToContactMechanism)
+//            ->setShippedFromParty($shippedFromParty)
+//            ->setShippedToParty($shippedToParty);
 
         $this->shipment->setIncrementId($this->generateRandomString());
         $this->shipment->setShipCost($info['shipCost']);
@@ -222,7 +224,6 @@ class Shipment
 
         $handlingInstruction = $info['handlingInstruction'];
         $this->shipment->setHandlingInstructions($handlingInstruction);
-        $this->shipment = new ShipmentEntity();
 
 //        $shipmentStatus = $this->createShipmentStatus($this->shipment, null, false);
     }

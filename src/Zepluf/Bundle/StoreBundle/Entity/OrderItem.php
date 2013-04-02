@@ -15,7 +15,7 @@ class OrderItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -31,7 +31,7 @@ class OrderItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", options={"unsigned"=true}, nullable=false)
      */
     private $quantity;
 
@@ -71,14 +71,11 @@ class OrderItem
     private $type;
 
     /**
-     * @var \Product
+     * @var boolean
      *
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="taxable", type="boolean", nullable=false)
      */
-    private $product;
+    private $taxable;
 
     /**
      * @var \Order
@@ -99,6 +96,16 @@ class OrderItem
      * })
      */
     private $orderItem;
+
+    /**
+     * @var \Product
+     *
+     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * })
+     */
+    private $product;
 
 
 
@@ -274,26 +281,26 @@ class OrderItem
     }
 
     /**
-     * Set product
+     * Set taxable
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     * @param boolean $taxable
      * @return OrderItem
      */
-    public function setProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product = null)
+    public function setTaxable($taxable)
     {
-        $this->product = $product;
+        $this->taxable = $taxable;
     
         return $this;
     }
 
     /**
-     * Get product
+     * Get taxable
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Product 
+     * @return boolean 
      */
-    public function getProduct()
+    public function getTaxable()
     {
-        return $this->product;
+        return $this->taxable;
     }
 
     /**
@@ -340,5 +347,28 @@ class OrderItem
     public function getOrderItem()
     {
         return $this->orderItem;
+    }
+
+    /**
+     * Set product
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     * @return OrderItem
+     */
+    public function setProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product = null)
+    {
+        $this->product = $product;
+    
+        return $this;
+    }
+
+    /**
+     * Get product
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Product 
+     */
+    public function getProduct()
+    {
+        return $this->product;
     }
 }

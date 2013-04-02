@@ -24,7 +24,7 @@
 
         <!-- shipping carriers -->
         <service id="storebundle.carrier.ups"
-                 class="%storebundle.carrier.ups.class%">
+                 class="%storebundle.carrier.ups.class%" >
             <tag name="storebundle.carrier" alias="ups"/>
         </service>
 

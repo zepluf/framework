@@ -15,7 +15,7 @@ class ProductFeature
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -38,19 +38,9 @@ class ProductFeature
     /**
      * @var integer
      *
-     * @ORM\Column(name="order", type="integer", nullable=false)
+     * @ORM\Column(name="sort", type="integer", options={"unsigned"=true}, nullable=false)
      */
-    private $order;
-
-    /**
-     * @var \UnitOfMeasurement
-     *
-     * @ORM\ManyToOne(targetEntity="UnitOfMeasurement")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="unit_of_measurement_id", referencedColumnName="id")
-     * })
-     */
-    private $unitOfMeasurement;
+    private $sort;
 
     /**
      * @var \ProductFeatureCategory
@@ -61,6 +51,16 @@ class ProductFeature
      * })
      */
     private $productFeatureCategory;
+
+    /**
+     * @var \UnitOfMeasurement
+     *
+     * @ORM\ManyToOne(targetEntity="UnitOfMeasurement")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="unit_of_measurement_id", referencedColumnName="id")
+     * })
+     */
+    private $unitOfMeasurement;
 
 
 
@@ -121,49 +121,26 @@ class ProductFeature
     }
 
     /**
-     * Set order
+     * Set sort
      *
-     * @param integer $order
+     * @param integer $sort
      * @return ProductFeature
      */
-    public function setOrder($order)
+    public function setSort($sort)
     {
-        $this->order = $order;
+        $this->sort = $sort;
     
         return $this;
     }
 
     /**
-     * Get order
+     * Get sort
      *
      * @return integer 
      */
-    public function getOrder()
+    public function getSort()
     {
-        return $this->order;
-    }
-
-    /**
-     * Set unitOfMeasurement
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement
-     * @return ProductFeature
-     */
-    public function setUnitOfMeasurement(\Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement = null)
-    {
-        $this->unitOfMeasurement = $unitOfMeasurement;
-    
-        return $this;
-    }
-
-    /**
-     * Get unitOfMeasurement
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement 
-     */
-    public function getUnitOfMeasurement()
-    {
-        return $this->unitOfMeasurement;
+        return $this->sort;
     }
 
     /**
@@ -187,5 +164,28 @@ class ProductFeature
     public function getProductFeatureCategory()
     {
         return $this->productFeatureCategory;
+    }
+
+    /**
+     * Set unitOfMeasurement
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement
+     * @return ProductFeature
+     */
+    public function setUnitOfMeasurement(\Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement = null)
+    {
+        $this->unitOfMeasurement = $unitOfMeasurement;
+    
+        return $this;
+    }
+
+    /**
+     * Get unitOfMeasurement
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement 
+     */
+    public function getUnitOfMeasurement()
+    {
+        return $this->unitOfMeasurement;
     }
 }

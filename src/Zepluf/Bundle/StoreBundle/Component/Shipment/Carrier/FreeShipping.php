@@ -17,6 +17,7 @@ class FreeShipping
     implements ShippingCarrierInterface
 {
     protected $code = 'freeshipping';
+    protected $name = 'Free Shipping';
 
     public function getInfo()
     {
@@ -54,13 +55,13 @@ class FreeShipping
      */
     public function getRates(ShippingRateRequest $request)
     {
-        $quote = new ShippingQuote($this->getCode());
+        $quote = new ShippingQuote($this->name);
         $costArray = array();
 
         //  TODO: CurrencyCode???
         // $costArray['method'] => ( 'currencyCode' => 'USD', 'cost' => 10)
         // Freeshipping has onely 1 method
-        $costArray[$this->getCode()] = array('currencyCode' => 'USD', 'cost' => 0);
+        $costArray[$this->code] = array('serviceName' => $this->name, 'currencyCode' => 'USD', 'cost' => 0);
         $quote->setQuotes($costArray);
         return $quote;
     }

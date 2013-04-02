@@ -22,16 +22,6 @@ class Location
     private $id;
 
     /**
-     * @var \Lot
-     *
-     * @ORM\ManyToOne(targetEntity="Lot")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="lot_id", referencedColumnName="id")
-     * })
-     */
-    private $lot;
-
-    /**
      * @var \Container
      *
      * @ORM\ManyToOne(targetEntity="Container")
@@ -50,6 +40,16 @@ class Location
      * })
      */
     private $facility;
+
+    /**
+     * @var \Lot
+     *
+     * @ORM\ManyToOne(targetEntity="Lot")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="lot_id", referencedColumnName="id")
+     * })
+     */
+    private $lot;
 
 
 }

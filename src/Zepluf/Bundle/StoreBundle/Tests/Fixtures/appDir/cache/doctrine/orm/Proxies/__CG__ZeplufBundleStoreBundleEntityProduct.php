@@ -183,46 +183,46 @@ class Product extends \Zepluf\Bundle\StoreBundle\Entity\Product implements \Doct
         return parent::getUnitOfMeasurement();
     }
 
-    public function getProductFeatureApplication()
+    public function addProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplications)
     {
         $this->__load();
-        return parent::getProductFeatureApplication();
+        return parent::addProductFeatureApplication($productFeatureApplications);
     }
 
-    public function getProductCategory()
+    public function removeProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplications)
     {
         $this->__load();
-        return parent::getProductCategory();
+        return parent::removeProductFeatureApplication($productFeatureApplications);
     }
 
-    public function addProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication)
+    public function getProductFeatureApplications()
     {
         $this->__load();
-        return parent::addProductFeatureApplication($productFeatureApplication);
+        return parent::getProductFeatureApplications();
     }
 
-    public function removeProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication)
+    public function addProductCategoryClassification(\Zepluf\Bundle\StoreBundle\Entity\ProductCategoryClassification $productCategoryClassifications)
     {
         $this->__load();
-        return parent::removeProductFeatureApplication($productFeatureApplication);
+        return parent::addProductCategoryClassification($productCategoryClassifications);
     }
 
-    public function addProductCategory(\Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory)
+    public function removeProductCategoryClassification(\Zepluf\Bundle\StoreBundle\Entity\ProductCategoryClassification $productCategoryClassifications)
     {
         $this->__load();
-        return parent::addProductCategory($productCategory);
+        return parent::removeProductCategoryClassification($productCategoryClassifications);
     }
 
-    public function removeProductCategory(\Zepluf\Bundle\StoreBundle\Entity\ProductCategory $productCategory)
+    public function getProductCategoryClassifications()
     {
         $this->__load();
-        return parent::removeProductCategory($productCategory);
+        return parent::getProductCategoryClassifications();
     }
 
 
     public function __sleep()
     {
-        return array('__isInitialized__', 'id', 'type', 'name', 'description', 'introductionDate', 'salesDiscontinuationDate', 'availableDate', 'priceComponent', 'termType', 'manufacturer', 'unitOfMeasurement', 'productFeatureApplication', 'productCategory');
+        return array('__isInitialized__', 'id', 'type', 'name', 'description', 'introductionDate', 'salesDiscontinuationDate', 'availableDate', 'priceComponent', 'termType', 'manufacturer', 'unitOfMeasurement', 'productFeatureApplications', 'productCategoryClassifications');
     }
 
     public function __clone()

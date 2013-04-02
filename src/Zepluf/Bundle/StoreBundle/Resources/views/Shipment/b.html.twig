@@ -1,0 +1,20 @@
+{% extends 'StoreBundle::layout.html.twig' %}
+
+{% block content %}
+    <form method="post" action="{{ path('get_shipping_method') }}">
+        <dl>
+            {% for codename,rate in rates %}
+                <dt>{{ rate.carrier }}</dt>
+                <dd>
+                    <ul>
+                        {% for service,quote in rate.quotes %}
+                            {{ include('StoreBundle:Shipment:shipping_method_list_content.html.twig') }}
+                        {% endfor %}
+                    </ul>
+                </dd>
+            {% endfor %}
+        </dl>
+        <input type="submit" value="{% trans %}Submit{% endtrans %}"/>
+    </form>
+{% endblock %}
+

@@ -15,7 +15,7 @@ class OrderStatus
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -39,16 +39,6 @@ class OrderStatus
     private $order;
 
     /**
-     * @var \OrderStatusType
-     *
-     * @ORM\ManyToOne(targetEntity="OrderStatusType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="order_status_type_id", referencedColumnName="id")
-     * })
-     */
-    private $orderStatusType;
-
-    /**
      * @var \OrderItem
      *
      * @ORM\ManyToOne(targetEntity="OrderItem")
@@ -57,6 +47,16 @@ class OrderStatus
      * })
      */
     private $orderItem;
+
+    /**
+     * @var \OrderStatusType
+     *
+     * @ORM\ManyToOne(targetEntity="OrderStatusType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_status_type_id", referencedColumnName="id")
+     * })
+     */
+    private $orderStatusType;
 
 
 
@@ -117,29 +117,6 @@ class OrderStatus
     }
 
     /**
-     * Set orderStatusType
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderStatusType $orderStatusType
-     * @return OrderStatus
-     */
-    public function setOrderStatusType(\Zepluf\Bundle\StoreBundle\Entity\OrderStatusType $orderStatusType = null)
-    {
-        $this->orderStatusType = $orderStatusType;
-    
-        return $this;
-    }
-
-    /**
-     * Get orderStatusType
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderStatusType 
-     */
-    public function getOrderStatusType()
-    {
-        return $this->orderStatusType;
-    }
-
-    /**
      * Set orderItem
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
@@ -160,5 +137,28 @@ class OrderStatus
     public function getOrderItem()
     {
         return $this->orderItem;
+    }
+
+    /**
+     * Set orderStatusType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderStatusType $orderStatusType
+     * @return OrderStatus
+     */
+    public function setOrderStatusType(\Zepluf\Bundle\StoreBundle\Entity\OrderStatusType $orderStatusType = null)
+    {
+        $this->orderStatusType = $orderStatusType;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderStatusType
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderStatusType 
+     */
+    public function getOrderStatusType()
+    {
+        return $this->orderStatusType;
     }
 }

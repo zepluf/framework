@@ -15,7 +15,7 @@ class OrderItemFeature
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -36,16 +36,6 @@ class OrderItemFeature
     private $value;
 
     /**
-     * @var \OrderItem
-     *
-     * @ORM\ManyToOne(targetEntity="OrderItem")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="order_item_id", referencedColumnName="id")
-     * })
-     */
-    private $orderItem;
-
-    /**
      * @var \ProductFeatureApplication
      *
      * @ORM\ManyToOne(targetEntity="ProductFeatureApplication")
@@ -54,6 +44,16 @@ class OrderItemFeature
      * })
      */
     private $productFeatureApplication;
+
+    /**
+     * @var \OrderItem
+     *
+     * @ORM\ManyToOne(targetEntity="OrderItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_item_id", referencedColumnName="id")
+     * })
+     */
+    private $orderItem;
 
 
 
@@ -114,29 +114,6 @@ class OrderItemFeature
     }
 
     /**
-     * Set orderItem
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
-     * @return OrderItemFeature
-     */
-    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem = null)
-    {
-        $this->orderItem = $orderItem;
-    
-        return $this;
-    }
-
-    /**
-     * Get orderItem
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderItem 
-     */
-    public function getOrderItem()
-    {
-        return $this->orderItem;
-    }
-
-    /**
      * Set productFeatureApplication
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication
@@ -157,5 +134,28 @@ class OrderItemFeature
     public function getProductFeatureApplication()
     {
         return $this->productFeatureApplication;
+    }
+
+    /**
+     * Set orderItem
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem
+     * @return OrderItemFeature
+     */
+    public function setOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItem = null)
+    {
+        $this->orderItem = $orderItem;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderItem
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderItem 
+     */
+    public function getOrderItem()
+    {
+        return $this->orderItem;
     }
 }

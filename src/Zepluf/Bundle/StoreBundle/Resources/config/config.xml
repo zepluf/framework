@@ -7,6 +7,8 @@
     <parameters>
 
         <!-- configs -->
+        <parameter key="storebundle.config.class">Zepluf\Bundle\StoreBundle\Utility\Config</parameter>
+        <parameter key="store_config.redirectRouteAfterModify">store_config_settings_modify</parameter>
         <parameter key="storebundle.cache.status">true</parameter>
         <parameter key="http_kernel.class">Zepluf\Bundle\StoreBundle\HttpKernel</parameter>
         <parameter key="storebundle.asset_finder.class">Zepluf\Bundle\StoreBundle\AssetFinder</parameter>
@@ -133,6 +135,11 @@
         </service>
         <service id="utility.string" class="%storebundle.utility.string.class%"></service>
         <service id="utility.uri" class="%storebundle.utility.uri.class%"></service>
+        <service id="store_config" class="%storebundle.config.class.class%">
+            <call method="setEntityManager">
+                <argument type="service" id="doctrine.orm.default_entity_manager" />
+            </call>
+        </service>
 
         <!-- routing -->
         <service id="plugin_route_loader" class="%storebundle.plugin_route_loader.class%" public="false">

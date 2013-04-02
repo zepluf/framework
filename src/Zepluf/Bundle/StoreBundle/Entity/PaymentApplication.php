@@ -15,7 +15,7 @@ class PaymentApplication
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -36,16 +36,6 @@ class PaymentApplication
     private $amountApplied;
 
     /**
-     * @var \Payment
-     *
-     * @ORM\ManyToOne(targetEntity="Payment")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="payment_id", referencedColumnName="id")
-     * })
-     */
-    private $payment;
-
-    /**
      * @var \Invoice
      *
      * @ORM\ManyToOne(targetEntity="Invoice")
@@ -54,6 +44,16 @@ class PaymentApplication
      * })
      */
     private $invoice;
+
+    /**
+     * @var \Payment
+     *
+     * @ORM\ManyToOne(targetEntity="Payment")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="payment_id", referencedColumnName="id")
+     * })
+     */
+    private $payment;
 
 
 
@@ -114,29 +114,6 @@ class PaymentApplication
     }
 
     /**
-     * Set payment
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Payment $payment
-     * @return PaymentApplication
-     */
-    public function setPayment(\Zepluf\Bundle\StoreBundle\Entity\Payment $payment = null)
-    {
-        $this->payment = $payment;
-    
-        return $this;
-    }
-
-    /**
-     * Get payment
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Payment 
-     */
-    public function getPayment()
-    {
-        return $this->payment;
-    }
-
-    /**
      * Set invoice
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice
@@ -157,5 +134,28 @@ class PaymentApplication
     public function getInvoice()
     {
         return $this->invoice;
+    }
+
+    /**
+     * Set payment
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Payment $payment
+     * @return PaymentApplication
+     */
+    public function setPayment(\Zepluf\Bundle\StoreBundle\Entity\Payment $payment = null)
+    {
+        $this->payment = $payment;
+    
+        return $this;
+    }
+
+    /**
+     * Get payment
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Payment 
+     */
+    public function getPayment()
+    {
+        return $this->payment;
     }
 }

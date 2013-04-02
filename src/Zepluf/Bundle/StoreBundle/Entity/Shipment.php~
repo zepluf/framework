@@ -71,26 +71,6 @@ class Shipment
     private $updatedAt;
 
     /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipped_from_party_id", referencedColumnName="id")
-     * })
-     */
-    private $shippedFromParty;
-
-    /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipped_to_party_id", referencedColumnName="id")
-     * })
-     */
-    private $shippedToParty;
-
-    /**
      * @var \ContactMechanism
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanism")
@@ -109,6 +89,26 @@ class Shipment
      * })
      */
     private $shippedToContactMechanism;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipped_from_party_id", referencedColumnName="id")
+     * })
+     */
+    private $shippedFromParty;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipped_to_party_id", referencedColumnName="id")
+     * })
+     */
+    private $shippedToParty;
 
 
 }

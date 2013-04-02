@@ -15,7 +15,7 @@ class CartItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,7 +24,7 @@ class CartItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", options={"unsigned"=true}, nullable=false)
      */
     private $quantity;
 
@@ -50,16 +50,6 @@ class CartItem
     private $productUid;
 
     /**
-     * @var \Product
-     *
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     * })
-     */
-    private $product;
-
-    /**
      * @var \Party
      *
      * @ORM\ManyToOne(targetEntity="Party")
@@ -68,6 +58,16 @@ class CartItem
      * })
      */
     private $party;
+
+    /**
+     * @var \Product
+     *
+     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * })
+     */
+    private $product;
 
 
 
@@ -174,29 +174,6 @@ class CartItem
     }
 
     /**
-     * Set product
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
-     * @return CartItem
-     */
-    public function setProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product = null)
-    {
-        $this->product = $product;
-    
-        return $this;
-    }
-
-    /**
-     * Get product
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Product 
-     */
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
-    /**
      * Set party
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Party $party
@@ -217,5 +194,28 @@ class CartItem
     public function getParty()
     {
         return $this->party;
+    }
+
+    /**
+     * Set product
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     * @return CartItem
+     */
+    public function setProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product = null)
+    {
+        $this->product = $product;
+    
+        return $this;
+    }
+
+    /**
+     * Get product
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Product 
+     */
+    public function getProduct()
+    {
+        return $this->product;
     }
 }

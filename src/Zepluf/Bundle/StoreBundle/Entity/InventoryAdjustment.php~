@@ -43,14 +43,14 @@ class InventoryAdjustment
     private $date;
 
     /**
-     * @var \ShipmentItem
+     * @var \PicklistItem
      *
-     * @ORM\ManyToOne(targetEntity="ShipmentItem")
+     * @ORM\ManyToOne(targetEntity="PicklistItem")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="picklist_item_id", referencedColumnName="id")
      * })
      */
-    private $shipmentItem;
+    private $picklistItem;
 
     /**
      * @var \InventoryItem
@@ -63,14 +63,14 @@ class InventoryAdjustment
     private $inventoryItem;
 
     /**
-     * @var \PicklistItem
+     * @var \ShipmentItem
      *
-     * @ORM\ManyToOne(targetEntity="PicklistItem")
+     * @ORM\ManyToOne(targetEntity="ShipmentItem")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="picklist_item_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
      * })
      */
-    private $picklistItem;
+    private $shipmentItem;
 
 
 }

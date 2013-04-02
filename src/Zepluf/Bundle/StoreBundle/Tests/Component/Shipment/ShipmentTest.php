@@ -20,7 +20,7 @@ class ShipmentTest extends BaseTestCase
     public function testCreateShipment()
     {
         $entityManager = $this->get('doctrine.orm.entity_manager');
-        $eventDispatcher = $this->get('event_dispatcher');
+        $eventDispatcher = $this->getEventDispatcher();
 
         $this->obj = new Shipment($entityManager, $eventDispatcher);
 
@@ -50,14 +50,6 @@ class ShipmentTest extends BaseTestCase
                     'productFeatureApplicationId' => 2,
                     'name' => 'Color',
                     'value' => 'White'),
-                array(
-                    'productFeatureApplicationId' => 3,
-                    'name' => 'Storage',
-                    'value' => '8GB'),
-                array(
-                    'productFeatureApplicationId' => 4,
-                    'name' => 'Storage',
-                    'value' => '16GB'),
             )
         );
 
@@ -75,7 +67,10 @@ class ShipmentTest extends BaseTestCase
 
     protected function getEventDispatcher()
     {
-        $obj = $this->getMock('Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher');
+        $container = $this->getMock('Symfony\\Component\\DependencyInjection\\ContainerBuilder');
+        $obj = $this->getMock('Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher', array('dispatch'), array($container));
+        $obj->expects($this->once())
+            ->method('flush');
 
         return $obj;
     }

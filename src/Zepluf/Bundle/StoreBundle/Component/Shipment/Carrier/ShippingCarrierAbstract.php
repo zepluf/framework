@@ -15,11 +15,17 @@ use Symfony\Component\Yaml\Parser;
 abstract class ShippingCarrierAbstract
 {
     protected $code;
+    protected $name = 'carrier';
     protected $config;
 
     public function getCode()
     {
         return $this->code;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     function __construct()

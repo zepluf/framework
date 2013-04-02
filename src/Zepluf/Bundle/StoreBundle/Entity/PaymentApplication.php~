@@ -36,16 +36,6 @@ class PaymentApplication
     private $amountApplied;
 
     /**
-     * @var \Payment
-     *
-     * @ORM\ManyToOne(targetEntity="Payment")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="payment_id", referencedColumnName="id")
-     * })
-     */
-    private $payment;
-
-    /**
      * @var \Invoice
      *
      * @ORM\ManyToOne(targetEntity="Invoice")
@@ -54,6 +44,16 @@ class PaymentApplication
      * })
      */
     private $invoice;
+
+    /**
+     * @var \Payment
+     *
+     * @ORM\ManyToOne(targetEntity="Payment")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="payment_id", referencedColumnName="id")
+     * })
+     */
+    private $payment;
 
 
 }

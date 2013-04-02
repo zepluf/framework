@@ -29,46 +29,46 @@ class StoreBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
-        parent::build($container);
 
-        $container->addCompilerPass(new ZeplufPass());
+//        parent::build($container);
+//        $container->addCompilerPass(new ZeplufPass());
         $container->addCompilerPass(new ShipmentPass());
-        $container->addCompilerPass(new PaymentPass());
+//        $container->addCompilerPass(new PaymentPass());
         $container->addCompilerPass(new TemplatingPass());
 
-        // allow plugins to have their own compiler passes
-        $appDir = $container->getParameter("kernel.root_dir");
-        $pluginsDir = $appDir . '/plugins';
-
-        // copy config files from dist folder
-        foreach (glob($appDir . '/config_dist/*', GLOB_NOSORT) as $config_file) {
-            $config_filename = basename($config_file);
-            if (!file_exists($dest_config_file = $appDir . '/config/' . $config_filename)) {
-                copy($config_file, $dest_config_file);
-            }
-        }
-
-        // load the sys config which store the current plugins installed etc
-        if (file_exists($sysFile = $appDir . '/config/sys_' . $container->getParameter("kernel.environment") . '.yml')) {
-            $sysConfig = Yaml::parse($sysFile);
-
-            $container->setParameter("sys", $sysConfig);
-
-            if (isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
-                foreach ($sysConfig["activated"] as $plugin) {
-                    //
-                    if (is_dir($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler')) {
-                        foreach (glob($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler/*Pass.php', GLOB_NOSORT) as $pass) {
-                            $class = '\\plugins\\' . $plugin . '\DependencyInjection\Compiler\\' . (basename($pass, ".php"));
-                            $container->addCompilerPass(new $class());
-                        }
-                    }
-                }
-            }
-        }
+//        // allow plugins to have their own compiler passes
+//        $appDir = $container->getParameter("kernel.root_dir");
+//        $pluginsDir = $appDir . '/plugins';
+//
+//        // copy config files from dist folder
+////        foreach (glob($appDir . '/config_dist/*', GLOB_NOSORT) as $config_file) {
+////            $config_filename = basename($config_file);
+////            if (!file_exists($dest_config_file = $appDir . '/config/' . $config_filename)) {
+////                copy($config_file, $dest_config_file);
+////            }
+////        }
+//
+//        // load the sys config which store the current plugins installed etc
+//        if (file_exists($sysFile = $appDir . '/config/sys_' . $container->getParameter("kernel.environment") . '.yml')) {
+//            $sysConfig = Yaml::parse($sysFile);
+//
+//            $container->setParameter("sys", $sysConfig);
+//
+//            if (isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
+//                foreach ($sysConfig["activated"] as $plugin) {
+//                    //
+//                    if (is_dir($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler')) {
+//                        foreach (glob($pluginsDir . '/' . $plugin . '/DependencyInjection/Compiler/*Pass.php', GLOB_NOSORT) as $pass) {
+//                            $class = '\\plugins\\' . $plugin . '\DependencyInjection\Compiler\\' . (basename($pass, ".php"));
+//                            $container->addCompilerPass(new $class());
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         // save the sys config
-        @file_put_contents($sysFile, Yaml::dump($sysConfig));
+//        @file_put_contents($sysFile, Yaml::dump($sysConfig));
     }
 
     public function getParent()

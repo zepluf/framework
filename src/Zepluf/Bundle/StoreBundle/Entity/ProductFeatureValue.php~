@@ -24,9 +24,9 @@ class ProductFeatureValue
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    private $value;
+    private $name;
 
     /**
      * @var string

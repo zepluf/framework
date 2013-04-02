@@ -15,21 +15,11 @@ class Location
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
-     * @var \Lot
-     *
-     * @ORM\ManyToOne(targetEntity="Lot")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="lot_id", referencedColumnName="id")
-     * })
-     */
-    private $lot;
 
     /**
      * @var \Container
@@ -51,6 +41,16 @@ class Location
      */
     private $facility;
 
+    /**
+     * @var \Lot
+     *
+     * @ORM\ManyToOne(targetEntity="Lot")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="lot_id", referencedColumnName="id")
+     * })
+     */
+    private $lot;
+
 
 
     /**
@@ -61,29 +61,6 @@ class Location
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set lot
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Lot $lot
-     * @return Location
-     */
-    public function setLot(\Zepluf\Bundle\StoreBundle\Entity\Lot $lot = null)
-    {
-        $this->lot = $lot;
-    
-        return $this;
-    }
-
-    /**
-     * Get lot
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Lot 
-     */
-    public function getLot()
-    {
-        return $this->lot;
     }
 
     /**
@@ -130,5 +107,28 @@ class Location
     public function getFacility()
     {
         return $this->facility;
+    }
+
+    /**
+     * Set lot
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Lot $lot
+     * @return Location
+     */
+    public function setLot(\Zepluf\Bundle\StoreBundle\Entity\Lot $lot = null)
+    {
+        $this->lot = $lot;
+    
+        return $this;
+    }
+
+    /**
+     * Get lot
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Lot 
+     */
+    public function getLot()
+    {
+        return $this->lot;
     }
 }

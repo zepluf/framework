@@ -16,7 +16,7 @@ class Shipment
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -463,7 +463,7 @@ class Shipment
      * @param integer $shipmentType
      * @return Shipment
      */
-    public function setShipmentType( $shipmentType)
+    public function setShipmentType($shipmentType)
     {
         $this->shipmentType = $shipmentType;
 

@@ -36,16 +36,6 @@ class ShipmentItemFeature
     private $value;
 
     /**
-     * @var \ShipmentItem
-     *
-     * @ORM\ManyToOne(targetEntity="ShipmentItem")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
-     * })
-     */
-    private $shipmentItem;
-
-    /**
      * @var \ProductFeatureApplication
      *
      * @ORM\ManyToOne(targetEntity="ProductFeatureApplication")
@@ -54,6 +44,16 @@ class ShipmentItemFeature
      * })
      */
     private $productFeatureApplication;
+
+    /**
+     * @var \ShipmentItem
+     *
+     * @ORM\ManyToOne(targetEntity="ShipmentItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
+     * })
+     */
+    private $shipmentItem;
 
 
 }

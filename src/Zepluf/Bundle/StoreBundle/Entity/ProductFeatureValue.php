@@ -15,7 +15,7 @@ class ProductFeatureValue
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,9 +24,9 @@ class ProductFeatureValue
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    private $value;
+    private $name;
 
     /**
      * @var string
@@ -58,26 +58,26 @@ class ProductFeatureValue
     }
 
     /**
-     * Set value
+     * Set name
      *
-     * @param string $value
+     * @param string $name
      * @return ProductFeatureValue
      */
-    public function setValue($value)
+    public function setName($name)
     {
-        $this->value = $value;
+        $this->name = $name;
     
         return $this;
     }
 
     /**
-     * Get value
+     * Get name
      *
      * @return string 
      */
-    public function getValue()
+    public function getName()
     {
-        return $this->value;
+        return $this->name;
     }
 
     /**

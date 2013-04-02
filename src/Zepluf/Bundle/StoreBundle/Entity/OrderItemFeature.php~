@@ -36,16 +36,6 @@ class OrderItemFeature
     private $value;
 
     /**
-     * @var \OrderItem
-     *
-     * @ORM\ManyToOne(targetEntity="OrderItem")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="order_item_id", referencedColumnName="id")
-     * })
-     */
-    private $orderItem;
-
-    /**
      * @var \ProductFeatureApplication
      *
      * @ORM\ManyToOne(targetEntity="ProductFeatureApplication")
@@ -54,6 +44,16 @@ class OrderItemFeature
      * })
      */
     private $productFeatureApplication;
+
+    /**
+     * @var \OrderItem
+     *
+     * @ORM\ManyToOne(targetEntity="OrderItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_item_id", referencedColumnName="id")
+     * })
+     */
+    private $orderItem;
 
 
 }

@@ -36,16 +36,6 @@ class ShipmentItem
     private $description;
 
     /**
-     * @var \Shipment
-     *
-     * @ORM\ManyToOne(targetEntity="Shipment")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id")
-     * })
-     */
-    private $shipment;
-
-    /**
      * @var \Product
      *
      * @ORM\ManyToOne(targetEntity="Product")
@@ -54,6 +44,16 @@ class ShipmentItem
      * })
      */
     private $product;
+
+    /**
+     * @var \Shipment
+     *
+     * @ORM\ManyToOne(targetEntity="Shipment")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id")
+     * })
+     */
+    private $shipment;
 
 
 }

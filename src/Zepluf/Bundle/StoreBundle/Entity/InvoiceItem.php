@@ -15,7 +15,7 @@ class InvoiceItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,7 +24,7 @@ class InvoiceItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @ORM\Column(name="quantity", type="integer", options={"unsigned"=true}, nullable=false)
      */
     private $quantity;
 
@@ -57,6 +57,16 @@ class InvoiceItem
     private $isTaxable;
 
     /**
+     * @var \InventoryItem
+     *
+     * @ORM\ManyToOne(targetEntity="InventoryItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="inventory_item_id", referencedColumnName="id")
+     * })
+     */
+    private $inventoryItem;
+
+    /**
      * @var \Invoice
      *
      * @ORM\ManyToOne(targetEntity="Invoice")
@@ -67,16 +77,6 @@ class InvoiceItem
     private $invoice;
 
     /**
-     * @var \AdjustmentType
-     *
-     * @ORM\ManyToOne(targetEntity="AdjustmentType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="adjustment_type_id", referencedColumnName="id")
-     * })
-     */
-    private $adjustmentType;
-
-    /**
      * @var \InvoiceItemType
      *
      * @ORM\ManyToOne(targetEntity="InvoiceItemType")
@@ -85,16 +85,6 @@ class InvoiceItem
      * })
      */
     private $invoiceItemType;
-
-    /**
-     * @var \InventoryItem
-     *
-     * @ORM\ManyToOne(targetEntity="InventoryItem")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="inventory_item_id", referencedColumnName="id")
-     * })
-     */
-    private $inventoryItem;
 
 
 
@@ -224,6 +214,29 @@ class InvoiceItem
     }
 
     /**
+     * Set inventoryItem
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\InventoryItem $inventoryItem
+     * @return InvoiceItem
+     */
+    public function setInventoryItem(\Zepluf\Bundle\StoreBundle\Entity\InventoryItem $inventoryItem = null)
+    {
+        $this->inventoryItem = $inventoryItem;
+    
+        return $this;
+    }
+
+    /**
+     * Get inventoryItem
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\InventoryItem 
+     */
+    public function getInventoryItem()
+    {
+        return $this->inventoryItem;
+    }
+
+    /**
      * Set invoice
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice
@@ -247,29 +260,6 @@ class InvoiceItem
     }
 
     /**
-     * Set adjustmentType
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\AdjustmentType $adjustmentType
-     * @return InvoiceItem
-     */
-    public function setAdjustmentType(\Zepluf\Bundle\StoreBundle\Entity\AdjustmentType $adjustmentType = null)
-    {
-        $this->adjustmentType = $adjustmentType;
-    
-        return $this;
-    }
-
-    /**
-     * Get adjustmentType
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\AdjustmentType 
-     */
-    public function getAdjustmentType()
-    {
-        return $this->adjustmentType;
-    }
-
-    /**
      * Set invoiceItemType
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\InvoiceItemType $invoiceItemType
@@ -290,28 +280,5 @@ class InvoiceItem
     public function getInvoiceItemType()
     {
         return $this->invoiceItemType;
-    }
-
-    /**
-     * Set inventoryItem
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\InventoryItem $inventoryItem
-     * @return InvoiceItem
-     */
-    public function setInventoryItem(\Zepluf\Bundle\StoreBundle\Entity\InventoryItem $inventoryItem = null)
-    {
-        $this->inventoryItem = $inventoryItem;
-    
-        return $this;
-    }
-
-    /**
-     * Get inventoryItem
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\InventoryItem 
-     */
-    public function getInventoryItem()
-    {
-        return $this->inventoryItem;
     }
 }

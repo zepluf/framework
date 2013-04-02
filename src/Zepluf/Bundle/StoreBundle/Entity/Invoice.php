@@ -15,7 +15,7 @@ class Invoice
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -58,26 +58,6 @@ class Invoice
     private $termType;
 
     /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="billed_to", referencedColumnName="id")
-     * })
-     */
-    private $billedTo;
-
-    /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="billed_from", referencedColumnName="id")
-     * })
-     */
-    private $billedFrom;
-
-    /**
      * @var \ContactMechanism
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanism")
@@ -96,6 +76,36 @@ class Invoice
      * })
      */
     private $sentTo;
+
+    /**
+     * @var \Order
+     *
+     * @ORM\ManyToOne(targetEntity="Order")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     * })
+     */
+    private $order;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="billed_to", referencedColumnName="id")
+     * })
+     */
+    private $billedTo;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="billed_from", referencedColumnName="id")
+     * })
+     */
+    private $billedFrom;
 
     /**
      * Constructor
@@ -219,52 +229,6 @@ class Invoice
     }
 
     /**
-     * Set billedTo
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $billedTo
-     * @return Invoice
-     */
-    public function setBilledTo(\Zepluf\Bundle\StoreBundle\Entity\Party $billedTo = null)
-    {
-        $this->billedTo = $billedTo;
-    
-        return $this;
-    }
-
-    /**
-     * Get billedTo
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
-     */
-    public function getBilledTo()
-    {
-        return $this->billedTo;
-    }
-
-    /**
-     * Set billedFrom
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $billedFrom
-     * @return Invoice
-     */
-    public function setBilledFrom(\Zepluf\Bundle\StoreBundle\Entity\Party $billedFrom = null)
-    {
-        $this->billedFrom = $billedFrom;
-    
-        return $this;
-    }
-
-    /**
-     * Get billedFrom
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
-     */
-    public function getBilledFrom()
-    {
-        return $this->billedFrom;
-    }
-
-    /**
      * Set addressedTo
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $addressedTo
@@ -308,5 +272,74 @@ class Invoice
     public function getSentTo()
     {
         return $this->sentTo;
+    }
+
+    /**
+     * Set order
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Order $order
+     * @return Invoice
+     */
+    public function setOrder(\Zepluf\Bundle\StoreBundle\Entity\Order $order = null)
+    {
+        $this->order = $order;
+    
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Order 
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set billedTo
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $billedTo
+     * @return Invoice
+     */
+    public function setBilledTo(\Zepluf\Bundle\StoreBundle\Entity\Party $billedTo = null)
+    {
+        $this->billedTo = $billedTo;
+    
+        return $this;
+    }
+
+    /**
+     * Get billedTo
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     */
+    public function getBilledTo()
+    {
+        return $this->billedTo;
+    }
+
+    /**
+     * Set billedFrom
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Party $billedFrom
+     * @return Invoice
+     */
+    public function setBilledFrom(\Zepluf\Bundle\StoreBundle\Entity\Party $billedFrom = null)
+    {
+        $this->billedFrom = $billedFrom;
+    
+        return $this;
+    }
+
+    /**
+     * Get billedFrom
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Party 
+     */
+    public function getBilledFrom()
+    {
+        return $this->billedFrom;
     }
 }

@@ -15,7 +15,7 @@ class PartyContactMechanismPurpose
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -36,16 +36,6 @@ class PartyContactMechanismPurpose
     private $thruDate;
 
     /**
-     * @var \ContactMechanism
-     *
-     * @ORM\ManyToOne(targetEntity="ContactMechanism")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="party_contact_mechanism_id", referencedColumnName="id")
-     * })
-     */
-    private $partyContactMechanism;
-
-    /**
      * @var \ContactMechanismType
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanismType")
@@ -54,6 +44,16 @@ class PartyContactMechanismPurpose
      * })
      */
     private $contactMechanismType;
+
+    /**
+     * @var \ContactMechanism
+     *
+     * @ORM\ManyToOne(targetEntity="ContactMechanism")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="party_contact_mechanism_id", referencedColumnName="id")
+     * })
+     */
+    private $partyContactMechanism;
 
 
 
@@ -114,29 +114,6 @@ class PartyContactMechanismPurpose
     }
 
     /**
-     * Set partyContactMechanism
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $partyContactMechanism
-     * @return PartyContactMechanismPurpose
-     */
-    public function setPartyContactMechanism(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $partyContactMechanism = null)
-    {
-        $this->partyContactMechanism = $partyContactMechanism;
-    
-        return $this;
-    }
-
-    /**
-     * Get partyContactMechanism
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism 
-     */
-    public function getPartyContactMechanism()
-    {
-        return $this->partyContactMechanism;
-    }
-
-    /**
      * Set contactMechanismType
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanismType $contactMechanismType
@@ -157,5 +134,28 @@ class PartyContactMechanismPurpose
     public function getContactMechanismType()
     {
         return $this->contactMechanismType;
+    }
+
+    /**
+     * Set partyContactMechanism
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $partyContactMechanism
+     * @return PartyContactMechanismPurpose
+     */
+    public function setPartyContactMechanism(\Zepluf\Bundle\StoreBundle\Entity\ContactMechanism $partyContactMechanism = null)
+    {
+        $this->partyContactMechanism = $partyContactMechanism;
+    
+        return $this;
+    }
+
+    /**
+     * Get partyContactMechanism
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ContactMechanism 
+     */
+    public function getPartyContactMechanism()
+    {
+        return $this->partyContactMechanism;
     }
 }

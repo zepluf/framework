@@ -36,16 +36,6 @@ class PartyContactMechanismPurpose
     private $thruDate;
 
     /**
-     * @var \ContactMechanism
-     *
-     * @ORM\ManyToOne(targetEntity="ContactMechanism")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="party_contact_mechanism_id", referencedColumnName="id")
-     * })
-     */
-    private $partyContactMechanism;
-
-    /**
      * @var \ContactMechanismType
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanismType")
@@ -54,6 +44,16 @@ class PartyContactMechanismPurpose
      * })
      */
     private $contactMechanismType;
+
+    /**
+     * @var \ContactMechanism
+     *
+     * @ORM\ManyToOne(targetEntity="ContactMechanism")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="party_contact_mechanism_id", referencedColumnName="id")
+     * })
+     */
+    private $partyContactMechanism;
 
 
 }

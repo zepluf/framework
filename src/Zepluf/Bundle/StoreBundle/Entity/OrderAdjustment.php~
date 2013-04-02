@@ -36,14 +36,18 @@ class OrderAdjustment
     private $percentage;
 
     /**
-     * @var \OrderAdjustmentType
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="OrderAdjustmentType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="order_adjustment_type_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
-    private $orderAdjustmentType;
+    private $description;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="taxable", type="boolean", nullable=false)
+     */
+    private $taxable;
 
     /**
      * @var \Order
@@ -54,6 +58,16 @@ class OrderAdjustment
      * })
      */
     private $order;
+
+    /**
+     * @var \OrderAdjustmentType
+     *
+     * @ORM\ManyToOne(targetEntity="OrderAdjustmentType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_adjustment_type_id", referencedColumnName="id")
+     * })
+     */
+    private $orderAdjustmentType;
 
 
 }

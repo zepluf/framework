@@ -22,11 +22,18 @@ class Order
     private $id;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="type", type="smallint", nullable=false)
+     * @ORM\Column(name="type", type="boolean", nullable=false)
      */
     private $type;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="pricing_type", type="boolean", nullable=false)
+     */
+    private $pricingType;
 
     /**
      * @var \DateTime

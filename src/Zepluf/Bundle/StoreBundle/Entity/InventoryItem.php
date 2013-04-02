@@ -15,7 +15,7 @@ class InventoryItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -38,19 +38,9 @@ class InventoryItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity_onhand", type="integer", nullable=false)
+     * @ORM\Column(name="quantity_onhand", type="integer", options={"unsigned"=true}, nullable=false)
      */
     private $quantityOnhand;
-
-    /**
-     * @var \Product
-     *
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     * })
-     */
-    private $product;
 
     /**
      * @var \InventoryItemStatusType
@@ -71,6 +61,16 @@ class InventoryItem
      * })
      */
     private $location;
+
+    /**
+     * @var \Product
+     *
+     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * })
+     */
+    private $product;
 
 
 
@@ -154,29 +154,6 @@ class InventoryItem
     }
 
     /**
-     * Set product
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
-     * @return InventoryItem
-     */
-    public function setProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product = null)
-    {
-        $this->product = $product;
-    
-        return $this;
-    }
-
-    /**
-     * Get product
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Product 
-     */
-    public function getProduct()
-    {
-        return $this->product;
-    }
-
-    /**
      * Set inventoryItemStatusType
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\InventoryItemStatusType $inventoryItemStatusType
@@ -220,5 +197,28 @@ class InventoryItem
     public function getLocation()
     {
         return $this->location;
+    }
+
+    /**
+     * Set product
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Product $product
+     * @return InventoryItem
+     */
+    public function setProduct(\Zepluf\Bundle\StoreBundle\Entity\Product $product = null)
+    {
+        $this->product = $product;
+    
+        return $this;
+    }
+
+    /**
+     * Get product
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Product 
+     */
+    public function getProduct()
+    {
+        return $this->product;
     }
 }

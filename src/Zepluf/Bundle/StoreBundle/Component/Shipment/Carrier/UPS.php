@@ -18,10 +18,12 @@ class UPS
     implements ShippingCarrierInterface
 {
     protected $code = 'ups';
+    protected $name = 'United Parcel Service';
 
     protected $xmlGatewayUrl = 'https://www.ups.com/ups.app/xml/Rate';
     protected $cgiGatewayUrl = 'http://www.ups.com:80/using/services/rave/qcostcgi.cgi';
     protected $request;
+
 
 //    public function convertValue($type, $code)
 //    {
@@ -116,52 +118,84 @@ class UPS
     {
         $r = array();
         if ($request->getMethod()) {
-            $r['requestOption'] = 'Rate';
-            $r['service']['code'] = $request->getMethod();
-            $r['service']['description'] = '';
+            $option['RequestOption'] = 'Rate';
+
+            $service['Code'] = $request->getMethod();
+            $service['Description'] = 'Service Code';
+            $shipment['Service'] = $service;
         } else {
-            $r['requestOption'] = 'Shop';
+            $option['RequestOption'] = 'Shop';
         }
+        $r['Request'] = $option;
 
-        if ($request->getOriginationCountry()) {
-            $r['origCountry'] = $request->getOriginationCountry();
-        }
-        if ($request->getOriginationPostal()) {
-            $r['origPostal'] = $request->getOriginationPostal();
-        }
-        if ($request->getOriginationCity()) {
-            $r['origCity'] = $request->getOriginationCity();
-        }
-        if ($request->getOriginationStateProvince()) {
-            $r['origRegion'] = $request->getOriginationStateProvince();
-        }
-        if ($request->getDestinationCountry()) {
-            $r['destCountry'] = $request->getDestinationCountry();
-        }
-        if ($request->getDestinationPostal()) {
-            $r['destPostal'] = $request->getDestinationPostal();
-        }
-        if ($request->getDestinationCity()) {
-            $r['destCity'] = $request->getDestinationCity();
-        }
-        if ($request->getDestinationStateProvince()) {
-            $r['destRegion'] = $request->getDestinationStateProvince();
-        }
+        $pickupType['Code'] = '01';
+        $pickupType['Description'] = 'Daily Pickup';
+        $r['PickupType'] = $pickupType;
 
+//        $customerclassification['Code'] = '01';
+//        $customerclassification['Description'] = 'Classfication';
+//        $request['CustomerClassification'] = $customerclassification;
+
+        //  Shipper Information
+        $shipper['Name'] = 'Imani Carr';
+        $shipper['ShipperNumber'] = '222006';
+        $address['AddressLine'] = array
+        (
+            'Southam Rd',
+            '4 Case Cour',
+            'Apt 3B'
+        );
+        $address['City'] = 'Timonium';
+        $address['StateProvinceCode'] = 'MD';
+        $address['PostalCode'] = '21093';
+        $address['CountryCode'] = 'US';
+        $shipper['Address'] = $address;
+        $shipment['Shipper'] = $shipper;
+
+        //  Origination Information
+        $addressFrom['CountryCode'] = $request->getOriginationCountry() ? $request->getOriginationCountry() : '';
+        $addressFrom['PostalCode'] = $request->getOriginationPostal() ? $addressFrom['PostalCode'] = $request->getOriginationPostal() : '';
+        $addressFrom['City'] = $request->getOriginationCity() ? $request->getOriginationCity() : '';
+        $addressFrom['StateProvinceCode'] = $request->getOriginationStateProvince() ? $request->getOriginationStateProvince() : '';
+        $shipFrom['Address'] = $addressFrom;
+        $shipment['ShipFrom'] = $shipFrom;
+
+        //  Destination Information
+        $addressTo['CountryCode'] = $request->getDestinationCountry() ? $request->getDestinationCountry() : '';
+        $addressTo['PostalCode'] = $request->getDestinationPostal() ? $request->getDestinationPostal() : '';
+        $addressTo['City'] = $request->getDestinationCity() ? $request->getDestinationCity() : '';
+        $addressTo['StateProvinceCode'] = $request->getDestinationStateProvince() ? $request->getDestinationStateProvince() : '';
+        $addressTo['ResidentialAddressIndicator'] = '';
+        $shiptTo['Address'] = $addressTo;
+        $shipment['ShipTo'] = $shiptTo;
+
+        //  Package Information
         if ($request->getPackageContainer()) {
-            $r['packageType'] = $this->convertValue('container', $request->getPackageContainer());
+            $packaging['Code'] = $this->convertValue('container', $request->getPackageContainer());
+            $packaging['Description'] = 'Rate';
         } else {
-            $r['packageType'] = $this->convertValue('container', $this->getConfig('container'));
+            $packaging['Code'] = $this->convertValue('container', $this->getConfig('container'));
+            $packaging['Description'] = 'Rate';
         }
-        if ($request->getPackageWeight()) {
-            $r['packageWeight'] = $request->getPackageWeight();
-        }
+        $package['PackagingType'] = $packaging;
+
         if ($request->getPackageUOM()) {
-            $r['packageUnitOfMeasurement'] = $request->getPackageUOM();
+            $pUnit['Code'] = $request->getPackageUOM();
         } else {
-            $r['packageUnitOfMeasurement'] = $this->getConfig('UOM');
+            $pUnit['Code'] = $this->getConfig('UOM');
         }
 
+        if ($request->getPackageWeight()) {
+            $packageWeight['UnitOfMeasurement'] = $pUnit;
+            $packageWeight['Weight'] = $request->getPackageWeight();
+        }
+
+        $package['PackageWeight'] = $packageWeight;
+
+        $shipment['Package'] = $package;
+        $shipment['ShipmentServiceOptions'] = '';
+        $shipment['LargePackageIndicator'] = '';
+        $r['Shipment'] = $shipment;
 
         return $r;
     }
@@ -182,13 +216,14 @@ class UPS
         $userId = $this->getConfig('user_id');
         $password = $this->getConfig('password');
 
-        if ($request['requestOption'] === 'Shop') {
+        if ($request['Request']['RequestOption'] === 'Shop') {
             // Service code is not relevant when we're asking ALL possible services' rates
             $serviceCode = null;
         } else {
-            $serviceCode = $request['service']['code'];
+            $serviceCode = $request['Shipment']['Service']['Code'];
         }
-
+//var_dump($request);
+//        die();
         $xmlRequest =
             <<<_XMLAuth_
                         <?xml version="1.0"?>
@@ -210,11 +245,11 @@ _XMLAuth_;
                     <XpciVersion>1.0</XpciVersion>
                 </TransactionReference>
                 <RequestAction>Rate</RequestAction>
-                <RequestOption>{$request['requestOption']}</RequestOption>
+                <RequestOption>{$request['Request']['RequestOption']}</RequestOption>
             </Request>
             <PickupType>
-                <Code>01</Code>
-                <Description>Daily Pickup</Description>
+                <Code>{$request['PickupType']['Code']}</Code>
+                <Description>{$request['PickupType']['Description']}</Description>
             </PickupType>
              <Shipment>
                 <Shipper>
@@ -229,27 +264,27 @@ _XMLRequest_;
         $xmlRequest .=
             <<<_XMLRequest_
                     <Address>
-                      <PostalCode>{$request['origPostal']}</PostalCode>
-                        <CountryCode>{$request['origCountry']}</CountryCode>
-                        <StateProvinceCode>{$request['origRegion']}</StateProvinceCode>
-                        <City>{$request['origCity']}</City>
+                      <PostalCode>{$request['Shipment']['ShipFrom']['Address']['PostalCode']}</PostalCode>
+                        <CountryCode>{$request['Shipment']['ShipFrom']['Address']['CountryCode']}</CountryCode>
+                        <StateProvinceCode>{$request['Shipment']['ShipFrom']['Address']['StateProvinceCode']}</StateProvinceCode>
+                        <City>{$request['Shipment']['ShipFrom']['Address']['City']}</City>
                     </Address>
                 </Shipper>
                 <ShipTo>
                     <Address>
-                        <PostalCode>{$request['destPostal']}</PostalCode>
-                        <CountryCode>{$request['destCountry']}</CountryCode>
-                        <StateProvinceCode>{$request['destRegion']}</StateProvinceCode>
-                        <City>{$request['destCity']}</City>
+                        <PostalCode>{$request['Shipment']['ShipTo']['Address']['PostalCode']}</PostalCode>
+                        <CountryCode>{$request['Shipment']['ShipTo']['Address']['CountryCode']}</CountryCode>
+                        <StateProvinceCode>{$request['Shipment']['ShipTo']['Address']['StateProvinceCode']}</StateProvinceCode>
+                        <City>{$request['Shipment']['ShipTo']['Address']['City']}</City>
                     </Address>
                 </ShipTo>
 
                 <ShipFrom>
                     <Address>
-                        <PostalCode>{$request['origPostal']}</PostalCode>
-                        <CountryCode>{$request['origCountry']}</CountryCode>
-                        <StateProvinceCode>{$request['origRegion']}</StateProvinceCode>
-                        <City>{$request['origCity']}</City>
+                        <PostalCode>{$request['Shipment']['ShipFrom']['Address']['PostalCode']}</PostalCode>
+                        <CountryCode>{$request['Shipment']['ShipFrom']['Address']['CountryCode']}</CountryCode>
+                        <StateProvinceCode>{$request['Shipment']['ShipFrom']['Address']['StateProvinceCode']}</StateProvinceCode>
+                        <City>{$request['Shipment']['ShipFrom']['Address']['City']}</City>
     			    </Address>
                 </ShipFrom>
 _XMLRequest_;
@@ -257,7 +292,7 @@ _XMLRequest_;
             $xmlRequest .=
                 "<Service>" .
                     "<Code>{$serviceCode}</Code>" .
-                    "<Description>{$request['service']['description']}</Description>" .
+                    "<Description>{$request['Shipment']['Service']['Description']}</Description>" .
                     "</Service>";
         }
 
@@ -265,13 +300,13 @@ _XMLRequest_;
             <<<_XMLRequest_
                 <Package>
                     <PackagingType>
-                        <Code>{$request['packageType']}</Code>
+                        <Code>{$request['Shipment']['Package']['PackagingType']['Code']}</Code>
                     </PackagingType>
                     <PackageWeight>
                         <UnitOfMeasurement>
-                            <Code>{$request['packageUnitOfMeasurement']}</Code>
+                            <Code>{$request['Shipment']['Package']['PackageWeight']['UnitOfMeasurement']['Code']}</Code>
                         </UnitOfMeasurement>
-                        <Weight>{$request['packageWeight']}</Weight>
+                        <Weight>{$request['Shipment']['Package']['PackageWeight']['Weight']}</Weight>
                     </PackageWeight>
                 </Package>
 _XMLRequest_;
@@ -308,6 +343,11 @@ _XMLRequest_;
         return $this->parseXMLResponse($objResult);
     }
 
+    /**
+     * Parse a XML Response by UPS server
+     * @param \SimpleXMLElement $response
+     * @return ShippingQuote on success or false on failure
+     */
     protected function parseXMLResponse(\SimpleXMLElement $response)
     {
         //TODO: Parse data
@@ -325,9 +365,9 @@ _XMLRequest_;
 
             foreach ($response->RatedShipment as $rate) {
                 $code = (string)$rate->Service->Code;
-                $code = $this->convertValue('service', $code);
+                $serviceName = $this->convertValue('service', $code);
 
-                if ($code === false) {
+                if ($serviceName === false) {
                     continue;
                 }
                 if ($negotiatedActive) {
@@ -340,10 +380,10 @@ _XMLRequest_;
                 $cost = (float)$cost;
                 $currency = (string)$currency;
 
-                $costArr[$code] = array('currencyCode' => $currency, 'cost' => $cost);
+                $costArr[$code] = array('serviceName' => $serviceName, 'cost' => $cost, 'currencyCode' => $currency);
             }
 
-            $quote = new ShippingQuote($this->getCode());
+            $quote = new ShippingQuote($this->name);
             $quote->setQuotes($costArr);
 
             return $quote;
@@ -352,48 +392,54 @@ _XMLRequest_;
         }
     }
 
-    /**
-     * Hit the UPS web service and return some
-     * rate information.
-     **/
-//    protected function getCgiQuotes($request)
-//    {
-//        try {
-//            $mode = array
-//            (
-//                'soap_version' => 'SOAP_1_1', // use soap 1.1 client
-//                'trace' => 1
-//            );
-//
-//            // initialize soap client
-//            $client = new SoapClient($wsdl, $mode);
-//
-//            //set endpoint url
-//            $client->__setLocation($endpointurl);
-//
-//            //create soap header
-//            $usernameToken['Username'] = $userid;
-//            $usernameToken['Password'] = $passwd;
-//            $serviceAccessLicense['AccessLicenseNumber'] = $access;
-//            $upss['UsernameToken'] = $usernameToken;
-//            $upss['ServiceAccessToken'] = $serviceAccessLicense;
-//
-//            $header = new SoapHeader('http://www.ups.com/XMLSchema/XOLTWS/UPSS/v1.0', 'UPSSecurity', $upss);
-//            $client->__setSoapHeaders($header);
-//
-//            //get response
-//            $response = $client->__soapCall($operation, array(processFreightRate()));
-//
-//            //get status
-//            echo "Response Status: " . $response->Response->ResponseStatus->Description . "\n";
-//
-//            //save soap request and response to file
-//            $fw = fopen($outputFileName, 'w');
-//            fwrite($fw, "Request: \n" . $client->__getLastRequest() . "\n");
-//            fwrite($fw, "Response: \n" . $client->__getLastResponse() . "\n");
-//            fclose($fw);
-//        } catch (Exception $ex) {
-//            print_r($ex);
-//        }
-//    }
+    public function getSoapQuotes($request)
+    {
+        $wsdl = __DIR__ . "/UPS/RateWS.wsdl";
+        $operation = "ProcessRate";
+        $endpointUrl = 'https://wwwcie.ups.com/webservices/Rate';
+        $outputFileName = __DIR__ . "/UPS/XOLTResult.xml";
+
+        // Authentication
+        $accessLicenseNumber = $this->getConfig('access_license_number');
+        $userId = $this->getConfig('user_id');
+        $password = $this->getConfig('password');
+
+        try {
+            $mode = array
+            (
+                'soap_version' => 'SOAP_1_1', // use soap 1.1 client
+                'trace' => 1
+            );
+            // initialize soap client
+            $client = new \SoapClient($wsdl, $mode);
+            //set endpoint url
+            $client->__setLocation($endpointUrl);
+
+            //create soap header
+            $usernameToken['Username'] = $userId;
+            $usernameToken['Password'] = $password;
+            $serviceAccessLicense['AccessLicenseNumber'] = $accessLicenseNumber;
+            $upss['UsernameToken'] = $usernameToken;
+            $upss['ServiceAccessToken'] = $serviceAccessLicense;
+
+            $header = new \SoapHeader('http://www.ups.com/XMLSchema/XOLTWS/UPSS/v1.0', 'UPSSecurity', $upss);
+            $client->__setSoapHeaders($header);
+
+            //get response
+            $resp = $client->__soapCall($operation, array($request));
+
+            var_dump($resp->RatedShipment);
+
+            //get status
+            echo "Response Status: " . $resp->Response->ResponseStatus->Description . "\n";
+
+            //save soap request and response to file
+            $fw = fopen($outputFileName, 'w');
+            fwrite($fw, "Request: \n" . $client->__getLastRequest() . "\n");
+            fwrite($fw, "Response: \n" . $client->__getLastResponse() . "\n");
+            fclose($fw);
+        } catch (\Exception $ex) {
+            echo $ex;
+        }
+    }
 }

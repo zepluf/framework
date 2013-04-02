@@ -71,14 +71,11 @@ class OrderItem
     private $type;
 
     /**
-     * @var \Product
+     * @var boolean
      *
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="taxable", type="boolean", nullable=false)
      */
-    private $product;
+    private $taxable;
 
     /**
      * @var \Order
@@ -99,6 +96,16 @@ class OrderItem
      * })
      */
     private $orderItem;
+
+    /**
+     * @var \Product
+     *
+     * @ORM\ManyToOne(targetEntity="Product")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * })
+     */
+    private $product;
 
 
 }
