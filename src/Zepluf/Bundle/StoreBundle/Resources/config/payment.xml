@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <!-- invoice -->
+        <parameter key="storebundle.invoice.class">Zepluf\Bundle\StoreBundle\Component\Invoice\Invoice</parameter>
+
+        <!-- payment -->
+        <parameter key="storebundle.payment.class">Zepluf\Bundle\StoreBundle\Component\Payment\Payment</parameter>
+        <parameter key="storebundle.payment_methods.class">Zepluf\Bundle\StoreBundle\Component\Payment\PaymentMethods</parameter>
+
+        <!-- payment methods -->
+        <parameter key="storebundle.payment_methods.cheque.class">Zepluf\Bundle\StoreBundle\Component\Payment\Method\Cheque</parameter>
+        <parameter key="storebundle.payment_methods.paypal_standard.class">Zepluf\Bundle\StoreBundle\Component\Payment\Method\PaypalStandard</parameter>
+    </parameters>
+
+    <services>
+        <!-- invoice -->
+        <service id="storebundle.invoice" class="%storebundle.invoice.class%">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <!-- payment -->
+        <service id="storebundle.payment" class="%storebundle.payment.class%">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="storebundle.payment_methods" class="%storebundle.payment_methods.class%">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <!-- payment methods -->
+        <service id="storebundle.payment_methods.cheque" class="%storebundle.payment_methods.cheque.class%">
+            <argument type="service" id="event_dispatcher" />
+            <tag name="storebundle.payment_methods.method" alias="cheque" />
+        </service>
+
+        <service id="storebundle.payment_methods.paypal_standard" class="%storebundle.payment_methods.paypal_standard.class%">
+            <argument type="service" id="event_dispatcher" />
+            <tag name="storebundle.payment_methods.method" alias="paypal_standard" />
+        </service>
+    </services>
+</container>

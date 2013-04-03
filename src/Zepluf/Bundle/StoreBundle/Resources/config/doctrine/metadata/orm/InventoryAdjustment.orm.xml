@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="InventoryAdjustment" table="inventory_adjustment">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="incrementId" type="integer" column="increment_id" nullable="false"/>
+    <field name="quantity" type="integer" column="quantity" nullable="true"/>
+    <field name="date" type="datetime" column="date" nullable="true"/>
+    <many-to-one field="picklistItem" target-entity="PicklistItem">
+      <join-columns>
+        <join-column name="picklist_item_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="inventoryItem" target-entity="InventoryItem">
+      <join-columns>
+        <join-column name="inventory_item_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="shipmentItem" target-entity="ShipmentItem">
+      <join-columns>
+        <join-column name="shipment_item_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

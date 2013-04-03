@@ -22,18 +22,18 @@ class Shipment
     private $id;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="shipment_type_id", type="integer", nullable=false)
+     */
+    private $shipmentTypeId;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="increment_id", type="string", length=45, nullable=false)
      */
     private $incrementId;
-
-    /**
-     * @var ShipmentItem|array
-     *
-     * @ORM\OneToMany(targetEntity="ShipmentItem", mappedBy="shipment")
-     */
-    private $shipmentItems;
 
     /**
      * @var float
@@ -71,14 +71,24 @@ class Shipment
     private $updatedAt;
 
     /**
-     * @var \ShipmentType
+     * @var \ContactMechanism
      *
-     * @ORM\ManyToOne(targetEntity="ShipmentType")
+     * @ORM\ManyToOne(targetEntity="ContactMechanism")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_type_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="shipped_from_contact_mechanism_id", referencedColumnName="id")
      * })
      */
-    private $shipmentType;
+    private $shippedFromContactMechanism;
+
+    /**
+     * @var \ContactMechanism
+     *
+     * @ORM\ManyToOne(targetEntity="ContactMechanism")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipped_to_contact_mechanism_id", referencedColumnName="id")
+     * })
+     */
+    private $shippedToContactMechanism;
 
     /**
      * @var \Party
@@ -99,26 +109,6 @@ class Shipment
      * })
      */
     private $shippedToParty;
-
-    /**
-     * @var \ContactMechanism
-     *
-     * @ORM\ManyToOne(targetEntity="ContactMechanism")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipped_from_contact_mechanism_id", referencedColumnName="id")
-     * })
-     */
-    private $shippedFromContactMechanism;
-
-    /**
-     * @var \ContactMechanism
-     *
-     * @ORM\ManyToOne(targetEntity="ContactMechanism")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipped_to_contact_mechanism_id", referencedColumnName="id")
-     * })
-     */
-    private $shippedToContactMechanism;
 
 
 }

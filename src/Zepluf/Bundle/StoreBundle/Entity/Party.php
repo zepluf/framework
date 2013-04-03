@@ -15,7 +15,7 @@ class Party
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -36,16 +36,6 @@ class Party
     private $type;
 
     /**
-     * @var \Person
-     *
-     * @ORM\ManyToOne(targetEntity="Person")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="person_id", referencedColumnName="id")
-     * })
-     */
-    private $person;
-
-    /**
      * @var \Organization
      *
      * @ORM\ManyToOne(targetEntity="Organization")
@@ -54,6 +44,16 @@ class Party
      * })
      */
     private $organization;
+
+    /**
+     * @var \Person
+     *
+     * @ORM\ManyToOne(targetEntity="Person")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="person_id", referencedColumnName="id")
+     * })
+     */
+    private $person;
 
 
 
@@ -114,29 +114,6 @@ class Party
     }
 
     /**
-     * Set person
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\Person $person
-     * @return Party
-     */
-    public function setPerson(\Zepluf\Bundle\StoreBundle\Entity\Person $person = null)
-    {
-        $this->person = $person;
-    
-        return $this;
-    }
-
-    /**
-     * Get person
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Person 
-     */
-    public function getPerson()
-    {
-        return $this->person;
-    }
-
-    /**
      * Set organization
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Organization $organization
@@ -157,5 +134,28 @@ class Party
     public function getOrganization()
     {
         return $this->organization;
+    }
+
+    /**
+     * Set person
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Person $person
+     * @return Party
+     */
+    public function setPerson(\Zepluf\Bundle\StoreBundle\Entity\Person $person = null)
+    {
+        $this->person = $person;
+    
+        return $this;
+    }
+
+    /**
+     * Get person
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Person 
+     */
+    public function getPerson()
+    {
+        return $this->person;
     }
 }

@@ -15,7 +15,7 @@ class UnitOfMeasurement
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -34,16 +34,6 @@ class UnitOfMeasurement
      * @ORM\Column(name="abbreviation", type="string", length=255, nullable=false)
      */
     private $abbreviation;
-
-    /**
-     * @var \PriceComponent
-     *
-     * @ORM\ManyToOne(targetEntity="PriceComponent")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="price_component_id", referencedColumnName="id")
-     * })
-     */
-    private $priceComponent;
 
 
 
@@ -101,28 +91,5 @@ class UnitOfMeasurement
     public function getAbbreviation()
     {
         return $this->abbreviation;
-    }
-
-    /**
-     * Set priceComponent
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent
-     * @return UnitOfMeasurement
-     */
-    public function setPriceComponent(\Zepluf\Bundle\StoreBundle\Entity\PriceComponent $priceComponent = null)
-    {
-        $this->priceComponent = $priceComponent;
-    
-        return $this;
-    }
-
-    /**
-     * Get priceComponent
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\PriceComponent 
-     */
-    public function getPriceComponent()
-    {
-        return $this->priceComponent;
     }
 }

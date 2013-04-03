@@ -15,7 +15,7 @@ class PriceComponent
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -64,19 +64,33 @@ class PriceComponent
     private $comment;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="handler", type="string", length=255, nullable=false)
+     */
+    private $handler;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="settings", type="text", nullable=true)
+     */
+    private $settings;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="ProductFeature", inversedBy="priceComponent")
-     * @ORM\JoinTable(name="product_feature_price_component",
+     * @ORM\ManyToMany(targetEntity="ProductFeatureApplication", inversedBy="priceComponent")
+     * @ORM\JoinTable(name="product_feature_application_price_component",
      *   joinColumns={
      *     @ORM\JoinColumn(name="price_component_id", referencedColumnName="id")
      *   },
      *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="feature_id", referencedColumnName="id")
+     *     @ORM\JoinColumn(name="product_feature_application_id", referencedColumnName="id")
      *   }
      * )
      */
-    private $feature;
+    private $productFeatureApplication;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
@@ -86,11 +100,21 @@ class PriceComponent
     private $product;
 
     /**
+     * @var \UnitOfMeasurement
+     *
+     * @ORM\ManyToOne(targetEntity="UnitOfMeasurement")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="unit_of_measurement_id", referencedColumnName="id")
+     * })
+     */
+    private $unitOfMeasurement;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->feature = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->productFeatureApplication = new \Doctrine\Common\Collections\ArrayCollection();
         $this->product = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
@@ -244,36 +268,82 @@ class PriceComponent
     }
 
     /**
-     * Add feature
+     * Set handler
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $feature
+     * @param string $handler
      * @return PriceComponent
      */
-    public function addFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $feature)
+    public function setHandler($handler)
     {
-        $this->feature[] = $feature;
+        $this->handler = $handler;
     
         return $this;
     }
 
     /**
-     * Remove feature
+     * Get handler
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $feature
+     * @return string 
      */
-    public function removeFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $feature)
+    public function getHandler()
     {
-        $this->feature->removeElement($feature);
+        return $this->handler;
     }
 
     /**
-     * Get feature
+     * Set settings
+     *
+     * @param string $settings
+     * @return PriceComponent
+     */
+    public function setSettings($settings)
+    {
+        $this->settings = $settings;
+    
+        return $this;
+    }
+
+    /**
+     * Get settings
+     *
+     * @return string 
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
+     * Add productFeatureApplication
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication
+     * @return PriceComponent
+     */
+    public function addProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication)
+    {
+        $this->productFeatureApplication[] = $productFeatureApplication;
+    
+        return $this;
+    }
+
+    /**
+     * Remove productFeatureApplication
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication
+     */
+    public function removeProductFeatureApplication(\Zepluf\Bundle\StoreBundle\Entity\ProductFeatureApplication $productFeatureApplication)
+    {
+        $this->productFeatureApplication->removeElement($productFeatureApplication);
+    }
+
+    /**
+     * Get productFeatureApplication
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getFeature()
+    public function getProductFeatureApplication()
     {
-        return $this->feature;
+        return $this->productFeatureApplication;
     }
 
     /**
@@ -307,5 +377,28 @@ class PriceComponent
     public function getProduct()
     {
         return $this->product;
+    }
+
+    /**
+     * Set unitOfMeasurement
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement
+     * @return PriceComponent
+     */
+    public function setUnitOfMeasurement(\Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement $unitOfMeasurement = null)
+    {
+        $this->unitOfMeasurement = $unitOfMeasurement;
+    
+        return $this;
+    }
+
+    /**
+     * Get unitOfMeasurement
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\UnitOfMeasurement 
+     */
+    public function getUnitOfMeasurement()
+    {
+        return $this->unitOfMeasurement;
     }
 }

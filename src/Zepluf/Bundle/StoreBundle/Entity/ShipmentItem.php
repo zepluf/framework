@@ -15,7 +15,7 @@ class ShipmentItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,30 +24,9 @@ class ShipmentItem
     /**
      * @var integer
      *
-     * @ORM\Column(name="quantity", type="integer", nullable=true)
+     * @ORM\Column(name="quantity", type="integer", options={"unsigned"=true}, nullable=true)
      */
     private $quantity;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="price", type="decimal", nullable=true)
-     */
-    private $price;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(name="weight", type="decimal", nullable=true)
-     */
-    private $weight;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
-     */
-    private $name;
 
     /**
      * @var string
@@ -61,7 +40,7 @@ class ShipmentItem
      *
      * @ORM\ManyToOne(targetEntity="Shipment", inversedBy="shipmentItems")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id", onDelete="SET NULL")
      * })
      */
     private $shipment;
@@ -75,6 +54,13 @@ class ShipmentItem
      * })
      */
     private $product;
+
+    /**
+     * @var ShipmentItemFeature|array
+     *
+     * @ORM\OneToMany(targetEntity="ShipmentItemFeature", mappedBy="shipmentItem", cascade={"persist", "remove"})
+     */
+    private $features;
 
 
 
@@ -109,75 +95,6 @@ class ShipmentItem
     public function getQuantity()
     {
         return $this->quantity;
-    }
-
-    /**
-     * Set price
-     *
-     * @param float $price
-     * @return ShipmentItem
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-    
-        return $this;
-    }
-
-    /**
-     * Get price
-     *
-     * @return float 
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * Set weight
-     *
-     * @param float $weight
-     * @return ShipmentItem
-     */
-    public function setWeight($weight)
-    {
-        $this->weight = $weight;
-    
-        return $this;
-    }
-
-    /**
-     * Get weight
-     *
-     * @return float 
-     */
-    public function getWeight()
-    {
-        return $this->weight;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return ShipmentItem
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 
     /**
@@ -247,5 +164,45 @@ class ShipmentItem
     public function getProduct()
     {
         return $this->product;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->features = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+    
+    /**
+     * Add features
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature $features
+     * @return ShipmentItem
+     */
+    public function addFeature(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature $features)
+    {
+        $this->features[] = $features;
+    
+        return $this;
+    }
+
+    /**
+     * Remove features
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature $features
+     */
+    public function removeFeature(\Zepluf\Bundle\StoreBundle\Entity\ShipmentItemFeature $features)
+    {
+        $this->features->removeElement($features);
+    }
+
+    /**
+     * Get features
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFeatures()
+    {
+        return $this->features;
     }
 }

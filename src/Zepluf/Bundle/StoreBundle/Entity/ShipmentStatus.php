@@ -15,7 +15,7 @@ class ShipmentStatus
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -31,9 +31,9 @@ class ShipmentStatus
     /**
      * @var \Shipment
      *
-     * @ORM\ManyToOne(targetEntity="Shipment")
+     * @ORM\ManyToOne(targetEntity="Shipment", inversedBy="shipmentStatuses")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="shipment_id", referencedColumnName="id")
      * })
      */
     private $shipment;
@@ -43,17 +43,16 @@ class ShipmentStatus
      *
      * @ORM\ManyToOne(targetEntity="ShipmentStatusType")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="shipment_status_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="shipment_status_type_id", referencedColumnName="id")
      * })
      */
     private $shipmentStatusType;
 
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -69,14 +68,14 @@ class ShipmentStatus
     public function setDate($date)
     {
         $this->date = $date;
-    
+
         return $this;
     }
 
     /**
      * Get date
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -92,14 +91,14 @@ class ShipmentStatus
     public function setShipment(\Zepluf\Bundle\StoreBundle\Entity\Shipment $shipment = null)
     {
         $this->shipment = $shipment;
-    
+
         return $this;
     }
 
     /**
      * Get shipment
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\Shipment 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Shipment
      */
     public function getShipment()
     {
@@ -115,17 +114,25 @@ class ShipmentStatus
     public function setShipmentStatusType(\Zepluf\Bundle\StoreBundle\Entity\ShipmentStatusType $shipmentStatusType = null)
     {
         $this->shipmentStatusType = $shipmentStatusType;
-    
+
         return $this;
     }
 
     /**
      * Get shipmentStatusType
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentStatusType 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ShipmentStatusType
      */
     public function getShipmentStatusType()
     {
         return $this->shipmentStatusType;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->date = new \DateTime();
     }
 }

@@ -6,9 +6,9 @@
     </id>
     <field name="sequenceId" type="string" column="sequence_id" length="255" nullable="true"/>
     <field name="amountApplied" type="decimal" column="amount_applied" nullable="false"/>
-    <many-to-one field="invoiceItem" target-entity="InvoiceItem">
+    <many-to-one field="invoice" target-entity="Invoice">
       <join-columns>
-        <join-column name="invoice_item_id" referenced-column-name="id"/>
+        <join-column name="invoice_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="payment" target-entity="Payment">

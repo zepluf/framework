@@ -1,0 +1,12 @@
+model: Zepluf\Bundle\StoreBundle\Entity\InvetoryItem
+tags: [ test, dev ] # optional parameter
+fixtures:
+  sampple_good_product_invetory_base:
+    inventoryItemStatusType: invetory_item_status_type_available
+    product: sampple_good_product
+    quantityOnhand: 10
+  sampple_good_product_invetory_features_1:
+    inventoryItemStatusType: invetory_item_status_type_available
+    product: sampple_good_product
+    quantityOnhand: 10
+    featureValueIds: 1,2,3,

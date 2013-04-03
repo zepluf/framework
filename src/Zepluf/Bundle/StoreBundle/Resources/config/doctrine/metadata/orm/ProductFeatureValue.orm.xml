@@ -6,6 +6,10 @@
     </id>
     <field name="value" type="string" column="value" length="255" nullable="false"/>
     <field name="description" type="string" column="description" length="255" nullable="true"/>
-    <many-to-many field="productFeature" target-entity="ProductFeature" mapped-by="productFeatureValue"/>
+    <many-to-one field="productFeature" target-entity="ProductFeature">
+      <join-columns>
+        <join-column name="product_feature_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
   </entity>
 </doctrine-mapping>

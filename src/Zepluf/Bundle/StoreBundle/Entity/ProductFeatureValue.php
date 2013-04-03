@@ -15,7 +15,7 @@ class ProductFeatureValue
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -24,9 +24,9 @@ class ProductFeatureValue
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
-    private $value;
+    private $name;
 
     /**
      * @var string
@@ -36,20 +36,16 @@ class ProductFeatureValue
     private $description;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var \ProductFeature
      *
-     * @ORM\ManyToMany(targetEntity="ProductFeature", mappedBy="productFeatureValue")
+     * @ORM\ManyToOne(targetEntity="ProductFeature")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_feature_id", referencedColumnName="id")
+     * })
      */
     private $productFeature;
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->productFeature = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
+
 
     /**
      * Get id
@@ -62,26 +58,26 @@ class ProductFeatureValue
     }
 
     /**
-     * Set value
+     * Set name
      *
-     * @param string $value
+     * @param string $name
      * @return ProductFeatureValue
      */
-    public function setValue($value)
+    public function setName($name)
     {
-        $this->value = $value;
+        $this->name = $name;
     
         return $this;
     }
 
     /**
-     * Get value
+     * Get name
      *
      * @return string 
      */
-    public function getValue()
+    public function getName()
     {
-        return $this->value;
+        return $this->name;
     }
 
     /**
@@ -108,32 +104,22 @@ class ProductFeatureValue
     }
 
     /**
-     * Add productFeature
+     * Set productFeature
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature
      * @return ProductFeatureValue
      */
-    public function addProductFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature)
+    public function setProductFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature = null)
     {
-        $this->productFeature[] = $productFeature;
+        $this->productFeature = $productFeature;
     
         return $this;
     }
 
     /**
-     * Remove productFeature
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature
-     */
-    public function removeProductFeature(\Zepluf\Bundle\StoreBundle\Entity\ProductFeature $productFeature)
-    {
-        $this->productFeature->removeElement($productFeature);
-    }
-
-    /**
      * Get productFeature
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Zepluf\Bundle\StoreBundle\Entity\ProductFeature 
      */
     public function getProductFeature()
     {

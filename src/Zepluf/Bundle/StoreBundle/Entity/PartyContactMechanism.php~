@@ -43,16 +43,6 @@ class PartyContactMechanism
     private $comment;
 
     /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
-     * })
-     */
-    private $party;
-
-    /**
      * @var \ContactMechanism
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanism")
@@ -61,6 +51,16 @@ class PartyContactMechanism
      * })
      */
     private $contactMechanism;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
+     * })
+     */
+    private $party;
 
     /**
      * @var \PartyRoleType

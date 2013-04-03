@@ -39,16 +39,6 @@ class OrderRole
     private $order;
 
     /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
-     * })
-     */
-    private $party;
-
-    /**
      * @var \OrderRoleType
      *
      * @ORM\ManyToOne(targetEntity="OrderRoleType")
@@ -57,6 +47,16 @@ class OrderRole
      * })
      */
     private $orderRoleType;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="party_id", referencedColumnName="id")
+     * })
+     */
+    private $party;
 
 
 }

@@ -15,7 +15,7 @@ class PaymentApplication
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -36,6 +36,16 @@ class PaymentApplication
     private $amountApplied;
 
     /**
+     * @var \Invoice
+     *
+     * @ORM\ManyToOne(targetEntity="Invoice")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="invoice_id", referencedColumnName="id")
+     * })
+     */
+    private $invoice;
+
+    /**
      * @var \Payment
      *
      * @ORM\ManyToOne(targetEntity="Payment")
@@ -44,16 +54,6 @@ class PaymentApplication
      * })
      */
     private $payment;
-
-    /**
-     * @var \InvoiceItem
-     *
-     * @ORM\ManyToOne(targetEntity="InvoiceItem")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="invoice_item_id", referencedColumnName="id")
-     * })
-     */
-    private $invoiceItem;
 
 
 
@@ -114,6 +114,29 @@ class PaymentApplication
     }
 
     /**
+     * Set invoice
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice
+     * @return PaymentApplication
+     */
+    public function setInvoice(\Zepluf\Bundle\StoreBundle\Entity\Invoice $invoice = null)
+    {
+        $this->invoice = $invoice;
+    
+        return $this;
+    }
+
+    /**
+     * Get invoice
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\Invoice 
+     */
+    public function getInvoice()
+    {
+        return $this->invoice;
+    }
+
+    /**
      * Set payment
      *
      * @param \Zepluf\Bundle\StoreBundle\Entity\Payment $payment
@@ -134,28 +157,5 @@ class PaymentApplication
     public function getPayment()
     {
         return $this->payment;
-    }
-
-    /**
-     * Set invoiceItem
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItem
-     * @return PaymentApplication
-     */
-    public function setInvoiceItem(\Zepluf\Bundle\StoreBundle\Entity\InvoiceItem $invoiceItem = null)
-    {
-        $this->invoiceItem = $invoiceItem;
-    
-        return $this;
-    }
-
-    /**
-     * Get invoiceItem
-     *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\InvoiceItem 
-     */
-    public function getInvoiceItem()
-    {
-        return $this->invoiceItem;
     }
 }

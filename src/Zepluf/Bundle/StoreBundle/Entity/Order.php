@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Order
  *
- * @ORM\Table(name="order")
+ * @ORM\Table(name="` order`")
  * @ORM\Entity
  */
 class Order
@@ -15,25 +15,25 @@ class Order
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @var OrderItem|array
+     * @var boolean
      *
-     * @ORM\OneToMany(targetEntity="OrderItem", mappedBy="order")
-     */
-    private $orderItems;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="type", type="smallint", nullable=false)
+     * @ORM\Column(name="`type`", type="boolean", nullable=false)
      */
     private $type;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="pricing_type", type="boolean", nullable=false)
+     */
+    private $pricingType;
 
     /**
      * @var \DateTime
@@ -50,14 +50,7 @@ class Order
     private $entryDate;
 
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->orderItems = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-    
+
     /**
      * Get id
      *
@@ -71,7 +64,7 @@ class Order
     /**
      * Set type
      *
-     * @param integer $type
+     * @param boolean $type
      * @return Order
      */
     public function setType($type)
@@ -84,11 +77,34 @@ class Order
     /**
      * Get type
      *
-     * @return integer 
+     * @return boolean 
      */
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Set pricingType
+     *
+     * @param boolean $pricingType
+     * @return Order
+     */
+    public function setPricingType($pricingType)
+    {
+        $this->pricingType = $pricingType;
+    
+        return $this;
+    }
+
+    /**
+     * Get pricingType
+     *
+     * @return boolean 
+     */
+    public function getPricingType()
+    {
+        return $this->pricingType;
     }
 
     /**
@@ -135,38 +151,5 @@ class Order
     public function getEntryDate()
     {
         return $this->entryDate;
-    }
-
-    /**
-     * Add orderItems
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItems
-     * @return Order
-     */
-    public function addOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItems)
-    {
-        $this->orderItems[] = $orderItems;
-    
-        return $this;
-    }
-
-    /**
-     * Remove orderItems
-     *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItems
-     */
-    public function removeOrderItem(\Zepluf\Bundle\StoreBundle\Entity\OrderItem $orderItems)
-    {
-        $this->orderItems->removeElement($orderItems);
-    }
-
-    /**
-     * Get orderItems
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getOrderItems()
-    {
-        return $this->orderItems;
     }
 }

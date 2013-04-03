@@ -24,6 +24,13 @@ class InventoryItem
     /**
      * @var string
      *
+     * @ORM\Column(name="feature_value_ids", type="text", nullable=true)
+     */
+    private $featureValueIds;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="serial", type="string", length=255, nullable=true)
      */
     private $serial;
@@ -36,16 +43,6 @@ class InventoryItem
     private $quantityOnhand;
 
     /**
-     * @var \Product
-     *
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
-     * })
-     */
-    private $product;
-
-    /**
      * @var \InventoryItemStatusType
      *
      * @ORM\ManyToOne(targetEntity="InventoryItemStatusType")
@@ -56,34 +53,24 @@ class InventoryItem
     private $inventoryItemStatusType;
 
     /**
-     * @var \Container
+     * @var \Location
      *
-     * @ORM\ManyToOne(targetEntity="Container")
+     * @ORM\ManyToOne(targetEntity="Location")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="container_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="location_id", referencedColumnName="id")
      * })
      */
-    private $container;
+    private $location;
 
     /**
-     * @var \Lot
+     * @var \Product
      *
-     * @ORM\ManyToOne(targetEntity="Lot")
+     * @ORM\ManyToOne(targetEntity="Product")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="lot_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      * })
      */
-    private $lot;
-
-    /**
-     * @var \Facility
-     *
-     * @ORM\ManyToOne(targetEntity="Facility")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="facility_id", referencedColumnName="id")
-     * })
-     */
-    private $facility;
+    private $product;
 
 
 }

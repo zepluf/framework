@@ -22,13 +22,6 @@ class Invoice
     private $id;
 
     /**
-     * @var InvoiceItem|array
-     *
-     * @ORM\OneToMany(targetEntity="InvoiceItem", mappedBy="invoice")
-     */
-    private $invoiceItems;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="entry_date", type="datetime", nullable=false)
@@ -65,26 +58,6 @@ class Invoice
     private $termType;
 
     /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="billed_to", referencedColumnName="id")
-     * })
-     */
-    private $billedTo;
-
-    /**
-     * @var \Party
-     *
-     * @ORM\ManyToOne(targetEntity="Party")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="billed_from", referencedColumnName="id")
-     * })
-     */
-    private $billedFrom;
-
-    /**
      * @var \ContactMechanism
      *
      * @ORM\ManyToOne(targetEntity="ContactMechanism")
@@ -103,6 +76,36 @@ class Invoice
      * })
      */
     private $sentTo;
+
+    /**
+     * @var \Order
+     *
+     * @ORM\ManyToOne(targetEntity="Order")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     * })
+     */
+    private $order;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="billed_to", referencedColumnName="id")
+     * })
+     */
+    private $billedTo;
+
+    /**
+     * @var \Party
+     *
+     * @ORM\ManyToOne(targetEntity="Party")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="billed_from", referencedColumnName="id")
+     * })
+     */
+    private $billedFrom;
 
     /**
      * Constructor

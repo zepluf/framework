@@ -31,30 +31,51 @@ class ProductCategory
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="left", type="integer", nullable=true)
+     * @ORM\Column(name="lft", type="integer", nullable=true)
      */
-    private $left;
+    private $lft;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="right", type="integer", nullable=true)
+     * @ORM\Column(name="rgt", type="integer", nullable=true)
      */
-    private $right;
+    private $rgt;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="order", type="integer", nullable=false)
+     * @ORM\Column(name="level", type="integer", nullable=true)
      */
-    private $order;
+    private $level;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="root", type="integer", nullable=true)
+     */
+    private $root;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="children", type="integer", nullable=true)
+     */
+    private $children;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="sort", type="integer", nullable=false)
+     */
+    private $sort;
 
     /**
      * @var boolean
@@ -62,6 +83,16 @@ class ProductCategory
      * @ORM\Column(name="status", type="boolean", nullable=false)
      */
     private $status;
+
+    /**
+     * @var \ProductCategory
+     *
+     * @ORM\ManyToOne(targetEntity="ProductCategory")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="parent", referencedColumnName="id")
+     * })
+     */
+    private $parent;
 
 
 }

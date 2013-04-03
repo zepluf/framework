@@ -15,7 +15,7 @@ class OrderAdjustment
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -36,14 +36,18 @@ class OrderAdjustment
     private $percentage;
 
     /**
-     * @var \OrderAdjustmentType
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="OrderAdjustmentType")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="order_adjustment_type_id", referencedColumnName="id")
-     * })
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
-    private $orderAdjustmentType;
+    private $description;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="taxable", type="boolean", nullable=false)
+     */
+    private $taxable;
 
     /**
      * @var \Order
@@ -54,6 +58,16 @@ class OrderAdjustment
      * })
      */
     private $order;
+
+    /**
+     * @var \OrderAdjustmentType
+     *
+     * @ORM\ManyToOne(targetEntity="OrderAdjustmentType")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="order_adjustment_type_id", referencedColumnName="id")
+     * })
+     */
+    private $orderAdjustmentType;
 
 
 
@@ -114,26 +128,49 @@ class OrderAdjustment
     }
 
     /**
-     * Set orderAdjustmentType
+     * Set description
      *
-     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderAdjustmentType $orderAdjustmentType
+     * @param string $description
      * @return OrderAdjustment
      */
-    public function setOrderAdjustmentType(\Zepluf\Bundle\StoreBundle\Entity\OrderAdjustmentType $orderAdjustmentType = null)
+    public function setDescription($description)
     {
-        $this->orderAdjustmentType = $orderAdjustmentType;
+        $this->description = $description;
     
         return $this;
     }
 
     /**
-     * Get orderAdjustmentType
+     * Get description
      *
-     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderAdjustmentType 
+     * @return string 
      */
-    public function getOrderAdjustmentType()
+    public function getDescription()
     {
-        return $this->orderAdjustmentType;
+        return $this->description;
+    }
+
+    /**
+     * Set taxable
+     *
+     * @param boolean $taxable
+     * @return OrderAdjustment
+     */
+    public function setTaxable($taxable)
+    {
+        $this->taxable = $taxable;
+    
+        return $this;
+    }
+
+    /**
+     * Get taxable
+     *
+     * @return boolean 
+     */
+    public function getTaxable()
+    {
+        return $this->taxable;
     }
 
     /**
@@ -157,5 +194,28 @@ class OrderAdjustment
     public function getOrder()
     {
         return $this->order;
+    }
+
+    /**
+     * Set orderAdjustmentType
+     *
+     * @param \Zepluf\Bundle\StoreBundle\Entity\OrderAdjustmentType $orderAdjustmentType
+     * @return OrderAdjustment
+     */
+    public function setOrderAdjustmentType(\Zepluf\Bundle\StoreBundle\Entity\OrderAdjustmentType $orderAdjustmentType = null)
+    {
+        $this->orderAdjustmentType = $orderAdjustmentType;
+    
+        return $this;
+    }
+
+    /**
+     * Get orderAdjustmentType
+     *
+     * @return \Zepluf\Bundle\StoreBundle\Entity\OrderAdjustmentType 
+     */
+    public function getOrderAdjustmentType()
+    {
+        return $this->orderAdjustmentType;
     }
 }

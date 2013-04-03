@@ -30,53 +30,59 @@ class StoreExtension extends Extension
     /**
      * Responds to the app.config configuration parameter.
      *
-     * @param array            $configs
+     * @param array $configs
      * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('config.xml');
+//        $loader->load('config.xml');
 
-        $appDir = $container->getParameter("kernel.root_dir");
-        $pluginsDir = $appDir . '/plugins';
+//        $appDir = $container->getParameter("kernel.root_dir");
+//        $pluginsDir = $appDir . '/plugins';
+//
+//        if($container->hasParameter("sys")) {
+//            $sysConfig = $container->getParameter("sys");
+//
+//            // load all plugins routes
+//            if(isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
+//                foreach ($sysConfig["activated"] as $plugin) {
+//                    $plugin = basename($plugin);
+//
+//                    // only for activated plugin
+//                    $plugin_path = $pluginsDir . '/' . $plugin . '/Resources/config/';
+//
+//                    if (file_exists($plugin_path . 'services.yml')) {
+//                        $ymlLoader = new YamlFileLoader($container, new FileLocator($plugin_path));
+//                        $ymlLoader->load('services.yml');
+//                    }
+//                }
+//            }
+//        }
+//
+//        // register core services for all available plugins
+//        foreach(glob($pluginsDir . '/*', GLOB_ONLYDIR) as $plugin_path)
+//        {
+//            $plugin_name = basename($plugin_path);
+//            // register the plugin's core class
+//            $plugin_class = ucfirst($plugin_name);
+//            if (file_exists($plugin_path . '/' . $plugin_class . '.php')) {
+//
+//                $container->setDefinition($plugin_class, new Definition(
+//                    'plugins\\' . $plugin_name . '\\' . $plugin_class,
+//                    array(
+//                        new Reference('database_patcher'),
+//                        new Reference('event_dispatcher')
+//                    )
+//                ));
+//            }
+//        }
 
-        if($container->hasParameter("sys")) {
-            $sysConfig = $container->getParameter("sys");
+        // register payment configurations
+        $this->registerPaymentConfiguration(array(), $container, $loader);
 
-            // load all plugins routes
-            if(isset($sysConfig["activated"]) && is_array($sysConfig["activated"])) {
-                foreach ($sysConfig["activated"] as $plugin) {
-                    $plugin = basename($plugin);
-
-                    // only for activated plugin
-                    $plugin_path = $pluginsDir . '/' . $plugin . '/Resources/config/';
-
-                    if (file_exists($plugin_path . 'services.yml')) {
-                        $ymlLoader = new YamlFileLoader($container, new FileLocator($plugin_path));
-                        $ymlLoader->load('services.yml');
-                    }
-                }
-            }
-        }
-
-        // register core services for all available plugins
-        foreach(glob($pluginsDir . '/*', GLOB_ONLYDIR) as $plugin_path)
-        {
-            $plugin_name = basename($plugin_path);
-            // register the plugin's core class
-            $plugin_class = ucfirst($plugin_name);
-            if (file_exists($plugin_path . '/' . $plugin_class . '.php')) {
-
-                $container->setDefinition($plugin_class, new Definition(
-                    'plugins\\' . $plugin_name . '\\' . $plugin_class,
-                    array(
-                        new Reference('database_patcher'),
-                        new Reference('event_dispatcher')
-                    )
-                ));
-            }
-        }
+        // register shipment configurations
+        $this->registerShipmentConfiguration(array(), $container, $loader);
     }
 
     public function getConfiguration(array $config, ContainerBuilder $container)
@@ -91,7 +97,7 @@ class StoreExtension extends Extension
      */
     public function getXsdValidationBasePath()
     {
-        return __DIR__.'/../Resources/config/schema';
+        return __DIR__ . '/../Resources/config/schema';
     }
 
     /**
@@ -100,5 +106,27 @@ class StoreExtension extends Extension
     public function getAlias()
     {
         return 'store';
+    }
+
+    /**
+     * Loads the payment configuration.
+     *
+     * @param array $config A proxy configuration array
+     * @param XmlFileLoader $loader An XmlFileLoader instance
+     */
+    private function registerPaymentConfiguration(array $config, ContainerBuilder $container, XmlFileLoader $loader)
+    {
+        $loader->load('payment.xml');
+    }
+
+    /**
+     * Loads the shipment configuration.
+     *
+     * @param array $config A proxy configuration array
+     * @param XmlFileLoader $loader An XmlFileLoader instance
+     */
+    private function registerShipmentConfiguration(array $config, ContainerBuilder $container, XmlFileLoader $loader)
+    {
+        $loader->load('shipment.xml');
     }
 }

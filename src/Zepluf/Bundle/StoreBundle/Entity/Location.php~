@@ -1,0 +1,55 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Location
+ *
+ * @ORM\Table(name="location")
+ * @ORM\Entity
+ */
+class Location
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \Container
+     *
+     * @ORM\ManyToOne(targetEntity="Container")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="container_id", referencedColumnName="id")
+     * })
+     */
+    private $container;
+
+    /**
+     * @var \Facility
+     *
+     * @ORM\ManyToOne(targetEntity="Facility")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="facility_id", referencedColumnName="id")
+     * })
+     */
+    private $facility;
+
+    /**
+     * @var \Lot
+     *
+     * @ORM\ManyToOne(targetEntity="Lot")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="lot_id", referencedColumnName="id")
+     * })
+     */
+    private $lot;
+
+
+}

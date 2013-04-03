@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		{% block stylesheets %}
+			{#{% stylesheets '@CraueConfigBundle/Resources/assets/css/form.css' %}#}
+				{#<link type="text/css" rel="stylesheet" href="{{ asset_url }}" />#}
+			{#{% endstylesheets %}#}
+		{% endblock %}
+	</head>
+	<body>
+		{% for key, flash in app.session.flashBag.all() %}
+			<div class="{{ key }}">
+				{{ flash }}
+			</div>
+		{% endfor %}
+
+		{% block content %}
+		{% endblock %}
+	</body>
+</html>

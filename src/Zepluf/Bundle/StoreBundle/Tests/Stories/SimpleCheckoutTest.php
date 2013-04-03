@@ -45,8 +45,6 @@ class SimpleCheckoutTest extends \PHPUnit_Framework_TestCase
 //        $this->cart->setStorageHandler(new \Zepluf\Bundle\StoreBundle\Component\Cart\StorageHandler\SessionStorageHandler());
 //        $this->cart->save();
 
-        var_dump($_SESSION, "TUan");
-
         // create order
 
 //        $order = new \Zepluf\Bundle\StoreBundle\Entity\Order();

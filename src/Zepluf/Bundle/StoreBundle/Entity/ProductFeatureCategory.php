@@ -15,7 +15,7 @@ class ProductFeatureCategory
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -38,9 +38,9 @@ class ProductFeatureCategory
     /**
      * @var integer
      *
-     * @ORM\Column(name="order", type="integer", nullable=false)
+     * @ORM\Column(name="sort", type="integer", options={"unsigned"=true}, nullable=false)
      */
-    private $order;
+    private $sort;
 
     /**
      * @var boolean
@@ -110,12 +110,12 @@ class ProductFeatureCategory
     /**
      * Set order
      *
-     * @param integer $order
+     * @param integer $sort
      * @return ProductFeatureCategory
      */
-    public function setOrder($order)
+    public function setOrder($sort)
     {
-        $this->order = $order;
+        $this->sort = $sort;
     
         return $this;
     }

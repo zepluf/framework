@@ -15,7 +15,7 @@ class ShipmentRouteSegment
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", options={"unsigned"=true}, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -75,7 +75,7 @@ class ShipmentRouteSegment
      *
      * @ORM\ManyToOne(targetEntity="Carrier")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="carrier_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="carrier_id", referencedColumnName="id", onDelete="SET NULL")
      * })
      */
     private $carrier;
@@ -307,5 +307,22 @@ class ShipmentRouteSegment
     public function getShipment()
     {
         return $this->shipment;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedValue()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * @ORM\preUpdate
+     */
+    public function setUpdatedValue()
+    {
+        $this->updatedAt = new \DateTime();
     }
 }

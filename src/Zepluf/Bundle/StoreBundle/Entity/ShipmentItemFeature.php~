@@ -1,0 +1,59 @@
+<?php
+
+namespace Zepluf\Bundle\StoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ShipmentItemFeature
+ *
+ * @ORM\Table(name="shipment_item_feature")
+ * @ORM\Entity
+ */
+class ShipmentItemFeature
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="value", type="string", length=255, nullable=true)
+     */
+    private $value;
+
+    /**
+     * @var \ProductFeatureApplication
+     *
+     * @ORM\ManyToOne(targetEntity="ProductFeatureApplication")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="product_feature_application_id", referencedColumnName="id")
+     * })
+     */
+    private $productFeatureApplication;
+
+    /**
+     * @var \ShipmentItem
+     *
+     * @ORM\ManyToOne(targetEntity="ShipmentItem")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="shipment_item_id", referencedColumnName="id")
+     * })
+     */
+    private $shipmentItem;
+
+
+}

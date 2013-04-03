@@ -6,9 +6,9 @@
     </id>
     <field name="name" type="string" column="name" length="255" nullable="true"/>
     <field name="value" type="string" column="value" length="255" nullable="true"/>
-    <many-to-one field="productFeature" target-entity="ProductFeature">
+    <many-to-one field="productFeatureApplication" target-entity="ProductFeatureApplication">
       <join-columns>
-        <join-column name="product_feature_id" referenced-column-name="id"/>
+        <join-column name="product_feature_application_id" referenced-column-name="id"/>
       </join-columns>
     </many-to-one>
     <many-to-one field="orderItem" target-entity="OrderItem">
